@@ -16,20 +16,20 @@ object HotMBlocks {
     /**
      * Thinking stone, dimension base block.
      */
-    val THINKING_STONE = Block(FabricBlockSettings.of(Material.STONE))
+    val THINKING_STONE = Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f))
 
     /**
      * Temp machine casing block.
      */
-    val TEST_MACHINE_CASING = Block(FabricBlockSettings.of(Material.METAL))
+    val TEST_MACHINE_CASING = Block(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f))
 
     /**
      * Register all Heart of the Machine blocks...
      */
     fun register() {
         registerAll(
-            THINKING_STONE to "thinking_stone" to Item.Settings().group(ItemGroup.MATERIALS),
-            TEST_MACHINE_CASING to "test_machine_casing" to Item.Settings().group(ItemGroup.MATERIALS)
+            THINKING_STONE to "thinking_stone" to Item.Settings().group(ItemGroup.BUILDING_BLOCKS),
+            TEST_MACHINE_CASING to "test_machine_casing" to Item.Settings().group(ItemGroup.BUILDING_BLOCKS)
         )
     }
 
