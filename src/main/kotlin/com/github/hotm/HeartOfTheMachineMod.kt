@@ -5,5 +5,5 @@ package com.github.hotm
  */
 @Suppress("unused")
 fun init() {
-    println("Heart of the Machine initialized!")
+    HotMBlocks.register()
 }
