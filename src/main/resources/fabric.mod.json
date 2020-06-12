@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "hotm",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Heart of the Machine",
+  "description": "Heart of the Machine adds a whole new dimension of abandoned machinery to explore. Maybe you can uncover the secrets of this dimension and make use of them somehow.",
   "authors": [
-    "Me!"
+    "Kneelawk",
+    "Meelock"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/Heart-of-the-Machine/heart-of-the-machine"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "MIT",
+  "icon": "assets/hotm/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleModKt::init"
+      "com.github.hotm.HeartOfTheMachineModKt::init"
     ]
   },
   "mixins": [
@@ -29,7 +29,7 @@
     "fabricloader": ">=0.7.1",
     "fabric": "*",
     "fabric-language-kotlin": "*",
-    "minecraft": "1.15.x"
+    "minecraft": "1.16.x"
   },
   "suggests": {
     "flamingo": "*"
