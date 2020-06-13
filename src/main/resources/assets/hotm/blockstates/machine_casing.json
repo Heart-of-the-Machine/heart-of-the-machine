@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hotm:block/machine_casing"
+    }
+  }
+}

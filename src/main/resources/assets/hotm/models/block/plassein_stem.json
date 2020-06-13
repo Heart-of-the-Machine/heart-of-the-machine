@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "up": "hotm:block/plassein_stem_top",
+    "down": "hotm:block/plassein_stem_top",
+    "east": "hotm:block/plassein_stem",
+    "west": "hotm:block/plassein_stem",
+    "north": "hotm:block/plassein_stem",
+    "south": "hotm:block/plassein_stem"
+  }
+}

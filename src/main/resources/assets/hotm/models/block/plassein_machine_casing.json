@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "up": "hotm:block/plassein_machine_casing_top",
+    "down": "hotm:block/plassein_machine_casing_top",
+    "east": "hotm:block/plassein_machine_casing",
+    "west": "hotm:block/plassein_machine_casing",
+    "north": "hotm:block/plassein_machine_casing",
+    "south": "hotm:block/plassein_machine_casing"
+  }
+}
