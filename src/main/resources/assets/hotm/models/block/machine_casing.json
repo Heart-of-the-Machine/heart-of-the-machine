@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "up": "hotm:block/machine_casing_top",
+    "down": "hotm:block/machine_casing_top",
+    "east": "hotm:block/machine_casing",
+    "west": "hotm:block/machine_casing",
+    "north": "hotm:block/machine_casing",
+    "south": "hotm:block/machine_casing"
+  }
+}

@@ -1,4 +1,10 @@
 {
   "block.hotm.test_machine_casing": "Test Machine Casing",
-  "block.hotm.thinking_stone": "Thinking Stone"
+  "block.hotm.thinking_stone": "Thinking Stone",
+  "block.hotm.glowy_obelisk_part": "Glowy Obelisk part",
+  "block.hotm.machine_casing": "Machine Casing",
+  "block.hotm.obelisk_part": "Obelisk Part",
+  "block.hotm.plassein_bloom": "Plassein Bloom",
+  "block.hotm.plassein_machine_casing": "Plassein Machine Casing",
+  "block.hotm.plassein_stem": "Plassein Stem"
 }
