@@ -3,6 +3,7 @@
   "package": "com.github.hotm.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "SurfaceChunkGeneratorMixin"
   ],
   "client": [
   ],
