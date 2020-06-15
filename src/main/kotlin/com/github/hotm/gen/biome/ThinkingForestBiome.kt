@@ -18,5 +18,6 @@ class ThinkingForestBiome : Biome(
 ) {
     init {
         HotMBiomeFeatures.addRefusePiles(this)
+        HotMBiomeFeatures.addPlasseinGrowths(this)
     }
 }

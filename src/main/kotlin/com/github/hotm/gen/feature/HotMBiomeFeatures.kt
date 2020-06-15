@@ -7,6 +7,7 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.decorator.CountDecoratorConfig
+import net.minecraft.world.gen.decorator.CountExtraChanceDecoratorConfig
 import net.minecraft.world.gen.decorator.Decorator
 import net.minecraft.world.gen.feature.Feature
 
@@ -15,6 +16,8 @@ import net.minecraft.world.gen.feature.Feature
  */
 object HotMBiomeFeatures {
     private val THINKING_STONE = HotMBlocks.THINKING_STONE.defaultState
+    private val PLASSEIN_STEM = HotMBlocks.PLASSEIN_STEM.defaultState
+    private val PLASSEIN_BLOOM = HotMBlocks.PLASSEIN_BLOOM.defaultState
 
     /**
      * Refuse pile feature. This is similar to the vanilla FOREST_ROCK feature but generates in more places.
@@ -22,15 +25,37 @@ object HotMBiomeFeatures {
     val REFUSE_PILE = register("refuse_pile", RefusePileFeature(PileFeatureConfig.CODEC))
 
     /**
+     * Creates a plassein "tree" growth.
+     */
+    val PLASSEIN_GROWTH = register("plassein_growth", PlasseinGrowthFeature(PlasseinGrowthConfig.CODEC))
+
+    /**
      * Adds refuse piles similar to the mossy rocks in Giant Spruce Taigas.
      */
     fun addRefusePiles(biome: Biome) {
         biome.addFeature(
-            GenerationStep.Feature.LOCAL_MODIFICATIONS, REFUSE_PILE.configure(
-                PileFeatureConfig(
-                    THINKING_STONE, 0
+            GenerationStep.Feature.LOCAL_MODIFICATIONS,
+            REFUSE_PILE.configure(PileFeatureConfig(THINKING_STONE, 0))
+                .createDecoratedFeature(Decorator.FOREST_ROCK.configure(CountDecoratorConfig(3)))
+        )
+    }
+
+    /**
+     * Adds Plassein growths.
+     */
+    fun addPlasseinGrowths(biome: Biome) {
+        biome.addFeature(
+            GenerationStep.Feature.VEGETAL_DECORATION,
+            PLASSEIN_GROWTH.configure(PlasseinGrowthConfig(PLASSEIN_STEM, PLASSEIN_BLOOM, 6, 4, 0.5, 0.5))
+                .createDecoratedFeature(
+                    Decorator.COUNT_EXTRA_HEIGHTMAP.configure(
+                        CountExtraChanceDecoratorConfig(
+                            10,
+                            0.1F,
+                            1
+                        )
+                    )
                 )
-            ).createDecoratedFeature(Decorator.FOREST_ROCK.configure(CountDecoratorConfig(3)))
         )
     }
 
