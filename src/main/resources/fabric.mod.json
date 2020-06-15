@@ -21,6 +21,9 @@
   "entrypoints": {
     "main": [
       "com.github.hotm.HeartOfTheMachineModKt::init"
+    ],
+    "client": [
+      "com.github.hotm.client.HeartOfTheMachineModClientKt::init"
     ]
   },
   "mixins": [
