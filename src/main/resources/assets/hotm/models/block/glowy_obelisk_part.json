@@ -1,11 +1,7 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube_column",
   "textures": {
-    "up": "hotm:block/glowy_obelisk_part_top",
-    "down": "hotm:block/glowy_obelisk_part_top",
-    "east": "hotm:block/glowy_obelisk_part",
-    "west": "hotm:block/glowy_obelisk_part",
-    "north": "hotm:block/glowy_obelisk_part",
-    "south": "hotm:block/glowy_obelisk_part"
+    "end": "hotm:block/glowy_obelisk_part_top",
+    "side": "hotm:block/glowy_obelisk_part"
   }
 }
