@@ -58,6 +58,36 @@ object HotMDimensions {
     val NECTERE_TYPE_KEY = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, Identifier(HotMConstants.MOD_ID, "nectere"))
 
     /**
+     * ChunkGeneratorType preset for the Nectere dimension.
+     */
+    val NECTERE_CHUNK_GENERATOR_TYPE_PRESET = ChunkGeneratorType.Preset("${HotMConstants.MOD_ID}:nectere") { preset ->
+        ChunkGeneratorTypeInvoker.create(
+            StructuresConfig(false),
+            NoiseConfig(
+                256,
+                NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 160.0),
+                SlideConfig(-10, 3, 0),
+                SlideConfig(-30, 0, 0),
+                1,
+                2,
+                1.0,
+                -0.46875,
+                true,
+                true,
+                false,
+                false
+            ),
+            HotMBlocks.THINKING_STONE.defaultState,
+            Blocks.WATER.defaultState,
+            -10,
+            0,
+            16,
+            false,
+            Optional.of(preset)
+        )
+    }
+
+    /**
      * Registers the world generator for the Nectere dimension.
      */
     fun register() {
@@ -84,29 +114,7 @@ object HotMDimensions {
         return SurfaceChunkGenerator(
             FixedBiomeSource(HotMBiomes.THINKING_FOREST),
             seed,
-            ChunkGeneratorTypeInvoker.create(
-                StructuresConfig(false),
-                NoiseConfig(
-                    256,
-                    NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 160.0),
-                    SlideConfig(-10, 3, 0),
-                    SlideConfig(-30, 0, 0),
-                    1,
-                    2,
-                    1.0,
-                    -0.46875,
-                    true,
-                    true,
-                    false,
-                    false
-                ),
-                HotMBlocks.THINKING_STONE.defaultState,
-                Blocks.WATER.defaultState,
-                -10,
-                0,
-                16,
-                false
-            )
+            NECTERE_CHUNK_GENERATOR_TYPE_PRESET.chunkGeneratorType
         )
     }
 }
