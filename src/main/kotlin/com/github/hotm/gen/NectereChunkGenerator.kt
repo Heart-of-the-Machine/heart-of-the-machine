@@ -1,6 +1,5 @@
 package com.github.hotm.gen
 
-import com.github.hotm.hacks.ChunkGeneratorSeedHack
 import com.mojang.datafixers.util.Function3
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -597,7 +596,7 @@ class NectereChunkGenerator private constructor(
                 instance.group(
                     BiomeSource.field_24713.fieldOf("biome_source")
                         .forGetter { surfaceChunkGenerator: NectereChunkGenerator -> surfaceChunkGenerator.biomeSource },
-                    Codec.LONG.fieldOf("seed").withDefault { ChunkGeneratorSeedHack.seed }
+                    Codec.LONG.fieldOf("seed")
                         .forGetter { surfaceChunkGenerator: NectereChunkGenerator -> surfaceChunkGenerator.seed },
                     ChunkGeneratorType.field_24781.fieldOf("settings")
                         .forGetter { surfaceChunkGenerator: NectereChunkGenerator -> surfaceChunkGenerator.generatorType }
