@@ -1,8 +1,11 @@
 package com.github.hotm.gen
 
+import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
-import com.github.hotm.HotMDimensionType
+import com.github.hotm.mixin.ChunkGeneratorTypeInvoker
+import com.github.hotm.mixin.DimensionTypeInvoker
 import com.github.hotm.mixinopts.DimensionAdditions
+import net.minecraft.block.Blocks
 import net.minecraft.tag.BlockTags
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
@@ -10,8 +13,7 @@ import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World
 import net.minecraft.world.biome.source.FixedBiomeSource
 import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType
-import net.minecraft.world.gen.chunk.ChunkGeneratorType
-import net.minecraft.world.gen.chunk.SurfaceChunkGenerator
+import net.minecraft.world.gen.chunk.*
 import java.util.*
 
 /**
@@ -32,26 +34,26 @@ object HotMDimensions {
     /**
      * Dimension options that describe the Nectere dimension.
      */
-    val NECTERE_TYPE = HotMDimensionType(
-        fixedTime = OptionalLong.empty(),
-        hasSkyLight = true,
-        hasCeiling = false,
-        ultrawarm = false,
-        natural = true,
-        shrunk = false,
-        hasEnderDragonFight = false,
-        piglinSafe = false,
-        bedWorks = false,
-        respawnAnchorWorks = false,
-        hasRaids = false,
-        logicalHeight = 256,
-        biomeAccessType = HorizontalVoronoiBiomeAccessType.INSTANCE,
-        infiniburn = BlockTags.INFINIBURN_OVERWORLD.id,
-        ambientLight = 0.1f
+    val NECTERE_TYPE = DimensionTypeInvoker.create(
+        OptionalLong.empty(),
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        256,
+        HorizontalVoronoiBiomeAccessType.INSTANCE,
+        BlockTags.INFINIBURN_OVERWORLD.id,
+        0.1f
     )
 
     /**
-     *
+     * Key used to reference the Nectere dimension type.
      */
     val NECTERE_TYPE_KEY = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, Identifier(HotMConstants.MOD_ID, "nectere"))
 
@@ -82,8 +84,29 @@ object HotMDimensions {
         return SurfaceChunkGenerator(
             FixedBiomeSource(HotMBiomes.THINKING_FOREST),
             seed,
-            // TODO fix world base block
-            ChunkGeneratorType.Preset.OVERWORLD.chunkGeneratorType
+            ChunkGeneratorTypeInvoker.create(
+                StructuresConfig(false),
+                NoiseConfig(
+                    256,
+                    NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 160.0),
+                    SlideConfig(-10, 3, 0),
+                    SlideConfig(-30, 0, 0),
+                    1,
+                    2,
+                    1.0,
+                    -0.46875,
+                    true,
+                    true,
+                    false,
+                    false
+                ),
+                HotMBlocks.THINKING_STONE.defaultState,
+                Blocks.WATER.defaultState,
+                -10,
+                0,
+                16,
+                false
+            )
         )
     }
 }
