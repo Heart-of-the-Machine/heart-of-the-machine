@@ -91,13 +91,6 @@ object HotMDimensions {
      * Registers the world generator for the Nectere dimension.
      */
     fun register() {
-        // Unused chunk generator
-//        Registry.register(
-//            Registry.CHUNK_GENERATOR,
-//            Identifier(HotMConstants.MOD_ID, "nectere"),
-//            NectereChunkGenerator.CODEC
-//        )
-
         DimensionAdditions.addDimension(
             NECTERE_OPTIONS_KEY,
             NECTERE_TYPE_KEY,
