@@ -5,11 +5,17 @@ import com.github.hotm.HotMConstants
 import com.github.hotm.mixin.ChunkGeneratorTypeInvoker
 import com.github.hotm.mixin.DimensionTypeInvoker
 import com.github.hotm.mixinopts.DimensionAdditions
+import net.fabricmc.fabric.api.dimension.v1.FabricDimensions
 import net.minecraft.block.Blocks
+import net.minecraft.block.pattern.BlockPattern
+import net.minecraft.entity.Entity
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.tag.BlockTags
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
+import net.minecraft.world.Heightmap
 import net.minecraft.world.World
 import net.minecraft.world.biome.source.FixedBiomeSource
 import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType
@@ -98,6 +104,10 @@ object HotMDimensions {
         ) { seed -> createNectereGenerator(seed) }
 
         DimensionAdditions.setSaveDir(NECTERE_KEY, "DIM-nectere")
+
+        FabricDimensions.registerDefaultPlacer(
+            NECTERE_KEY
+        ) { oldEntity, destination, _, _, _ -> findTeleportationDestination(oldEntity, destination) }
     }
 
     /**
@@ -109,5 +119,35 @@ object HotMDimensions {
             seed,
             NECTERE_CHUNK_GENERATOR_TYPE_PRESET.chunkGeneratorType
         )
+    }
+
+    /**
+     * Performs a teleportation between the Overworld and the Nectere.
+     */
+    fun performNectereTeleportation(entity: Entity, world: World) {
+        world.server?.let { server ->
+            val serverWorld = server.getWorld(world.registryKey)
+            if (world.registryKey == NECTERE_KEY) {
+                FabricDimensions.teleport(
+                    entity,
+                    server.getWorld(World.OVERWORLD)
+                ) { oldEntity, destination, _, _, _ -> findTeleportationDestination(oldEntity, destination) }
+            } else {
+                entity.changeDimension(server.getWorld(NECTERE_KEY))
+            }
+        }
+    }
+
+    /**
+     * Finds the teleportation destination block.
+     */
+    private fun findTeleportationDestination(oldEntity: Entity, destination: ServerWorld): BlockPattern.TeleportTarget {
+        // TODO implement proper teleportation logic
+
+        // load chunk so heightmap loading works properly
+        destination.getChunk(oldEntity.blockPos)
+
+        val position = destination.getTopPosition(Heightmap.Type.WORLD_SURFACE, oldEntity.blockPos)
+        return BlockPattern.TeleportTarget(Vec3d.of(position).add(0.5, 0.5, 0.5), Vec3d.ZERO, oldEntity.yaw.toInt())
     }
 }

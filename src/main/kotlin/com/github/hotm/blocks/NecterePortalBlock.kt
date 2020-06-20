@@ -1,10 +1,12 @@
 package com.github.hotm.blocks
 
+import com.github.hotm.gen.HotMDimensions
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.FacingBlock
 import net.minecraft.block.ShapeContext
 import net.minecraft.block.piston.PistonBehavior
+import net.minecraft.entity.Entity
 import net.minecraft.entity.ai.pathing.NavigationType
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
@@ -14,6 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.world.BlockView
+import net.minecraft.world.World
 
 class NecterePortalBlock(settings: Settings) : FacingBlock(settings) {
     companion object {
@@ -72,5 +75,11 @@ class NecterePortalBlock(settings: Settings) : FacingBlock(settings) {
         type: NavigationType
     ): Boolean {
         return false
+    }
+
+    override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
+        if (state.get(FACING) == Direction.UP && !entity.hasVehicle() && !entity.hasPassengers() && entity.canUsePortals()) {
+            HotMDimensions.performNectereTeleportation(entity, world)
+        }
     }
 }
