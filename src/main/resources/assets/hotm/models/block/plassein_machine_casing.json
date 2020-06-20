@@ -1,7 +1,6 @@
 {
   "parent": "block/cube_column",
   "textures": {
-    "end": "hotm:block/plassein_machine_casing_top",
     "side": "hotm:block/plassein_machine_casing"
   }
 }

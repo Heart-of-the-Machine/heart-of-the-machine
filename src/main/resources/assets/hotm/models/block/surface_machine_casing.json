@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_column",
   "textures": {
-    "all": "hotm:block/machine_casing"
+    "side": "hotm:block/surface_machine_casing"
   }
 }
