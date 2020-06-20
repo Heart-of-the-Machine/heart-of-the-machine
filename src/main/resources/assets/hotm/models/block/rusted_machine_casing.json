@@ -2,6 +2,6 @@
   "parent": "block/cube_column",
   "textures": {
     "end": "hotm:block/rusted_machine_casing_top",
-    "side": "hotm:block/rusted_metal_machine_casing"
+    "side": "hotm:block/rusted_machine_casing"
   }
 }

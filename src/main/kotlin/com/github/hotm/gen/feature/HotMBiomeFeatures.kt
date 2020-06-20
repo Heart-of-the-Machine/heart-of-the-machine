@@ -46,11 +46,11 @@ object HotMBiomeFeatures {
     fun addPlasseinGrowths(biome: Biome) {
         biome.addFeature(
             GenerationStep.Feature.VEGETAL_DECORATION,
-            PLASSEIN_GROWTH.configure(PlasseinGrowthConfig(PLASSEIN_STEM, PLASSEIN_BLOOM, 6, 4, 0.5, 0.5))
+            PLASSEIN_GROWTH.configure(PlasseinGrowthConfig(PLASSEIN_STEM, PLASSEIN_BLOOM, 10, 10, 0.5, 0.5))
                 .createDecoratedFeature(
                     Decorator.COUNT_EXTRA_HEIGHTMAP.configure(
                         CountExtraChanceDecoratorConfig(
-                            10,
+                            3,
                             0.1F,
                             1
                         )

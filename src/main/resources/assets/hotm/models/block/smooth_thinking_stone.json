@@ -1,6 +1,6 @@
 {
-  "parent": "block/cube_column",
+  "parent": "block/cube_all",
   "textures": {
-    "side": "hotm:block/smooth_thinking_stone"
+    "all": "hotm:block/smooth_thinking_stone"
   }
 }

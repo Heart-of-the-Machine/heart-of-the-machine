@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
+    "axis=x": {
+      "model": "hotm:block/glowy_obelisk_part",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
       "model": "hotm:block/glowy_obelisk_part"
+    },
+    "axis=z": {
+      "model": "hotm:block/glowy_obelisk_part",
+      "x": 90
     }
   }
 }

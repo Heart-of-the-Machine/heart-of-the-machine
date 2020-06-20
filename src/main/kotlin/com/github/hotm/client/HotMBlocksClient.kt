@@ -14,5 +14,6 @@ object HotMBlocksClient {
      */
     fun register() {
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.PLASSEIN_BLOOM, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.NECTERE_PORTAL, RenderLayer.getTranslucent())
     }
 }

@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "hotm:block/nectere_portal",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "hotm:block/nectere_portal",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "hotm:block/nectere_portal",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "hotm:block/nectere_portal",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "hotm:block/nectere_portal"
+    },
+    "facing=west": {
+      "model": "hotm:block/nectere_portal",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

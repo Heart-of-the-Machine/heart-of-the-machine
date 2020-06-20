@@ -7,8 +7,8 @@ import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig
  * Contains surface configs for the Heart of the Machine biomes.
  */
 object HotMSurfaceConfigs {
-    val SURFACE_BLOCK = HotMBlocks.TEST_MACHINE_CASING
-    val SUBSURFACE_BLOCK = HotMBlocks.METAL_MACHINE_CASING
+    val SURFACE_BLOCK = HotMBlocks.RUSTED_MACHINE_CASING
+    val SUBSURFACE_BLOCK = HotMBlocks.SURFACE_MACHINE_CASING
 
     private val SURFACE_STATE = SURFACE_BLOCK.defaultState
     private val SUBSURFACE_STATE = SUBSURFACE_BLOCK.defaultState
