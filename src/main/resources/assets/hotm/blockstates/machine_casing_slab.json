@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hotm:block/machine_casing_slab"
+    },
+    "type=double": {
+      "model": "hotm:block/machine_casing"
+    },
+    "type=top": {
+      "model": "hotm:block/machine_casing_slab_top"
+    }
+  }
+}

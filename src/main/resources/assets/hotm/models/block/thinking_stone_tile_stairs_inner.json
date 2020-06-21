@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "hotm:block/thinking_stone_tiles",
+    "top": "hotm:block/thinking_stone_tiles",
+    "side": "hotm:block/thinking_stone_tiles"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "hotm:block/machine_casing",
+    "top": "hotm:block/machine_casing",
+    "side": "hotm:block/machine_casing"
+  }
+}

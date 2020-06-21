@@ -1,7 +1,11 @@
 {
   "block.hotm.glowy_obelisk_part": "Glowy Obelisk part",
   "block.hotm.machine_casing": "Machine Casing",
+  "block.hotm.machine_casing_slab": "Machine Casing Slab",
+  "block.hotm.machine_casing_stairs": "Machine Casing Stairs",
   "block.hotm.machine_casing_bricks": "Machine Casing Bricks",
+  "block.hotm.machine_casing_brick_slab": "Machine Casing Brick Slab",
+  "block.hotm.machine_casing_brick_stairs": "Machine Casing Brick Stairs",
   "block.hotm.metal_machine_casing": "Metal Machine Casing",
   "block.hotm.nectere_portal": "Nectere Portal",
   "block.hotm.obelisk_part": "Obelisk Part",
@@ -10,8 +14,17 @@
   "block.hotm.plassein_stem": "Plassein Stem",
   "block.hotm.rusted_machine_casing": "Rusted Machine Casing",
   "block.hotm.smooth_thinking_stone": "Smooth Thinking Stone",
+  "block.hotm.smooth_thinking_stone_slab": "Smooth Thinking Stone Slab",
+  "block.hotm.smooth_thinking_stone_stairs": "Smooth Thinking Stone Stairs",
   "block.hotm.surface_machine_casing": "Surface Machine Casing",
   "block.hotm.test_machine_casing": "Test Machine Casing",
   "block.hotm.thinking_stone": "Thinking Stone",
-  "block.hotm.thinking_stone_tiles": "Thinking Stone Tiles"
+  "block.hotm.thinking_stone_slab": "Thinking Stone Slab",
+  "block.hotm.thinking_stone_stairs": "Thinking Stone Stairs",
+  "block.hotm.thinking_stone_bricks": "Thinking Stone Bricks",
+  "block.hotm.thinking_stone_brick_slab": "Thinking Stone Brick Slab",
+  "block.hotm.thinking_stone_brick_stairs": "Thinking Stone Brick Stairs",
+  "block.hotm.thinking_stone_tiles": "Thinking Stone Tiles",
+  "block.hotm.thinking_stone_tile_slab": "Thinking Stone Tile Slab",
+  "block.hotm.thinking_stone_tile_stairs": "Thinking Stone Tile Stairs"
 }

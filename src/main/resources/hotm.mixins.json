@@ -6,7 +6,8 @@
     "DimensionOptionsMixin",
     "DimensionTypeMixin",
     "ChunkGeneratorTypeInvoker",
-    "DimensionTypeInvoker"
+    "DimensionTypeInvoker",
+    "StairsBlockInvoker"
   ],
   "client": [
   ],
