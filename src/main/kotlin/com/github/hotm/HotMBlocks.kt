@@ -33,7 +33,7 @@ object HotMBlocks {
         )
     val NECTERE_PORTAL = NecterePortalBlock(
         FabricBlockSettings.of(Material.PORTAL).noCollision().strength(-1.0f).sounds(BlockSoundGroup.GLASS).nonOpaque()
-            .lightLevel { 3 })
+            .lightLevel { 12 })
 
     /*
      * Machine Casing Blocks.
