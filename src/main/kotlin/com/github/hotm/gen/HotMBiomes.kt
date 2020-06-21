@@ -4,6 +4,8 @@ import com.github.hotm.HotMConstants
 import com.github.hotm.gen.biome.ThinkingForestBiome
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.biome.Biome
+import java.util.*
 
 /**
  * Registers biomes for the Nectere dimension.

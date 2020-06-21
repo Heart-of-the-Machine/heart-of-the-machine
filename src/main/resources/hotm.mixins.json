@@ -5,6 +5,7 @@
   "mixins": [
     "DimensionOptionsMixin",
     "DimensionTypeMixin",
+    "BiomeCategoryMixin",
     "ChunkGeneratorTypeInvoker",
     "DimensionTypeInvoker",
     "StairsBlockInvoker"
