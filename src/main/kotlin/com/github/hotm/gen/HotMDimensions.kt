@@ -2,8 +2,6 @@ package com.github.hotm.gen
 
 import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
-import com.github.hotm.mixin.ChunkGeneratorTypeInvoker
-import com.github.hotm.mixin.DimensionTypeInvoker
 import com.github.hotm.mixinopts.DimensionAdditions
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions
 import net.minecraft.block.Blocks
@@ -40,7 +38,7 @@ object HotMDimensions {
     /**
      * Dimension options that describe the Nectere dimension.
      */
-    val NECTERE_TYPE = DimensionTypeInvoker.create(
+    val NECTERE_TYPE = DimensionAdditions.createDimensionType(
         OptionalLong.empty(),
         true,
         false,
@@ -67,7 +65,7 @@ object HotMDimensions {
      * ChunkGeneratorType preset for the Nectere dimension.
      */
     val NECTERE_CHUNK_GENERATOR_TYPE_PRESET = ChunkGeneratorType.Preset("${HotMConstants.MOD_ID}:nectere") { preset ->
-        ChunkGeneratorTypeInvoker.create(
+        DimensionAdditions.createChunkGeneratorType(
             StructuresConfig(false),
             NoiseConfig(
                 256,
@@ -126,7 +124,6 @@ object HotMDimensions {
      */
     fun performNectereTeleportation(entity: Entity, world: World) {
         world.server?.let { server ->
-            val serverWorld = server.getWorld(world.registryKey)
             if (world.registryKey == NECTERE_KEY) {
                 FabricDimensions.teleport(
                     entity,
