@@ -31,7 +31,7 @@ public class DimensionOptionsMixin {
      */
     @Inject(method = "method_29567", at = @At(value = "INVOKE_ASSIGN",
             target = "Lcom/google/common/collect/Lists;newArrayList(Ljava/lang/Iterable;)Ljava/util/ArrayList;", remap = false),
-            locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+            locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
     private static void onMethod_29567_2(long seed, SimpleRegistry<DimensionOptions> simpleRegistry,
                                          CallbackInfoReturnable<Boolean> cir,
                                          List<Map.Entry<RegistryKey<DimensionOptions>, DimensionOptions>> list) {
