@@ -75,7 +75,7 @@ object HotMDimensions {
                 1,
                 2,
                 0.0,
-                -0.03,
+                0.0,
                 false,
                 true,
                 false,
