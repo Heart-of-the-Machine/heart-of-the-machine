@@ -5,9 +5,11 @@
   "mixins": [
     "DimensionOptionsMixin",
     "DimensionTypeMixin",
+    "StructuresConfigMixin",
     "ChunkGeneratorTypeInvoker",
     "DimensionTypeInvoker",
-    "StairsBlockInvoker"
+    "StairsBlockInvoker",
+    "StructureFeatureAccessor"
   ],
   "client": [
   ],

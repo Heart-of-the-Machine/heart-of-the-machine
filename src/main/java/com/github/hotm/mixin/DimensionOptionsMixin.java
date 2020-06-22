@@ -30,7 +30,7 @@ public class DimensionOptionsMixin {
      * @param list           the list minecraft checks for dimension customizations.
      */
     @Inject(method = "method_29567", at = @At(value = "INVOKE_ASSIGN",
-            target = "Lcom/google/common/collect/Lists;newArrayList(Ljava/lang/Iterable;)Ljava/util/ArrayList;"),
+            target = "Lcom/google/common/collect/Lists;newArrayList(Ljava/lang/Iterable;)Ljava/util/ArrayList;", remap = false),
             locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private static void onMethod_29567_2(long seed, SimpleRegistry<DimensionOptions> simpleRegistry,
                                          CallbackInfoReturnable<Boolean> cir,

@@ -9,6 +9,7 @@ import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.decorator.CountDecoratorConfig
 import net.minecraft.world.gen.decorator.CountExtraChanceDecoratorConfig
 import net.minecraft.world.gen.decorator.Decorator
+import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
 
 /**
@@ -28,6 +29,11 @@ object HotMBiomeFeatures {
      * Creates a plassein "tree" growth.
      */
     val PLASSEIN_GROWTH = register("plassein_growth", PlasseinGrowthFeature(PlasseinGrowthConfig.CODEC))
+
+    /**
+     * Nectere portal structure feature.
+     */
+    val NECTERE_PORTAL = HotMStructureFeatures.NECTERE_PORTAL.configure(DefaultFeatureConfig.INSTANCE)
 
     /**
      * Adds refuse piles similar to the mossy rocks in Giant Spruce Taigas.
@@ -57,6 +63,19 @@ object HotMBiomeFeatures {
                     )
                 )
         )
+    }
+
+    /**
+     * Register our structures with the existing biomes.
+     */
+    fun register() {
+        HotMStructureFeatures.register()
+
+        for (biome in Registry.BIOME) {
+            if (biome.category != Biome.Category.OCEAN && biome.category != Biome.Category.RIVER && biome.category != Biome.Category.NETHER && biome.category != Biome.Category.THEEND) {
+                biome.addStructureFeature(NECTERE_PORTAL)
+            }
+        }
     }
 
     /**
