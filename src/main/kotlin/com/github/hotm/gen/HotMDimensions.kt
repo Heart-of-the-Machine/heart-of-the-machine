@@ -68,15 +68,15 @@ object HotMDimensions {
         DimensionAdditions.createChunkGeneratorType(
             StructuresConfig(false),
             NoiseConfig(
-                256,
-                NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 160.0),
+                150,
+                NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 60.0),
                 SlideConfig(-10, 3, 0),
-                SlideConfig(-30, 0, 0),
+                SlideConfig(30, 4, -1),
                 1,
                 2,
-                1.0,
-                -0.46875,
-                true,
+                0.0,
+                -0.03,
+                false,
                 true,
                 false,
                 false
