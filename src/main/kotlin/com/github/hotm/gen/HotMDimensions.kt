@@ -71,12 +71,12 @@ object HotMDimensions {
                 150,
                 NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 60.0),
                 SlideConfig(-10, 3, 0),
-                SlideConfig(30, 4, -1),
+                SlideConfig(50, 4, -1),
                 1,
                 2,
-                0.0,
-                0.0,
-                false,
+                -0.02,
+                -0.02,
+                true,
                 true,
                 false,
                 false
@@ -95,6 +95,12 @@ object HotMDimensions {
      * Registers the world generator for the Nectere dimension.
      */
     fun register() {
+        Registry.register(
+            Registry.CHUNK_GENERATOR,
+            Identifier(HotMConstants.MOD_ID, "nectere"),
+            NectereChunkGenerator.CODEC
+        )
+
         DimensionAdditions.addDimension(
             NECTERE_OPTIONS_KEY,
             NECTERE_TYPE_KEY,
@@ -111,8 +117,8 @@ object HotMDimensions {
     /**
      * Constructs the chunk generator used for the Nectere dimension.
      */
-    private fun createNectereGenerator(seed: Long): SurfaceChunkGenerator {
-        return SurfaceChunkGenerator(
+    private fun createNectereGenerator(seed: Long): NectereChunkGenerator {
+        return NectereChunkGenerator(
             FixedBiomeSource(HotMBiomes.THINKING_FOREST),
             seed,
             NECTERE_CHUNK_GENERATOR_TYPE_PRESET.chunkGeneratorType
