@@ -21,6 +21,18 @@ object HotMBlocks {
     private val BUILDING_BLOCKS = Item.Settings().group(ItemGroup.BUILDING_BLOCKS)
 
     /*
+     * Crystals.
+     */
+    val CYAN_CRYSTAL = Block(
+        FabricBlockSettings.of(Material.GLASS).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS)
+            .lightLevel(15)
+    )
+    val MAGENTA_CRYSTAL = Block(
+        FabricBlockSettings.of(Material.GLASS).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS)
+            .lightLevel(15)
+    )
+
+    /*
      * Obelisk parts.
      */
     val GLOWY_OBELISK_PART =
@@ -108,6 +120,7 @@ object HotMBlocks {
      */
     fun register() {
         registerAll(
+            CYAN_CRYSTAL to "cyan_crystal" to BUILDING_BLOCKS,
             GLOWY_OBELISK_PART to "glowy_obelisk_part" to BUILDING_BLOCKS,
             MACHINE_CASING to "machine_casing" to BUILDING_BLOCKS,
             MACHINE_CASING_SLAB to "machine_casing_slab" to BUILDING_BLOCKS,
@@ -115,6 +128,7 @@ object HotMBlocks {
             MACHINE_CASING_BRICKS to "machine_casing_bricks" to BUILDING_BLOCKS,
             MACHINE_CASING_BRICK_SLAB to "machine_casing_brick_slab" to BUILDING_BLOCKS,
             MACHINE_CASING_BRICK_STAIRS to "machine_casing_brick_stairs" to BUILDING_BLOCKS,
+            MAGENTA_CRYSTAL to "magenta_crystal" to BUILDING_BLOCKS,
             METAL_MACHINE_CASING to "metal_machine_casing" to BUILDING_BLOCKS,
             NECTERE_PORTAL to "nectere_portal" to Item.Settings(),
             OBELISK_PART to "obelisk_part" to BUILDING_BLOCKS,

@@ -1,4 +1,5 @@
 {
+  "block.hotm.cyan_crystal": "Cyan Crystal",
   "block.hotm.glowy_obelisk_part": "Glowy Obelisk part",
   "block.hotm.machine_casing": "Machine Casing",
   "block.hotm.machine_casing_slab": "Machine Casing Slab",
@@ -6,6 +7,7 @@
   "block.hotm.machine_casing_bricks": "Machine Casing Bricks",
   "block.hotm.machine_casing_brick_slab": "Machine Casing Brick Slab",
   "block.hotm.machine_casing_brick_stairs": "Machine Casing Brick Stairs",
+  "block.hotm.magenta_crystal": "Magenta Crystal",
   "block.hotm.metal_machine_casing": "Metal Machine Casing",
   "block.hotm.nectere_portal": "Nectere Portal",
   "block.hotm.obelisk_part": "Obelisk Part",
