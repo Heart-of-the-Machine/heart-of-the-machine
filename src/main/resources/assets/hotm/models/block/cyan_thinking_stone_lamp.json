@@ -1,6 +1,7 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube_column",
   "textures": {
-    "all": "hotm:block/cyan_thinking_stone_lamp"
+    "end":  "hotm:block/smooth_thinking_stone",
+    "side": "hotm:block/cyan_thinking_stone_lamp"
   }
 }
