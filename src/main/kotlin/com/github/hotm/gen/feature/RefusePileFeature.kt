@@ -25,6 +25,10 @@ class RefusePileFeature(codec: Codec<PileFeatureConfig?>?) : Feature<PileFeature
                     blockPosMut = blockPosMut.down()
                     continue
                 }
+
+                if (serverWorldAccess.isWater(blockPosMut.down())) {
+                    return false
+                }
             }
 
             if (blockPosMut.y <= 3) {
