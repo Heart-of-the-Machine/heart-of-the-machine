@@ -2,6 +2,7 @@ package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
+import com.github.hotm.gen.feature.decorator.CountHeightmapInRangeDecoratorConfig
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
@@ -54,12 +55,8 @@ object HotMBiomeFeatures {
             GenerationStep.Feature.VEGETAL_DECORATION,
             PLASSEIN_GROWTH.configure(PlasseinGrowthConfig(PLASSEIN_STEM, PLASSEIN_BLOOM, 10, 10, 0.5, 0.5))
                 .createDecoratedFeature(
-                    Decorator.COUNT_EXTRA_HEIGHTMAP.configure(
-                        CountExtraChanceDecoratorConfig(
-                            3,
-                            0.1F,
-                            1
-                        )
+                    HotMDecorators.COUNT_HEIGHTMAP_IN_RANGE.configure(
+                        CountHeightmapInRangeDecoratorConfig(16, 100, 4)
                     )
                 )
         )
