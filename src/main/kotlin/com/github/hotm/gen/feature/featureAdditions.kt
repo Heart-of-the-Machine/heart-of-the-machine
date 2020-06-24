@@ -10,7 +10,7 @@ import net.minecraft.world.gen.feature.Feature
  * Used by HotM features to tell if they're generating on the surface.
  */
 fun isSurface(block: Block): Boolean {
-    return isNectereSurface(block) || Feature.isDirt(block) || isNectereStone(block) || isStone(block)
+    return isNectereSurface(block) || Feature.isSoil(block) || isNectereStone(block) || isStone(block)
 }
 
 fun isStone(block: Block): Boolean {
