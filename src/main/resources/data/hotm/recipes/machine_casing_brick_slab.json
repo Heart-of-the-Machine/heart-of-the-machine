@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    {
+      "item": "hotm:machine_casing"
+    },
+    {
+      "item": "hotm:machine_casing_bricks"
+    }
+  ],
+  "result": "hotm:machine_casing_brick_slab",
+  "count": 2
+}

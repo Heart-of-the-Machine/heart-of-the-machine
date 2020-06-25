@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "hotm:cyan_crystal_lamp"
+  },
+  "result": "hotm:cyan_thinking_stone_lamp",
+  "count": 1
+}

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "hotm:smooth_thinking_stone"
+  },
+  "result": "hotm:smooth_thinking_stone_slab",
+  "count": 2
+}

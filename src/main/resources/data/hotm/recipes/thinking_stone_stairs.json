@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "hotm:thinking_stone"
+  },
+  "result": "hotm:thinking_stone_stairs",
+  "count": 1
+}

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "hotm:magenta_crystal_lamp"
+  },
+  "result": "hotm:magent_thinking_stone_lamp",
+  "count": 1
+}

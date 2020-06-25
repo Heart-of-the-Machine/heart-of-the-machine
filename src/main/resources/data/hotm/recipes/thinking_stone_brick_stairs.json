@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    {
+      "item": "hotm:smooth_thinking_stone"
+    },
+    {
+      "item": "hotm:thinking_stone_bricks"
+    }
+  ],
+  "result": "hotm:thinking_stone_brick_stairs",
+  "count": 1
+}

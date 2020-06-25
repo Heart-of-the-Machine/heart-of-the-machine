@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " T ",
+    "TCT",
+    " T "
+  ],
+  "key": {
+    "T": {
+      "item": "hotm:smooth_thinking_stone"
+    },
+    "C": {
+      "item": "hotm:magenta_crystal"
+    }
+  },
+  "result": {
+    "item": "hotm:magenta_crystal_lamp",
+    "count": 2
+  }
+}

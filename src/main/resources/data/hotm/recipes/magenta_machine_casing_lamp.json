@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " M ",
+    "MCM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "item": "hotm:machine_casing"
+    },
+    "C": {
+      "item": "hotm:magenta_crystal"
+    }
+  },
+  "result": {
+    "item": "hotm:magenta_machine_casing_lamp",
+    "count": 2
+  }
+}

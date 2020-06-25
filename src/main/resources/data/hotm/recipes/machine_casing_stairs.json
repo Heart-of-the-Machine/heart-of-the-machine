@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "hotm:machine_casing"
+  },
+  "result": "hotm:machine_casing_stairs",
+  "count": 1
+}
