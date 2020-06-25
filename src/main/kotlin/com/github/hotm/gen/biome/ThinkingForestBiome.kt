@@ -20,5 +20,6 @@ class ThinkingForestBiome : Biome(
         HotMBiomeFeatures.addRefusePiles(this)
         HotMBiomeFeatures.addPlasseinGrowths(this)
         HotMBiomeFeatures.addCrystalGrowths(this)
+        HotMBiomeFeatures.addServerTowers(this)
     }
 }

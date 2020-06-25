@@ -2,6 +2,7 @@ package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
+import com.github.hotm.gen.feature.decorator.CountChanceSurfaceInRangeDecoratorConfig
 import com.github.hotm.gen.feature.decorator.CountHeightmapInRangeDecoratorConfig
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
@@ -36,6 +37,11 @@ object HotMBiomeFeatures {
      * Creates crystal structures originating from walls and ceilings.
      */
     val CRYSTAL_GROWTH = register("crystal_growth", CrystalGrowthFeature(CrystalGrowthConfig.CODEC))
+
+    /**
+     * Creates server tower like structures.
+     */
+    val SERVER_TOWER = register("server_tower", ServerTowerFeature(ServerTowerConfig.CODEC))
 
     /**
      * Nectere portal structure feature.
@@ -96,6 +102,55 @@ object HotMBiomeFeatures {
                     )
                 )
             ).createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(15, 0, 0, 100)))
+        )
+    }
+
+    /**
+     * Adds crystal growths.
+     */
+    fun addServerTowers(biome: Biome) {
+        biome.addFeature(
+            GenerationStep.Feature.UNDERGROUND_DECORATION,
+            Feature.RANDOM_SELECTOR.configure(
+                RandomFeatureConfig(
+                    listOf(
+                        SERVER_TOWER.configure(
+                            ServerTowerConfig(
+                                1,
+                                5,
+                                1,
+                                10,
+                                0,
+                                2,
+                                5,
+                                0.5f,
+                                HotMBlocks.SMOOTH_THINKING_STONE.defaultState,
+                                HotMBlocks.CYAN_CRYSTAL_LAMP.defaultState,
+                                HotMBlocks.CYAN_THINKING_STONE_LAMP.defaultState
+                            )
+                        ).withChance(0.5f)
+                    ),
+                    SERVER_TOWER.configure(
+                        ServerTowerConfig(
+                            1,
+                            5,
+                            1,
+                            10,
+                            0,
+                            2,
+                            5,
+                            0.5f,
+                            HotMBlocks.SMOOTH_THINKING_STONE.defaultState,
+                            HotMBlocks.MAGENTA_CRYSTAL_LAMP.defaultState,
+                            HotMBlocks.MAGENTA_THINKING_STONE_LAMP.defaultState
+                        )
+                    )
+                )
+            ).createDecoratedFeature(
+                HotMDecorators.COUNT_CHANCE_SURFACE_IN_RANGE.configure(
+                    CountChanceSurfaceInRangeDecoratorConfig(8, 80, 2, 0.125f)
+                )
+            )
         )
     }
 

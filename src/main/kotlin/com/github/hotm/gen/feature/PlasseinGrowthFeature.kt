@@ -45,7 +45,7 @@ class PlasseinGrowthFeature(codec: Codec<PlasseinGrowthConfig>) : Feature<Plasse
         stalkBlocks: MutableCollection<BlockPos>,
         leafBlocks: MutableCollection<BlockPos>
     ): Boolean {
-        if (!world.testBlockState(pos.down()) { isSurface(it.block) }) {
+        if (!world.testBlockState(pos.down()) { FeatureUtils.isSurface(it.block) }) {
             return false
         }
 
