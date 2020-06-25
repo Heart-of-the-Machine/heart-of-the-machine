@@ -31,6 +31,10 @@ object HotMBlocks {
         FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
             .lightLevel(15)
     )
+    val CYAN_MACHINE_CASING_LAMP = Block(
+        FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
+            .lightLevel(15)
+    )
     val CYAN_THINKING_STONE_LAMP = Block(
         FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
             .lightLevel(15)
@@ -40,6 +44,10 @@ object HotMBlocks {
             .lightLevel(15)
     )
     val MAGENTA_CRYSTAL_LAMP = Block(
+        FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
+            .lightLevel(15)
+    )
+    val MAGENTA_MACHINE_CASING_LAMP = Block(
         FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
             .lightLevel(15)
     )
@@ -138,6 +146,7 @@ object HotMBlocks {
         registerAll(
             CYAN_CRYSTAL to "cyan_crystal" to BUILDING_BLOCKS,
             CYAN_CRYSTAL_LAMP to "cyan_crystal_lamp" to BUILDING_BLOCKS,
+            CYAN_MACHINE_CASING_LAMP to "cyan_machine_casing_lamp" to BUILDING_BLOCKS,
             CYAN_THINKING_STONE_LAMP to "cyan_thinking_stone_lamp" to BUILDING_BLOCKS,
             GLOWY_OBELISK_PART to "glowy_obelisk_part" to BUILDING_BLOCKS,
             MACHINE_CASING to "machine_casing" to BUILDING_BLOCKS,
@@ -148,6 +157,7 @@ object HotMBlocks {
             MACHINE_CASING_BRICK_STAIRS to "machine_casing_brick_stairs" to BUILDING_BLOCKS,
             MAGENTA_CRYSTAL to "magenta_crystal" to BUILDING_BLOCKS,
             MAGENTA_CRYSTAL_LAMP to "magenta_crystal_lamp" to BUILDING_BLOCKS,
+            MAGENTA_MACHINE_CASING_LAMP to "magenta_machine_casing_lamp" to BUILDING_BLOCKS,
             MAGENTA_THINKING_STONE_LAMP to "magenta_thinking_stone_lamp" to BUILDING_BLOCKS,
             METAL_MACHINE_CASING to "metal_machine_casing" to BUILDING_BLOCKS,
             NECTERE_PORTAL to "nectere_portal" to Item.Settings(),
