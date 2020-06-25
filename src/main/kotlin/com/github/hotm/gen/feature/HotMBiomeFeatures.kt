@@ -8,10 +8,11 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.decorator.CountDecoratorConfig
-import net.minecraft.world.gen.decorator.CountExtraChanceDecoratorConfig
 import net.minecraft.world.gen.decorator.Decorator
+import net.minecraft.world.gen.decorator.RangeDecoratorConfig
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.RandomFeatureConfig
 
 /**
  * Features for Heart of the Machine biomes.
@@ -30,6 +31,11 @@ object HotMBiomeFeatures {
      * Creates a plassein "tree" growth.
      */
     val PLASSEIN_GROWTH = register("plassein_growth", PlasseinGrowthFeature(PlasseinGrowthConfig.CODEC))
+
+    /**
+     * Creates crystal structures originating from walls and ceilings.
+     */
+    val CRYSTAL_GROWTH = register("crystal_growth", CrystalGrowthFeature(CrystalGrowthConfig.CODEC))
 
     /**
      * Nectere portal structure feature.
@@ -59,6 +65,37 @@ object HotMBiomeFeatures {
                         CountHeightmapInRangeDecoratorConfig(16, 100, 4)
                     )
                 )
+        )
+    }
+
+    /**
+     * Adds crystal growths.
+     */
+    fun addCrystalGrowths(biome: Biome) {
+        biome.addFeature(
+            GenerationStep.Feature.UNDERGROUND_DECORATION,
+            Feature.RANDOM_SELECTOR.configure(
+                RandomFeatureConfig(
+                    listOf(
+                        CRYSTAL_GROWTH.configure(
+                            CrystalGrowthConfig(
+                                listOf(HotMBlocks.THINKING_STONE),
+                                HotMBlocks.CYAN_CRYSTAL.defaultState,
+                                5,
+                                0.5f
+                            )
+                        ).withChance(0.5f)
+                    ),
+                    CRYSTAL_GROWTH.configure(
+                        CrystalGrowthConfig(
+                            listOf(HotMBlocks.THINKING_STONE),
+                            HotMBlocks.MAGENTA_CRYSTAL.defaultState,
+                            5,
+                            0.5f
+                        )
+                    )
+                )
+            ).createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(15, 0, 0, 100)))
         )
     }
 

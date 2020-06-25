@@ -21,12 +21,12 @@ class CountHeightmapInRangeDecorator(codec: Codec<CountHeightmapInRangeDecorator
         random: Random,
         config: CountHeightmapInRangeDecoratorConfig,
         pos: BlockPos
-    ): Stream<BlockPos> {
+    ): Stream<BlockPos?> {
         return IntStream.range(0, config.count).mapToObj {
             val x = random.nextInt(16) + pos.x
             val z = random.nextInt(16) + pos.z
             val y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z)
             if (y in config.minHeight until config.maxHeight) BlockPos(x, y, z) else null
-        }.filter(Objects::nonNull).map { it!! }
+        }.filter(Objects::nonNull)
     }
 }
