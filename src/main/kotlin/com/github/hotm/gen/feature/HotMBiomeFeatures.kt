@@ -2,7 +2,7 @@ package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
-import com.github.hotm.gen.feature.decorator.CountChanceSurfaceInRangeDecoratorConfig
+import com.github.hotm.gen.feature.decorator.CountChanceInRangeDecoratorConfig
 import com.github.hotm.gen.feature.decorator.CountHeightmapInRangeDecoratorConfig
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
@@ -42,6 +42,11 @@ object HotMBiomeFeatures {
      * Creates server tower like structures.
      */
     val SERVER_TOWER = register("server_tower", ServerTowerFeature(ServerTowerConfig.CODEC))
+
+    /**
+     * Creates metal towers with blinking lights.
+     */
+    val TRANSMISSION_TOWER = register("transmission_tower", TransmissionTowerFeature(TransmissionTowerConfig.CODEC))
 
     /**
      * Nectere portal structure feature.
@@ -148,7 +153,56 @@ object HotMBiomeFeatures {
                 )
             ).createDecoratedFeature(
                 HotMDecorators.COUNT_CHANCE_SURFACE_IN_RANGE.configure(
-                    CountChanceSurfaceInRangeDecoratorConfig(8, 80, 2, 0.125f)
+                    CountChanceInRangeDecoratorConfig(8, 80, 2, 0.125f)
+                )
+            )
+        )
+    }
+
+    /**
+     * Adds crystal growths.
+     */
+    fun addTransmissionTowers(biome: Biome) {
+        biome.addFeature(
+            GenerationStep.Feature.SURFACE_STRUCTURES,
+            Feature.RANDOM_SELECTOR.configure(
+                RandomFeatureConfig(
+                    listOf(
+                        TRANSMISSION_TOWER.configure(
+                            TransmissionTowerConfig(
+                                6,
+                                25,
+                                1,
+                                8,
+                                4,
+                                0.125f,
+                                0.125f,
+                                HotMBlocks.MACHINE_CASING.defaultState,
+                                HotMBlocks.PLASSEIN_MACHINE_CASING.defaultState,
+                                PLASSEIN_BLOOM,
+                                HotMBlocks.CYAN_MACHINE_CASING_LAMP.defaultState
+                            )
+                        ).withChance(0.5f)
+                    ),
+                    TRANSMISSION_TOWER.configure(
+                        TransmissionTowerConfig(
+                            6,
+                            25,
+                            1,
+                            8,
+                            4,
+                            0.125f,
+                            0.125f,
+                            HotMBlocks.MACHINE_CASING.defaultState,
+                            HotMBlocks.PLASSEIN_MACHINE_CASING.defaultState,
+                            PLASSEIN_BLOOM,
+                            HotMBlocks.MAGENTA_MACHINE_CASING_LAMP.defaultState
+                        )
+                    )
+                )
+            ).createDecoratedFeature(
+                HotMDecorators.COUNT_CHANCE_HEIGHTMAP_IN_RANGE.configure(
+                    CountChanceInRangeDecoratorConfig(128, 192, 2, 0.0625f)
                 )
             )
         )

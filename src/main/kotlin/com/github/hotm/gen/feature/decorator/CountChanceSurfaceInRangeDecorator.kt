@@ -14,15 +14,15 @@ import java.util.stream.Stream
  * Picks an X and Z location within the given chunk and then picks one of the many potential surface Y levels within the
  * requested range.
  */
-class CountChanceSurfaceInRangeDecorator(codec: Codec<CountChanceSurfaceInRangeDecoratorConfig>) :
-    Decorator<CountChanceSurfaceInRangeDecoratorConfig>(codec) {
+class CountChanceSurfaceInRangeDecorator(codec: Codec<CountChanceInRangeDecoratorConfig>) :
+    Decorator<CountChanceInRangeDecoratorConfig>(codec) {
     private val levels: ThreadLocal<IntArrayList> = ThreadLocal.withInitial { IntArrayList() }
 
     override fun getPositions(
         world: WorldAccess,
         generator: ChunkGenerator,
         random: Random,
-        config: CountChanceSurfaceInRangeDecoratorConfig,
+        config: CountChanceInRangeDecoratorConfig,
         pos: BlockPos
     ): Stream<BlockPos?> {
         return IntStream.range(0, config.count).filter {
