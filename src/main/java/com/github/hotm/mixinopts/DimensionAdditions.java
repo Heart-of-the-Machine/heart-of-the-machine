@@ -1,5 +1,6 @@
 package com.github.hotm.mixinopts;
 
+import com.github.hotm.gen.HotMDimensions;
 import com.github.hotm.mixin.ChunkGeneratorTypeInvoker;
 import com.github.hotm.mixin.DimensionTypeInvoker;
 import net.minecraft.block.BlockState;
@@ -73,10 +74,15 @@ public class DimensionAdditions {
     }
 
     public static void setupDimensionOptions(long seed, SimpleRegistry<DimensionOptions> optionsRegistry) {
+        // Make sure dimensions are registered in time.
+        HotMDimensions.INSTANCE.register();
+
+        System.out.println("HotM Adding Dimensions:");
         for (DimensionAddition addition : ADDITIONS) {
             optionsRegistry.add(addition.getOptionsRegistryKey(), new DimensionOptions(addition::getDimensionType,
                     addition.getChunkGeneratorSupplier().getChunkGenerator(seed)));
             optionsRegistry.markLoaded(addition.getOptionsRegistryKey());
+            System.out.println("    " + addition.getOptionsRegistryKey());
         }
     }
 

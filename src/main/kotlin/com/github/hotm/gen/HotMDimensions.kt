@@ -24,6 +24,8 @@ import java.util.*
  * Initializes and registers dimension functionality.
  */
 object HotMDimensions {
+    private var registered = false
+
     /**
      * Key used to reference the Nectere dimension.
      */
@@ -92,9 +94,22 @@ object HotMDimensions {
     }
 
     /**
-     * Registers the world generator for the Nectere dimension.
+     * Calls this Registers this mods dimensions.
+     *
+     * Actual registration happens in a separate method that is protected from being called twice so that servers, which
+     * query dimensions before mods are loaded, can call this register method when loading.
      */
     fun register() {
+        if (!registered) {
+            registered = true
+            registerImpl()
+        }
+    }
+
+    /**
+     * Registers the world generator for the Nectere dimension.
+     */
+    private fun registerImpl() {
         Registry.register(
             Registry.CHUNK_GENERATOR,
             Identifier(HotMConstants.MOD_ID, "nectere"),
