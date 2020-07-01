@@ -24,6 +24,8 @@ import java.util.*;
  * Used to register a new dimension with the dimension mixin.
  */
 public class DimensionAdditions {
+    private static final String FORCE_DIMENSION_FLAG = "force-hotm";
+
     private static final List<DimensionAddition> ADDITIONS = new ArrayList<>();
     private static final Map<RegistryKey<DimensionOptions>, DimensionAddition> DIMENSION_KEYS = new HashMap<>();
     private static final Map<RegistryKey<World>, String> SAVE_DIRS = new HashMap<>();
@@ -79,10 +81,14 @@ public class DimensionAdditions {
 
         System.out.println("HotM Adding Dimensions:");
         for (DimensionAddition addition : ADDITIONS) {
-            optionsRegistry.add(addition.getOptionsRegistryKey(), new DimensionOptions(addition::getDimensionType,
-                    addition.getChunkGeneratorSupplier().getChunkGenerator(seed)));
-            optionsRegistry.markLoaded(addition.getOptionsRegistryKey());
-            System.out.println("    " + addition.getOptionsRegistryKey());
+            if (!optionsRegistry.containsId(addition.getOptionsRegistryKey().getValue())) {
+                optionsRegistry.add(addition.getOptionsRegistryKey(), new DimensionOptions(addition::getDimensionType,
+                        addition.getChunkGeneratorSupplier().getChunkGenerator(seed)));
+                optionsRegistry.markLoaded(addition.getOptionsRegistryKey());
+                System.out.println("    " + addition.getOptionsRegistryKey());
+            } else {
+                System.out.println("    " + addition.getOptionsRegistryKey() + " : ALREADY REGISTERED");
+            }
         }
     }
 
@@ -129,5 +135,16 @@ public class DimensionAdditions {
         }
 
         return true;
+    }
+
+    public static boolean shouldForceDimensions() {
+        File flag = new File(FORCE_DIMENSION_FLAG);
+        if (flag.exists()) {
+            if (!flag.delete()) {
+                System.err.println("Error deleting force dimension flag file: " + flag.getAbsolutePath());
+            }
+            return true;
+        }
+        return false;
     }
 }
