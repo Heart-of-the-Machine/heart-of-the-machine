@@ -24,7 +24,7 @@ import java.util.*;
  * Used to register a new dimension with the dimension mixin.
  */
 public class DimensionAdditions {
-    private static final String FORCE_DIMENSION_FLAG = "force-hotm";
+    public static final String FORCE_DIMENSION_FLAG = "force-hotm";
 
     private static final List<DimensionAddition> ADDITIONS = new ArrayList<>();
     private static final Map<RegistryKey<DimensionOptions>, DimensionAddition> DIMENSION_KEYS = new HashMap<>();

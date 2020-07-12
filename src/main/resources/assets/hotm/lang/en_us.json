@@ -34,5 +34,6 @@
   "block.hotm.thinking_stone_brick_stairs": "Thinking Stone Brick Stairs",
   "block.hotm.thinking_stone_tiles": "Thinking Stone Tiles",
   "block.hotm.thinking_stone_tile_slab": "Thinking Stone Tile Slab",
-  "block.hotm.thinking_stone_tile_stairs": "Thinking Stone Tile Stairs"
+  "block.hotm.thinking_stone_tile_stairs": "Thinking Stone Tile Stairs",
+  "error.chat.missing_nectere": "The Nectere dimension appears to be missing in this server's world. You can force the server to create it by creating a file named '%s' in the same directory as the server.jar file and restarting the server. Then Nectere portals and the Nectere dimension should work properly."
 }
