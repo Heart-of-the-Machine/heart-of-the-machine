@@ -5,6 +5,7 @@
   "mixins": [
     "DimensionOptionsMixin",
     "DimensionTypeMixin",
+    "MinecraftServerMixin",
     "StructuresConfigMixin",
     "ChunkGeneratorTypeInvoker",
     "DimensionTypeInvoker",
@@ -14,7 +15,6 @@
   "client": [
   ],
   "server": [
-    "MinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
