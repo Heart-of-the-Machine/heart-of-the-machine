@@ -11,3 +11,18 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - .gradle/loom-cache/
+
+before_deploy:
+  - gradle build
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_RELEASE_TOKEN
+  file_glob: true
+  file: build/lib/*
+  on:
+    tags: true
+  skip_cleanup: true
+
+after_deploy:
+  - gradle curseforge
