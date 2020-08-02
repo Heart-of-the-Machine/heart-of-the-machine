@@ -24,8 +24,6 @@ import java.util.*;
  * Used to register a new dimension with the dimension mixin.
  */
 public class DimensionAdditions {
-    public static final String FORCE_DIMENSION_FLAG = "force-hotm";
-
     private static final List<DimensionAddition> ADDITIONS = new ArrayList<>();
     private static final Map<RegistryKey<DimensionOptions>, DimensionAddition> DIMENSION_KEYS = new HashMap<>();
     private static final Map<RegistryKey<World>, String> SAVE_DIRS = new HashMap<>();
@@ -137,14 +135,9 @@ public class DimensionAdditions {
         return true;
     }
 
-    public static boolean shouldForceDimensions() {
-        File flag = new File(FORCE_DIMENSION_FLAG);
-        if (flag.exists()) {
-            if (!flag.delete()) {
-                System.err.println("Error deleting force dimension flag file: " + flag.getAbsolutePath());
-            }
-            return true;
-        }
-        return false;
+    public static void addDimensionToServer(MutableMinecraftServer server, RegistryKey<DimensionOptions> optionsKey) {
+        DimensionAddition addition = DIMENSION_KEYS.get(optionsKey);
+        server.hotm_addDimension(optionsKey, new DimensionOptions(addition::getDimensionType,
+                addition.getChunkGeneratorSupplier().getChunkGenerator(server.hotm_getSeed())));
     }
 }
