@@ -1,6 +1,6 @@
 package com.github.hotm.mixin;
 
-import com.github.hotm.mixinopts.StructureAdditions;
+import com.github.hotm.mixinapi.StructureAdditions;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.world.gen.chunk.StructureConfig;
 import net.minecraft.world.gen.chunk.StructuresConfig;

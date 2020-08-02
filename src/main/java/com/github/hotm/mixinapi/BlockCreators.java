@@ -1,4 +1,4 @@
-package com.github.hotm.mixinopts;
+package com.github.hotm.mixinapi;
 
 import com.github.hotm.mixin.StairsBlockInvoker;
 import net.minecraft.block.AbstractBlock;

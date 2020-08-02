@@ -3,7 +3,7 @@ package com.github.hotm.gen
 import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
 import com.github.hotm.HotMLog
-import com.github.hotm.mixinopts.DimensionAdditions
+import com.github.hotm.mixinapi.DimensionAdditions
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions
 import net.minecraft.block.Blocks
 import net.minecraft.block.pattern.BlockPattern

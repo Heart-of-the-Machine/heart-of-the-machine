@@ -1,6 +1,6 @@
 package com.github.hotm.mixin;
 
-import com.github.hotm.mixinopts.DimensionAdditions;
+import com.github.hotm.mixinapi.DimensionAdditions;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.dimension.DimensionOptions;

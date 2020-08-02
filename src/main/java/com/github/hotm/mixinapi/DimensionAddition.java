@@ -1,4 +1,4 @@
-package com.github.hotm.mixinopts;
+package com.github.hotm.mixinapi;
 
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.dimension.DimensionOptions;

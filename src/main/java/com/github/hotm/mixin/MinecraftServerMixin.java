@@ -1,6 +1,6 @@
 package com.github.hotm.mixin;
 
-import com.github.hotm.mixinopts.DimensionAdditions;
+import com.github.hotm.mixinapi.DimensionAdditions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.world.SaveProperties;

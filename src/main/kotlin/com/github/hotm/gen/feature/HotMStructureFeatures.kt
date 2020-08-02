@@ -1,9 +1,7 @@
 package com.github.hotm.gen.feature
 
-import com.github.hotm.mixinopts.StructureAdditions
+import com.github.hotm.mixinapi.StructureAdditions
 import net.minecraft.world.gen.GenerationStep
-import net.minecraft.world.gen.chunk.StructureConfig
-import net.minecraft.world.gen.chunk.StructuresConfig
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 
 /**

@@ -1,7 +1,7 @@
 package com.github.hotm
 
 import com.github.hotm.blocks.NecterePortalBlock
-import com.github.hotm.mixinopts.BlockCreators
+import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.Material
