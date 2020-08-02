@@ -13,7 +13,7 @@ cache:
     - .gradle/loom-cache/
 
 before_deploy:
-  - gradle build
+  - ./gradlew build
 
 deploy:
   provider: releases
@@ -25,4 +25,4 @@ deploy:
   skip_cleanup: true
 
 after_deploy:
-  - gradle curseforge
+  - ./gradlew curseforge

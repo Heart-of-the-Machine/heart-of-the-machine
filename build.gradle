@@ -110,6 +110,9 @@ if (System.getenv("CURSE_API_KEY") != null) {
                 mainArtifact(remapJar)
             }
         }
+        options {
+            forgeGradleIntegration = false
+        }
     }
 }
 
