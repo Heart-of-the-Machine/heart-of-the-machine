@@ -4,6 +4,7 @@ import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
 import com.github.hotm.HotMLog
 import com.github.hotm.mixinapi.DimensionAdditions
+import com.github.hotm.mixinapi.MutableMinecraftServer
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions
 import net.minecraft.block.Blocks
 import net.minecraft.block.pattern.BlockPattern
@@ -11,10 +12,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.tag.BlockTags
-import net.minecraft.text.LiteralText
-import net.minecraft.text.Style
-import net.minecraft.text.TextColor
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
@@ -157,22 +154,15 @@ object HotMDimensions {
                     server.getWorld(World.OVERWORLD)
                 ) { oldEntity, destination, _, _, _ -> findTeleportationDestination(oldEntity, destination) }
             } else {
+                if (server.getWorld(NECTERE_KEY) == null && entity is PlayerEntity && server is MutableMinecraftServer) {
+                    HotMLog.log.info("A player has walked through a nectere portal. Adding the Nectere dimension...")
+                    DimensionAdditions.addDimensionToServer(server, NECTERE_OPTIONS_KEY)
+                }
+
                 val nectereWorld = server.getWorld(NECTERE_KEY)
 
                 if (nectereWorld == null) {
-                    if (entity is PlayerEntity) {
-                        entity.sendMessage(
-                            TranslatableText(
-                                "error.chat.missing_nectere",
-                                LiteralText(DimensionAdditions.FORCE_DIMENSION_FLAG).setStyle(
-                                    Style.EMPTY.withItalic(true).withColor(TextColor.fromRgb(0x0000FF))
-                                )
-                            ).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFF0000))), false
-                        )
-                    }
-
-                    HotMLog.log.warn("An entity is attempting to travel through a Nectere portal, but the Nectere dimension does not exist in this world!")
-                    HotMLog.log.warn("In order to create the Nectere dimension, place a file called 'force-hotm' in the same directory as the server's server.jar file and restart the server.")
+                    HotMLog.log.error("Unable to add the Nectere dimension!")
                 } else {
                     entity.changeDimension(nectereWorld)
                 }
