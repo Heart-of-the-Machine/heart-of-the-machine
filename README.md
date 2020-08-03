@@ -1,7 +1,9 @@
-# Heart of the Machine &emsp; [![Travis Status]][Travis]
+# Heart of the Machine &emsp; [![Travis Status]][Travis] [![Discord Status]][Discord]
 
 [Travis Status]: https://img.shields.io/travis/Heart-of-the-Machine/heart-of-the-machine/master?logo=travis&style=flat-square
 [Travis]: https://travis-ci.org/Heart-of-the-Machine/heart-of-the-machine
+[Discord Status]: https://img.shields.io/discord/720635296131055697?logo=discord&logoColor=white&style=flat-square
+[Discord]: https://discord.gg/hU4us4D
 
 Heart of the Machine is a ModFest 1.16 entry.
 
