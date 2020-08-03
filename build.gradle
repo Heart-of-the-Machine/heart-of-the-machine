@@ -102,12 +102,10 @@ if (System.getenv("CURSE_API_KEY") != null) {
             releaseType = project.mod_release_type
             addGameVersion project.minecraft_version
             addGameVersion 'Java 8'
+            mainArtifact(remapJar)
             relations {
                 requiredDependency "fabric-api"
                 requiredDependency "fabric-language-kotlin"
-            }
-            afterEvaluate {
-                mainArtifact(remapJar.archivePath)
             }
         }
         options {
