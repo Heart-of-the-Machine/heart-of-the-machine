@@ -19,7 +19,7 @@ deploy:
   provider: releases
   api_key: $GITHUB_RELEASE_TOKEN
   file_glob: true
-  file: build/lib/*
+  file: build/libs/*
   on:
     tags: true
   skip_cleanup: true

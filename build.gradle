@@ -107,7 +107,7 @@ if (System.getenv("CURSE_API_KEY") != null) {
                 requiredDependency "fabric-language-kotlin"
             }
             afterEvaluate {
-                mainArtifact(remapJar)
+                mainArtifact(remapJar.archivePath)
             }
         }
         options {
