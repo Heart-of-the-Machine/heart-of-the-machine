@@ -1,7 +1,9 @@
-# Heart of the Machine &emsp; [![Website Icon]][Website] [![Travis Status]][Travis] [![Discord Status]][Discord] [![CurseForge Status]][CurseForge]
+# Heart of the Machine &emsp; [![Website Icon]][Website] [![Trello Icon]][Trello] [![Travis Status]][Travis] [![Discord Status]][Discord] [![CurseForge Status]][CurseForge]
 
-[Website Icon]: https://img.shields.io/badge/Heart%20of%20the%20Machine-website-blue?style=flat-square
+[Website Icon]: https://github.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/blob/master/icons/Plassein-Machine-Casing-tbg-C4096-20x20.png
 [Website]: https://heart-of-the-machine.github.io/
+[Trello Icon]: https://github.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/blob/master/icons/trello-mark-blue-20px.png
+[Trello]: https://trello.com/b/LM2DHkuS
 [Travis Status]: https://img.shields.io/travis/Heart-of-the-Machine/heart-of-the-machine/master?logo=travis&style=flat-square
 [Travis]: https://travis-ci.org/Heart-of-the-Machine/heart-of-the-machine
 [Discord Status]: https://img.shields.io/discord/720635296131055697?logo=discord&logoColor=white&style=flat-square
