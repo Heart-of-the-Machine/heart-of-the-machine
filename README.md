@@ -11,6 +11,9 @@
 
 Heart of the Machine is a ModFest 1.16 entry.
 
+[CurseForge](https://www.curseforge.com/minecraft/mc-mods/heart-of-the-machine) </br>
+[Trello](https://trello.com/b/LM2DHkuS)
+
 Heart of the Machine adds a whole new dimension of abandoned machinery to explore. Maybe you can uncover the secrets of
 this dimension and make use of them somehow.
 
