@@ -1,9 +1,13 @@
-# Heart of the Machine &emsp; [![Travis Status]][Travis] [![Discord Status]][Discord]
+# Heart of the Machine &emsp; [![Website Icon]][Website] [![Travis Status]][Travis] [![Discord Status]][Discord] [![CurseForge Status]][CurseForge]
 
+[Website Icon]: https://img.shields.io/badge/Heart%20of%20the%20Machine-website-blue?style=flat-square
+[Website]: https://heart-of-the-machine.github.io/
 [Travis Status]: https://img.shields.io/travis/Heart-of-the-Machine/heart-of-the-machine/master?logo=travis&style=flat-square
 [Travis]: https://travis-ci.org/Heart-of-the-Machine/heart-of-the-machine
 [Discord Status]: https://img.shields.io/discord/720635296131055697?logo=discord&logoColor=white&style=flat-square
 [Discord]: https://discord.gg/hU4us4D
+[CurseForge Status]: http://cf.way2muchnoise.eu/391897.svg?badge_style=flat
+[CurseForge]: https://www.curseforge.com/minecraft/mc-mods/heart-of-the-machine
 
 Heart of the Machine is a ModFest 1.16 entry.
 
