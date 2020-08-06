@@ -4,7 +4,7 @@ import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
 import com.github.hotm.gen.feature.decorator.CountChanceInRangeDecoratorConfig
 import com.github.hotm.gen.feature.decorator.CountHeightmapInRangeDecoratorConfig
-import net.minecraft.util.Identifier
+import com.github.hotm.gen.feature.segment.*
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
@@ -22,6 +22,11 @@ object HotMBiomeFeatures {
     private val THINKING_STONE = HotMBlocks.THINKING_STONE.defaultState
     private val PLASSEIN_STEM = HotMBlocks.PLASSEIN_STEM.defaultState
     private val PLASSEIN_BLOOM = HotMBlocks.PLASSEIN_BLOOM.defaultState
+
+    /**
+     * Creates a segmented feature such as a plassein tree or other plant.
+     */
+    val SEGMENTED_FEATURE = register("segmented_feature", SegmentedFeature(SegmentedFeatureConfig.CODEC))
 
     /**
      * Refuse pile feature. This is similar to the vanilla FOREST_ROCK feature but generates in more places.
@@ -80,6 +85,31 @@ object HotMBiomeFeatures {
     }
 
     /**
+     * Adds Plassein tree things.
+     */
+    fun addPlasseinSurfaceTrees(biome: Biome) {
+        biome.addFeature(
+            GenerationStep.Feature.VEGETAL_DECORATION,
+            SEGMENTED_FEATURE.configure(
+                SegmentedFeatureConfig(
+                    PlasseinStemSegment(
+                        PLASSEIN_STEM,
+                        20,
+                        15,
+                        PlasseinBranchSegment(PLASSEIN_STEM, 4, 5, PlasseinLeafSegment(PLASSEIN_BLOOM, 3, 3, 1, 1)),
+                        PlasseinLeafSegment(PLASSEIN_BLOOM, 8, 6, 3, 3)
+                    )
+                )
+            )
+                .createDecoratedFeature(
+                    HotMDecorators.COUNT_CHANCE_HEIGHTMAP_IN_RANGE.configure(
+                        CountChanceInRangeDecoratorConfig(100, 200, 2, 0.25f)
+                    )
+                )
+        )
+    }
+
+    /**
      * Adds crystal growths.
      */
     fun addCrystalGrowths(biome: Biome) {
@@ -111,7 +141,7 @@ object HotMBiomeFeatures {
     }
 
     /**
-     * Adds crystal growths.
+     * Adds server towers.
      */
     fun addServerTowers(biome: Biome) {
         biome.addFeature(
@@ -160,7 +190,7 @@ object HotMBiomeFeatures {
     }
 
     /**
-     * Adds crystal growths.
+     * Adds transmission towers.
      */
     fun addTransmissionTowers(biome: Biome) {
         biome.addFeature(
@@ -170,10 +200,10 @@ object HotMBiomeFeatures {
                     listOf(
                         TRANSMISSION_TOWER.configure(
                             TransmissionTowerConfig(
-                                6,
-                                25,
-                                1,
-                                8,
+                                30,
+                                60,
+                                5,
+                                15,
                                 4,
                                 0.125f,
                                 0.125f,
@@ -186,10 +216,10 @@ object HotMBiomeFeatures {
                     ),
                     TRANSMISSION_TOWER.configure(
                         TransmissionTowerConfig(
-                            6,
-                            25,
-                            1,
-                            8,
+                            30,
+                            60,
+                            5,
+                            15,
                             4,
                             0.125f,
                             0.125f,
@@ -225,6 +255,6 @@ object HotMBiomeFeatures {
      * Used for statically registering a features.
      */
     private fun <F : Feature<*>> register(name: String, feature: F): F {
-        return Registry.register(Registry.FEATURE, Identifier(HotMConstants.MOD_ID, name), feature)
+        return Registry.register(Registry.FEATURE, HotMConstants.identifier(name), feature)
     }
 }

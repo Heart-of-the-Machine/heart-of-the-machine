@@ -18,6 +18,6 @@ object HotMBiomes {
      * Does the registering of biomes.
      */
     fun register() {
-        Registry.register(Registry.BIOME, Identifier(HotMConstants.MOD_ID, "thinking_forest"), THINKING_FOREST)
+        Registry.register(Registry.BIOME, HotMConstants.identifier("thinking_forest"), THINKING_FOREST)
     }
 }

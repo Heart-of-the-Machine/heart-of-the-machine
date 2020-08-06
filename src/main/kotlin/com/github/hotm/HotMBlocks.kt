@@ -11,7 +11,6 @@ import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.sound.BlockSoundGroup
-import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
 /**
@@ -185,12 +184,9 @@ object HotMBlocks {
 
     private fun registerAll(vararg blocks: Pair<Pair<Block, String>, Item.Settings>) {
         for (block in blocks) {
-            Registry.register(Registry.BLOCK, Identifier(HotMConstants.MOD_ID, block.first.second), block.first.first)
-            Registry.register(
-                Registry.ITEM,
-                Identifier(HotMConstants.MOD_ID, block.first.second),
-                BlockItem(block.first.first, block.second)
-            )
+            val identifier = HotMConstants.identifier(block.first.second)
+            Registry.register(Registry.BLOCK, identifier, block.first.first)
+            Registry.register(Registry.ITEM, identifier, BlockItem(block.first.first, block.second))
         }
     }
 }

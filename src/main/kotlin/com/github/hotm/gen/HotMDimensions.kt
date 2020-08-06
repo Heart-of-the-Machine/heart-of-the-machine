@@ -33,12 +33,12 @@ object HotMDimensions {
      * Key used to reference the Nectere dimension.
      */
     val NECTERE_KEY: RegistryKey<World> =
-        RegistryKey.of(Registry.DIMENSION, Identifier(HotMConstants.MOD_ID, "nectere"))
+        RegistryKey.of(Registry.DIMENSION, HotMConstants.identifier("nectere"))
 
     /**
      * Key used to reference the Nectere dimension options.
      */
-    val NECTERE_OPTIONS_KEY = RegistryKey.of(Registry.DIMENSION_OPTIONS, Identifier(HotMConstants.MOD_ID, "nectere"))
+    val NECTERE_OPTIONS_KEY = RegistryKey.of(Registry.DIMENSION_OPTIONS, HotMConstants.identifier("nectere"))
 
     /**
      * Dimension options that describe the Nectere dimension.
@@ -64,7 +64,7 @@ object HotMDimensions {
     /**
      * Key used to reference the Nectere dimension type.
      */
-    val NECTERE_TYPE_KEY = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, Identifier(HotMConstants.MOD_ID, "nectere"))
+    val NECTERE_TYPE_KEY = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, HotMConstants.identifier("nectere"))
 
     /**
      * ChunkGeneratorType preset for the Nectere dimension.
@@ -115,7 +115,7 @@ object HotMDimensions {
     private fun registerImpl() {
         Registry.register(
             Registry.CHUNK_GENERATOR,
-            Identifier(HotMConstants.MOD_ID, "nectere"),
+            HotMConstants.identifier("nectere"),
             NectereChunkGenerator.CODEC
         )
 

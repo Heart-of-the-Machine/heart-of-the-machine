@@ -21,13 +21,9 @@ class RefusePileFeature(codec: Codec<PileFeatureConfig?>?) : Feature<PileFeature
 
         while (true) {
             if (blockPosMut.y > 3) {
-                if (serverWorldAccess.isAir(blockPosMut.down())) {
+                if (!FeatureUtils.isSurface(serverWorldAccess.getBlockState(blockPosMut.down()).block)) {
                     blockPosMut = blockPosMut.down()
                     continue
-                }
-
-                if (serverWorldAccess.isWater(blockPosMut.down())) {
-                    return false
                 }
             }
 

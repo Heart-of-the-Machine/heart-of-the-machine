@@ -75,6 +75,10 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
         leafList: MutableCollection<BlockPos>,
         lampList: MutableCollection<BlockPos>
     ): Boolean {
+        if (!world.testBlockState(pos.down()) { FeatureUtils.isSurface(it.block) }) {
+            return false
+        }
+
         val height = random.nextInt(config.maxHeight - config.minHeight + 1) + config.minHeight
 
         val heights = Object2IntOpenHashMap<BlockPos>()
