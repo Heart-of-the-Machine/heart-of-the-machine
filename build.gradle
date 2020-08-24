@@ -15,9 +15,9 @@ group = project.maven_group
 minecraft {
 }
 
-
 repositories {
     maven { url = "http://maven.fabricmc.net/" }
+    maven { name = "BuildCraft"; url = "https://mod-buildcraft.com/maven" }
 }
 
 dependencies {
@@ -31,7 +31,11 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
+    modImplementation "com.terraformersmc:shapes:${shapes_version}"
+    include "com.terraformersmc:shapes:${shapes_version}"
+
     modRuntime "io.github.prospector:modmenu:1.12.1+build.15"
+    modRuntime "alexiil.mc.mod:simplepipes-all:0.4.0"
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 

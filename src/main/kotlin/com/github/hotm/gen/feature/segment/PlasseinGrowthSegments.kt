@@ -1,13 +1,15 @@
 package com.github.hotm.gen.feature.segment
 
 import com.github.hotm.gen.feature.FeatureUtils
-import com.github.hotm.gen.feature.segment.FeatureSegmentUtils.place
 import com.github.hotm.gen.feature.segment.FeatureSegmentUtils.tryFill
 import com.github.hotm.gen.feature.segment.FeatureSegmentUtils.tryPlace
 import com.github.hotm.util.CardinalDirection
-import com.github.hotm.util.Ellipsoid
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.terraformersmc.shapes.api.Position
+import com.terraformersmc.shapes.impl.Shapes
+import com.terraformersmc.shapes.impl.layer.pathfinder.SubtractLayer
+import com.terraformersmc.shapes.impl.layer.transform.TranslateLayer
 import net.minecraft.block.BlockState
 import net.minecraft.block.PillarBlock
 import net.minecraft.util.math.BlockPos
@@ -216,33 +218,14 @@ class PlasseinLeafSegment(
     ): Boolean {
         val radius = random.nextInt(radiusVariation + 1) + radiusMin
         val depth = random.nextInt(depthVariation + 1) + depthMin
-        val include = Ellipsoid(
-            pos.down(radius / 2 - (depth - depth / 2) + 1),
-            radius.toDouble() * 2,
-            radius.toDouble(),
-            radius.toDouble() * 2
-        )
-        val exclude = Ellipsoid(
-            pos.down(radius / 2 + depth / 2 + 1),
-            radius.toDouble() * 2,
-            radius.toDouble(),
-            radius.toDouble() * 2
-        )
 
-        val max = pos.up(depth - depth / 2 - 1).south(radius).east(radius)
-        val min = pos.down(radius + depth / 2 + 1).north(radius).west(radius)
-
-        val mutable = BlockPos.Mutable()
-        for (y in min.y..max.y) {
-            for (x in min.x..max.x) {
-                for (z in min.z..max.z) {
-                    mutable.set(x, y, z)
-                    if (include.isPosWithin(mutable) && !exclude.isPosWithin(mutable)) {
-                        place(blocks, mutable, BlockPlacement(leaf, false, 19, 10))
-                    }
-                }
-            }
-        }
+        // `applyLayer` seems to mutate the underlying shape so we need separate shapes here
+        val upper = Shapes.ellipsoid(radius.toDouble(), radius.toDouble(), radius.toDouble() / 2)
+            .applyLayer(TranslateLayer.of(Position.of(pos.down(radius / 2 - (depth - depth / 2)))))
+        val lower = Shapes.ellipsoid(radius.toDouble(), radius.toDouble(), radius.toDouble() / 2)
+            .applyLayer(TranslateLayer.of(Position.of(pos.down(radius / 2 + depth / 2))))
+        val bloom = upper.applyLayer(SubtractLayer(lower))
+        bloom.fill(SegmentFiller(blocks, BlockPlacement(leaf, false, 19, 10)))
 
         return true
     }

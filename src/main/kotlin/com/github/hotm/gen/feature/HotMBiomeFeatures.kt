@@ -94,16 +94,16 @@ object HotMBiomeFeatures {
                 SegmentedFeatureConfig(
                     PlasseinStemSegment(
                         PLASSEIN_STEM,
-                        20,
-                        15,
-                        PlasseinBranchSegment(PLASSEIN_STEM, 4, 5, PlasseinLeafSegment(PLASSEIN_BLOOM, 3, 3, 1, 1)),
-                        PlasseinLeafSegment(PLASSEIN_BLOOM, 8, 6, 3, 3)
+                        8,
+                        8,
+                        PlasseinBranchSegment(PLASSEIN_STEM, 2, 2, PlasseinLeafSegment(PLASSEIN_BLOOM, 2, 2, 1, 1)),
+                        PlasseinLeafSegment(PLASSEIN_BLOOM, 4, 3, 2, 2)
                     )
                 )
             )
                 .createDecoratedFeature(
                     HotMDecorators.COUNT_CHANCE_HEIGHTMAP_IN_RANGE.configure(
-                        CountChanceInRangeDecoratorConfig(100, 200, 2, 0.25f)
+                        CountChanceInRangeDecoratorConfig(100, 200, 24, 0.5f)
                     )
                 )
         )
