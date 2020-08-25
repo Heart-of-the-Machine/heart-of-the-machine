@@ -1,10 +1,13 @@
 package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMBlocks
+import com.github.hotm.HotMConfig
 import com.github.hotm.HotMConstants
+import com.github.hotm.HotMLog
 import com.github.hotm.gen.feature.decorator.CountChanceInRangeDecoratorConfig
 import com.github.hotm.gen.feature.decorator.CountHeightmapInRangeDecoratorConfig
 import com.github.hotm.gen.feature.segment.*
+import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
@@ -244,10 +247,9 @@ object HotMBiomeFeatures {
     fun register() {
         HotMStructureFeatures.register()
 
-        for (biome in Registry.BIOME) {
-            if (biome.category != Biome.Category.OCEAN && biome.category != Biome.Category.RIVER && biome.category != Biome.Category.NETHER && biome.category != Biome.Category.THEEND) {
-                biome.addStructureFeature(NECTERE_PORTAL)
-            }
+        for (biomeId in HotMConfig.CONFIG.necterePortalBiomes!!) {
+            val biome = Registry.BIOME[Identifier(biomeId)]
+            biome?.addStructureFeature(NECTERE_PORTAL) ?: HotMLog.log.warn("Unknown biome id: $biomeId")
         }
     }
 

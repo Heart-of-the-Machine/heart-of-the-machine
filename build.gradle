@@ -31,6 +31,8 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
+    modImplementation "org.yaml:snakeyaml:${yaml_version}"
+    include "org.yaml:snakeyaml:${yaml_version}"
     modImplementation "com.terraformersmc:shapes:${shapes_version}"
     include "com.terraformersmc:shapes:${shapes_version}"
 
