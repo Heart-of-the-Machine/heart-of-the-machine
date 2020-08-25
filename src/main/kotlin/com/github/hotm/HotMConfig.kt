@@ -6,6 +6,7 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
+import org.yaml.snakeyaml.introspector.PropertyUtils
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
@@ -22,7 +23,12 @@ class HotMConfig {
             private set
 
         fun load() {
-            val yaml = Yaml(Constructor(HotMConfig::class.java))
+            val constructor = Constructor(HotMConfig::class.java)
+            val propertyUtils = PropertyUtils()
+            propertyUtils.isSkipMissingProperties = true
+            // constructor's propertyUtils setter also sets propertyUtils for all its typeDescriptions
+            constructor.propertyUtils = propertyUtils
+            val yaml = Yaml(constructor)
 
             if (!CONFIG_DIR.exists()) {
                 CONFIG_DIR.mkdirs()
