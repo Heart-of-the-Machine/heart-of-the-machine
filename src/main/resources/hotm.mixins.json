@@ -3,6 +3,7 @@
   "package": "com.github.hotm.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ChunkGeneratorMixin",
     "DimensionOptionsMixin",
     "DimensionTypeMixin",
     "MinecraftServerMixin",
@@ -10,7 +11,8 @@
     "ChunkGeneratorTypeInvoker",
     "DimensionTypeInvoker",
     "StairsBlockInvoker",
-    "StructureFeatureAccessor"
+    "StructureFeatureAccessor",
+    "StructurePieceAccessor"
   ],
   "client": [
   ],

@@ -32,7 +32,7 @@ public class StructureAdditions {
             ImmutableMap<StructureFeature<?>, StructureConfig> defaultConfig) {
         ImmutableMap.Builder<StructureFeature<?>, StructureConfig> config = ImmutableMap.builder();
         config.putAll(defaultConfig);
-        config.put(HotMStructureFeatures.INSTANCE.getNECTERE_PORTAL(), new StructureConfig(32, 8, 103873));
+        HotMStructureFeatures.INSTANCE.addConfigs(config);
         return config.build();
     }
 }

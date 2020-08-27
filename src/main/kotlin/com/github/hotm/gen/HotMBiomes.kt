@@ -10,7 +10,7 @@ import net.minecraft.world.biome.Biome
  * Registers biomes for the Nectere dimension.
  */
 object HotMBiomes {
-    private val NECTERE_PORTAL_BIOMES = mutableListOf<Identifier>()
+    private val NECTERE_PORTAL_BLACKLIST_BIOMES = mutableSetOf<Identifier>()
     private val BIOMES = mutableMapOf<Identifier, Biome>()
 
     /**
@@ -28,17 +28,24 @@ object HotMBiomes {
     }
 
     /**
-     * Gets the list of biomes from HotM that should contain a Nectere portal.
+     * Gets the list of biomes from HotM that should not contain a Nectere portal.
      */
-    fun necterePortalBiomes(): List<Identifier> {
-        return NECTERE_PORTAL_BIOMES
+    fun necterePortalBlacklistBiomes(): Set<Identifier> {
+        return NECTERE_PORTAL_BLACKLIST_BIOMES
+    }
+
+    /**
+     * Gets all the Nectere biomes.
+     */
+    fun biomes(): Map<Identifier, Biome> {
+        return BIOMES
     }
 
     private fun <B : Biome> setup(biome: B, name: Identifier, portalable: Boolean): B {
         BIOMES[name] = biome
 
-        if (portalable) {
-            NECTERE_PORTAL_BIOMES += name
+        if (!portalable) {
+            NECTERE_PORTAL_BLACKLIST_BIOMES += name
         }
 
         return biome

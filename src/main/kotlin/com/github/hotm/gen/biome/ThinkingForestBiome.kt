@@ -3,6 +3,7 @@ package com.github.hotm.gen.biome
 import com.github.hotm.gen.HotMSurfaceConfigs
 import com.github.hotm.gen.feature.HotMBiomeFeatures
 import net.minecraft.sound.BiomeMoodSound
+import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.BiomeEffects
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder
@@ -15,7 +16,7 @@ class ThinkingForestBiome : Biome(
                 BiomeMoodSound.CAVE
             ).build()
         ).parent(null)
-) {
+), NectereBiome {
     init {
         HotMBiomeFeatures.addRefusePiles(this)
         HotMBiomeFeatures.addPlasseinGrowths(this)
@@ -24,4 +25,8 @@ class ThinkingForestBiome : Biome(
         HotMBiomeFeatures.addServerTowers(this)
         HotMBiomeFeatures.addTransmissionTowers(this)
     }
+
+    override val coordinateMultiplier = 8.0
+    override val targetWorld = World.OVERWORLD
+    override val isPortalable = true
 }

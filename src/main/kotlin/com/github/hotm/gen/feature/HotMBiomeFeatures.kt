@@ -3,19 +3,21 @@ package com.github.hotm.gen.feature
 import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConfig
 import com.github.hotm.HotMConstants
-import com.github.hotm.HotMLog
+import com.github.hotm.gen.biome.NectereBiome
 import com.github.hotm.gen.feature.decorator.CountChanceInRangeDecoratorConfig
 import com.github.hotm.gen.feature.decorator.CountHeightmapInRangeDecoratorConfig
 import com.github.hotm.gen.feature.segment.*
-import net.minecraft.util.Identifier
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.decorator.CountDecoratorConfig
 import net.minecraft.world.gen.decorator.Decorator
+import net.minecraft.world.gen.decorator.DecoratorConfig
 import net.minecraft.world.gen.decorator.RangeDecoratorConfig
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.FeatureConfig
 import net.minecraft.world.gen.feature.RandomFeatureConfig
 
 /**
@@ -57,9 +59,15 @@ object HotMBiomeFeatures {
     val TRANSMISSION_TOWER = register("transmission_tower", TransmissionTowerFeature(TransmissionTowerConfig.CODEC))
 
     /**
-     * Nectere portal structure feature.
+     * Nectere portal structure feature. (Only intended to be used in the Nectere dimension.)
      */
-    val NECTERE_PORTAL = HotMStructureFeatures.NECTERE_PORTAL.configure(DefaultFeatureConfig.INSTANCE)
+    val NECTERE_SIDE_NECTERE_PORTAL = HotMStructureFeatures.NECTERE_PORTAL.configure(DefaultFeatureConfig.INSTANCE)
+
+    /**
+     * Nectere portal feature. (Only intended to be used in dimensions that are not the Nectere dimension.)
+     */
+    val NON_NECTERE_SIDE_NECTERE_PORTAL =
+        register("nns_nectere_portal", NecterePortalFeature(DefaultFeatureConfig.CODEC))
 
     /**
      * Adds refuse piles similar to the mossy rocks in Giant Spruce Taigas.
@@ -241,16 +249,45 @@ object HotMBiomeFeatures {
         )
     }
 
+    private fun addNecterePortals(biome: Biome) {
+        biome.addFeature(
+            GenerationStep.Feature.SURFACE_STRUCTURES,
+            NON_NECTERE_SIDE_NECTERE_PORTAL.configure(FeatureConfig.DEFAULT)
+                .createDecoratedFeature(HotMDecorators.NECTERE_PORTAL.configure(DecoratorConfig.DEFAULT))
+        )
+    }
+
     /**
      * Register our structures with the existing biomes.
      */
     fun register() {
         HotMStructureFeatures.register()
 
-        for (biomeId in HotMConfig.CONFIG.necterePortalBiomes!!) {
-            val biome = Registry.BIOME[Identifier(biomeId)]
-            biome?.addStructureFeature(NECTERE_PORTAL) ?: HotMLog.log.warn("Unknown biome id: $biomeId")
+        for (biomeId in Registry.BIOME.ids) {
+            val biome = Registry.BIOME[biomeId]!!
+            if (biome is NectereBiome) {
+                if (biome.isPortalable) {
+                    biome.addStructureFeature(NECTERE_SIDE_NECTERE_PORTAL)
+                }
+            } else {
+                if (!HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(biomeId.toString())) {
+                    addNecterePortals(biome)
+                }
+            }
         }
+
+        RegistryEntryAddedCallback.event(Registry.BIOME)
+            .register(RegistryEntryAddedCallback { _, biomeId, biome ->
+                if (biome is NectereBiome) {
+                    if (biome.isPortalable) {
+                        biome.addStructureFeature(NECTERE_SIDE_NECTERE_PORTAL)
+                    }
+                } else {
+                    if (!HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(biomeId.toString())) {
+                        addNecterePortals(biome)
+                    }
+                }
+            })
     }
 
     /**

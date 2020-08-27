@@ -4,6 +4,7 @@ import com.github.hotm.HotMConstants
 import com.github.hotm.gen.feature.decorator.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.gen.decorator.NopeDecoratorConfig
 
 /**
  * Keeps track of the Heart of the Machine decorators.
@@ -25,5 +26,11 @@ object HotMDecorators {
         Registry.DECORATOR,
         HotMConstants.identifier("count_chance_heightmap_in_range"),
         CountChanceHeightmapInRangeDecorator(CountChanceInRangeDecoratorConfig.CODEC)
+    )
+
+    val NECTERE_PORTAL: NecterePortalDecorator = Registry.register(
+        Registry.DECORATOR,
+        HotMConstants.identifier("nectere_portal"),
+        NecterePortalDecorator(NopeDecoratorConfig.field_24891)
     )
 }

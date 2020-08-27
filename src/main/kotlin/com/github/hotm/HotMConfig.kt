@@ -45,21 +45,17 @@ class HotMConfig {
                 HotMConfig()
             }
 
-            if (config.necterePortalBiomes == null) {
+            if (config.necterePortalWorldGenBlacklistBiomes == null) {
                 val biomes = mutableListOf<String>()
 
                 for (biomeId in Registry.BIOME.ids) {
                     val biome = Registry.BIOME[biomeId]!!
-                    if (biome.category != Biome.Category.OCEAN && biome.category != Biome.Category.RIVER && biome.category != Biome.Category.NETHER && biome.category != Biome.Category.THEEND) {
+                    if (biome.category == Biome.Category.OCEAN || biome.category == Biome.Category.RIVER) {
                         biomes += biomeId.toString()
                     }
                 }
 
-                for (biomeId in HotMBiomes.necterePortalBiomes()) {
-                    biomes += biomeId.toString()
-                }
-
-                config.necterePortalBiomes = biomes
+                config.necterePortalWorldGenBlacklistBiomes = biomes
             }
 
             try {
@@ -72,5 +68,7 @@ class HotMConfig {
         }
     }
 
-    var necterePortalBiomes: MutableList<String>? = null
+    var necterePortalWorldGenBlacklistBiomes: MutableList<String>? = null
+
+    var generateMissingPortals = true
 }
