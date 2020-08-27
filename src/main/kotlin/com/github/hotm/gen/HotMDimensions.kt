@@ -26,7 +26,6 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.Heightmap
 import net.minecraft.world.World
-import net.minecraft.world.WorldAccess
 import net.minecraft.world.WorldView
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.source.FixedBiomeSource
@@ -338,11 +337,10 @@ object HotMDimensions {
      * Gets the non-Nectere-coordinates of all Nectere portals within this chunk.
      */
     fun getNonNecterePortalCoords(
-        currentWorld: WorldAccess,
         currentWorldKey: RegistryKey<World>,
         currentPos: ChunkPos,
-        nectereWorld: ServerWorld,
-        random: Random
+        heightFn: (Int, Int) -> Int,
+        nectereWorld: ServerWorld
     ): Stream<BlockPos> {
         if (currentWorldKey == NECTERE_KEY) {
             throw IllegalArgumentException("Cannot get non-Nectere portal gen coords in a Nectere world")
@@ -361,12 +359,11 @@ object HotMDimensions {
                         ).mapToObj { z -> ChunkPos(x, z) }
                     }.flatMap { necterePos ->
                         getNonNecterePortalCoordsForBiome(
-                            currentWorld,
                             currentPos,
+                            heightFn,
                             nectereWorld,
                             nectereBiome,
-                            necterePos,
-                            random
+                            necterePos
                         )
                     }
                 } else {
@@ -376,12 +373,11 @@ object HotMDimensions {
                     )
 
                     getNonNecterePortalCoordsForBiome(
-                        currentWorld,
                         currentPos,
+                        heightFn,
                         nectereWorld,
                         nectereBiome,
-                        necterePos,
-                        random
+                        necterePos
                     )
                 }
             } else {
@@ -394,12 +390,11 @@ object HotMDimensions {
      * Gets the non-Nectere-side location of all Nectere portals for the given Nectere-side chunk and Nectere-side biome.
      */
     private fun getNonNecterePortalCoordsForBiome(
-        currentWorld: WorldAccess,
         currentPos: ChunkPos,
+        heightFn: (Int, Int) -> Int,
         nectereWorld: ServerWorld,
         nectereBiome: NectereBiome,
-        necterePos: ChunkPos,
-        random: Random
+        necterePos: ChunkPos
     ): Stream<BlockPos> {
         val chunkRandom = ChunkRandom()
         val structureConfig =
@@ -445,7 +440,7 @@ object HotMDimensions {
                     val resPos = NecterePortalGen.unPortalPos(
                         BlockPos(
                             resX,
-                            NecterePortalGen.getPortalStructureY(currentWorld, resX, resZ, random),
+                            heightFn(resX, resZ) + NecterePortalGen.PORTAL_OFFSET_Y,
                             resZ
                         )
                     )

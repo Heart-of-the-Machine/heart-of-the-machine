@@ -8,7 +8,6 @@ import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockBox
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.world.Heightmap
 import net.minecraft.world.WorldAccess
 import java.util.*
 
@@ -16,6 +15,8 @@ object NecterePortalGen {
     const val PORTAL_OFFSET_X = 2
     const val PORTAL_OFFSET_Y = 1
     const val PORTAL_OFFSET_Z = 2
+
+    private const val MIN_ROOF_HEIGHT = 32
 
     fun portalPos(startPos: BlockPos): BlockPos {
         return startPos.add(PORTAL_OFFSET_X, PORTAL_OFFSET_Y, PORTAL_OFFSET_Z)
@@ -26,11 +27,36 @@ object NecterePortalGen {
     }
 
     fun getPortalStructureY(world: WorldAccess, x: Int, z: Int, random: Random): Int {
-        val worldHeight = world.getTopY(Heightmap.Type.WORLD_SURFACE_WG, x, z)
-        return if (worldHeight < 4) {
-            random.nextInt(124) + 4
-        } else {
-            worldHeight
+        val surfaces = mutableListOf<Int>()
+        val pos = BlockPos.Mutable(x, 0, z)
+        var prevAir = world.isAir(pos)
+        var roof = -1
+
+        for (y in 1..250) {
+            pos.y = y
+
+            if (world.getBlockState(pos).block == Blocks.BEDROCK && y > MIN_ROOF_HEIGHT) {
+                roof = y
+                break
+            }
+
+            val air = world.isAir(pos)
+            if (!prevAir && air) {
+                surfaces.add(y)
+            }
+            prevAir = air
+        }
+
+        return when {
+            surfaces.isEmpty() -> random.nextInt(
+                if (roof > MIN_ROOF_HEIGHT) {
+                    roof - 8
+                } else {
+                    124
+                }
+            ) + 4
+            roof > MIN_ROOF_HEIGHT -> surfaces[random.nextInt(surfaces.size)]
+            else -> surfaces.last()
         }
     }
 

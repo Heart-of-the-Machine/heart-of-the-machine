@@ -1,6 +1,7 @@
 package com.github.hotm.gen.feature.decorator
 
 import com.github.hotm.gen.HotMDimensions
+import com.github.hotm.gen.feature.NecterePortalGen
 import com.github.hotm.util.WorldUtils
 import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
@@ -24,11 +25,10 @@ class NecterePortalDecorator(codec: Codec<NopeDecoratorConfig>) : Decorator<Nope
         return if (serverWorld != null) {
             val nectereWorld = HotMDimensions.getNectereWorld(serverWorld.server)
             HotMDimensions.getNonNecterePortalCoords(
-                world,
                 serverWorld.registryKey,
                 ChunkPos(pos),
-                nectereWorld,
-                random
+                { resX, resZ -> NecterePortalGen.getPortalStructureY(world, resX, resZ, random) },
+                nectereWorld
             )
         } else {
             Stream.empty<BlockPos>()
