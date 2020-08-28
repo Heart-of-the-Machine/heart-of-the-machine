@@ -10,6 +10,8 @@ import com.github.hotm.mixin.StructureFeatureAccessor
 import com.github.hotm.mixinapi.DimensionAdditions
 import com.github.hotm.mixinapi.MutableMinecraftServer
 import com.google.common.collect.HashMultimap
+import com.google.common.collect.ImmutableList
+import com.mojang.datafixers.util.Pair
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.minecraft.block.Blocks
@@ -28,8 +30,8 @@ import net.minecraft.world.Heightmap
 import net.minecraft.world.World
 import net.minecraft.world.WorldView
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.source.FixedBiomeSource
 import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType
+import net.minecraft.world.biome.source.MultiNoiseBiomeSource
 import net.minecraft.world.gen.ChunkRandom
 import net.minecraft.world.gen.chunk.*
 import net.minecraft.world.gen.feature.FeatureConfig
@@ -114,6 +116,13 @@ object HotMDimensions {
     }
 
     /**
+     * Biome source preset for the Nectere dimension.
+     */
+    val NECTERE_BIOME_SOURCE_PRESET = MultiNoiseBiomeSource.Preset(HotMConstants.identifier("nectere")) { seed ->
+        createNectereBiomeSource(seed)
+    }
+
+    /**
      * Calls this Registers this mods dimensions.
      *
      * Actual registration happens in a separate method that is protected from being called twice so that servers, which
@@ -154,9 +163,20 @@ object HotMDimensions {
      */
     private fun createNectereGenerator(seed: Long): NectereChunkGenerator {
         return NectereChunkGenerator(
-            FixedBiomeSource(HotMBiomes.THINKING_FOREST),
+            NECTERE_BIOME_SOURCE_PRESET.getBiomeSource(seed),
             seed,
             NECTERE_CHUNK_GENERATOR_TYPE_PRESET.chunkGeneratorType
+        )
+    }
+
+    /**
+     * Constructs the biome source used for the Nectere dimension.
+     */
+    private fun createNectereBiomeSource(seed: Long): MultiNoiseBiomeSource {
+        return MultiNoiseBiomeSource(seed,
+            HotMBiomes.biomes().values.stream().flatMap { biome -> biome.streamNoises().map { Pair.of(it, biome) } }
+                .collect(ImmutableList.toImmutableList()),
+            Optional.of(NECTERE_BIOME_SOURCE_PRESET)
         )
     }
 
@@ -427,9 +447,9 @@ object HotMDimensions {
                 BlockPos(NecterePortalGen.getPortalX(portalChunk.x), 64, NecterePortalGen.getPortalZ(portalChunk.z))
 
             val biome = biomeSource.getBiomeForNoiseGen(
-                necterePortalPos.x,
-                necterePortalPos.y,
-                necterePortalPos.z
+                necterePortalPos.x shr 2,
+                necterePortalPos.y shr 2,
+                necterePortalPos.z shr 2
             )
 
             if (biome == nectereBiome) {
@@ -562,6 +582,7 @@ object HotMDimensions {
             } else {
                 Stream.empty()
             }
-        }.findFirst().orElse(null)
+        }.min(Comparator.comparing<BlockPos, Double> { portalPos -> portalPos.getSquaredDistance(currentPos) })
+            .orElse(null)
     }
 }

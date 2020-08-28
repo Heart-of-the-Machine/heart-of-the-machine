@@ -40,9 +40,9 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
             val structurePos = NecterePortalGen.unPortalPos(nonNecterePos)
             val biomeId = Registry.BIOME.getId(
                 nonNectereWorld.chunkManager.chunkGenerator.biomeSource.getBiomeForNoiseGen(
-                    structurePos.x,
-                    structurePos.y,
-                    structurePos.z
+                    structurePos.x shr 2,
+                    structurePos.y shr 2,
+                    structurePos.z shr 2
                 )
             )
 
@@ -78,9 +78,9 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
         featureConfig: DefaultFeatureConfig
     ): Boolean {
         val portalBiome = biomeSource.getBiomeForNoiseGen(
-            NecterePortalGen.getPortalX(chunkX),
-            64,
-            NecterePortalGen.getPortalZ(chunkZ)
+            NecterePortalGen.getPortalX(chunkX) shr 2,
+            64 shr 2,
+            NecterePortalGen.getPortalZ(chunkZ) shr 2
         )
         return portalBiome is NectereBiome && portalBiome.isPortalable
     }

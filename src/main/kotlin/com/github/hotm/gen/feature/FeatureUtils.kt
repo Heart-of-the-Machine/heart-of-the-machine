@@ -26,7 +26,7 @@ object FeatureUtils {
     }
 
     fun isNectereSurface(block: Block): Boolean {
-        return block == HotMSurfaceConfigs.SURFACE_BLOCK || block == HotMSurfaceConfigs.SUBSURFACE_BLOCK
+        return block == HotMSurfaceConfigs.RUSTED_SURFACE_BLOCK || block == HotMSurfaceConfigs.SURFACE_BLOCK
     }
 
     fun isNectereStone(block: Block): Boolean {
