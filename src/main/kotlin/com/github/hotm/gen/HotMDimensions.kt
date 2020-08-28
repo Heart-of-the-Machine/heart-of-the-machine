@@ -186,7 +186,7 @@ object HotMDimensions {
     /**
      * Performs a teleportation between the Overworld and the Nectere.
      *
-     * @return whether the portal that attempted to teleport the entity is functional.
+     * @return whether the portal that attempted to teleport the entity is in a valid location.
      */
     fun attemptNectereTeleportation(entity: Entity, world: World, portalPos: BlockPos): Boolean {
         return (world as? ServerWorld)?.let { serverWorld ->

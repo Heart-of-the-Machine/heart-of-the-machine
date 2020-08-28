@@ -1,5 +1,6 @@
 package com.github.hotm.blocks
 
+import com.github.hotm.HotMBlocks
 import com.github.hotm.gen.HotMDimensions
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -9,6 +10,8 @@ import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.entity.Entity
 import net.minecraft.entity.ai.pathing.NavigationType
 import net.minecraft.item.ItemPlacementContext
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvents
 import net.minecraft.state.StateManager
 import net.minecraft.util.BlockMirror
 import net.minecraft.util.BlockRotation
@@ -78,8 +81,19 @@ class NecterePortalBlock(settings: Settings) : FacingBlock(settings) {
     }
 
     override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
-        if (state.get(FACING) == Direction.UP && !entity.hasVehicle() && !entity.hasPassengers() && entity.canUsePortals()) {
-            HotMDimensions.attemptNectereTeleportation(entity, world, pos)
+        val down = pos.down()
+        if (!world.isClient && world.getBlockState(down).block != HotMBlocks.NECTERE_PORTAL
+            && world.isTopSolid(down, entity) && !entity.hasVehicle() && !entity.hasPassengers()
+            && entity.canUsePortals()
+        ) {
+            if (!HotMDimensions.attemptNectereTeleportation(entity, world, pos)) {
+                if (entity.netherPortalCooldown > 0) {
+                    entity.netherPortalCooldown = entity.defaultNetherPortalCooldown
+                } else {
+                    world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f)
+                    entity.netherPortalCooldown = entity.defaultNetherPortalCooldown
+                }
+            }
         }
     }
 }
