@@ -19,7 +19,8 @@ import net.minecraft.util.registry.Registry
  * Static block access and initialization.
  */
 object HotMBlocks {
-    val HOTM_BUILDING_ITEM_GROUP = FabricItemGroupBuilder.build(HotMConstants.identifier("building"), HotMBlocks::mainGroupItem)
+    val HOTM_BUILDING_ITEM_GROUP =
+        FabricItemGroupBuilder.build(HotMConstants.identifier("building"), HotMBlocks::mainGroupItem)
 
     private val HOTM_BUILDING_ITEM_SETTINGS = Item.Settings().group(HOTM_BUILDING_ITEM_GROUP)
 
@@ -105,11 +106,12 @@ object HotMBlocks {
      * Plassein Growth Blocks.
      */
     val PLASSEIN_BLOOM = Block(
-        FabricBlockSettings.of(Material.LEAVES).requiresTool().strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOL)
+        FabricBlockSettings.of(Material.LEAVES).strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOL)
             .nonOpaque()
     )
     val PLASSEIN_STEM = PillarBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOD)
+        FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
+            .sounds(BlockSoundGroup.WOOD)
     )
 
     /*

@@ -15,3 +15,4 @@ For Minecraft 1.16.1
   otherwise in a valid location. This config option is `generateMissingPortals`.
 * Made portals play a sound when a player tries to enter them if they are in an invalid or 'dead' location.
 * Added creative tab for Heart of the Machine's blocks and items.
+* Fixed Plassein being only broken with pickaxes.
