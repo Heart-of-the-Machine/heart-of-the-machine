@@ -1,5 +1,6 @@
 package com.github.hotm.gen
 
+import com.github.hotm.HotMConfig
 import com.mojang.datafixers.util.Function3
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -604,7 +605,11 @@ class NectereChunkGenerator private constructor(
                         instance,
                         instance.stable(Function3 { biomeSource, l, chunkGeneratorType ->
                             NectereChunkGenerator(
-                                biomeSource,
+                                if (HotMConfig.CONFIG.forceNectereBiomeSource) {
+                                    HotMDimensions.NECTERE_BIOME_SOURCE_PRESET.getBiomeSource(l)
+                                } else {
+                                    biomeSource
+                                },
                                 l,
                                 chunkGeneratorType
                             )

@@ -19,10 +19,9 @@ class HotMConfig {
         private val CONFIG_DIR = FABRIC.configDirectory ?: File("config")
         private val CONFIG_FILE = File(CONFIG_DIR, "hotm.yml")
 
-        lateinit var CONFIG: HotMConfig
-            private set
+        val CONFIG: HotMConfig
 
-        fun load() {
+        init {
             val constructor = Constructor(HotMConfig::class.java)
             val propertyUtils = PropertyUtils()
             propertyUtils.isSkipMissingProperties = true
@@ -69,6 +68,8 @@ class HotMConfig {
     }
 
     var necterePortalWorldGenBlacklistBiomes: MutableList<String>? = null
+
+    var forceNectereBiomeSource = true
 
     var generateMissingPortals = true
 }

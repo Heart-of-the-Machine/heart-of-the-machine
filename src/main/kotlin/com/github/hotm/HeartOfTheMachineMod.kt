@@ -11,7 +11,7 @@ import com.github.hotm.gen.feature.HotMStructurePieces
  */
 @Suppress("unused")
 fun init() {
-    HotMConfig.load()
+    HotMConfig.CONFIG
     HotMBlocks.register()
     HotMBiomes.register()
     HotMDimensions.register()
