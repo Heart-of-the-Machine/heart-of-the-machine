@@ -3,6 +3,7 @@ package com.github.hotm
 import com.github.hotm.blocks.NecterePortalBlock
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.Material
@@ -10,7 +11,7 @@ import net.minecraft.block.PillarBlock
 import net.minecraft.block.SlabBlock
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
-import net.minecraft.item.ItemGroup
+import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.registry.Registry
 
@@ -18,7 +19,9 @@ import net.minecraft.util.registry.Registry
  * Static block access and initialization.
  */
 object HotMBlocks {
-    private val BUILDING_BLOCKS = Item.Settings().group(ItemGroup.BUILDING_BLOCKS)
+    val HOTM_BUILDING_ITEM_GROUP = FabricItemGroupBuilder.build(HotMConstants.identifier("building"), HotMBlocks::mainGroupItem)
+
+    private val HOTM_BUILDING_ITEM_SETTINGS = Item.Settings().group(HOTM_BUILDING_ITEM_GROUP)
 
     /*
      * Crystals & Lamps.
@@ -144,42 +147,42 @@ object HotMBlocks {
      */
     fun register() {
         registerAll(
-            CYAN_CRYSTAL to "cyan_crystal" to BUILDING_BLOCKS,
-            CYAN_CRYSTAL_LAMP to "cyan_crystal_lamp" to BUILDING_BLOCKS,
-            CYAN_MACHINE_CASING_LAMP to "cyan_machine_casing_lamp" to BUILDING_BLOCKS,
-            CYAN_THINKING_STONE_LAMP to "cyan_thinking_stone_lamp" to BUILDING_BLOCKS,
-            GLOWY_OBELISK_PART to "glowy_obelisk_part" to BUILDING_BLOCKS,
-            MACHINE_CASING to "machine_casing" to BUILDING_BLOCKS,
-            MACHINE_CASING_SLAB to "machine_casing_slab" to BUILDING_BLOCKS,
-            MACHINE_CASING_STAIRS to "machine_casing_stairs" to BUILDING_BLOCKS,
-            MACHINE_CASING_BRICKS to "machine_casing_bricks" to BUILDING_BLOCKS,
-            MACHINE_CASING_BRICK_SLAB to "machine_casing_brick_slab" to BUILDING_BLOCKS,
-            MACHINE_CASING_BRICK_STAIRS to "machine_casing_brick_stairs" to BUILDING_BLOCKS,
-            MAGENTA_CRYSTAL to "magenta_crystal" to BUILDING_BLOCKS,
-            MAGENTA_CRYSTAL_LAMP to "magenta_crystal_lamp" to BUILDING_BLOCKS,
-            MAGENTA_MACHINE_CASING_LAMP to "magenta_machine_casing_lamp" to BUILDING_BLOCKS,
-            MAGENTA_THINKING_STONE_LAMP to "magenta_thinking_stone_lamp" to BUILDING_BLOCKS,
-            METAL_MACHINE_CASING to "metal_machine_casing" to BUILDING_BLOCKS,
+            CYAN_CRYSTAL to "cyan_crystal" to HOTM_BUILDING_ITEM_SETTINGS,
+            CYAN_CRYSTAL_LAMP to "cyan_crystal_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
+            CYAN_MACHINE_CASING_LAMP to "cyan_machine_casing_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
+            CYAN_THINKING_STONE_LAMP to "cyan_thinking_stone_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
+            GLOWY_OBELISK_PART to "glowy_obelisk_part" to HOTM_BUILDING_ITEM_SETTINGS,
+            MACHINE_CASING to "machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
+            MACHINE_CASING_SLAB to "machine_casing_slab" to HOTM_BUILDING_ITEM_SETTINGS,
+            MACHINE_CASING_STAIRS to "machine_casing_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
+            MACHINE_CASING_BRICKS to "machine_casing_bricks" to HOTM_BUILDING_ITEM_SETTINGS,
+            MACHINE_CASING_BRICK_SLAB to "machine_casing_brick_slab" to HOTM_BUILDING_ITEM_SETTINGS,
+            MACHINE_CASING_BRICK_STAIRS to "machine_casing_brick_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
+            MAGENTA_CRYSTAL to "magenta_crystal" to HOTM_BUILDING_ITEM_SETTINGS,
+            MAGENTA_CRYSTAL_LAMP to "magenta_crystal_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
+            MAGENTA_MACHINE_CASING_LAMP to "magenta_machine_casing_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
+            MAGENTA_THINKING_STONE_LAMP to "magenta_thinking_stone_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
+            METAL_MACHINE_CASING to "metal_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
             NECTERE_PORTAL to "nectere_portal" to Item.Settings(),
-            OBELISK_PART to "obelisk_part" to BUILDING_BLOCKS,
-            PLASSEIN_BLOOM to "plassein_bloom" to BUILDING_BLOCKS,
-            PLASSEIN_MACHINE_CASING to "plassein_machine_casing" to BUILDING_BLOCKS,
-            PLASSEIN_STEM to "plassein_stem" to BUILDING_BLOCKS,
-            RUSTED_MACHINE_CASING to "rusted_machine_casing" to BUILDING_BLOCKS,
-            SMOOTH_THINKING_STONE to "smooth_thinking_stone" to BUILDING_BLOCKS,
-            SMOOTH_THINKING_STONE_SLAB to "smooth_thinking_stone_slab" to BUILDING_BLOCKS,
-            SMOOTH_THINKING_STONE_STAIRS to "smooth_thinking_stone_stairs" to BUILDING_BLOCKS,
-            SURFACE_MACHINE_CASING to "surface_machine_casing" to BUILDING_BLOCKS,
-            TEST_MACHINE_CASING to "test_machine_casing" to BUILDING_BLOCKS,
-            THINKING_STONE to "thinking_stone" to BUILDING_BLOCKS,
-            THINKING_STONE_SLAB to "thinking_stone_slab" to BUILDING_BLOCKS,
-            THINKING_STONE_STAIRS to "thinking_stone_stairs" to BUILDING_BLOCKS,
-            THINKING_STONE_BRICKS to "thinking_stone_bricks" to BUILDING_BLOCKS,
-            THINKING_STONE_BRICK_SLAB to "thinking_stone_brick_slab" to BUILDING_BLOCKS,
-            THINKING_STONE_BRICK_STAIRS to "thinking_stone_brick_stairs" to BUILDING_BLOCKS,
-            THINKING_STONE_TILES to "thinking_stone_tiles" to BUILDING_BLOCKS,
-            THINKING_STONE_TILE_SLAB to "thinking_stone_tile_slab" to BUILDING_BLOCKS,
-            THINKING_STONE_TILE_STAIRS to "thinking_stone_tile_stairs" to BUILDING_BLOCKS
+            OBELISK_PART to "obelisk_part" to HOTM_BUILDING_ITEM_SETTINGS,
+            PLASSEIN_BLOOM to "plassein_bloom" to HOTM_BUILDING_ITEM_SETTINGS,
+            PLASSEIN_MACHINE_CASING to "plassein_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
+            PLASSEIN_STEM to "plassein_stem" to HOTM_BUILDING_ITEM_SETTINGS,
+            RUSTED_MACHINE_CASING to "rusted_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
+            SMOOTH_THINKING_STONE to "smooth_thinking_stone" to HOTM_BUILDING_ITEM_SETTINGS,
+            SMOOTH_THINKING_STONE_SLAB to "smooth_thinking_stone_slab" to HOTM_BUILDING_ITEM_SETTINGS,
+            SMOOTH_THINKING_STONE_STAIRS to "smooth_thinking_stone_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
+            SURFACE_MACHINE_CASING to "surface_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
+            TEST_MACHINE_CASING to "test_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
+            THINKING_STONE to "thinking_stone" to HOTM_BUILDING_ITEM_SETTINGS,
+            THINKING_STONE_SLAB to "thinking_stone_slab" to HOTM_BUILDING_ITEM_SETTINGS,
+            THINKING_STONE_STAIRS to "thinking_stone_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
+            THINKING_STONE_BRICKS to "thinking_stone_bricks" to HOTM_BUILDING_ITEM_SETTINGS,
+            THINKING_STONE_BRICK_SLAB to "thinking_stone_brick_slab" to HOTM_BUILDING_ITEM_SETTINGS,
+            THINKING_STONE_BRICK_STAIRS to "thinking_stone_brick_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
+            THINKING_STONE_TILES to "thinking_stone_tiles" to HOTM_BUILDING_ITEM_SETTINGS,
+            THINKING_STONE_TILE_SLAB to "thinking_stone_tile_slab" to HOTM_BUILDING_ITEM_SETTINGS,
+            THINKING_STONE_TILE_STAIRS to "thinking_stone_tile_stairs" to HOTM_BUILDING_ITEM_SETTINGS
         )
     }
 
@@ -189,5 +192,9 @@ object HotMBlocks {
             Registry.register(Registry.BLOCK, identifier, block.first.first)
             Registry.register(Registry.ITEM, identifier, BlockItem(block.first.first, block.second))
         }
+    }
+
+    private fun mainGroupItem(): ItemStack {
+        return ItemStack(CYAN_THINKING_STONE_LAMP)
     }
 }

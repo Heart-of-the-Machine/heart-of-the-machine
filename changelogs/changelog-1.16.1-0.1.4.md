@@ -14,3 +14,4 @@ For Minecraft 1.16.1
 * Added default config option to generate an output portal if a player uses an input portal that is disconnected but
   otherwise in a valid location. This config option is `generateMissingPortals`.
 * Made portals play a sound when a player tries to enter them if they are in an invalid or 'dead' location.
+* Added creative tab for Heart of the Machine's blocks and items.
