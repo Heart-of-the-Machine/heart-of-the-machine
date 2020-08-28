@@ -3,6 +3,7 @@ package com.github.hotm
 import com.github.hotm.blocks.NecterePortalBlock
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.block.PillarBlock
@@ -23,8 +24,8 @@ object HotMBlocks {
      * Crystals & Lamps.
      */
     val CYAN_CRYSTAL = Block(
-        FabricBlockSettings.of(Material.GLASS).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS)
-            .lightLevel(15)
+        FabricBlockSettings.of(Material.GLASS).requiresTool().breakByTool(FabricToolTags.PICKAXES).strength(2.0f, 5.0f)
+            .sounds(BlockSoundGroup.GLASS).lightLevel(15)
     )
     val CYAN_CRYSTAL_LAMP = Block(
         FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
@@ -39,8 +40,8 @@ object HotMBlocks {
             .lightLevel(15)
     )
     val MAGENTA_CRYSTAL = Block(
-        FabricBlockSettings.of(Material.GLASS).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS)
-            .lightLevel(15)
+        FabricBlockSettings.of(Material.GLASS).requiresTool().breakByTool(FabricToolTags.PICKAXES).strength(2.0f, 5.0f)
+            .sounds(BlockSoundGroup.GLASS).lightLevel(15)
     )
     val MAGENTA_CRYSTAL_LAMP = Block(
         FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)

@@ -5,3 +5,5 @@ For Minecraft 1.16.1
 * Added config option for which biomes Nectere portals generate in.
 * Begin on support for different Nectere biomes having different coordinate multipliers.
   Note: This breakes the `/locate` command in generated chunks.
+* Added Wasteland biome.
+* Fixed unbreakable crystals.
