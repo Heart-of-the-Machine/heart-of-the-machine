@@ -79,7 +79,7 @@ class NecterePortalBlock(settings: Settings) : FacingBlock(settings) {
 
     override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
         if (state.get(FACING) == Direction.UP && !entity.hasVehicle() && !entity.hasPassengers() && entity.canUsePortals()) {
-            HotMDimensions.performNectereTeleportation(entity, world, pos)
+            HotMDimensions.attemptNectereTeleportation(entity, world, pos)
         }
     }
 }

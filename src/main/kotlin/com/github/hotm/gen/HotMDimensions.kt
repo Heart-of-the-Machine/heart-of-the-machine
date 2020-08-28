@@ -1,6 +1,7 @@
 package com.github.hotm.gen
 
 import com.github.hotm.HotMBlocks
+import com.github.hotm.HotMConfig
 import com.github.hotm.HotMConstants
 import com.github.hotm.HotMLog
 import com.github.hotm.gen.biome.NectereBiome
@@ -22,12 +23,14 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.tag.BlockTags
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
+import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper.floor
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.Heightmap
 import net.minecraft.world.World
+import net.minecraft.world.WorldAccess
 import net.minecraft.world.WorldView
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType
@@ -155,7 +158,7 @@ object HotMDimensions {
 
         FabricDimensions.registerDefaultPlacer(
             NECTERE_KEY
-        ) { oldEntity, destination, _, _, _ -> findGenericTeleportationDestination(oldEntity, destination) }
+        ) { oldEntity, destination, _, _, _ -> getGenericTeleportTarget(oldEntity, destination) }
     }
 
     /**
@@ -182,52 +185,157 @@ object HotMDimensions {
 
     /**
      * Performs a teleportation between the Overworld and the Nectere.
+     *
+     * @return whether the portal that attempted to teleport the entity is functional.
      */
-    fun performNectereTeleportation(entity: Entity, world: World, portalPos: BlockPos) {
-        (world as? ServerWorld)?.let { serverWorld ->
-            val server = serverWorld.server
-            if (world.registryKey == NECTERE_KEY) {
-                val newWorld = getCorrespondingNonNectereWorld(serverWorld, portalPos)
-                val newPos = getCorrespondingNonNectereCoords(serverWorld, portalPos).collect(Collectors.toList())
-                if (newWorld != null && newPos.isNotEmpty()) {
-                    FabricDimensions.teleport(
-                        entity,
-                        newWorld
-                    ) { oldEntity, destination, _, _, _ ->
-                        findNonNectereTeleportationDestination(
-                            oldEntity,
-                            destination,
-                            newPos
-                        )
-                    }
+    fun attemptNectereTeleportation(entity: Entity, world: World, portalPos: BlockPos): Boolean {
+        return (world as? ServerWorld)?.let { serverWorld ->
+            if (entity.netherPortalCooldown > 0) {
+                entity.netherPortalCooldown = entity.defaultNetherPortalCooldown
 
-                    true
-                } else {
-                    false
-                }
+                true
             } else {
-                val nectereWorld = getNectereWorld(server)
-                val newPos =
-                    getCorrespondingNectereCoords(serverWorld, portalPos, nectereWorld).collect(Collectors.toList())
+                val server = serverWorld.server
 
-                if (newPos.isNotEmpty()) {
-                    FabricDimensions.teleport(
-                        entity,
-                        nectereWorld
-                    ) { oldEntity, destination, _, _, _ ->
-                        findNectereTeleportationDestination(
-                            oldEntity,
-                            destination,
-                            newPos
-                        )
-                    }
+                if (world.registryKey == NECTERE_KEY) {
+                    val newWorld = getCorrespondingNonNectereWorld(serverWorld, portalPos)
+                    val newPoses = getCorrespondingNonNectereCoords(serverWorld, portalPos).collect(Collectors.toList())
 
-                    true
+                    attemptTeleport(newWorld, newPoses, entity)
                 } else {
-                    false
+                    val nectereWorld = getNectereWorld(server)
+                    val newPoses =
+                        getCorrespondingNectereCoords(serverWorld, portalPos, nectereWorld).collect(Collectors.toList())
+
+                    attemptTeleport(nectereWorld, newPoses, entity)
+                }
+            }
+        } ?: true
+    }
+
+    /**
+     * Attempts to perform a teleportation of the target entity to the destination world with a list of destination
+     * positions.
+     */
+    private fun attemptTeleport(
+        destWorld: ServerWorld?,
+        destPoses: List<BlockPos>,
+        entity: Entity
+    ): Boolean {
+        return if (destWorld != null && destPoses.isNotEmpty()) {
+            var destPos = findNecterePortal(destWorld, destPoses)
+
+            if (destPos == null && HotMConfig.CONFIG.generateMissingPortals) {
+                destPos = createNecterePortal(destWorld, destPoses)
+            }
+
+            val finalPos = destPos
+
+            if (finalPos != null) {
+                val res = FabricDimensions.teleport(
+                    entity,
+                    destWorld
+                ) { oldEntity, _, _, _, _ ->
+                    getTeleportTarget(
+                        oldEntity,
+                        finalPos
+                    )
+                }
+
+                res.netherPortalCooldown = res.defaultNetherPortalCooldown
+
+                true
+            } else {
+                false
+            }
+        } else {
+            false
+        }
+    }
+
+    /**
+     * Attempt to find a Nectere portal among a list of destination positions.
+     */
+    private fun findNecterePortal(world: WorldView, newPoses: List<BlockPos>): BlockPos? {
+        for (offset in 0 until 256) {
+            for (init in newPoses) {
+                val up = init.up(offset)
+                val down = init.down(offset)
+
+                if (!World.isHeightInvalid(up) && world.getBlockState(up).block == HotMBlocks.NECTERE_PORTAL) {
+                    return findPortalBase(world, up)
+                }
+
+                if (!World.isHeightInvalid(down) && world.getBlockState(down).block == HotMBlocks.NECTERE_PORTAL) {
+                    return findPortalBase(world, down)
                 }
             }
         }
+
+        return null
+    }
+
+    /**
+     * When given a portal block, finds the base portal block.
+     */
+    private fun findPortalBase(world: WorldView, portalPos: BlockPos): BlockPos {
+        val mut = portalPos.mutableCopy()
+        while (world.getBlockState(mut.down()).block == HotMBlocks.NECTERE_PORTAL) {
+            mut.move(Direction.DOWN)
+        }
+        return mut.toImmutable()
+    }
+
+    /**
+     * Creates a Nectere portal at an optimal position among a list of destination positions and returns the location of
+     * that portal.
+     */
+    private fun createNecterePortal(world: WorldAccess, newPoses: List<BlockPos>): BlockPos {
+        val rand = Random()
+        val portalXZ = newPoses[rand.nextInt(newPoses.size)]
+        val portalPos = BlockPos(
+            portalXZ.x,
+            NecterePortalGen.getPortalStructureY(
+                world,
+                portalXZ.x,
+                portalXZ.z,
+                rand
+            ) + NecterePortalGen.PORTAL_OFFSET_Y,
+            portalXZ.z
+        )
+        val structurePos = NecterePortalGen.unPortalPos(portalPos)
+
+        NecterePortalGen.generate(world, structurePos)
+
+        return portalPos
+    }
+
+    /**
+     * Finds the teleportation destination block in the Nectere dimension.
+     */
+    private fun getTeleportTarget(
+        oldEntity: Entity,
+        destinationPos: BlockPos
+    ): BlockPattern.TeleportTarget {
+        return BlockPattern.TeleportTarget(
+            Vec3d.of(destinationPos).add(0.5, 0.0, 0.5),
+            Vec3d.ZERO,
+            oldEntity.yaw.toInt()
+        )
+    }
+
+    /**
+     * Finds the teleportation destination block when the portal location is not known.
+     */
+    private fun getGenericTeleportTarget(
+        oldEntity: Entity,
+        destination: ServerWorld
+    ): BlockPattern.TeleportTarget {
+        // load chunk so heightmap loading works properly
+        destination.getChunk(oldEntity.blockPos)
+
+        val position = destination.getTopPosition(Heightmap.Type.WORLD_SURFACE, oldEntity.blockPos)
+        return BlockPattern.TeleportTarget(Vec3d.of(position).add(0.5, 0.5, 0.5), Vec3d.ZERO, oldEntity.yaw.toInt())
     }
 
     /**
@@ -240,58 +348,6 @@ object HotMDimensions {
         }
 
         return server.getWorld(NECTERE_KEY) ?: throw IllegalStateException("Unable to add Nectere dimension!")
-    }
-
-    /**
-     * Finds the teleportation destination block in the Nectere dimension.
-     */
-    private fun findNectereTeleportationDestination(
-        oldEntity: Entity,
-        destination: ServerWorld,
-        destinationPoses: List<BlockPos>
-    ): BlockPattern.TeleportTarget {
-        // TODO implement proper teleportation logic
-
-        val destinationPos = destinationPoses.first()
-
-        // load chunk so heightmap loading works properly
-        destination.getChunk(destinationPos)
-
-        val position = destination.getTopPosition(Heightmap.Type.WORLD_SURFACE, destinationPos)
-        return BlockPattern.TeleportTarget(Vec3d.of(position).add(0.5, 0.5, 0.5), Vec3d.ZERO, oldEntity.yaw.toInt())
-    }
-
-    /**
-     * Finds the teleportation destination block when leaving the Nectere dimension.
-     */
-    private fun findNonNectereTeleportationDestination(
-        oldEntity: Entity,
-        destination: ServerWorld,
-        destinationPoses: List<BlockPos>
-    ): BlockPattern.TeleportTarget {
-        // TODO implement proper teleportation logic
-
-        val destinationPos = destinationPoses.first()
-
-        // load chunk so heightmap loading works properly
-        destination.getChunk(destinationPos)
-
-        val position = destination.getTopPosition(Heightmap.Type.WORLD_SURFACE, destinationPos)
-        return BlockPattern.TeleportTarget(Vec3d.of(position).add(0.5, 0.5, 0.5), Vec3d.ZERO, oldEntity.yaw.toInt())
-    }
-
-    /**
-     * Finds the teleportation destination block when the portal location is not known.
-     */
-    private fun findGenericTeleportationDestination(
-        oldEntity: Entity,
-        destination: ServerWorld
-    ): BlockPattern.TeleportTarget {
-        // load chunk so heightmap loading works properly
-        destination.getChunk(oldEntity.blockPos)
-
-        val position = destination.getTopPosition(Heightmap.Type.WORLD_SURFACE, oldEntity.blockPos)
-        return BlockPattern.TeleportTarget(Vec3d.of(position).add(0.5, 0.5, 0.5), Vec3d.ZERO, oldEntity.yaw.toInt())
     }
 
     /**
