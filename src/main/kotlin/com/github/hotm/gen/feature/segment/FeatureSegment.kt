@@ -5,6 +5,7 @@ import com.github.hotm.util.CardinalDirection
 import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.ServerWorldAccess
+import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.StructureAccessor
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import java.util.*
@@ -31,8 +32,7 @@ interface FeatureSegment<C> {
     fun tryGenerate(
         blocks: MutableMap<BlockPos, BlockPlacement>,
         children: MutableCollection<PositionedFeatureSegment<*>>,
-        world: ServerWorldAccess,
-        structureAccessor: StructureAccessor,
+        world: StructureWorldAccess,
         generator: ChunkGenerator,
         random: Random,
         pos: BlockPos,

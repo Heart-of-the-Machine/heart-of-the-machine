@@ -1,47 +1,168 @@
 package com.github.hotm.gen
 
 import com.github.hotm.HotMConstants
-import com.github.hotm.gen.biome.ThinkingForestBiome
-import com.github.hotm.gen.biome.WastelandBiome
+import com.github.hotm.gen.biome.NectereBiomeData
+import com.github.hotm.gen.feature.HotMBiomeFeatures
+import com.github.hotm.gen.feature.HotMStructureFeatures
+import net.minecraft.sound.BiomeMoodSound
 import net.minecraft.util.Identifier
+import net.minecraft.util.registry.BuiltinRegistries
+import net.minecraft.util.registry.DynamicRegistryManager
 import net.minecraft.util.registry.Registry
+import net.minecraft.util.registry.RegistryKey
+import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
+import net.minecraft.world.biome.BiomeEffects
+import net.minecraft.world.biome.GenerationSettings
+import net.minecraft.world.biome.SpawnSettings
 
 /**
  * Registers biomes for the Nectere dimension.
  */
 object HotMBiomes {
-    private val BIOMES = mutableMapOf<Identifier, Biome>()
+    private val BIOME_KEYS = mutableMapOf<Identifier, RegistryKey<Biome>>()
+    private val BIOME_DATA = mutableMapOf<RegistryKey<Biome>, NectereBiomeData>()
+    private val BIOME_NOISE = mutableMapOf<RegistryKey<Biome>, Biome.MixedNoisePoint>()
+    private val BIOME_DEFAULTS = mutableMapOf<RegistryKey<Biome>, Biome>()
 
     /**
      * The thinking forest biome.
      */
-    val THINKING_FOREST = setup(ThinkingForestBiome(), HotMConstants.identifier("thinking_forest"))
+    val THINKING_FOREST = register(
+        "thinking_forest",
+        createThinkingForest(),
+        8.0,
+        World.OVERWORLD,
+        true,
+        Biome.MixedNoisePoint(0.25f, 0.25f, 0.25f, 0.0f, 1.0f)
+    )
 
     /**
      * The wasteland biome.
      */
-    val WASTELAND = setup(WastelandBiome(), HotMConstants.identifier("wasteland"))
+    val WASTELAND = register(
+        "wasteland",
+        createWasteland(),
+        1.0,
+        World.OVERWORLD,
+        true,
+        Biome.MixedNoisePoint(0.0f, -0.5f, 0.0f, 0.0f, 1.0f)
+    )
 
     /**
-     * Does the registering of biomes.
+     * Makes sure everything is loaded and registered.
      */
-    fun register() {
-        for (biome in BIOMES) {
-            Registry.register(Registry.BIOME, biome.key, biome.value)
-        }
+    fun register() {}
+
+    /**
+     * Gets the builtin set of biomes by instantiating a new DynamicRegistryManager and getting the biome Registry from
+     * there.
+     */
+    fun builtinBiomeRegistry(): Registry<Biome> {
+        val registryManager = DynamicRegistryManager.create()
+        return registryManager[Registry.BIOME_KEY]
     }
 
     /**
      * Gets all the Nectere biomes.
      */
-    fun biomes(): Map<Identifier, Biome> {
-        return BIOMES
+    fun biomes(): Map<Identifier, RegistryKey<Biome>> {
+        return BIOME_KEYS
     }
 
-    private fun <B : Biome> setup(biome: B, name: Identifier): B {
-        BIOMES[name] = biome
+    /**
+     * Gets all Nectere biome data.
+     */
+    fun biomeData(): Map<RegistryKey<Biome>, NectereBiomeData> {
+        return BIOME_DATA
+    }
 
-        return biome
+    /**
+     * Gets the MixedNoisePoints for all Nectere biomes.
+     */
+    fun biomeNoise(): Map<RegistryKey<Biome>, Biome.MixedNoisePoint> {
+        return BIOME_NOISE
+    }
+
+    private fun createThinkingForest(): Biome {
+        val effects = BiomeEffects.Builder()
+        effects.waterColor(0x3f76e4)
+        effects.waterFogColor(0x050533)
+        effects.fogColor(0x7591c7)
+        effects.moodSound(BiomeMoodSound.CAVE)
+
+        val spawns = SpawnSettings.Builder()
+
+        val gen = GenerationSettings.Builder()
+        gen.surfaceBuilder(HotMSurfaceBuilders.THINKING_FOREST)
+        setupDefaultGen(gen)
+        HotMBiomeFeatures.addRefusePiles(gen)
+        HotMBiomeFeatures.addPlasseinGrowths(gen)
+        HotMBiomeFeatures.addPlasseinSurfaceTrees(gen)
+        HotMBiomeFeatures.addServerTowers(gen)
+        HotMBiomeFeatures.addTransmissionTowers(gen)
+
+        val biome = Biome.Builder()
+        biome.precipitation(Biome.Precipitation.RAIN)
+        biome.category(Biome.Category.JUNGLE)
+        biome.depth(0.45F).scale(0.3F)
+        biome.temperature(0.5f).downfall(0.5f)
+        biome.effects(effects.build())
+        biome.spawnSettings(spawns.build())
+        biome.generationSettings(gen.build())
+
+        return biome.build()
+    }
+
+    private fun createWasteland(): Biome {
+        val effects = BiomeEffects.Builder()
+        effects.waterColor(0x7591c7)
+        effects.waterFogColor(0x050533)
+        effects.fogColor(0x222222)
+        effects.moodSound(BiomeMoodSound.CAVE)
+
+        val spawns = SpawnSettings.Builder()
+
+        val gen = GenerationSettings.Builder()
+        gen.surfaceBuilder(HotMSurfaceBuilders.WASTELAND)
+        setupDefaultGen(gen)
+        HotMBiomeFeatures.addRefusePiles(gen)
+
+        val biome = Biome.Builder()
+        biome.precipitation(Biome.Precipitation.NONE)
+        biome.category(Biome.Category.PLAINS)
+        biome.depth(0.125F).scale(0.05F)
+        biome.temperature(0.8F).downfall(0.0F)
+        biome.effects(effects.build())
+        biome.spawnSettings(spawns.build())
+        biome.generationSettings(gen.build())
+
+        return biome.build()
+    }
+
+    private fun setupDefaultGen(gen: GenerationSettings.Builder) {
+        gen.structureFeature(HotMStructureFeatures.NECTERE_SIDE_NECTERE_PORTAL)
+        HotMBiomeFeatures.addCrystalGrowths(gen)
+    }
+
+    private fun register(
+        name: String,
+        biome: Biome,
+        coordinateMultiplier: Double,
+        targetWorld: RegistryKey<World>,
+        isPortalable: Boolean,
+        biomeNoise: Biome.MixedNoisePoint
+    ): RegistryKey<Biome> {
+        val ident = HotMConstants.identifier(name)
+        val key = RegistryKey.of(Registry.BIOME_KEY, ident)
+
+        BIOME_KEYS[ident] = key
+        BIOME_DATA[key] = NectereBiomeData(key, coordinateMultiplier, targetWorld, isPortalable)
+        BIOME_NOISE[key] = biomeNoise
+        BIOME_DEFAULTS[key] = biome
+
+        Registry.register(BuiltinRegistries.BIOME, ident, biome)
+
+        return key
     }
 }

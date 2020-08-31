@@ -15,6 +15,7 @@ import net.minecraft.block.PillarBlock
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.ServerWorldAccess
+import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.StructureAccessor
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import java.lang.Integer.max
@@ -51,8 +52,7 @@ class PlasseinStemSegment(
     override fun tryGenerate(
         blocks: MutableMap<BlockPos, BlockPlacement>,
         children: MutableCollection<PositionedFeatureSegment<*>>,
-        world: ServerWorldAccess,
-        structureAccessor: StructureAccessor,
+        world: StructureWorldAccess,
         generator: ChunkGenerator,
         random: Random,
         pos: BlockPos,
@@ -127,8 +127,7 @@ class PlasseinBranchSegment(
     override fun tryGenerate(
         blocks: MutableMap<BlockPos, BlockPlacement>,
         children: MutableCollection<PositionedFeatureSegment<*>>,
-        world: ServerWorldAccess,
-        structureAccessor: StructureAccessor,
+        world: StructureWorldAccess,
         generator: ChunkGenerator,
         random: Random,
         pos: BlockPos,
@@ -209,8 +208,7 @@ class PlasseinLeafSegment(
     override fun tryGenerate(
         blocks: MutableMap<BlockPos, BlockPlacement>,
         children: MutableCollection<PositionedFeatureSegment<*>>,
-        world: ServerWorldAccess,
-        structureAccessor: StructureAccessor,
+        world: StructureWorldAccess,
         generator: ChunkGenerator,
         random: Random,
         pos: BlockPos,

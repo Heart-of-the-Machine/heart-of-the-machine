@@ -1,6 +1,6 @@
 package com.github.hotm.mixin;
 
-import com.github.hotm.mixinapi.StructureAdditions;
+import com.github.hotm.mixinapi.FeatureAdditions;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.world.gen.chunk.StructureConfig;
 import net.minecraft.world.gen.chunk.StructuresConfig;
@@ -32,6 +32,6 @@ public class StructuresConfigMixin {
      */
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void onClinit(CallbackInfo ci) {
-        DEFAULT_STRUCTURES = StructureAdditions.addDefaultStructureConfigs(DEFAULT_STRUCTURES);
+        DEFAULT_STRUCTURES = FeatureAdditions.addDefaultStructureConfigs(DEFAULT_STRUCTURES);
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.ServerWorldAccess
+import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.TestableWorld
 import net.minecraft.world.gen.StructureAccessor
 import net.minecraft.world.gen.chunk.ChunkGenerator
@@ -13,8 +14,7 @@ import kotlin.collections.ArrayList
 
 class PlasseinGrowthFeature(codec: Codec<PlasseinGrowthConfig>) : Feature<PlasseinGrowthConfig>(codec) {
     override fun generate(
-        serverWorldAccess: ServerWorldAccess,
-        accessor: StructureAccessor,
+        world: StructureWorldAccess,
         generator: ChunkGenerator,
         random: Random,
         pos: BlockPos,
@@ -23,15 +23,15 @@ class PlasseinGrowthFeature(codec: Codec<PlasseinGrowthConfig>) : Feature<Plasse
         val stalkBlocks = ArrayList<BlockPos>()
         val leafBlocks = ArrayList<BlockPos>()
 
-        if (!tryGenerate(serverWorldAccess, random, pos, config, stalkBlocks, leafBlocks)) {
+        if (!tryGenerate(world, random, pos, config, stalkBlocks, leafBlocks)) {
             return false
         }
 
         for (stalk in stalkBlocks) {
-            serverWorldAccess.setBlockState(stalk, config.stalk, 0x13)
+            world.setBlockState(stalk, config.stalk, 0x13)
         }
         for (leaf in leafBlocks) {
-            serverWorldAccess.setBlockState(leaf, config.leaves, 0x13)
+            world.setBlockState(leaf, config.leaves, 0x13)
         }
 
         return true

@@ -31,6 +31,6 @@ object HotMDecorators {
     val NECTERE_PORTAL: NecterePortalDecorator = Registry.register(
         Registry.DECORATOR,
         HotMConstants.identifier("nectere_portal"),
-        NecterePortalDecorator(NopeDecoratorConfig.field_24891)
+        NecterePortalDecorator(NopeDecoratorConfig.CODEC)
     )
 }

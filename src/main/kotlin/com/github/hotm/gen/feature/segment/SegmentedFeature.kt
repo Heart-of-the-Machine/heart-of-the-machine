@@ -5,6 +5,7 @@ import com.google.common.collect.Queues
 import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.ServerWorldAccess
+import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.StructureAccessor
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.Feature
@@ -19,8 +20,7 @@ class SegmentedFeature(codec: Codec<SegmentedFeatureConfig>) : Feature<Segmented
     }
 
     override fun generate(
-        world: ServerWorldAccess,
-        structureAccessor: StructureAccessor,
+        world: StructureWorldAccess,
         generator: ChunkGenerator,
         random: Random,
         pos: BlockPos,
@@ -41,7 +41,6 @@ class SegmentedFeature(codec: Codec<SegmentedFeatureConfig>) : Feature<Segmented
                     blocks,
                     segments,
                     world,
-                    structureAccessor,
                     generator,
                     random
                 )

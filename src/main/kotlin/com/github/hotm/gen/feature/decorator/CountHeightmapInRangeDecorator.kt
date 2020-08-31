@@ -6,6 +6,7 @@ import net.minecraft.world.Heightmap
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.decorator.Decorator
+import net.minecraft.world.gen.decorator.DecoratorContext
 import java.util.*
 import java.util.stream.IntStream
 import java.util.stream.Stream
@@ -16,8 +17,7 @@ import java.util.stream.Stream
 class CountHeightmapInRangeDecorator(codec: Codec<CountHeightmapInRangeDecoratorConfig>) :
     Decorator<CountHeightmapInRangeDecoratorConfig>(codec) {
     override fun getPositions(
-        world: WorldAccess,
-        generator: ChunkGenerator,
+        context: DecoratorContext,
         random: Random,
         config: CountHeightmapInRangeDecoratorConfig,
         pos: BlockPos
@@ -25,7 +25,7 @@ class CountHeightmapInRangeDecorator(codec: Codec<CountHeightmapInRangeDecorator
         return IntStream.range(0, config.count).mapToObj {
             val x = random.nextInt(16) + pos.x
             val z = random.nextInt(16) + pos.z
-            val y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z)
+            val y = context.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z)
             if (y in config.minHeight until config.maxHeight) BlockPos(x, y, z) else null
         }.filter(Objects::nonNull)
     }

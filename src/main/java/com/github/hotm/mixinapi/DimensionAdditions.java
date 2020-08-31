@@ -1,24 +1,34 @@
 package com.github.hotm.mixinapi;
 
 import com.github.hotm.gen.HotMDimensions;
-import com.github.hotm.mixin.ChunkGeneratorTypeInvoker;
+import com.github.hotm.mixin.ChunkGeneratorSettingsInvoker;
 import com.github.hotm.mixin.DimensionTypeInvoker;
+import com.github.hotm.mixin.MultiNoiseBiomeSourceInvoker;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.MutableRegistry;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.RegistryTracker;
 import net.minecraft.util.registry.SimpleRegistry;
+import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccessType;
+import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.ChunkGeneratorType;
-import net.minecraft.world.gen.chunk.NoiseConfig;
+import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
+import net.minecraft.world.gen.chunk.GenerationShapeConfig;
 import net.minecraft.world.gen.chunk.StructuresConfig;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Used to register a new dimension with the dimension mixin.
@@ -27,24 +37,23 @@ public class DimensionAdditions {
     private static final List<DimensionAddition> ADDITIONS = new ArrayList<>();
     private static final Map<RegistryKey<DimensionOptions>, DimensionAddition> DIMENSION_KEYS = new HashMap<>();
     private static final Map<RegistryKey<World>, String> SAVE_DIRS = new HashMap<>();
+    private static final Map<RegistryKey<World>, EntityPlacer> DEFAULT_PLACERS = new HashMap<>();
+    private static final ThreadLocal<EntityPlacer> CURRENT_PLACER = new ThreadLocal<>();
 
-    public static ChunkGeneratorType createChunkGeneratorType(StructuresConfig structures, NoiseConfig noise,
-                                                              BlockState defaultBlock, BlockState defaultFluid,
-                                                              int bedrockRoofPosition, int bedrockFloorPosition,
-                                                              int seaLevel, boolean disableMobGeneration) {
-        return ChunkGeneratorTypeInvoker
-                .create(structures, noise, defaultBlock, defaultFluid, bedrockRoofPosition, bedrockFloorPosition,
-                        seaLevel, disableMobGeneration);
+    public static ChunkGeneratorSettings createChunkGeneratorSettings(StructuresConfig structuresConfig,
+                                                                      GenerationShapeConfig generationShapeConfig,
+                                                                      BlockState defaultBlock, BlockState defaultFluid,
+                                                                      int bedrockCeilingY, int bedrockFloorY, int seaLevel,
+                                                                      boolean mobGenerationDisabled) {
+        return ChunkGeneratorSettingsInvoker
+                .create(structuresConfig, generationShapeConfig, defaultBlock, defaultFluid, bedrockCeilingY,
+                        bedrockFloorY, seaLevel, mobGenerationDisabled);
     }
 
-    public static ChunkGeneratorType createChunkGeneratorType(StructuresConfig structures, NoiseConfig noise,
-                                                              BlockState defaultBlock, BlockState defaultFluid,
-                                                              int bedrockRoofPosition, int bedrockFloorPosition,
-                                                              int seaLevel, boolean disableMobGeneration,
-                                                              Optional<ChunkGeneratorType.Preset> preset) {
-        return ChunkGeneratorTypeInvoker
-                .create(structures, noise, defaultBlock, defaultFluid, bedrockRoofPosition, bedrockFloorPosition,
-                        seaLevel, disableMobGeneration, preset);
+    public static MultiNoiseBiomeSource createMultiNoiseBiomeSource(long seed,
+                                                                    List<Pair<Biome.MixedNoisePoint, Supplier<Biome>>> list,
+                                                                    Optional<Pair<Registry<Biome>, MultiNoiseBiomeSource.Preset>> optional) {
+        return MultiNoiseBiomeSourceInvoker.create(seed, list, optional);
     }
 
     public static DimensionType createDimensionType(OptionalLong fixedTime, boolean hasSkylight, boolean hasCeiling,
@@ -73,16 +82,22 @@ public class DimensionAdditions {
         SAVE_DIRS.put(key, saveDir);
     }
 
-    public static void setupDimensionOptions(long seed, SimpleRegistry<DimensionOptions> optionsRegistry) {
+    public static void setupDimensionOptions(
+            Registry<DimensionType> dimensionTypes,
+            Registry<Biome> biomes,
+            Registry<ChunkGeneratorSettings> generatorSettings,
+            long seed,
+            SimpleRegistry<DimensionOptions> optionsRegistry) {
         // Make sure dimensions are registered in time.
         HotMDimensions.INSTANCE.register();
 
         System.out.println("HotM Adding Dimensions:");
         for (DimensionAddition addition : ADDITIONS) {
             if (!optionsRegistry.containsId(addition.getOptionsRegistryKey().getValue())) {
-                optionsRegistry.add(addition.getOptionsRegistryKey(), new DimensionOptions(addition::getDimensionType,
-                        addition.getChunkGeneratorSupplier().getChunkGenerator(seed)));
-                optionsRegistry.markLoaded(addition.getOptionsRegistryKey());
+                optionsRegistry.add(addition.getOptionsRegistryKey(),
+                        new DimensionOptions(() -> dimensionTypes.getOrThrow(addition.getTypeRegistryKey()),
+                                addition.getChunkGeneratorSupplier()
+                                        .getChunkGenerator(biomes, generatorSettings, seed)), Lifecycle.stable());
                 System.out.println("    " + addition.getOptionsRegistryKey());
             } else {
                 System.out.println("    " + addition.getOptionsRegistryKey() + " : ALREADY REGISTERED");
@@ -90,9 +105,9 @@ public class DimensionAdditions {
         }
     }
 
-    public static void setupDimensionTypes(RegistryTracker.Modifiable modifiable) {
+    public static void setupDimensionTypes(MutableRegistry<DimensionType> dimensionTypes) {
         for (DimensionAddition addition : ADDITIONS) {
-            modifiable.addDimensionType(addition.getTypeRegistryKey(), addition.getDimensionType());
+            dimensionTypes.add(addition.getTypeRegistryKey(), addition.getDimensionType(), Lifecycle.stable());
         }
     }
 
@@ -121,12 +136,8 @@ public class DimensionAdditions {
                     return false;
                 }
 
-                ChunkGenerator generator = addition.getChunkGeneratorSupplier().getChunkGenerator(seed);
-                if (!generator.getClass().isAssignableFrom(options.getChunkGenerator().getClass())) {
-                    return false;
-                }
-
                 // not quite sure how to verify generator settings
+                // TODO: Add more rigorous checking
 
                 it.remove();
             }
@@ -137,7 +148,35 @@ public class DimensionAdditions {
 
     public static void addDimensionToServer(MutableMinecraftServer server, RegistryKey<DimensionOptions> optionsKey) {
         DimensionAddition addition = DIMENSION_KEYS.get(optionsKey);
-        server.hotm_addDimension(optionsKey, new DimensionOptions(addition::getDimensionType,
-                addition.getChunkGeneratorSupplier().getChunkGenerator(server.hotm_getSeed())));
+        server.hotm_addDimension(optionsKey, addition);
+    }
+
+    public static void registerDefaultPlacer(RegistryKey<World> key, EntityPlacer placer) {
+        DEFAULT_PLACERS.put(key, placer);
+    }
+
+    @Nullable
+    public static Entity teleport(Entity entity, ServerWorld destination, EntityPlacer placer) {
+        // Kind of a gross hack, but I don't see any other way to get the custom entity placer into the EntityMixin.
+        // Besides, I'm pretty sure FabricDimensions used a ThreadLocal for this as well.
+        CURRENT_PLACER.set(placer);
+        try {
+            return entity.moveToWorld(destination);
+        } finally {
+            CURRENT_PLACER.set(null);
+        }
+    }
+
+    public static boolean shouldUseCustomPlacer(ServerWorld destination) {
+        return CURRENT_PLACER.get() != null || DEFAULT_PLACERS.containsKey(destination.getRegistryKey());
+    }
+
+    public static TeleportTarget useCustomPlacer(Entity entity, ServerWorld destination) {
+        EntityPlacer placer = CURRENT_PLACER.get();
+        if (placer == null) {
+            placer = DEFAULT_PLACERS.get(destination.getRegistryKey());
+        }
+
+        return placer.placeEntity(entity, destination);
     }
 }

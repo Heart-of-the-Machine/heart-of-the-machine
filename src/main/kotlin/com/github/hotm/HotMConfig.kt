@@ -2,6 +2,7 @@ package com.github.hotm
 
 import com.github.hotm.gen.HotMBiomes
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.util.registry.DynamicRegistryManager
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import org.yaml.snakeyaml.Yaml
@@ -45,10 +46,12 @@ class HotMConfig {
             }
 
             if (config.necterePortalWorldGenBlacklistBiomes == null) {
+                val biomeRegistry = HotMBiomes.builtinBiomeRegistry()
                 val biomes = mutableListOf<String>()
 
-                for (biomeId in Registry.BIOME.ids) {
-                    val biome = Registry.BIOME[biomeId]!!
+                for (biomeId in biomeRegistry.ids) {
+                    println("[CONFIG] Biome: $biomeId")
+                    val biome = biomeRegistry[biomeId]!!
                     if (biome.category == Biome.Category.OCEAN || biome.category == Biome.Category.RIVER) {
                         biomes += biomeId.toString()
                     }
@@ -65,6 +68,8 @@ class HotMConfig {
 
             CONFIG = config
         }
+
+        fun init() {}
     }
 
     var necterePortalWorldGenBlacklistBiomes: MutableList<String>? = null

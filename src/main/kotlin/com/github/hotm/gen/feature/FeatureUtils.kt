@@ -1,7 +1,7 @@
 package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMBlocks
-import com.github.hotm.gen.HotMSurfaceConfigs
+import com.github.hotm.gen.HotMSurfaceBuilders
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
@@ -26,7 +26,7 @@ object FeatureUtils {
     }
 
     fun isNectereSurface(block: Block): Boolean {
-        return block == HotMSurfaceConfigs.RUSTED_SURFACE_BLOCK || block == HotMSurfaceConfigs.SURFACE_BLOCK
+        return block == HotMSurfaceBuilders.RUSTED_SURFACE_BLOCK || block == HotMSurfaceBuilders.SURFACE_BLOCK
     }
 
     fun isNectereStone(block: Block): Boolean {

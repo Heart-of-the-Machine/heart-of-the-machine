@@ -9,5 +9,5 @@ import net.minecraft.world.dimension.DimensionOptions;
 public interface MutableMinecraftServer {
     long hotm_getSeed();
 
-    void hotm_addDimension(RegistryKey<DimensionOptions> optionsKey, DimensionOptions dimensionOptions);
+    void hotm_addDimension(RegistryKey<DimensionOptions> optionsKey, DimensionAddition dimensionOptions);
 }

@@ -25,28 +25,31 @@ import net.minecraft.util.math.noise.NoiseSampler
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler
 import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler
 import net.minecraft.util.math.noise.SimplexNoiseSampler
+import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.*
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.Biome.SpawnEntry
+import net.minecraft.world.biome.SpawnSettings
 import net.minecraft.world.biome.source.BiomeSource
 import net.minecraft.world.biome.source.TheEndBiomeSource
 import net.minecraft.world.chunk.Chunk
 import net.minecraft.world.chunk.ProtoChunk
 import net.minecraft.world.gen.ChunkRandom
 import net.minecraft.world.gen.StructureAccessor
-import net.minecraft.world.gen.chunk.*
+import net.minecraft.world.gen.chunk.ChunkGenerator
+import net.minecraft.world.gen.chunk.ChunkGeneratorSettings
+import net.minecraft.world.gen.chunk.VerticalBlockSample
 import net.minecraft.world.gen.feature.StructureFeature
 import java.util.*
 import java.util.function.Predicate
+import java.util.function.Supplier
 import java.util.stream.IntStream
 import kotlin.math.max
 import kotlin.math.pow
 
 class NectereChunkGenerator private constructor(
-    biomeSource: BiomeSource, biomeSource2: BiomeSource, private val field_24778: Long,
-    private val generatorType: ChunkGeneratorType
-) : ChunkGenerator(biomeSource, biomeSource2, generatorType.config, field_24778) {
-    private val noiseConfig: NoiseConfig = generatorType.method_28559()
+    biomeSource: BiomeSource, biomeSource2: BiomeSource, private val genSeed: Long,
+    private val settings: () -> ChunkGeneratorSettings
+) : ChunkGenerator(biomeSource, biomeSource2, settings().structuresConfig, genSeed) {
     private val verticalNoiseResolution: Int
     private val horizontalNoiseResolution: Int
     private val noiseSizeX: Int
@@ -64,26 +67,28 @@ class NectereChunkGenerator private constructor(
     private val terrainHeight: Int
 
     init {
-        terrainHeight = noiseConfig.height
-        verticalNoiseResolution = noiseConfig.sizeVertical * 4
-        horizontalNoiseResolution = noiseConfig.sizeHorizontal * 4
-        defaultBlock = generatorType.defaultBlock
-        defaultFluid = generatorType.defaultFluid
+        val genSettings = settings()
+        val shapeConfig = genSettings.generationShapeConfig
+        terrainHeight = shapeConfig.height
+        verticalNoiseResolution = shapeConfig.sizeVertical * 4
+        horizontalNoiseResolution = shapeConfig.sizeHorizontal * 4
+        defaultBlock = genSettings.defaultBlock
+        defaultFluid = genSettings.defaultFluid
         noiseSizeX = 16 / horizontalNoiseResolution
-        noiseSizeY = noiseConfig.height / verticalNoiseResolution
+        noiseSizeY = shapeConfig.height / verticalNoiseResolution
         noiseSizeZ = 16 / horizontalNoiseResolution
-        random = ChunkRandom(field_24778)
+        random = ChunkRandom(genSeed)
         lowerInterpolatedNoise = OctavePerlinNoiseSampler(random, IntStream.rangeClosed(-15, 0))
         upperInterpolatedNoise = OctavePerlinNoiseSampler(random, IntStream.rangeClosed(-15, 0))
         interpolationNoise = OctavePerlinNoiseSampler(random, IntStream.rangeClosed(-7, 0))
-        surfaceDepthNoise = if (noiseConfig.hasSimplexSurfaceNoise()) OctaveSimplexNoiseSampler(
+        surfaceDepthNoise = if (shapeConfig.hasSimplexSurfaceNoise()) OctaveSimplexNoiseSampler(
             random,
             IntStream.rangeClosed(-3, 0)
         ) else OctavePerlinNoiseSampler(random, IntStream.rangeClosed(-3, 0))
         random.consume(2620)
         randomDensityOffset = OctavePerlinNoiseSampler(random, IntStream.rangeClosed(-15, 0))
-        islandNoiseOverride = if (noiseConfig.hasIslandNoiseOverride()) {
-            val chunkRandom = ChunkRandom(field_24778)
+        islandNoiseOverride = if (shapeConfig.hasIslandNoiseOverride()) {
+            val chunkRandom = ChunkRandom(genSeed)
             chunkRandom.consume(17292)
             SimplexNoiseSampler(chunkRandom)
         } else {
@@ -91,24 +96,24 @@ class NectereChunkGenerator private constructor(
         }
     }
 
-    constructor(biomeSource: BiomeSource, l: Long, chunkGeneratorType: ChunkGeneratorType) : this(
+    constructor(biomeSource: BiomeSource, l: Long, settings: () -> ChunkGeneratorSettings) : this(
         biomeSource,
         biomeSource,
         l,
-        chunkGeneratorType
+        settings
     )
 
-    override fun method_28506(): Codec<out ChunkGenerator> {
+    override fun getCodec(): Codec<out ChunkGenerator> {
         return CODEC
     }
 
     @Environment(EnvType.CLIENT)
     override fun withSeed(seed: Long): ChunkGenerator {
-        return SurfaceChunkGenerator(biomeSource.withSeed(seed), seed, generatorType)
+        return NectereChunkGenerator(biomeSource.withSeed(seed), seed, settings)
     }
 
-    fun method_28548(l: Long, preset: ChunkGeneratorType.Preset?): Boolean {
-        return field_24778 == l && generatorType.method_28555(preset)
+    fun method_28548(seed: Long, registryKey: RegistryKey<ChunkGeneratorSettings?>?): Boolean {
+        return genSeed == seed && settings().equals(registryKey)
     }
 
     private fun sampleNoise(
@@ -168,6 +173,8 @@ class NectereChunkGenerator private constructor(
     }
 
     private fun sampleNoiseColumn(buffer: DoubleArray, x: Int, z: Int) {
+        val shapeConfig = settings().generationShapeConfig
+
         val biomeDepth: Double
         val biomeScale: Double
         if (islandNoiseOverride != null) {
@@ -189,7 +196,7 @@ class NectereChunkGenerator private constructor(
                     val blockScale = biome.scale
                     var adjustedBlockDepth: Float
                     var asjustedBlockScale: Float
-                    if (noiseConfig.isAmplified && blockDepth > 0.0f) {
+                    if (shapeConfig.isAmplified && blockDepth > 0.0f) {
                         adjustedBlockDepth = 1.0f + blockDepth * 2.0f
                         asjustedBlockScale = 1.0f + blockScale * 4.0f
                     } else {
@@ -212,19 +219,19 @@ class NectereChunkGenerator private constructor(
             biomeScale = 96.0 / preBiomeScale
         }
 
-        val xzScale = 684.412 * noiseConfig.sampling.xzScale
-        val yScale = 684.412 * noiseConfig.sampling.yScale
-        val xzFactor = xzScale / noiseConfig.sampling.xzFactor
-        val yFactor = yScale / noiseConfig.sampling.yFactor
-        val topTarget = noiseConfig.topSlide.target.toDouble()
-        val topSize = noiseConfig.topSlide.size.toDouble()
-        val topOffset = noiseConfig.topSlide.offset.toDouble()
-        val bottomTarget = noiseConfig.bottomSlide.target.toDouble()
-        val bottomSize = noiseConfig.bottomSlide.size.toDouble()
-        val bottomOffset = noiseConfig.bottomSlide.offset.toDouble()
-        val randomDensityOffset = if (noiseConfig.hasRandomDensityOffset()) getRandomDensityOffset(x, z) else 0.0
-        val densityFactor = noiseConfig.densityFactor
-        val densityOffset = noiseConfig.densityOffset
+        val xzScale = 684.412 * shapeConfig.sampling.xzScale
+        val yScale = 684.412 * shapeConfig.sampling.yScale
+        val xzFactor = xzScale / shapeConfig.sampling.xzFactor
+        val yFactor = yScale / shapeConfig.sampling.yFactor
+        val topTarget = shapeConfig.topSlide.target.toDouble()
+        val topSize = shapeConfig.topSlide.size.toDouble()
+        val topOffset = shapeConfig.topSlide.offset.toDouble()
+        val bottomTarget = shapeConfig.bottomSlide.target.toDouble()
+        val bottomSize = shapeConfig.bottomSlide.size.toDouble()
+        val bottomOffset = shapeConfig.bottomSlide.offset.toDouble()
+        val randomDensityOffset = if (shapeConfig.hasRandomDensityOffset()) getRandomDensityOffset(x, z) else 0.0
+        val densityFactor = shapeConfig.densityFactor
+        val densityOffset = shapeConfig.densityOffset
 
         for (sampleY in 0..noiseSizeY) {
             var density = sampleNoise(x, sampleY, z, xzScale, yScale, xzFactor, yFactor)
@@ -359,11 +366,12 @@ class NectereChunkGenerator private constructor(
     }
 
     private fun buildBedrock(chunk: Chunk, random: Random) {
+        val genSettings = settings()
         val mutable = BlockPos.Mutable()
         val i = chunk.pos.startX
         val j = chunk.pos.startZ
-        val k = generatorType.bedrockFloorY
-        val l = terrainHeight - 1 - generatorType.bedrockCeilingY
+        val k = genSettings.bedrockFloorY
+        val l = terrainHeight - 1 - genSettings.bedrockCeilingY
         val bl = l + 4 >= 0 && l < terrainHeight
         val bl2 = k + 4 >= 0 && k < terrainHeight
 
@@ -410,7 +418,7 @@ class NectereChunkGenerator private constructor(
         val j = chunkPos.z
         val k = i shl 4
         val l = j shl 4
-        for (structureFeature in StructureFeature.field_24861) {
+        for (structureFeature in StructureFeature.JIGSAW_STRUCTURES) {
             accessor.getStructuresWithChildren(ChunkSectionPos.from(chunkPos, 0), structureFeature)
                 .forEach { start: StructureStart<*>? ->
                     val var6: Iterator<StructurePiece> = start!!.children.iterator()
@@ -553,14 +561,14 @@ class NectereChunkGenerator private constructor(
     }
 
     override fun getSeaLevel(): Int {
-        return generatorType.method_28561()
+        return settings().seaLevel
     }
 
     override fun getEntitySpawnList(
         biome: Biome, accessor: StructureAccessor, group: SpawnGroup,
         pos: BlockPos
-    ): List<SpawnEntry> {
-        if (accessor.method_28388(pos, true, StructureFeature.SWAMP_HUT).hasChildren()) {
+    ): List<SpawnSettings.SpawnEntry> {
+        if (accessor.getStructureAt(pos, true, StructureFeature.SWAMP_HUT).hasChildren()) {
             if (group == SpawnGroup.MONSTER) {
                 return StructureFeature.SWAMP_HUT.monsterSpawns
             }
@@ -569,13 +577,13 @@ class NectereChunkGenerator private constructor(
             }
         }
         if (group == SpawnGroup.MONSTER) {
-            if (accessor.method_28388(pos, false, StructureFeature.PILLAGER_OUTPOST).hasChildren()) {
+            if (accessor.getStructureAt(pos, false, StructureFeature.PILLAGER_OUTPOST).hasChildren()) {
                 return StructureFeature.PILLAGER_OUTPOST.monsterSpawns
             }
-            if (accessor.method_28388(pos, false, StructureFeature.MONUMENT).hasChildren()) {
+            if (accessor.getStructureAt(pos, false, StructureFeature.MONUMENT).hasChildren()) {
                 return StructureFeature.MONUMENT.monsterSpawns
             }
-            if (accessor.method_28388(pos, true, StructureFeature.FORTRESS).hasChildren()) {
+            if (accessor.getStructureAt(pos, true, StructureFeature.FORTRESS).hasChildren()) {
                 return StructureFeature.FORTRESS.monsterSpawns
             }
         }
@@ -598,21 +606,20 @@ class NectereChunkGenerator private constructor(
             RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<NectereChunkGenerator> ->
                 instance
                     .group(
-                        BiomeSource.field_24713.fieldOf("biome_source").forGetter { it.biomeSource },
-                        Codec.LONG.fieldOf("seed").stable().forGetter { it.field_24778 },
-                        ChunkGeneratorType.field_24781.fieldOf("settings").forGetter { it.generatorType })
+                        BiomeSource.CODEC.fieldOf("biome_source").forGetter { it.biomeSource },
+                        Codec.LONG.fieldOf("seed").stable().forGetter { it.genSeed },
+                        ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter { Supplier { it.settings() } })
                     .apply(
                         instance,
-                        instance.stable(Function3 { biomeSource, l, chunkGeneratorType ->
+                        instance.stable(Function3 { biomeSource, seed, genSettings ->
                             NectereChunkGenerator(
                                 if (HotMConfig.CONFIG.forceNectereBiomeSource) {
-                                    HotMDimensions.NECTERE_BIOME_SOURCE_PRESET.getBiomeSource(l)
+                                    HotMDimensions.NECTERE_BIOME_SOURCE_PRESET.getBiomeSource(HotMBiomes.builtinBiomeRegistry(), seed)
                                 } else {
                                     biomeSource
                                 },
-                                l,
-                                chunkGeneratorType
-                            )
+                                seed
+                            ) { genSettings.get() }
                         })
                     )
             }

@@ -1,8 +1,9 @@
 package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMConfig
+import com.github.hotm.gen.HotMBiomes
 import com.github.hotm.gen.HotMDimensions
-import com.github.hotm.gen.biome.NectereBiome
+import com.github.hotm.gen.biome.NectereBiomeData
 import com.github.hotm.mixin.StructurePieceAccessor
 import com.github.hotm.util.WorldUtils
 import com.mojang.serialization.Codec
@@ -15,8 +16,11 @@ import net.minecraft.util.math.BlockBox
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.ChunkSectionPos
+import net.minecraft.util.registry.DynamicRegistryManager
 import net.minecraft.util.registry.Registry
-import net.minecraft.world.ServerWorldAccess
+import net.minecraft.util.registry.RegistryKey
+import net.minecraft.world.StructureWorldAccess
+import net.minecraft.world.WorldAccess
 import net.minecraft.world.WorldView
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.source.BiomeSource
@@ -37,12 +41,11 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
     StructureFeature<DefaultFeatureConfig>(config) {
     companion object {
         private fun checkBiomes(nonNectereWorld: ServerWorld, nonNecterePos: BlockPos): Boolean {
-            val structurePos = NecterePortalGen.unPortalPos(nonNecterePos)
-            val biomeId = Registry.BIOME.getId(
+            val biomeId = nonNectereWorld.registryManager[Registry.BIOME_KEY].getId(
                 nonNectereWorld.chunkManager.chunkGenerator.biomeSource.getBiomeForNoiseGen(
-                    structurePos.x shr 2,
-                    structurePos.y shr 2,
-                    structurePos.z shr 2
+                    nonNecterePos.x shr 2,
+                    nonNecterePos.y shr 2,
+                    nonNecterePos.z shr 2
                 )
             )
 
@@ -50,8 +53,7 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
         }
 
         private fun checkExactBiomes(nonNectereWorld: ServerWorld, nonNecterePos: BlockPos): Boolean {
-            val structurePos = NecterePortalGen.unPortalPos(nonNecterePos)
-            val biomeId = Registry.BIOME.getId(nonNectereWorld.getBiome(structurePos))
+            val biomeId = nonNectereWorld.method_31081(nonNecterePos).orElse(null)?.value
 
             return biomeId != null && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(biomeId.toString())
         }
@@ -63,37 +65,15 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
         }
     }
 
-    /**
-     * Make sure Nectere portal structures only spawn in NectereBiomes that are portalable.
-     */
-    override fun shouldStartAt(
-        chunkGenerator: ChunkGenerator,
-        biomeSource: BiomeSource,
-        seed: Long,
-        chunkRandom: ChunkRandom,
-        chunkX: Int,
-        chunkZ: Int,
-        biome: Biome,
-        chunkPos: ChunkPos,
-        featureConfig: DefaultFeatureConfig
-    ): Boolean {
-        val portalBiome = biomeSource.getBiomeForNoiseGen(
-            NecterePortalGen.getPortalX(chunkX) shr 2,
-            64 shr 2,
-            NecterePortalGen.getPortalZ(chunkZ) shr 2
-        )
-        return portalBiome is NectereBiome && portalBiome.isPortalable
-    }
-
     fun locateNonNectereSidePortal(
-        nectereWorld: WorldView,
+        nectereWorld: WorldAccess,
         structureAccessor: StructureAccessor,
         blockPos: BlockPos,
         maxRadius: Int,
         skipExistingChunks: Boolean,
         seed: Long,
         structureConfig: StructureConfig,
-        biome: NectereBiome,
+        biomeKey: RegistryKey<Biome>,
         nonNectereWorld: ServerWorld
     ): BlockPos? {
         val spacing = structureConfig.spacing
@@ -111,7 +91,7 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                         val curChunkX = chunkX + spacing * structX
                         val curChunkZ = chunkZ + spacing * structZ
 
-                        val chunkPos: ChunkPos = method_27218(structureConfig, seed, chunkRandom, curChunkX, curChunkZ)
+                        val chunkPos: ChunkPos = getStartChunk(structureConfig, seed, chunkRandom, curChunkX, curChunkZ)
 
                         val chunk = nectereWorld.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS)
                         val structureStart =
@@ -124,7 +104,7 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                         if (structureStart != null && structureStart.hasChildren()) {
                             val portalPos = NecterePortalGen.portalPos(structureStart.pos)
 
-                            if (biome == nectereWorld.getBiome(portalPos)) {
+                            if (biomeKey == nectereWorld.method_31081(portalPos).orElse(null)) {
                                 // Don't locate portals in biomes that won't generate portals in the first place
                                 val nonNecterePos =
                                     HotMDimensions.getBaseCorrespondingNonNectereCoords(nectereWorld, portalPos)
@@ -172,20 +152,35 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
         seed: Long
     ) : StructureStart<DefaultFeatureConfig>(feature, chunkX, chunkZ, box, references, seed) {
         override fun init(
+            registryManager: DynamicRegistryManager,
             chunkGenerator: ChunkGenerator,
             structureManager: StructureManager,
-            x: Int,
-            z: Int,
+            chunkX: Int,
+            chunkZ: Int,
             biome: Biome,
             featureConfig: DefaultFeatureConfig
         ) {
-            children.add(
-                Piece(
-                    random,
-                    NecterePortalGen.getPortalStructureX(x),
-                    NecterePortalGen.getPortalStructureZ(z)
+            val portalBiome = registryManager.get(Registry.BIOME_KEY).getKey(
+                chunkGenerator.biomeSource.getBiomeForNoiseGen(
+                    NecterePortalGen.getPortalX(chunkX) shr 2,
+                    64 shr 2,
+                    NecterePortalGen.getPortalZ(chunkZ) shr 2
                 )
-            )
+            ).orElse(null)
+
+            // Make sure Nectere portal structures only spawn in Nectere biomes that are portalable.
+            if (portalBiome != null && HotMBiomes.biomeData()
+                    .containsKey(portalBiome) && (HotMBiomes.biomeData()[portalBiome]
+                    ?: error("Invalid biome")).isPortalable
+            ) {
+                children.add(
+                    Piece(
+                        random,
+                        NecterePortalGen.getPortalStructureX(chunkX),
+                        NecterePortalGen.getPortalStructureZ(chunkZ)
+                    )
+                )
+            }
             setBoundingBoxFromChildren()
         }
     }
@@ -208,7 +203,7 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
         constructor(manager: StructureManager, tag: CompoundTag) : super(HotMStructurePieces.NECTERE_PORTAL, tag)
 
         override fun generate(
-            world: ServerWorldAccess,
+            world: StructureWorldAccess,
             structureAccessor: StructureAccessor,
             chunkGenerator: ChunkGenerator,
             random: Random,

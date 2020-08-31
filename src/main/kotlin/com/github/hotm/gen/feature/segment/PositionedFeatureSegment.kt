@@ -2,6 +2,7 @@ package com.github.hotm.gen.feature.segment
 
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.ServerWorldAccess
+import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.StructureAccessor
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import java.util.*
@@ -13,11 +14,10 @@ data class PositionedFeatureSegment<C>(val pos: BlockPos, val segment: FeatureSe
     fun tryGenerate(
         placements: MutableMap<BlockPos, BlockPlacement>,
         children: MutableCollection<PositionedFeatureSegment<*>>,
-        world: ServerWorldAccess,
-        structureAccessor: StructureAccessor,
+        world: StructureWorldAccess,
         generator: ChunkGenerator,
         random: Random
     ): Boolean {
-        return segment.tryGenerate(placements, children, world, structureAccessor, generator, random, pos, context)
+        return segment.tryGenerate(placements, children, world, generator, random, pos, context)
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.decorator.Decorator
+import net.minecraft.world.gen.decorator.DecoratorContext
 import java.util.*
 import java.util.stream.IntStream
 import java.util.stream.Stream
@@ -19,8 +20,7 @@ class CountChanceSurfaceInRangeDecorator(codec: Codec<CountChanceInRangeDecorato
     private val levels: ThreadLocal<IntArrayList> = ThreadLocal.withInitial { IntArrayList() }
 
     override fun getPositions(
-        world: WorldAccess,
-        generator: ChunkGenerator,
+        context: DecoratorContext,
         random: Random,
         config: CountChanceInRangeDecoratorConfig,
         pos: BlockPos
@@ -36,7 +36,7 @@ class CountChanceSurfaceInRangeDecorator(codec: Codec<CountChanceInRangeDecorato
             ls.clear()
             for (y in config.minHeight until config.maxHeight) {
                 mutable.y = y
-                if (world.isAir(mutable) && !world.isAir(mutable.down())) {
+                if (context.getBlockState(mutable).isAir && !context.getBlockState(mutable.down()).isAir) {
                     ls.add(y)
                 }
             }

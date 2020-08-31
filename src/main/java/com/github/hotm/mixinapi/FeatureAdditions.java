@@ -1,18 +1,21 @@
 package com.github.hotm.mixinapi;
 
+import com.github.hotm.gen.feature.HotMBiomeFeatures;
 import com.github.hotm.gen.feature.HotMStructureFeatures;
 import com.github.hotm.mixin.StructureFeatureAccessor;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.chunk.StructureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 
 /**
- * API to handle registering new structures.
+ * API to handle registering new structures and features.
  */
-public class StructureAdditions {
-    public static <F extends StructureFeature<?>> F register(String name, F structure, GenerationStep.Feature step) {
+public class FeatureAdditions {
+    public static <F extends StructureFeature<?>> F registerStructure(String name, F structure,
+                                                                      GenerationStep.Feature step) {
         StructureFeature.STRUCTURES.put(name, structure);
         StructureFeatureAccessor.getStructureToGenerationStep().put(structure, step);
         return Registry.register(Registry.STRUCTURE_FEATURE, name, structure);
@@ -34,5 +37,18 @@ public class StructureAdditions {
         config.putAll(defaultConfig);
         HotMStructureFeatures.INSTANCE.addConfigs(config);
         return config.build();
+    }
+
+    /**
+     * This is called every time a GenerationSettings.Builder.build() function is called to add features to the biome
+     * being built. This means that every biome will get the features that this method adds.
+     *
+     * This calls Heart of the Machine's HotMBiomeFeatures addUbiquitousFeatures to add Nectere portals to every biome.
+     * Per-biome Nectere portal disabling is handled in the Feature's Decorator.
+     *
+     * @param settings a reference to the builder of the biome generation settings being built.
+     */
+    public static void addUbiquitousGenerationSettings(GenerationSettings.Builder settings) {
+        HotMBiomeFeatures.INSTANCE.addUbiquitousFeatures(settings);
     }
 }
