@@ -61,8 +61,7 @@ object HotMBiomes {
      * there.
      */
     fun builtinBiomeRegistry(): Registry<Biome> {
-        val registryManager = DynamicRegistryManager.create()
-        return registryManager[Registry.BIOME_KEY]
+        return BuiltinRegistries.BIOME
     }
 
     /**
