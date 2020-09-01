@@ -4,8 +4,10 @@ import com.github.hotm.HotMConstants
 import com.github.hotm.gen.biome.NectereBiomeData
 import com.github.hotm.gen.feature.HotMBiomeFeatures
 import com.github.hotm.gen.feature.HotMStructureFeatures
+import com.github.hotm.mixin.BuiltinBiomesAccessor
 import net.minecraft.sound.BiomeMoodSound
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.MathHelper
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.DynamicRegistryManager
 import net.minecraft.util.registry.Registry
@@ -90,6 +92,7 @@ object HotMBiomes {
         effects.waterFogColor(0x050533)
         effects.fogColor(0x7591c7)
         effects.moodSound(BiomeMoodSound.CAVE)
+        effects.skyColor(getSkyColor(0.5f))
 
         val spawns = SpawnSettings.Builder()
 
@@ -120,6 +123,7 @@ object HotMBiomes {
         effects.waterFogColor(0x050533)
         effects.fogColor(0x222222)
         effects.moodSound(BiomeMoodSound.CAVE)
+        effects.skyColor(getSkyColor(0.8f))
 
         val spawns = SpawnSettings.Builder()
 
@@ -161,8 +165,19 @@ object HotMBiomes {
         BIOME_NOISE[key] = biomeNoise
         BIOME_DEFAULTS[key] = biome
 
-        Registry.register(BuiltinRegistries.BIOME, ident, biome)
+        val byRawId = BuiltinBiomesAccessor.getByRawId()
+        val rawId = byRawId.size
+
+        byRawId[rawId] = key
+        BuiltinRegistries.set(BuiltinRegistries.BIOME, rawId, key, biome)
+//        Registry.register(BuiltinRegistries.BIOME, ident, biome)
 
         return key
+    }
+
+    private fun getSkyColor(temperature: Float): Int {
+        var f = temperature / 3.0f
+        f = MathHelper.clamp(f, -1.0f, 1.0f)
+        return MathHelper.hsvToRgb(0.62222224f - f * 0.05f, 0.5f + f * 0.1f, 1.0f)
     }
 }

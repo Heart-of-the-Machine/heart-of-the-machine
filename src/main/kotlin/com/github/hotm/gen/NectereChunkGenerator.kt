@@ -613,11 +613,7 @@ class NectereChunkGenerator private constructor(
                         instance,
                         instance.stable(Function3 { biomeSource, seed, genSettings ->
                             NectereChunkGenerator(
-                                if (HotMConfig.CONFIG.forceNectereBiomeSource) {
-                                    HotMDimensions.NECTERE_BIOME_SOURCE_PRESET.getBiomeSource(HotMBiomes.builtinBiomeRegistry(), seed)
-                                } else {
-                                    biomeSource
-                                },
+                                biomeSource,
                                 seed
                             ) { genSettings.get() }
                         })

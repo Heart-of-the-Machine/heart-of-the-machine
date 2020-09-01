@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @SuppressWarnings("unused")
 @Mixin(Entity.class)
 public class EntityMixin {
-    @Inject(method = "getTeleportTarget", at = @At("HEAD"))
+    @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
     private void onGetTeleportTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
         if (DimensionAdditions.shouldUseCustomPlacer(destination)) {
             cir.setReturnValue(DimensionAdditions.useCustomPlacer((Entity) (Object) this, destination));

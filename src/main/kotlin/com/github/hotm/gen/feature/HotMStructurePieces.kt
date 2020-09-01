@@ -6,9 +6,8 @@ import net.minecraft.structure.StructurePieceType
  * Manages the Heart of the Machine Structure Pieces.
  */
 object HotMStructurePieces {
-    val NECTERE_PORTAL = StructurePieceType { manager, tag -> NecterePortalStructureFeature.Piece(manager, tag) }
+    val NECTERE_PORTAL =
+        StructurePieceType.register({ manager, tag -> NecterePortalStructureFeature.Piece(manager, tag) }, "HotMNePP")
 
-    fun register() {
-        StructurePieceType.register(NECTERE_PORTAL, "HotMNePP")
-    }
+    fun register() {}
 }

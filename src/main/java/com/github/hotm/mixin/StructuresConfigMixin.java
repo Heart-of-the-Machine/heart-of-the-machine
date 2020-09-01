@@ -30,7 +30,8 @@ public class StructuresConfigMixin {
      *
      * @param ci (unused) callback information.
      */
-    @Inject(method = "<clinit>", at = @At("RETURN"))
+    @Inject(method = "<clinit>",
+            at = @At(value = "FIELD", target = "Lnet/minecraft/util/registry/Registry;STRUCTURE_FEATURE:Lnet/minecraft/util/registry/Registry;", ordinal = 0))
     private static void onClinit(CallbackInfo ci) {
         DEFAULT_STRUCTURES = FeatureAdditions.addDefaultStructureConfigs(DEFAULT_STRUCTURES);
     }

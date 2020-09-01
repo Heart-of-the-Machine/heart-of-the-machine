@@ -110,7 +110,7 @@ object HotMBiomeFeatures {
                     )
                 )
             )
-        ).decorate(Decorator.RANGE.configure(RangeDecoratorConfig(15, 0, 0)).repeat(100))
+        ).decorate(Decorator.RANGE.configure(RangeDecoratorConfig(15, 8, 128)).spreadHorizontally().repeat(100))
     )
 
     /**
@@ -261,7 +261,7 @@ object HotMBiomeFeatures {
      * Adds server towers.
      */
     fun addServerTowers(genSettings: GenerationSettings.Builder) {
-        genSettings.feature(GenerationStep.Feature.UNDERGROUND_DECORATION, CONFIGURED_SERVER_TOWER)
+        genSettings.feature(GenerationStep.Feature.UNDERGROUND_STRUCTURES, CONFIGURED_SERVER_TOWER)
     }
 
     /**

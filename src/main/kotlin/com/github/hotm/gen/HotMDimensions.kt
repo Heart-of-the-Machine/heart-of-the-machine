@@ -32,6 +32,7 @@ import net.minecraft.world.*
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource
+import net.minecraft.world.dimension.DimensionType
 import net.minecraft.world.gen.ChunkRandom
 import net.minecraft.world.gen.chunk.*
 import net.minecraft.world.gen.feature.FeatureConfig
@@ -69,7 +70,7 @@ object HotMDimensions {
         false,
         false,
         true,
-        false,
+        1.0,
         false,
         false,
         false,
@@ -78,6 +79,7 @@ object HotMDimensions {
         256,
         HorizontalVoronoiBiomeAccessType.INSTANCE,
         BlockTags.INFINIBURN_OVERWORLD.id,
+        DimensionType.OVERWORLD_ID,
         0.1f
     )
 
@@ -512,15 +514,15 @@ object HotMDimensions {
             val necterePortalPos =
                 BlockPos(NecterePortalGen.getPortalX(portalChunk.x), 64, NecterePortalGen.getPortalZ(portalChunk.z))
 
-            val biome = biomeRegistry.getKey(
-                biomeSource.getBiomeForNoiseGen(
-                    necterePortalPos.x shr 2,
-                    necterePortalPos.y shr 2,
-                    necterePortalPos.z shr 2
-                )
-            ).orElse(null)
+            val biome = biomeSource.getBiomeForNoiseGen(
+                necterePortalPos.x shr 2,
+                necterePortalPos.y shr 2,
+                necterePortalPos.z shr 2
+            )
 
-            if (nectereBiomeData.biome == biome) {
+            val biomeId = biomeRegistry.getKey(biome).orElse(null)
+
+            if (nectereBiomeData.biome == biomeId) {
                 val resX = floor(necterePortalPos.x.toDouble() * nectereBiomeData.coordinateMultiplier)
                 val resZ = floor(necterePortalPos.z.toDouble() * nectereBiomeData.coordinateMultiplier)
 

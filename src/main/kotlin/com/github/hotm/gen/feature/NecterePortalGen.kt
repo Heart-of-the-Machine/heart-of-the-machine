@@ -58,7 +58,7 @@ object NecterePortalGen {
                 }
             ) + 4
             roof > MIN_ROOF_HEIGHT -> surfaces[random.nextInt(surfaces.size)]
-            else -> context.getTopY(Heightmap.Type.WORLD_SURFACE_WG, x, z)
+            else -> context.getTopY(Heightmap.Type.WORLD_SURFACE, x, z)
         }
     }
 
@@ -92,7 +92,7 @@ object NecterePortalGen {
                 }
             ) + 4
             roof > MIN_ROOF_HEIGHT -> surfaces[random.nextInt(surfaces.size)]
-            else -> world.getTopY(Heightmap.Type.WORLD_SURFACE_WG, x, z)
+            else -> world.getTopY(Heightmap.Type.WORLD_SURFACE, x, z)
         }
     }
 

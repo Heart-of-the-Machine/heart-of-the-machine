@@ -50,7 +50,6 @@ class HotMConfig {
                 val biomes = mutableListOf<String>()
 
                 for (biomeId in biomeRegistry.ids) {
-                    println("[CONFIG] Biome: $biomeId")
                     val biome = biomeRegistry[biomeId]!!
                     if (biome.category == Biome.Category.OCEAN || biome.category == Biome.Category.RIVER) {
                         biomes += biomeId.toString()

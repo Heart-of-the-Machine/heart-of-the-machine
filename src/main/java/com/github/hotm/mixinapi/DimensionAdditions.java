@@ -43,7 +43,8 @@ public class DimensionAdditions {
     public static ChunkGeneratorSettings createChunkGeneratorSettings(StructuresConfig structuresConfig,
                                                                       GenerationShapeConfig generationShapeConfig,
                                                                       BlockState defaultBlock, BlockState defaultFluid,
-                                                                      int bedrockCeilingY, int bedrockFloorY, int seaLevel,
+                                                                      int bedrockCeilingY, int bedrockFloorY,
+                                                                      int seaLevel,
                                                                       boolean mobGenerationDisabled) {
         return ChunkGeneratorSettingsInvoker
                 .create(structuresConfig, generationShapeConfig, defaultBlock, defaultFluid, bedrockCeilingY,
@@ -57,15 +58,15 @@ public class DimensionAdditions {
     }
 
     public static DimensionType createDimensionType(OptionalLong fixedTime, boolean hasSkylight, boolean hasCeiling,
-                                                    boolean ultrawarm, boolean natural, boolean shrunk,
+                                                    boolean ultrawarm, boolean natural, double coordinateScale,
                                                     boolean hasEnderDragonFight, boolean piglinSafe, boolean bedWorks,
                                                     boolean respawnAnchorWorks, boolean hasRaids, int logicalHeight,
                                                     BiomeAccessType biomeAccessType, Identifier infiniburn,
-                                                    float ambientLight) {
+                                                    Identifier skyProperties, float ambientLight) {
         return DimensionTypeInvoker
-                .create(fixedTime, hasSkylight, hasCeiling, ultrawarm, natural, shrunk, hasEnderDragonFight, piglinSafe,
-                        bedWorks, respawnAnchorWorks, hasRaids, logicalHeight, biomeAccessType, infiniburn,
-                        ambientLight);
+                .create(fixedTime, hasSkylight, hasCeiling, ultrawarm, natural, coordinateScale, hasEnderDragonFight,
+                        piglinSafe, bedWorks, respawnAnchorWorks, hasRaids, logicalHeight, biomeAccessType, infiniburn,
+                        skyProperties, ambientLight);
     }
 
     public static void addDimension(DimensionAddition addition) {

@@ -15,9 +15,10 @@ import java.util.OptionalLong;
 public interface DimensionTypeInvoker {
     @Invoker("<init>")
     static DimensionType create(OptionalLong fixedTime, boolean hasSkylight, boolean hasCeiling, boolean ultrawarm,
-                                boolean natural, boolean shrunk, boolean hasEnderDragonFight, boolean piglinSafe,
-                                boolean bedWorks, boolean respawnAnchorWorks, boolean hasRaids, int logicalHeight,
-                                BiomeAccessType biomeAccessType, Identifier infiniburn, float ambientLight) {
+                                boolean natural, double coordinateScale, boolean hasEnderDragonFight,
+                                boolean piglinSafe, boolean bedWorks, boolean respawnAnchorWorks, boolean hasRaids,
+                                int logicalHeight, BiomeAccessType biomeAccessType, Identifier infiniburn,
+                                Identifier skyProperties, float ambientLight) {
         throw new RuntimeException("DimensionTypeInvoker mixin was not properly mixed in!");
     }
 }
