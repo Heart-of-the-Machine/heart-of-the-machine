@@ -94,7 +94,7 @@ public class DimensionAdditions {
 
         System.out.println("HotM Adding Dimensions:");
         for (DimensionAddition addition : ADDITIONS) {
-            if (!optionsRegistry.containsId(addition.getOptionsRegistryKey().getValue())) {
+            if (!optionsRegistry.getIds().contains(addition.getOptionsRegistryKey().getValue())) {
                 optionsRegistry.add(addition.getOptionsRegistryKey(),
                         new DimensionOptions(() -> dimensionTypes.getOrThrow(addition.getTypeRegistryKey()),
                                 addition.getChunkGeneratorSupplier()
