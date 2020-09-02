@@ -185,8 +185,10 @@ object HotMDimensions {
     ): NectereChunkGenerator {
         return NectereChunkGenerator(
             NECTERE_BIOME_SOURCE_PRESET.getBiomeSource(biomes, seed),
-            seed
-        ) { generatorSettings.getOrThrow(NECTERE_CHUNK_GENERATOR_SETTINGS_KEY) }
+            seed,
+            { generatorSettings.getOrThrow(NECTERE_CHUNK_GENERATOR_SETTINGS_KEY) },
+            biomes
+        )
     }
 
     /**
@@ -301,6 +303,7 @@ object HotMDimensions {
      * that portal.
      */
     private fun createNecterePortal(world: WorldAccess, newPoses: List<BlockPos>): BlockPos {
+        // TODO: Look into making a command that does this for missing portals
         val rand = Random()
         val portalXZ = newPoses[rand.nextInt(newPoses.size)]
         val portalPos = BlockPos(

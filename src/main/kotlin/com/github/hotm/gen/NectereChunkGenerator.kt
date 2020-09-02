@@ -1,7 +1,7 @@
 package com.github.hotm.gen
 
 import com.github.hotm.HotMConfig
-import com.mojang.datafixers.util.Function3
+import com.mojang.datafixers.util.Function4
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
@@ -25,7 +25,9 @@ import net.minecraft.util.math.noise.NoiseSampler
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler
 import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler
 import net.minecraft.util.math.noise.SimplexNoiseSampler
+import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
+import net.minecraft.util.registry.RegistryLookupCodec
 import net.minecraft.world.*
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.SpawnSettings
@@ -48,7 +50,7 @@ import kotlin.math.pow
 
 class NectereChunkGenerator private constructor(
     biomeSource: BiomeSource, biomeSource2: BiomeSource, private val genSeed: Long,
-    private val settings: () -> ChunkGeneratorSettings
+    private val settings: () -> ChunkGeneratorSettings, private val biomeRegistry: Registry<Biome>
 ) : ChunkGenerator(biomeSource, biomeSource2, settings().structuresConfig, genSeed) {
     private val verticalNoiseResolution: Int
     private val horizontalNoiseResolution: Int
@@ -96,11 +98,17 @@ class NectereChunkGenerator private constructor(
         }
     }
 
-    constructor(biomeSource: BiomeSource, l: Long, settings: () -> ChunkGeneratorSettings) : this(
+    constructor(
+        biomeSource: BiomeSource,
+        l: Long,
+        settings: () -> ChunkGeneratorSettings,
+        registry: Registry<Biome>
+    ) : this(
         biomeSource,
         biomeSource,
         l,
-        settings
+        settings,
+        registry
     )
 
     override fun getCodec(): Codec<out ChunkGenerator> {
@@ -109,7 +117,7 @@ class NectereChunkGenerator private constructor(
 
     @Environment(EnvType.CLIENT)
     override fun withSeed(seed: Long): ChunkGenerator {
-        return NectereChunkGenerator(biomeSource.withSeed(seed), seed, settings)
+        return NectereChunkGenerator(biomeSource.withSeed(seed), seed, settings, biomeRegistry)
     }
 
     fun method_28548(seed: Long, registryKey: RegistryKey<ChunkGeneratorSettings?>?): Boolean {
@@ -606,16 +614,25 @@ class NectereChunkGenerator private constructor(
             RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<NectereChunkGenerator> ->
                 instance
                     .group(
-                        BiomeSource.CODEC.fieldOf("biome_source").forGetter { it.biomeSource },
-                        Codec.LONG.fieldOf("seed").stable().forGetter { it.genSeed },
-                        ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter { Supplier { it.settings() } })
+                        BiomeSource.CODEC.fieldOf("biome_source").forGetter(NectereChunkGenerator::biomeSource),
+                        Codec.LONG.fieldOf("seed").stable().forGetter(NectereChunkGenerator::genSeed),
+                        ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings")
+                            .forGetter { Supplier { it.settings() } },
+                        RegistryLookupCodec.of(Registry.BIOME_KEY).forGetter(NectereChunkGenerator::biomeRegistry)
+                    )
                     .apply(
                         instance,
-                        instance.stable(Function3 { biomeSource, seed, genSettings ->
+                        instance.stable(Function4 { biomeSource, seed, genSettings, registry ->
                             NectereChunkGenerator(
-                                biomeSource,
-                                seed
-                            ) { genSettings.get() }
+                                if (HotMConfig.CONFIG.forceNectereBiomeSource) {
+                                    HotMDimensions.NECTERE_BIOME_SOURCE_PRESET.getBiomeSource(registry, seed)
+                                } else {
+                                    biomeSource
+                                },
+                                seed,
+                                { genSettings.get() },
+                                registry
+                            )
                         })
                     )
             }
