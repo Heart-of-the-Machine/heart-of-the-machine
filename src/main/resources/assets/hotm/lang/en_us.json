@@ -35,5 +35,9 @@
   "block.hotm.thinking_stone_tiles": "Thinking Stone Tiles",
   "block.hotm.thinking_stone_tile_slab": "Thinking Stone Tile Slab",
   "block.hotm.thinking_stone_tile_stairs": "Thinking Stone Tile Stairs",
-  "itemGroup.hotm.building": "Heart of the Machine"
+  "itemGroup.hotm.building": "Heart of the Machine",
+  "command.hotm.retrogen_nectere_portal.failed": "Nectere portal retro-generation failed.",
+  "command.hotm.retrogen_nectere_portal.wrong_world": "Nectere portal retro-generation cannot be executed in the Nectere dimension.",
+  "command.hotm.retrogen_nectere_portal.found": "Found an existing Nectere portal at %s (%s blocks away)",
+  "command.hotm.retrogen_nectere_portal.generated": "Generated a new Nectere portal at %s (%s blocks away)"
 }

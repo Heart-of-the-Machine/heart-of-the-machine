@@ -16,5 +16,6 @@ fun init() {
     HotMBiomes.register()
     HotMDimensions.register()
     HotMBiomeFeatures.register()
+    HotMCommands.register()
     HotMDimensions.findBiomes()
 }

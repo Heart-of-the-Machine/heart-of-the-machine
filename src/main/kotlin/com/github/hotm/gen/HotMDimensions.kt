@@ -303,7 +303,6 @@ object HotMDimensions {
      * that portal.
      */
     private fun createNecterePortal(world: WorldAccess, newPoses: List<BlockPos>): BlockPos {
-        // TODO: Look into making a command that does this for missing portals
         val rand = Random()
         val portalXZ = newPoses[rand.nextInt(newPoses.size)]
         val portalPos = BlockPos(
@@ -670,5 +669,35 @@ object HotMDimensions {
             }
         }.min(Comparator.comparing<BlockPos, Double> { portalPos -> portalPos.getSquaredDistance(currentPos) })
             .orElse(null)
+    }
+
+    /**
+     * Retro-generates the "nearest" Nectere portal.
+     */
+    fun retrogenNonNectereSidePortal(
+        currentWorld: ServerWorld,
+        currentPos: BlockPos,
+        radius: Int
+    ): RetrogenPortalResult {
+        return locateNonNectereSidePortal(currentWorld, currentPos, radius, false)?.let { structurePos ->
+            val portalPos = NecterePortalGen.portalPos(structurePos)
+            val foundPos = findNecterePortal(currentWorld, listOf(portalPos))
+            if (foundPos == null) {
+                val genPos = createNecterePortal(currentWorld, listOf(portalPos))
+
+                RetrogenPortalResult.Generated(NecterePortalGen.unPortalPos(genPos))
+            } else {
+                RetrogenPortalResult.Found(NecterePortalGen.unPortalPos(foundPos))
+            }
+        } ?: RetrogenPortalResult.Failure
+    }
+
+    /**
+     * The possible results of portal retro-generation.
+     */
+    sealed class RetrogenPortalResult {
+        object Failure : RetrogenPortalResult()
+        data class Found(val blockPos: BlockPos) : RetrogenPortalResult()
+        data class Generated(val blockPos: BlockPos) : RetrogenPortalResult()
     }
 }
