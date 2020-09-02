@@ -282,6 +282,7 @@ object HotMBiomeFeatures {
      * Called to add Nectere portal potential to every biome.
      */
     fun addUbiquitousFeatures(settings: GenerationSettings.Builder) {
+        // TODO: Investigate better ways to do this.
         addNecterePortals(settings)
     }
 
