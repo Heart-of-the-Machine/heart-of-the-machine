@@ -73,7 +73,7 @@ class HotMConfig {
 
     var necterePortalWorldGenBlacklistBiomes: MutableList<String>? = null
 
-    var forceNectereBiomeSource = true
+    var forceNectereBiomeSource = false
 
     var generateMissingPortals = true
 }
