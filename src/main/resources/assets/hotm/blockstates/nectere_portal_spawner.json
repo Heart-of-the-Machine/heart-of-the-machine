@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hotm:block/nectere_portal_spawner"
+    }
+  }
+}
