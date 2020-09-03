@@ -168,8 +168,6 @@ object HotMDimensions {
             NECTERE_TYPE
         ) { biomes, generatorSettings, seed -> createNectereGenerator(biomes, generatorSettings, seed) }
 
-        DimensionAdditions.setSaveDir(NECTERE_KEY, "DIM-nectere")
-
         DimensionAdditions.registerDefaultPlacer(
             NECTERE_KEY
         ) { oldEntity, destination -> getGenericTeleportTarget(oldEntity, destination) }

@@ -37,7 +37,6 @@ import java.util.function.Supplier;
 public class DimensionAdditions {
     private static final List<DimensionAddition> ADDITIONS = new ArrayList<>();
     private static final Map<RegistryKey<DimensionOptions>, DimensionAddition> DIMENSION_KEYS = new HashMap<>();
-    private static final Map<RegistryKey<World>, String> SAVE_DIRS = new HashMap<>();
     private static final Map<RegistryKey<World>, EntityPlacer> DEFAULT_PLACERS = new HashMap<>();
     private static final ThreadLocal<EntityPlacer> CURRENT_PLACER = new ThreadLocal<>();
 
@@ -80,10 +79,6 @@ public class DimensionAdditions {
         addDimension(new DimensionAddition(optionsKey, typeKey, type, chunkSupplier));
     }
 
-    public static void setSaveDir(RegistryKey<World> key, String saveDir) {
-        SAVE_DIRS.put(key, saveDir);
-    }
-
     public static void setupDimensionOptions(
             Registry<DimensionType> dimensionTypes,
             Registry<Biome> biomes,
@@ -112,14 +107,6 @@ public class DimensionAdditions {
         for (DimensionAddition addition : ADDITIONS) {
             dimensionTypes.add(addition.getTypeRegistryKey(), addition.getDimensionType(), Lifecycle.stable());
         }
-    }
-
-    public static boolean containsSaveDir(RegistryKey<World> key) {
-        return SAVE_DIRS.containsKey(key);
-    }
-
-    public static File getSaveDir(RegistryKey<World> key, File root) {
-        return new File(root, SAVE_DIRS.get(key));
     }
 
     public static boolean checkAndRemoveDimensions(long seed,

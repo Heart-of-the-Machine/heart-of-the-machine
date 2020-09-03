@@ -35,11 +35,4 @@ public class DimensionTypeMixin {
         MutableRegistry<DimensionType> dimensionTypes = registryManager.get(Registry.DIMENSION_TYPE_KEY);
         DimensionAdditions.setupDimensionTypes(dimensionTypes);
     }
-
-    @Inject(method = "getSaveDirectory", at = @At("HEAD"), cancellable = true)
-    private static void onGetSaveDirectory(RegistryKey<World> worldRef, File root, CallbackInfoReturnable<File> cir) {
-        if (DimensionAdditions.containsSaveDir(worldRef)) {
-            cir.setReturnValue(DimensionAdditions.getSaveDir(worldRef, root));
-        }
-    }
 }
