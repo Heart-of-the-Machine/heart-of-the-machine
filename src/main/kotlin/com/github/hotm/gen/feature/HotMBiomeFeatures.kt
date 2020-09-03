@@ -109,7 +109,7 @@ object HotMBiomeFeatures {
                     )
                 )
             )
-        ).decorate(Decorator.RANGE.configure(RangeDecoratorConfig(15, 8, 128)).spreadHorizontally().repeat(100))
+        ).decorate(Decorator.RANGE.configure(RangeDecoratorConfig(15, 8, 128)).spreadHorizontally().repeat(40))
     )
 
     /**
