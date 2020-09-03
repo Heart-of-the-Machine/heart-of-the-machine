@@ -36,14 +36,21 @@ class NecterePortalSpawnerBlockEntity : BlockEntity(HotMBlockEntities.NECTERE_PO
     override fun tick() {
         val world = world
         if (world != null && world is ServerWorld) {
-            val random = Random()
-            NecterePortalGen.generateForChunk(world, ChunkPos(pos), random)
-
             world.removeBlockEntity(pos)
 
             if (originalBlock.block != HotMBlocks.NECTERE_PORTAL_SPAWNER) {
                 world.setBlockState(pos, originalBlock)
             }
+
+            spawn()
+        }
+    }
+
+    fun spawn() {
+        val world = world
+        if (world != null && world is ServerWorld) {
+            val random = Random()
+            NecterePortalGen.generateForChunk(world, ChunkPos(pos), random)
         }
     }
 }

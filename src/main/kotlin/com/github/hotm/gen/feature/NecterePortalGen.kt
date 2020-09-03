@@ -15,7 +15,6 @@ import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.Heightmap
 import net.minecraft.world.WorldAccess
-import net.minecraft.world.gen.decorator.DecoratorContext
 import java.util.*
 
 object NecterePortalGen {
@@ -31,40 +30,6 @@ object NecterePortalGen {
 
     fun unPortalPos(portalPos: BlockPos): BlockPos {
         return portalPos.add(-PORTAL_OFFSET_X, -PORTAL_OFFSET_Y, -PORTAL_OFFSET_Z)
-    }
-
-    fun getPortalStructureY(context: DecoratorContext, x: Int, z: Int, random: Random): Int {
-        val surfaces = mutableListOf<Int>()
-        val pos = BlockPos.Mutable(x, 0, z)
-        var prevAir = context.getBlockState(pos).isAir
-        var roof = -1
-
-        for (y in 1..250) {
-            pos.y = y
-
-            if (context.getBlockState(pos).block == Blocks.BEDROCK && y > MIN_ROOF_HEIGHT) {
-                roof = y
-                break
-            }
-
-            val air = context.getBlockState(pos).isAir
-            if (!prevAir && air) {
-                surfaces.add(y)
-            }
-            prevAir = air
-        }
-
-        return when {
-            surfaces.isEmpty() -> random.nextInt(
-                if (roof > MIN_ROOF_HEIGHT) {
-                    roof - 8
-                } else {
-                    124
-                }
-            ) + 4
-            roof > MIN_ROOF_HEIGHT -> surfaces[random.nextInt(surfaces.size)]
-            else -> context.getTopY(Heightmap.Type.WORLD_SURFACE, x, z)
-        }
     }
 
     fun getPortalStructureY(world: WorldAccess, x: Int, z: Int, random: Random): Int {

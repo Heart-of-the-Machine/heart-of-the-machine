@@ -4,6 +4,7 @@ import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConfig
 import com.github.hotm.HotMConstants
 import com.github.hotm.HotMLog
+import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
 import com.github.hotm.gen.biome.NectereBiomeData
 import com.github.hotm.gen.feature.HotMStructureFeatures
 import com.github.hotm.gen.feature.NecterePortalGen
@@ -230,6 +231,8 @@ object HotMDimensions {
         entity: Entity
     ): Boolean {
         return if (destWorld != null && destPoses.isNotEmpty()) {
+            pregenPortals(destWorld, destPoses)
+
             var destPos = findNecterePortal(destWorld, destPoses)
 
             if (destPos == null && HotMConfig.CONFIG.generateMissingPortals) {
@@ -261,6 +264,27 @@ object HotMDimensions {
             }
         } else {
             false
+        }
+    }
+
+    /**
+     * Makes sure all NecterePortalSpawnerBlockEntities in the destination chunks have generated their receiving portals.
+     */
+    fun pregenPortals(world: ServerWorld, newPoses: List<BlockPos>) {
+        if (world.registryKey != NECTERE_KEY) {
+            // look for and run nectere portal spawner block entities
+            val checked = mutableSetOf<ChunkPos>()
+
+            for (pos in newPoses) {
+                val chunkPos = ChunkPos(pos)
+                if (!checked.contains(chunkPos)) {
+                    checked.add(chunkPos)
+
+                    val spawnerPos = BlockPos(chunkPos.startX, 0, chunkPos.startZ)
+
+                    (world.getBlockEntity(spawnerPos) as? NecterePortalSpawnerBlockEntity)?.spawn()
+                }
+            }
         }
     }
 
