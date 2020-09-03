@@ -1,5 +1,6 @@
 package com.github.hotm.mixinapi;
 
+import com.github.hotm.HotMLog;
 import com.github.hotm.gen.HotMDimensions;
 import com.github.hotm.mixin.ChunkGeneratorSettingsInvoker;
 import com.github.hotm.mixin.DimensionTypeInvoker;
@@ -88,20 +89,21 @@ public class DimensionAdditions {
             Registry<Biome> biomes,
             Registry<ChunkGeneratorSettings> generatorSettings,
             long seed,
-            SimpleRegistry<DimensionOptions> optionsRegistry) {
+            SimpleRegistry<DimensionOptions> optionsRegistry,
+            String message) {
         // Make sure dimensions are registered in time.
         HotMDimensions.INSTANCE.register();
 
-        System.out.println("HotM Adding Dimensions:");
+        HotMLog.INSTANCE.getLog().info("HotM Adding Dimensions to " + message + ":");
         for (DimensionAddition addition : ADDITIONS) {
             if (!optionsRegistry.getIds().contains(addition.getOptionsRegistryKey().getValue())) {
                 optionsRegistry.add(addition.getOptionsRegistryKey(),
                         new DimensionOptions(() -> dimensionTypes.getOrThrow(addition.getTypeRegistryKey()),
                                 addition.getChunkGeneratorSupplier()
                                         .getChunkGenerator(biomes, generatorSettings, seed)), Lifecycle.stable());
-                System.out.println("    " + addition.getOptionsRegistryKey());
+                HotMLog.INSTANCE.getLog().info("    " + addition.getOptionsRegistryKey());
             } else {
-                System.out.println("    " + addition.getOptionsRegistryKey() + " : ALREADY REGISTERED");
+                HotMLog.INSTANCE.getLog().info("    " + addition.getOptionsRegistryKey() + " : ALREADY REGISTERED");
             }
         }
     }
@@ -145,11 +147,6 @@ public class DimensionAdditions {
         }
 
         return true;
-    }
-
-    public static void addDimensionToServer(MutableMinecraftServer server, RegistryKey<DimensionOptions> optionsKey) {
-        DimensionAddition addition = DIMENSION_KEYS.get(optionsKey);
-        server.hotm_addDimension(optionsKey, addition);
     }
 
     public static void registerDefaultPlacer(RegistryKey<World> key, EntityPlacer placer) {

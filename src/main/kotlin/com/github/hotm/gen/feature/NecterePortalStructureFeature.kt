@@ -3,7 +3,6 @@ package com.github.hotm.gen.feature
 import com.github.hotm.HotMConfig
 import com.github.hotm.gen.HotMBiomes
 import com.github.hotm.gen.HotMDimensions
-import com.github.hotm.gen.biome.NectereBiomeData
 import com.github.hotm.mixin.StructurePieceAccessor
 import com.github.hotm.util.WorldUtils
 import com.mojang.serialization.Codec
@@ -21,9 +20,7 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.WorldAccess
-import net.minecraft.world.WorldView
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.source.BiomeSource
 import net.minecraft.world.chunk.ChunkStatus
 import net.minecraft.world.gen.ChunkRandom
 import net.minecraft.world.gen.StructureAccessor
@@ -223,7 +220,7 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                 applyZTransform(NecterePortalGen.PORTAL_OFFSET_X, NecterePortalGen.PORTAL_OFFSET_Z)
             )
             val otherWorld = HotMDimensions.getCorrespondingNonNectereWorld(serverWorld, portalPos) ?: return false
-            val otherPoses = HotMDimensions.getBaseCorrespondingNonNectereCoords(serverWorld, portalPos)
+            val otherPoses = HotMDimensions.getBaseCorrespondingNonNectereCoords(world, portalPos)
 
             if (otherPoses == null || !checkBiomes(otherWorld, otherPoses)) {
                 return false

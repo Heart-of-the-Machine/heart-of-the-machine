@@ -1,12 +1,17 @@
 package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMBlocks
+import com.github.hotm.HotMConfig
+import com.github.hotm.gen.HotMBiomes
+import com.github.hotm.gen.HotMDimensions
 import com.github.hotm.mixin.StructurePieceAccessor
 import net.minecraft.block.*
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.BlockMirror
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockBox
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.Heightmap
 import net.minecraft.world.WorldAccess
@@ -110,6 +115,30 @@ object NecterePortalGen {
 
     fun getPortalZ(chunkZ: Int): Int {
         return getPortalStructureZ(chunkZ) + PORTAL_OFFSET_Z
+    }
+
+    fun generateForChunk(world: ServerWorld, pos: ChunkPos, random: Random) {
+        if (world.registryKey != HotMDimensions.NECTERE_KEY) {
+            val nectereWorld = HotMDimensions.getNectereWorld(world.server)
+            HotMDimensions.getNonNecterePortalCoords(
+                world.registryManager,
+                world.registryKey,
+                pos,
+                { resX, resZ -> getPortalStructureY(world, resX, resZ, random) },
+                nectereWorld
+            ).filter { structurePos ->
+                // Make sure the portal is in an enabled biome and not in a Nectere biome.
+                val portalPos = portalPos(structurePos)
+                val biome = world.method_31081(portalPos).orElse(null)
+
+                biome != null
+                        && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(biome.value.toString())
+                        && !HotMBiomes.biomeData().containsKey(biome)
+                        && HotMDimensions.findNecterePortal(world, listOf(portalPos)) == null
+            }.forEach { structurePos ->
+                generate(world, structurePos)
+            }
+        }
     }
 
     fun generate(world: WorldAccess, pos: BlockPos) {

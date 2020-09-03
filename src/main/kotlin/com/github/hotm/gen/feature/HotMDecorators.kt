@@ -27,10 +27,4 @@ object HotMDecorators {
         HotMConstants.identifier("count_chance_heightmap_in_range"),
         CountChanceHeightmapInRangeDecorator(CountChanceInRangeDecoratorConfig.CODEC)
     )
-
-    val NECTERE_PORTAL: NecterePortalDecorator = Registry.register(
-        Registry.DECORATOR,
-        HotMConstants.identifier("nectere_portal"),
-        NecterePortalDecorator(NopeDecoratorConfig.CODEC)
-    )
 }

@@ -6,3 +6,6 @@ For Minecraft 1.16.2.
   instead of the biome that generates the feature.
 * Added a command, `/retrogen_nectere_portal`, to retro-gen the nearest non-Nectere-side portal if it is missing. The
   nearest portal is determined using the same logic as the non-Nectere-side `/locate` command.
+* Use ticking BlockEntities to generate Nectere portals in correct locations to avoid Nectere-world corruption during
+  overworld generation.
+  (Thank you Heaven King for thinking of doing it this way!)

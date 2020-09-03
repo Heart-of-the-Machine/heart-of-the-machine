@@ -26,7 +26,7 @@ public class DimensionTypeMixin {
                                        Registry<ChunkGeneratorSettings> generatorSettings, long seed,
                                        CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir,
                                        SimpleRegistry<DimensionOptions> simpleRegistry) {
-        DimensionAdditions.setupDimensionOptions(dimensionTypes, biomes, generatorSettings, seed, simpleRegistry);
+        DimensionAdditions.setupDimensionOptions(dimensionTypes, biomes, generatorSettings, seed, simpleRegistry, "all new worlds");
     }
 
     @Inject(method = "addRegistryDefaults", at = @At("RETURN"))

@@ -10,7 +10,6 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.GenerationSettings
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.decorator.Decorator
-import net.minecraft.world.gen.decorator.DecoratorConfig
 import net.minecraft.world.gen.decorator.RangeDecoratorConfig
 import net.minecraft.world.gen.feature.*
 
@@ -224,10 +223,8 @@ object HotMBiomeFeatures {
     /**
      * Configured Nectere portal feature.
      */
-    val CONFIGURED_NON_NECTERE_SIDE_NECTERE_PORTAL = register(
-        "nns_nectere_portal", NON_NECTERE_SIDE_NECTERE_PORTAL.configure(FeatureConfig.DEFAULT)
-            .decorate(HotMDecorators.NECTERE_PORTAL.configure(DecoratorConfig.DEFAULT))
-    )
+    val CONFIGURED_NON_NECTERE_SIDE_NECTERE_PORTAL =
+        register("nns_nectere_portal", NON_NECTERE_SIDE_NECTERE_PORTAL.configure(FeatureConfig.DEFAULT))
 
     /**
      * Adds refuse piles similar to the mossy rocks in Giant Spruce Taigas.

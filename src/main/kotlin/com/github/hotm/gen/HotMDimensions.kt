@@ -10,7 +10,6 @@ import com.github.hotm.gen.feature.NecterePortalGen
 import com.github.hotm.mixin.EntityAccessor
 import com.github.hotm.mixin.StructureFeatureAccessor
 import com.github.hotm.mixinapi.DimensionAdditions
-import com.github.hotm.mixinapi.MutableMinecraftServer
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.ImmutableList
 import com.mojang.datafixers.util.Pair
@@ -268,7 +267,7 @@ object HotMDimensions {
     /**
      * Attempt to find a Nectere portal among a list of destination positions.
      */
-    private fun findNecterePortal(world: WorldView, newPoses: List<BlockPos>): BlockPos? {
+    fun findNecterePortal(world: WorldView, newPoses: List<BlockPos>): BlockPos? {
         for (offset in 0 until 256) {
             for (init in newPoses) {
                 val up = init.up(offset)
@@ -355,12 +354,7 @@ object HotMDimensions {
      * Gets the Nectere dimension from the server, forcibly adding it if it does not exist already.
      */
     fun getNectereWorld(server: MinecraftServer): ServerWorld {
-        if (server.getWorld(NECTERE_KEY) == null && server is MutableMinecraftServer) {
-            HotMLog.log.info("Adding the Nectere dimension...")
-            DimensionAdditions.addDimensionToServer(server, NECTERE_OPTIONS_KEY)
-        }
-
-        return server.getWorld(NECTERE_KEY) ?: throw IllegalStateException("Unable to add Nectere dimension!")
+        return server.getWorld(NECTERE_KEY) ?: throw IllegalStateException("Nectere dimension was never added!")
     }
 
     /**

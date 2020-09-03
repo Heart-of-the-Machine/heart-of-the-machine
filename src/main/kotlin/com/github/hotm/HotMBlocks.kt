@@ -1,6 +1,7 @@
 package com.github.hotm
 
 import com.github.hotm.blocks.NecterePortalBlock
+import com.github.hotm.blocks.NecterePortalSpawnerBlock
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -74,6 +75,7 @@ object HotMBlocks {
     val NECTERE_PORTAL = NecterePortalBlock(
         FabricBlockSettings.of(Material.PORTAL).noCollision().strength(-1.0f).sounds(BlockSoundGroup.GLASS).nonOpaque()
             .lightLevel { 12 })
+    val NECTERE_PORTAL_SPAWNER = NecterePortalSpawnerBlock(FabricBlockSettings.of(Material.STONE).strength(-1.0f))
 
     /*
      * Machine Casing Blocks.
@@ -148,52 +150,49 @@ object HotMBlocks {
      * Register all Heart of the Machine blocks...
      */
     fun register() {
-        registerAll(
-            CYAN_CRYSTAL to "cyan_crystal" to HOTM_BUILDING_ITEM_SETTINGS,
-            CYAN_CRYSTAL_LAMP to "cyan_crystal_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
-            CYAN_MACHINE_CASING_LAMP to "cyan_machine_casing_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
-            CYAN_THINKING_STONE_LAMP to "cyan_thinking_stone_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
-            GLOWY_OBELISK_PART to "glowy_obelisk_part" to HOTM_BUILDING_ITEM_SETTINGS,
-            MACHINE_CASING to "machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
-            MACHINE_CASING_SLAB to "machine_casing_slab" to HOTM_BUILDING_ITEM_SETTINGS,
-            MACHINE_CASING_STAIRS to "machine_casing_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
-            MACHINE_CASING_BRICKS to "machine_casing_bricks" to HOTM_BUILDING_ITEM_SETTINGS,
-            MACHINE_CASING_BRICK_SLAB to "machine_casing_brick_slab" to HOTM_BUILDING_ITEM_SETTINGS,
-            MACHINE_CASING_BRICK_STAIRS to "machine_casing_brick_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
-            MAGENTA_CRYSTAL to "magenta_crystal" to HOTM_BUILDING_ITEM_SETTINGS,
-            MAGENTA_CRYSTAL_LAMP to "magenta_crystal_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
-            MAGENTA_MACHINE_CASING_LAMP to "magenta_machine_casing_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
-            MAGENTA_THINKING_STONE_LAMP to "magenta_thinking_stone_lamp" to HOTM_BUILDING_ITEM_SETTINGS,
-            METAL_MACHINE_CASING to "metal_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
-            NECTERE_PORTAL to "nectere_portal" to Item.Settings(),
-            OBELISK_PART to "obelisk_part" to HOTM_BUILDING_ITEM_SETTINGS,
-            PLASSEIN_BLOOM to "plassein_bloom" to HOTM_BUILDING_ITEM_SETTINGS,
-            PLASSEIN_MACHINE_CASING to "plassein_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
-            PLASSEIN_STEM to "plassein_stem" to HOTM_BUILDING_ITEM_SETTINGS,
-            RUSTED_MACHINE_CASING to "rusted_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
-            SMOOTH_THINKING_STONE to "smooth_thinking_stone" to HOTM_BUILDING_ITEM_SETTINGS,
-            SMOOTH_THINKING_STONE_SLAB to "smooth_thinking_stone_slab" to HOTM_BUILDING_ITEM_SETTINGS,
-            SMOOTH_THINKING_STONE_STAIRS to "smooth_thinking_stone_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
-            SURFACE_MACHINE_CASING to "surface_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
-            TEST_MACHINE_CASING to "test_machine_casing" to HOTM_BUILDING_ITEM_SETTINGS,
-            THINKING_STONE to "thinking_stone" to HOTM_BUILDING_ITEM_SETTINGS,
-            THINKING_STONE_SLAB to "thinking_stone_slab" to HOTM_BUILDING_ITEM_SETTINGS,
-            THINKING_STONE_STAIRS to "thinking_stone_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
-            THINKING_STONE_BRICKS to "thinking_stone_bricks" to HOTM_BUILDING_ITEM_SETTINGS,
-            THINKING_STONE_BRICK_SLAB to "thinking_stone_brick_slab" to HOTM_BUILDING_ITEM_SETTINGS,
-            THINKING_STONE_BRICK_STAIRS to "thinking_stone_brick_stairs" to HOTM_BUILDING_ITEM_SETTINGS,
-            THINKING_STONE_TILES to "thinking_stone_tiles" to HOTM_BUILDING_ITEM_SETTINGS,
-            THINKING_STONE_TILE_SLAB to "thinking_stone_tile_slab" to HOTM_BUILDING_ITEM_SETTINGS,
-            THINKING_STONE_TILE_STAIRS to "thinking_stone_tile_stairs" to HOTM_BUILDING_ITEM_SETTINGS
-        )
+        register(CYAN_CRYSTAL, "cyan_crystal", HOTM_BUILDING_ITEM_SETTINGS)
+        register(CYAN_CRYSTAL_LAMP, "cyan_crystal_lamp", HOTM_BUILDING_ITEM_SETTINGS)
+        register(CYAN_MACHINE_CASING_LAMP, "cyan_machine_casing_lamp", HOTM_BUILDING_ITEM_SETTINGS)
+        register(CYAN_THINKING_STONE_LAMP, "cyan_thinking_stone_lamp", HOTM_BUILDING_ITEM_SETTINGS)
+        register(GLOWY_OBELISK_PART, "glowy_obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MACHINE_CASING, "machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MACHINE_CASING_SLAB, "machine_casing_slab", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MACHINE_CASING_STAIRS, "machine_casing_stairs", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MACHINE_CASING_BRICKS, "machine_casing_bricks", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MACHINE_CASING_BRICK_SLAB, "machine_casing_brick_slab", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MACHINE_CASING_BRICK_STAIRS, "machine_casing_brick_stairs", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MAGENTA_CRYSTAL, "magenta_crystal", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MAGENTA_CRYSTAL_LAMP, "magenta_crystal_lamp", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MAGENTA_MACHINE_CASING_LAMP, "magenta_machine_casing_lamp", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MAGENTA_THINKING_STONE_LAMP, "magenta_thinking_stone_lamp", HOTM_BUILDING_ITEM_SETTINGS)
+        register(METAL_MACHINE_CASING, "metal_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(NECTERE_PORTAL, "nectere_portal", Item.Settings())
+        register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner", Item.Settings())
+        register(OBELISK_PART, "obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_BLOOM, "plassein_bloom", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_MACHINE_CASING, "plassein_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
+        register(RUSTED_MACHINE_CASING, "rusted_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(SMOOTH_THINKING_STONE, "smooth_thinking_stone", HOTM_BUILDING_ITEM_SETTINGS)
+        register(SMOOTH_THINKING_STONE_SLAB, "smooth_thinking_stone_slab", HOTM_BUILDING_ITEM_SETTINGS)
+        register(SMOOTH_THINKING_STONE_STAIRS, "smooth_thinking_stone_stairs", HOTM_BUILDING_ITEM_SETTINGS)
+        register(SURFACE_MACHINE_CASING, "surface_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(TEST_MACHINE_CASING, "test_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE, "thinking_stone", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE_SLAB, "thinking_stone_slab", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE_STAIRS, "thinking_stone_stairs", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE_BRICKS, "thinking_stone_bricks", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE_BRICK_SLAB, "thinking_stone_brick_slab", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE_BRICK_STAIRS, "thinking_stone_brick_stairs", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE_TILES, "thinking_stone_tiles", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE_TILE_SLAB, "thinking_stone_tile_slab", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE_TILE_STAIRS, "thinking_stone_tile_stairs", HOTM_BUILDING_ITEM_SETTINGS)
     }
 
-    private fun registerAll(vararg blocks: Pair<Pair<Block, String>, Item.Settings>) {
-        for (block in blocks) {
-            val identifier = HotMConstants.identifier(block.first.second)
-            Registry.register(Registry.BLOCK, identifier, block.first.first)
-            Registry.register(Registry.ITEM, identifier, BlockItem(block.first.first, block.second))
-        }
+    private fun register(block: Block, name: String, itemSettings: Item.Settings) {
+        val identifier = HotMConstants.identifier(name)
+        Registry.register(Registry.BLOCK, identifier, block)
+        Registry.register(Registry.ITEM, identifier, BlockItem(block, itemSettings))
     }
 
     private fun mainGroupItem(): ItemStack {
