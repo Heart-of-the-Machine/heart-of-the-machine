@@ -62,7 +62,7 @@ object NecterePortalGen {
                 }
             ) + 4
             roof > MIN_ROOF_HEIGHT -> surfaces[random.nextInt(surfaces.size)]
-            else -> world.getTopY(Heightmap.Type.WORLD_SURFACE, x, z)
+            else -> world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z)
         }
     }
 
