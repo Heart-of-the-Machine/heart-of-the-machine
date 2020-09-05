@@ -6,15 +6,15 @@ import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
-import net.minecraft.block.Block
-import net.minecraft.block.Material
-import net.minecraft.block.PillarBlock
-import net.minecraft.block.SlabBlock
+import net.minecraft.block.*
+import net.minecraft.entity.EntityType
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.BlockView
 
 /**
  * Static block access and initialization.
@@ -146,6 +146,15 @@ object HotMBlocks {
     val THINKING_STONE_BRICK_SLAB = SlabBlock(FabricBlockSettings.copyOf(THINKING_STONE_BRICKS))
     val THINKING_STONE_TILE_SLAB = SlabBlock(FabricBlockSettings.copyOf(THINKING_STONE_TILES))
 
+    /*
+     * Thinking glass blocks.
+     */
+    val THINKING_GLASS = GlassBlock(
+        FabricBlockSettings.of(Material.GLASS).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.GLASS)
+            .nonOpaque().allowsSpawning(HotMBlocks::never).solidBlock(HotMBlocks::never).suffocates(HotMBlocks::never)
+            .blockVision(HotMBlocks::never)
+    )
+
     /**
      * Register all Heart of the Machine blocks...
      */
@@ -178,6 +187,7 @@ object HotMBlocks {
         register(SMOOTH_THINKING_STONE_STAIRS, "smooth_thinking_stone_stairs", HOTM_BUILDING_ITEM_SETTINGS)
         register(SURFACE_MACHINE_CASING, "surface_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(TEST_MACHINE_CASING, "test_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_GLASS, "thinking_glass", HOTM_BUILDING_ITEM_SETTINGS)
         register(THINKING_STONE, "thinking_stone", HOTM_BUILDING_ITEM_SETTINGS)
         register(THINKING_STONE_SLAB, "thinking_stone_slab", HOTM_BUILDING_ITEM_SETTINGS)
         register(THINKING_STONE_STAIRS, "thinking_stone_stairs", HOTM_BUILDING_ITEM_SETTINGS)
@@ -197,5 +207,13 @@ object HotMBlocks {
 
     private fun mainGroupItem(): ItemStack {
         return ItemStack(CYAN_THINKING_STONE_LAMP)
+    }
+
+    private fun never(state: BlockState, world: BlockView, pos: BlockPos, entity: EntityType<*>): Boolean {
+        return false
+    }
+
+    private fun never(state: BlockState, world: BlockView, pos: BlockPos): Boolean {
+        return false
     }
 }
