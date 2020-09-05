@@ -4,6 +4,7 @@ import com.github.hotm.util.DirectionUtils.texDown
 import com.github.hotm.util.DirectionUtils.texLeft
 import com.github.hotm.util.DirectionUtils.texRight
 import com.github.hotm.util.DirectionUtils.texUp
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
@@ -15,13 +16,39 @@ import net.minecraft.client.render.model.json.ModelOverrideList
 import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.texture.Sprite
 import net.minecraft.item.ItemStack
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockRenderView
 import java.util.*
 import java.util.function.Supplier
 
-class ConnectedTextureModel(private val sprites: List<Sprite>) : BakedModel, FabricBakedModel {
+class CTModel(
+    private val name: Identifier,
+    private val particle: Sprite,
+    private val layers: Array<Layer>,
+    private val doCorners: Boolean
+) : BakedModel, FabricBakedModel {
+    data class Layer(val sprites: Array<Sprite>, val material: RenderMaterial) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Layer
+
+            if (!sprites.contentEquals(other.sprites)) return false
+            if (material != other.material) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = sprites.contentHashCode()
+            result = 31 * result + material.hashCode()
+            return result
+        }
+    }
+
     private data class QuadPos(val left: Float, val bottom: Float, val right: Float, val top: Float) {
         fun emit(emitter: QuadEmitter, face: Direction, depth: Float) {
             emitter.square(face, left, bottom, right, top, depth)
@@ -70,7 +97,7 @@ class ConnectedTextureModel(private val sprites: List<Sprite>) : BakedModel, Fab
     }
 
     override fun getSprite(): Sprite {
-        return sprites[0]
+        return particle
     }
 
     override fun getTransformation(): ModelTransformation {
@@ -97,16 +124,23 @@ class ConnectedTextureModel(private val sprites: List<Sprite>) : BakedModel, Fab
         for (normal in Direction.values()) {
             val axis = normal.axis.ordinal
             val indices = getIndices(blockView, pos, normal)
-            for (corner in 0 until 4) {
-                CORNERS_PER_AXIS[axis][corner].emit(emitter, normal, 0.0f)
-                emitter.spriteBake(
-                    0,
-                    sprites[(indices shr (corner * 3)) and 0x7],
-                    MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[axis]
-                )
-                emitter.spriteColor(0, -1, -1, -1, -1)
+            for (layer in layers) {
+                if (doCorners && layer.sprites.size < 5) {
+                    throw IllegalStateException("Connected texture block $name requests corner support but does not provide corner sprites.")
+                }
 
-                emitter.emit()
+                for (corner in 0 until 4) {
+                    CORNERS_PER_AXIS[axis][corner].emit(emitter, normal, 0.0f)
+                    emitter.spriteBake(
+                        0,
+                        layer.sprites[(indices shr (corner * 3)) and 0x7],
+                        MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[axis]
+                    )
+                    emitter.spriteColor(0, -1, -1, -1, -1)
+                    emitter.material(layer.material)
+
+                    emitter.emit()
+                }
             }
         }
     }
@@ -114,7 +148,11 @@ class ConnectedTextureModel(private val sprites: List<Sprite>) : BakedModel, Fab
     private fun getIndices(blockView: BlockRenderView, pos: BlockPos, normal: Direction): Int {
         val horizontals = getHorizontals(blockView, pos, normal)
         val verticals = getVerticals(blockView, pos, normal)
-        val corners = getCorners(blockView, pos, normal) and verticals and horizontals
+        val corners = if (doCorners) {
+            getCorners(blockView, pos, normal) and verticals and horizontals
+        } else {
+            0
+        }
 
         return (corners shl 2) or (horizontals xor corners) or ((verticals xor corners) shl 1)
     }
@@ -171,19 +209,19 @@ class ConnectedTextureModel(private val sprites: List<Sprite>) : BakedModel, Fab
             .isOf(block)
 
         return if (bl) {
-            1
+            0x1
         } else {
             0
         } or if (br) {
-            1 shl 3
+            0x8
         } else {
             0
         } or if (tl) {
-            1 shl 6
+            0x40
         } else {
             0
         } or if (tr) {
-            1 shl 9
+            0x200
         } else {
             0
         }

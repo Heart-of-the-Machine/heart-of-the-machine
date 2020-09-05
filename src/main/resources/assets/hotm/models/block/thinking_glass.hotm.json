@@ -1,0 +1,13 @@
+{
+  "type": "hotm:quarter_connected_texture",
+  "layers": [
+    {
+      "none": "hotm:block/thinking_glass_none",
+      "horizontal": "hotm:block/thinking_glass_horizontal",
+      "vertical": "hotm:block/thinking_glass_vertical",
+      "corner": "hotm:block/thinking_glass_corner",
+      "no_corner": "hotm:block/thinking_glass_nocorner"
+    }
+  ],
+  "particle": "hotm:block/thinking_glass_none"
+}
