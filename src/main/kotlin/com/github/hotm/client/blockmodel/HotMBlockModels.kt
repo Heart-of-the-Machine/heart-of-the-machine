@@ -4,6 +4,7 @@ import com.github.hotm.HotMConstants
 import com.github.hotm.HotMLog
 import com.github.hotm.client.HotMClientRegistries
 import com.github.hotm.client.blockmodel.ct.UnbakedCTModelLayer
+import com.github.hotm.client.blockmodel.static.UnbakedStaticModelLayer
 import com.google.gson.JsonParseException
 import com.mojang.serialization.JsonOps
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
@@ -14,7 +15,6 @@ import net.minecraft.util.JsonHelper
 import net.minecraft.util.registry.Registry
 import java.io.IOException
 import java.io.InputStreamReader
-import java.lang.NullPointerException
 
 object HotMBlockModels {
     fun register() {
@@ -27,6 +27,11 @@ object HotMBlockModels {
             HotMClientRegistries.BLOCK_MODEL_LAYER,
             HotMConstants.identifier("quarter_connected_texture"),
             UnbakedCTModelLayer.CODEC
+        )
+        Registry.register(
+            HotMClientRegistries.BLOCK_MODEL_LAYER,
+            HotMConstants.identifier("static_all"),
+            UnbakedStaticModelLayer.CODEC
         )
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(HotMBlockModels::getResourceProvider)
