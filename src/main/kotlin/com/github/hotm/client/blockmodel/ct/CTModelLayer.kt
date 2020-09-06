@@ -14,40 +14,46 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.MathHelper.clamp
 import net.minecraft.world.BlockRenderView
 import java.util.*
 import java.util.function.Supplier
 
 class CTModelLayer(
     private val sprites: Array<Sprite>,
-    private val material: RenderMaterial
+    private val material: RenderMaterial,
+    depth: Float,
+    private val cullFaces: Boolean
 ) : BakedModelLayer {
-    private data class QuadPos(val left: Float, val bottom: Float, val right: Float, val top: Float) {
-        fun emit(emitter: QuadEmitter, face: Direction, depth: Float) {
+    private data class QuadPos(val left: Float, val bottom: Float, val right: Float, val top: Float, val depth: Float) {
+        fun emit(emitter: QuadEmitter, face: Direction) {
             emitter.square(face, left, bottom, right, top, depth)
         }
     }
 
     companion object {
-        private val CORNERS = arrayOf(
-            QuadPos(0.0f, 0.0f, 0.5f, 0.5f),
-            QuadPos(0.5f, 0.0f, 1.0f, 0.5f),
-            QuadPos(0.0f, 0.5f, 0.5f, 1.0f),
-            QuadPos(0.5f, 0.5f, 1.0f, 1.0f)
-        )
-
-        private val CORNERS_PER_AXIS = arrayOf(
-            CORNERS,
-            CORNERS,
-            arrayOf(CORNERS[1], CORNERS[0], CORNERS[3], CORNERS[2]),
-        )
-
         private val EXTRA_FLAGS_PER_AXIS = arrayOf(
             0,
             MutableQuadView.BAKE_FLIP_V,
             0,
         )
     }
+
+    private val depthClamped = clamp(depth, 0.0f, 0.5f)
+    private val depthMaxed = depth.coerceAtMost(0.5f)
+
+    private val corners = arrayOf(
+        QuadPos(0.0f + depthClamped, 0.0f + depthClamped, 0.5f, 0.5f, depthMaxed),
+        QuadPos(0.5f, 0.0f + depthClamped, 1.0f - depthClamped, 0.5f, depthMaxed),
+        QuadPos(0.0f + depthClamped, 0.5f, 0.5f, 1.0f - depthClamped, depthMaxed),
+        QuadPos(0.5f, 0.5f, 1.0f - depthClamped, 1.0f - depthClamped, depthMaxed)
+    )
+
+    private val cornersPerAxis = arrayOf(
+        corners,
+        corners,
+        arrayOf(corners[1], corners[0], corners[3], corners[2]),
+    )
 
     private val doCorners = sprites.size > 4
 
@@ -65,7 +71,7 @@ class CTModelLayer(
             val indices = getIndices(blockView, pos, normal)
 
             for (corner in 0 until 4) {
-                CORNERS_PER_AXIS[axis][corner].emit(emitter, normal, 0.0f)
+                cornersPerAxis[axis][corner].emit(emitter, normal)
                 emitter.spriteBake(
                     0,
                     sprites[(indices shr (corner * 3)) and 0x7],
@@ -73,6 +79,14 @@ class CTModelLayer(
                 )
                 emitter.spriteColor(0, -1, -1, -1, -1)
                 emitter.material(material)
+
+                emitter.cullFace(
+                    if (cullFaces) {
+                        normal
+                    } else {
+                        null
+                    }
+                )
 
                 emitter.emit()
             }

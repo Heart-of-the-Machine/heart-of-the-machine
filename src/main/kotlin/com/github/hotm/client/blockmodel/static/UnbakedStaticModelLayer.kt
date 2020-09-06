@@ -16,17 +16,27 @@ import net.minecraft.client.texture.SpriteAtlasTexture
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.MathHelper
 import java.util.function.Function
 
-class UnbakedStaticModelLayer(private val all: Identifier, private val material: JsonMaterial) : UnbakedModelLayer {
+class UnbakedStaticModelLayer(
+    private val all: Identifier,
+    private val material: JsonMaterial,
+    private val depth: Float,
+    private val cullFaces: Boolean
+) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedStaticModelLayer> =
             RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<UnbakedStaticModelLayer> ->
                 instance.group(
                     Identifier.CODEC.fieldOf("all").forGetter(UnbakedStaticModelLayer::all),
                     JsonMaterial.CODEC.fieldOf("material").orElse(JsonMaterial.DEFAULT)
-                        .forGetter(UnbakedStaticModelLayer::material)
-                ).apply(instance) { all, material -> UnbakedStaticModelLayer(all, material) }
+                        .forGetter(UnbakedStaticModelLayer::material),
+                    Codec.FLOAT.fieldOf("depth").orElse(0.0f).forGetter(UnbakedStaticModelLayer::depth),
+                    Codec.BOOL.fieldOf("cull_faces").orElse(true).forGetter(UnbakedStaticModelLayer::cullFaces)
+                ).apply(instance) { all, material, depth, cullFaces ->
+                    UnbakedStaticModelLayer(all, material, depth, cullFaces)
+                }
             }
 
         private val EXTRA_FLAGS_PER_AXIS = arrayOf(
@@ -35,6 +45,9 @@ class UnbakedStaticModelLayer(private val all: Identifier, private val material:
             0,
         )
     }
+
+    private val depthClamped = MathHelper.clamp(depth, 0.0f, 0.5f)
+    private val depthMaxed = depth.coerceAtMost(0.5f)
 
     override val codec = CODEC
 
@@ -64,10 +77,25 @@ class UnbakedStaticModelLayer(private val all: Identifier, private val material:
         val allSprite = textureGetter.apply(allSpriteId)
 
         for (face in Direction.values()) {
-            emitter.square(face, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f)
+            emitter.square(
+                face,
+                0.0f + depthClamped,
+                0.0f + depthClamped,
+                1.0f - depthClamped,
+                1.0f - depthClamped,
+                depthMaxed
+            )
             emitter.spriteBake(0, allSprite, MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[face.axis.ordinal])
             emitter.spriteColor(0, -1, -1, -1, -1)
             emitter.material(renderMaterial)
+
+            emitter.cullFace(
+                if (cullFaces) {
+                    face
+                } else {
+                    null
+                }
+            )
 
             emitter.emit()
         }

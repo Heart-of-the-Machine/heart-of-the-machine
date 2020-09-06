@@ -16,12 +16,14 @@ import net.minecraft.util.Identifier
 import java.util.function.Function
 
 class UnbakedCTModelLayer(
-    val none: Identifier,
-    val horizontal: Identifier,
-    val vertical: Identifier,
-    val corner: Identifier,
-    val noCorner: Identifier?,
-    val material: JsonMaterial
+    private val none: Identifier,
+    private val horizontal: Identifier,
+    private val vertical: Identifier,
+    private val corner: Identifier,
+    private val noCorner: Identifier?,
+    private val material: JsonMaterial,
+    private val depth: Float,
+    private val cullFaces: Boolean,
 ) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedCTModelLayer> =
@@ -33,9 +35,11 @@ class UnbakedCTModelLayer(
                     Identifier.CODEC.fieldOf("corner").forGetter(UnbakedCTModelLayer::corner),
                     Identifier.CODEC.fieldOf("no_corner").orElse(null).forGetter(UnbakedCTModelLayer::noCorner),
                     JsonMaterial.CODEC.fieldOf("material").orElse(JsonMaterial.DEFAULT)
-                        .forGetter(UnbakedCTModelLayer::material)
-                ).apply(instance) { none, horizontal, vertical, corner, noCorner, material ->
-                    UnbakedCTModelLayer(none, horizontal, vertical, corner, noCorner, material)
+                        .forGetter(UnbakedCTModelLayer::material),
+                    Codec.FLOAT.fieldOf("depth").orElse(0.0f).forGetter(UnbakedCTModelLayer::depth),
+                    Codec.BOOL.fieldOf("cull_faces").orElse(true).forGetter(UnbakedCTModelLayer::cullFaces)
+                ).apply(instance) { none, horizontal, vertical, corner, noCorner, material, depth, cullFaces ->
+                    UnbakedCTModelLayer(none, horizontal, vertical, corner, noCorner, material, depth, cullFaces)
                 }
             }
     }
@@ -75,7 +79,7 @@ class UnbakedCTModelLayer(
             arrayOf(sprite(none), sprite(horizontal), sprite(vertical), sprite(corner))
         }
 
-        return CTModelLayer(sprites, material.toRenderMaterial())
+        return CTModelLayer(sprites, material.toRenderMaterial(), depth, cullFaces)
     }
 
     private fun spriteId(identifier: Identifier): SpriteIdentifier {
