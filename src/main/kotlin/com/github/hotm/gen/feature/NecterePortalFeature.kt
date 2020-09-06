@@ -2,6 +2,8 @@ package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMBlocks
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
+import com.github.hotm.gen.HotMDimensions
+import com.github.hotm.util.WorldUtils
 import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.StructureWorldAccess
@@ -18,13 +20,19 @@ class NecterePortalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<Default
         pos: BlockPos,
         config: DefaultFeatureConfig
     ): Boolean {
-        val originalBlock = world.getBlockState(pos)
+        val key = WorldUtils.getServerWorld(world)?.registryKey
 
-        world.setBlockState(pos, HotMBlocks.NECTERE_PORTAL_SPAWNER.defaultState, 3)
-        (world.getBlockEntity(pos) as? NecterePortalSpawnerBlockEntity)?.let { be ->
-            be.originalBlock = originalBlock
+        return if (key != HotMDimensions.NECTERE_KEY) {
+            val originalBlock = world.getBlockState(pos)
+
+            world.setBlockState(pos, HotMBlocks.NECTERE_PORTAL_SPAWNER.defaultState, 3)
+            (world.getBlockEntity(pos) as? NecterePortalSpawnerBlockEntity)?.let { be ->
+                be.originalBlock = originalBlock
+            }
+
+            true
+        } else {
+            false
         }
-
-        return true
     }
 }
