@@ -3,6 +3,7 @@ package com.github.hotm.client.blockmodel
 import com.github.hotm.HotMConstants
 import com.github.hotm.HotMLog
 import com.github.hotm.client.HotMClientRegistries
+import com.github.hotm.client.blockmodel.ct.UnbakedCTModelLayer
 import com.google.gson.JsonParseException
 import com.mojang.serialization.JsonOps
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
@@ -13,13 +14,19 @@ import net.minecraft.util.JsonHelper
 import net.minecraft.util.registry.Registry
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.NullPointerException
 
 object HotMBlockModels {
     fun register() {
         Registry.register(
             HotMClientRegistries.BLOCK_MODEL,
+            HotMConstants.identifier("layered"),
+            UnbakedLayeredModel.CODEC
+        )
+        Registry.register(
+            HotMClientRegistries.BLOCK_MODEL_LAYER,
             HotMConstants.identifier("quarter_connected_texture"),
-            UnbakedCTModel.CODEC
+            UnbakedCTModelLayer.CODEC
         )
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(HotMBlockModels::getResourceProvider)
@@ -33,13 +40,16 @@ object HotMBlockModels {
                     val jsonObject =
                         JsonHelper.deserialize(InputStreamReader(rm.getResource(modelResource).inputStream))
 
-                    HotMBlockModel.CODEC.parse(JsonOps.INSTANCE, jsonObject).resultOrPartial(HotMLog.log::warn)
+                    UnbakedModel.CODEC.parse(JsonOps.INSTANCE, jsonObject).resultOrPartial(HotMLog.log::warn)
                         .orElse(null)
                 } catch (e: JsonParseException) {
                     HotMLog.log.warn("Trouble parsing model: $modelResource", e)
                     null
                 } catch (e: IOException) {
                     HotMLog.log.warn("Trouble loading model: $modelResource", e)
+                    null
+                } catch (e: NullPointerException) {
+                    HotMLog.log.warn("Trouble parsing model: $modelResource", e)
                     null
                 }
             } else {

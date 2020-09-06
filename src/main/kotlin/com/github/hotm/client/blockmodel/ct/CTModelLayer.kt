@@ -1,5 +1,6 @@
-package com.github.hotm.client.blockmodel
+package com.github.hotm.client.blockmodel.ct
 
+import com.github.hotm.client.blockmodel.BakedModelLayer
 import com.github.hotm.util.DirectionUtils.texDown
 import com.github.hotm.util.DirectionUtils.texLeft
 import com.github.hotm.util.DirectionUtils.texRight
@@ -7,48 +8,20 @@ import com.github.hotm.util.DirectionUtils.texUp
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
-import net.minecraft.client.render.model.BakedModel
-import net.minecraft.client.render.model.BakedQuad
-import net.minecraft.client.render.model.json.ModelOverrideList
-import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.texture.Sprite
 import net.minecraft.item.ItemStack
-import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockRenderView
 import java.util.*
 import java.util.function.Supplier
 
-class CTModel(
-    private val name: Identifier,
-    private val particle: Sprite,
-    private val layers: Array<Layer>,
-    private val doCorners: Boolean
-) : BakedModel, FabricBakedModel {
-    data class Layer(val sprites: Array<Sprite>, val material: RenderMaterial) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as Layer
-
-            if (!sprites.contentEquals(other.sprites)) return false
-            if (material != other.material) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = sprites.contentHashCode()
-            result = 31 * result + material.hashCode()
-            return result
-        }
-    }
-
+class CTModelLayer(
+    private val sprites: Array<Sprite>,
+    private val material: RenderMaterial
+) : BakedModelLayer {
     private data class QuadPos(val left: Float, val bottom: Float, val right: Float, val top: Float) {
         fun emit(emitter: QuadEmitter, face: Direction, depth: Float) {
             emitter.square(face, left, bottom, right, top, depth)
@@ -76,41 +49,7 @@ class CTModel(
         )
     }
 
-    override fun getQuads(state: BlockState?, face: Direction?, random: Random): List<BakedQuad> {
-        return listOf()
-    }
-
-    override fun useAmbientOcclusion(): Boolean {
-        return false
-    }
-
-    override fun hasDepth(): Boolean {
-        return false
-    }
-
-    override fun isSideLit(): Boolean {
-        return false
-    }
-
-    override fun isBuiltin(): Boolean {
-        return false
-    }
-
-    override fun getSprite(): Sprite {
-        return particle
-    }
-
-    override fun getTransformation(): ModelTransformation {
-        return ModelTransformation.NONE
-    }
-
-    override fun getOverrides(): ModelOverrideList {
-        return ModelOverrideList.EMPTY
-    }
-
-    override fun isVanillaAdapter(): Boolean {
-        return false
-    }
+    private val doCorners = sprites.size > 4
 
     override fun emitBlockQuads(
         blockView: BlockRenderView,
@@ -124,25 +63,24 @@ class CTModel(
         for (normal in Direction.values()) {
             val axis = normal.axis.ordinal
             val indices = getIndices(blockView, pos, normal)
-            for (layer in layers) {
-                if (doCorners && layer.sprites.size < 5) {
-                    throw IllegalStateException("Connected texture block $name requests corner support but does not provide corner sprites.")
-                }
 
-                for (corner in 0 until 4) {
-                    CORNERS_PER_AXIS[axis][corner].emit(emitter, normal, 0.0f)
-                    emitter.spriteBake(
-                        0,
-                        layer.sprites[(indices shr (corner * 3)) and 0x7],
-                        MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[axis]
-                    )
-                    emitter.spriteColor(0, -1, -1, -1, -1)
-                    emitter.material(layer.material)
+            for (corner in 0 until 4) {
+                CORNERS_PER_AXIS[axis][corner].emit(emitter, normal, 0.0f)
+                emitter.spriteBake(
+                    0,
+                    sprites[(indices shr (corner * 3)) and 0x7],
+                    MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[axis]
+                )
+                emitter.spriteColor(0, -1, -1, -1, -1)
+                emitter.material(material)
 
-                    emitter.emit()
-                }
+                emitter.emit()
             }
         }
+    }
+
+    override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<Random>, context: RenderContext) {
+        // This layer doesn't render items
     }
 
     private fun getIndices(blockView: BlockRenderView, pos: BlockPos, normal: Direction): Int {
@@ -225,9 +163,5 @@ class CTModel(
         } else {
             0
         }
-    }
-
-    override fun emitItemQuads(p0: ItemStack, p1: Supplier<Random>, p2: RenderContext) {
-        // The item is handled by json
     }
 }

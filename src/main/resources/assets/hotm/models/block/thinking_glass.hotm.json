@@ -1,7 +1,8 @@
 {
-  "type": "hotm:quarter_connected_texture",
+  "type": "hotm:layered",
   "layers": [
     {
+      "type": "hotm:quarter_connected_texture",
       "none": "hotm:block/thinking_glass_none",
       "horizontal": "hotm:block/thinking_glass_horizontal",
       "vertical": "hotm:block/thinking_glass_vertical",
