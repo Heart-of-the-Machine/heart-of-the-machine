@@ -28,50 +28,31 @@ object HotMBlocks {
     /*
      * Crystals & Lamps.
      */
-    val CYAN_CRYSTAL = Block(
+    private val CRYSTAL_BLOCK_SETTINGS =
         FabricBlockSettings.of(Material.GLASS).requiresTool().breakByTool(FabricToolTags.PICKAXES).strength(2.0f, 5.0f)
             .sounds(BlockSoundGroup.GLASS).lightLevel(15)
-    )
-    val CYAN_CRYSTAL_LAMP = Block(
+    private val LAMP_BLOCK_SETTINGS =
         FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
             .lightLevel(15)
-    )
-    val CYAN_MACHINE_CASING_LAMP = Block(
-        FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
+    private val MACHINE_CASING_LAMP_BLOCK_SETTINGS =
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.METAL)
             .lightLevel(15)
-    )
-    val CYAN_THINKING_STONE_LAMP = Block(
-        FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
-            .lightLevel(15)
-    )
-    val MAGENTA_CRYSTAL = Block(
-        FabricBlockSettings.of(Material.GLASS).requiresTool().breakByTool(FabricToolTags.PICKAXES).strength(2.0f, 5.0f)
-            .sounds(BlockSoundGroup.GLASS).lightLevel(15)
-    )
-    val MAGENTA_CRYSTAL_LAMP = Block(
-        FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
-            .lightLevel(15)
-    )
-    val MAGENTA_MACHINE_CASING_LAMP = Block(
-        FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
-            .lightLevel(15)
-    )
-    val MAGENTA_THINKING_STONE_LAMP = Block(
-        FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
-            .lightLevel(15)
-    )
+    val CYAN_CRYSTAL = Block(CRYSTAL_BLOCK_SETTINGS)
+    val CYAN_CRYSTAL_LAMP = Block(LAMP_BLOCK_SETTINGS)
+    val CYAN_MACHINE_CASING_LAMP = Block(MACHINE_CASING_LAMP_BLOCK_SETTINGS)
+    val CYAN_THINKING_STONE_LAMP = Block(LAMP_BLOCK_SETTINGS)
+    val MAGENTA_CRYSTAL = Block(CRYSTAL_BLOCK_SETTINGS)
+    val MAGENTA_CRYSTAL_LAMP = Block(LAMP_BLOCK_SETTINGS)
+    val MAGENTA_MACHINE_CASING_LAMP = Block(MACHINE_CASING_LAMP_BLOCK_SETTINGS)
+    val MAGENTA_THINKING_STONE_LAMP = Block(LAMP_BLOCK_SETTINGS)
 
     /*
      * Obelisk parts.
      */
-    val GLOWY_OBELISK_PART =
-        PillarBlock(
-            FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
-        )
-    val OBELISK_PART =
-        PillarBlock(
-            FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
-        )
+    private val OBELISK_PART_SETTINGS =
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
+    val GLOWY_OBELISK_PART = PillarBlock(OBELISK_PART_SETTINGS)
+    val OBELISK_PART = PillarBlock(OBELISK_PART_SETTINGS)
     val NECTERE_PORTAL = NecterePortalBlock(
         FabricBlockSettings.of(Material.PORTAL).noCollision().strength(-1.0f).sounds(BlockSoundGroup.GLASS).nonOpaque()
             .lightLevel { 12 })
@@ -80,29 +61,20 @@ object HotMBlocks {
     /*
      * Machine Casing Blocks.
      */
-    val MACHINE_CASING =
-        Block(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL))
-    val MACHINE_CASING_BRICKS =
-        Block(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL))
-    val METAL_MACHINE_CASING =
-        Block(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL))
-    val PLASSEIN_MACHINE_CASING = Block(
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(31.0f, 10.0f).sounds(BlockSoundGroup.METAL)
-    )
-    val RUSTED_MACHINE_CASING =
-        Block(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL))
-    val SURFACE_MACHINE_CASING =
-        Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL))
-    val TEST_MACHINE_CASING =
-        Block(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL))
-    val MACHINE_CASING_STAIRS =
-        BlockCreators.createStairsBlock(MACHINE_CASING.defaultState, FabricBlockSettings.copyOf(MACHINE_CASING))
-    val MACHINE_CASING_BRICK_STAIRS = BlockCreators.createStairsBlock(
-        MACHINE_CASING_BRICKS.defaultState,
-        FabricBlockSettings.copyOf(MACHINE_CASING_BRICKS)
-    )
-    val MACHINE_CASING_SLAB = SlabBlock(FabricBlockSettings.copyOf(MACHINE_CASING))
-    val MACHINE_CASING_BRICK_SLAB = SlabBlock(FabricBlockSettings.copyOf(MACHINE_CASING_BRICKS))
+    val MACHINE_CASING_SETTINGS =
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL)
+    val MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
+    val MACHINE_CASING_BRICKS = Block(MACHINE_CASING_SETTINGS)
+    val METAL_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
+    val PLASSEIN_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
+    val RUSTED_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
+    val SURFACE_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
+    val TEST_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
+    val MACHINE_CASING_STAIRS = BlockCreators.createStairsBlock(MACHINE_CASING.defaultState, MACHINE_CASING_SETTINGS)
+    val MACHINE_CASING_BRICK_STAIRS =
+        BlockCreators.createStairsBlock(MACHINE_CASING_BRICKS.defaultState, MACHINE_CASING_SETTINGS)
+    val MACHINE_CASING_SLAB = SlabBlock(MACHINE_CASING_SETTINGS)
+    val MACHINE_CASING_BRICK_SLAB = SlabBlock(MACHINE_CASING_SETTINGS)
 
     /*
      * Plassein Growth Blocks.
@@ -112,39 +84,30 @@ object HotMBlocks {
             .nonOpaque()
     )
     val PLASSEIN_STEM = PillarBlock(
-        FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
+        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
             .sounds(BlockSoundGroup.WOOD)
     )
 
     /*
      * Thinking Stone Blocks.
      */
-    val SMOOTH_THINKING_STONE =
-        Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE))
-    val THINKING_STONE =
-        Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE))
-    val THINKING_STONE_BRICKS =
-        Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE))
-    val THINKING_STONE_TILES =
-        Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE))
-    val SMOOTH_THINKING_STONE_STAIRS = BlockCreators.createStairsBlock(
-        SMOOTH_THINKING_STONE.defaultState,
-        FabricBlockSettings.copyOf(SMOOTH_THINKING_STONE)
-    )
-    val THINKING_STONE_STAIRS =
-        BlockCreators.createStairsBlock(THINKING_STONE.defaultState, FabricBlockSettings.copyOf(THINKING_STONE))
-    val THINKING_STONE_BRICK_STAIRS = BlockCreators.createStairsBlock(
-        THINKING_STONE_BRICKS.defaultState,
-        FabricBlockSettings.copyOf(THINKING_STONE_BRICKS)
-    )
-    val THINKING_STONE_TILE_STAIRS = BlockCreators.createStairsBlock(
-        THINKING_STONE_TILES.defaultState,
-        FabricBlockSettings.copyOf(THINKING_STONE_TILES)
-    )
-    val SMOOTH_THINKING_STONE_SLAB = SlabBlock(FabricBlockSettings.copyOf(SMOOTH_THINKING_STONE))
-    val THINKING_STONE_SLAB = SlabBlock(FabricBlockSettings.copyOf(THINKING_STONE))
-    val THINKING_STONE_BRICK_SLAB = SlabBlock(FabricBlockSettings.copyOf(THINKING_STONE_BRICKS))
-    val THINKING_STONE_TILE_SLAB = SlabBlock(FabricBlockSettings.copyOf(THINKING_STONE_TILES))
+    val THINKING_STONE_SETTINGS =
+        FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
+    val SMOOTH_THINKING_STONE = Block(THINKING_STONE_SETTINGS)
+    val THINKING_STONE = Block(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_BRICKS = Block(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_TILES = Block(THINKING_STONE_SETTINGS)
+    val SMOOTH_THINKING_STONE_STAIRS =
+        BlockCreators.createStairsBlock(SMOOTH_THINKING_STONE.defaultState, THINKING_STONE_SETTINGS)
+    val THINKING_STONE_STAIRS = BlockCreators.createStairsBlock(THINKING_STONE.defaultState, THINKING_STONE_SETTINGS)
+    val THINKING_STONE_BRICK_STAIRS =
+        BlockCreators.createStairsBlock(THINKING_STONE_BRICKS.defaultState, THINKING_STONE_SETTINGS)
+    val THINKING_STONE_TILE_STAIRS =
+        BlockCreators.createStairsBlock(THINKING_STONE_TILES.defaultState, THINKING_STONE_SETTINGS)
+    val SMOOTH_THINKING_STONE_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_BRICK_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_TILE_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
 
     /**
      * Register all Heart of the Machine blocks...
