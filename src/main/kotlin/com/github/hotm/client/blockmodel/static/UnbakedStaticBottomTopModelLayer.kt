@@ -19,23 +19,27 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper
 import java.util.function.Function
 
-class UnbakedStaticModelLayer(
-    private val all: Identifier,
+class UnbakedStaticBottomTopModelLayer(
+    private val side: Identifier,
+    private val bottom: Identifier,
+    private val top: Identifier,
     private val material: JsonMaterial,
     private val depth: Float,
-    private val cullFaces: Boolean
+    private val cullFaces: Boolean,
 ) : UnbakedModelLayer {
     companion object {
-        val CODEC: Codec<UnbakedStaticModelLayer> =
-            RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<UnbakedStaticModelLayer> ->
+        val CODEC: Codec<UnbakedStaticBottomTopModelLayer> =
+            RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<UnbakedStaticBottomTopModelLayer> ->
                 instance.group(
-                    Identifier.CODEC.fieldOf("all").forGetter(UnbakedStaticModelLayer::all),
+                    Identifier.CODEC.fieldOf("side").forGetter(UnbakedStaticBottomTopModelLayer::side),
+                    Identifier.CODEC.fieldOf("bottom").forGetter(UnbakedStaticBottomTopModelLayer::bottom),
+                    Identifier.CODEC.fieldOf("top").forGetter(UnbakedStaticBottomTopModelLayer::top),
                     JsonMaterial.CODEC.fieldOf("material").orElse(JsonMaterial.DEFAULT)
-                        .forGetter(UnbakedStaticModelLayer::material),
-                    Codec.FLOAT.fieldOf("depth").orElse(0.0f).forGetter(UnbakedStaticModelLayer::depth),
-                    Codec.BOOL.fieldOf("cull_faces").orElse(true).forGetter(UnbakedStaticModelLayer::cullFaces)
-                ).apply(instance) { all, material, depth, cullFaces ->
-                    UnbakedStaticModelLayer(all, material, depth, cullFaces)
+                        .forGetter(UnbakedStaticBottomTopModelLayer::material),
+                    Codec.FLOAT.fieldOf("depth").orElse(0.0f).forGetter(UnbakedStaticBottomTopModelLayer::depth),
+                    Codec.BOOL.fieldOf("cull_faces").orElse(true).forGetter(UnbakedStaticBottomTopModelLayer::cullFaces)
+                ).apply(instance) { side, bottom, top, material, depth, cullFaces ->
+                    UnbakedStaticBottomTopModelLayer(side, bottom, top, material, depth, cullFaces)
                 }
             }
 
@@ -48,7 +52,9 @@ class UnbakedStaticModelLayer(
 
     private val depthClamped = MathHelper.clamp(depth, 0.0f, 0.5f)
     private val depthMaxed = depth.coerceAtMost(0.5f)
-    private val allSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, all)
+    private val sideSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, side)
+    private val bottomSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, bottom)
+    private val topSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, top)
 
     override val codec = CODEC
 
@@ -60,7 +66,7 @@ class UnbakedStaticModelLayer(
         unbakedModelGetter: Function<Identifier, UnbakedModel>?,
         unresolvedTextureReferences: MutableSet<Pair<String, String>>?
     ): Collection<SpriteIdentifier> {
-        return listOf(allSpriteId)
+        return listOf(sideSpriteId, bottomSpriteId, topSpriteId)
     }
 
     override fun bake(
@@ -73,7 +79,9 @@ class UnbakedStaticModelLayer(
         val renderMaterial = material.toRenderMaterial()
         val meshBuilder = renderer.meshBuilder()
         val emitter = meshBuilder.emitter
-        val allSprite = textureGetter.apply(allSpriteId)
+        val sideSprite = textureGetter.apply(sideSpriteId)
+        val bottomSprite = textureGetter.apply(bottomSpriteId)
+        val topSprite = textureGetter.apply(topSpriteId)
 
         for (normal in Direction.values()) {
             emitter.square(
@@ -84,9 +92,16 @@ class UnbakedStaticModelLayer(
                 1.0f - depthClamped,
                 depthMaxed
             )
-            emitter.spriteBake(0, allSprite, MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[normal.axis.ordinal])
             emitter.spriteColor(0, -1, -1, -1, -1)
             emitter.material(renderMaterial)
+
+            emitter.spriteBake(
+                0, when (normal) {
+                    Direction.DOWN -> bottomSprite
+                    Direction.UP -> topSprite
+                    else -> sideSprite
+                }, MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[normal.axis.ordinal]
+            )
 
             emitter.cullFace(
                 if (cullFaces) {
