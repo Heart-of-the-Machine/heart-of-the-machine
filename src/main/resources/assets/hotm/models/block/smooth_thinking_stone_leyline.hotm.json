@@ -16,7 +16,8 @@
         "blend_mode": "cutout",
         "emissive": true
       },
-      "depth": -0.0001
+      "depth": -0.001,
+      "interior_border": false
     }
   ]
 }

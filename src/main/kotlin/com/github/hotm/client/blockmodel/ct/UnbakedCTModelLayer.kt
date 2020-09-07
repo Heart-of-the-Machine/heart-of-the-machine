@@ -25,6 +25,7 @@ class UnbakedCTModelLayer(
     private val material: JsonMaterial,
     private val depth: Float,
     private val cullFaces: Boolean,
+    private val interiorBorder: Boolean
 ) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedCTModelLayer> =
@@ -37,8 +38,9 @@ class UnbakedCTModelLayer(
                     Identifier.CODEC.optionalFieldOf("no_corner").forGetter { Optional.ofNullable(it.noCorner) },
                     JsonMaterial.CODEC.optionalFieldOf("material").forGetter { Optional.of(it.material) },
                     Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
-                    Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) }
-                ).apply(instance) { none, horizontal, vertical, corner, noCorner, material, depth, cullFaces ->
+                    Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) },
+                    Codec.BOOL.optionalFieldOf("interior_border").forGetter { Optional.of(it.interiorBorder) }
+                ).apply(instance) { none, horizontal, vertical, corner, noCorner, material, depth, cullFaces, interiorBorder ->
                     UnbakedCTModelLayer(
                         none,
                         horizontal,
@@ -47,7 +49,8 @@ class UnbakedCTModelLayer(
                         noCorner.orElse(null),
                         material.orElse(JsonMaterial.DEFAULT),
                         depth.orElse(0.0f),
-                        cullFaces.orElse(true)
+                        cullFaces.orElse(true),
+                        interiorBorder.orElse(true)
                     )
                 }
             }
@@ -88,7 +91,7 @@ class UnbakedCTModelLayer(
             arrayOf(sprite(none), sprite(horizontal), sprite(vertical), sprite(corner))
         }
 
-        return CTModelLayer(sprites, material.toRenderMaterial(), depth, cullFaces)
+        return CTModelLayer(sprites, material.toRenderMaterial(), depth, cullFaces, interiorBorder)
     }
 
     private fun spriteId(identifier: Identifier): SpriteIdentifier {

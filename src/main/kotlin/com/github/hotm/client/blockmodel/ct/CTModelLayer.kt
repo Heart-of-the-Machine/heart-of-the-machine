@@ -23,7 +23,8 @@ class CTModelLayer(
     private val sprites: Array<Sprite>,
     private val material: RenderMaterial,
     depth: Float,
-    private val cullFaces: Boolean
+    private val cullFaces: Boolean,
+    private val interiorBorder: Boolean
 ) : BakedModelLayer {
     private data class QuadPos(val left: Float, val bottom: Float, val right: Float, val top: Float, val depth: Float) {
         fun emit(emitter: QuadEmitter, face: Direction) {
@@ -112,9 +113,11 @@ class CTModelLayer(
     private fun getHorizontals(blockView: BlockRenderView, pos: BlockPos, normal: Direction): Int {
         val block = blockView.getBlockState(pos).block
         val right = blockView.getBlockState(pos.offset(normal.texRight())).isOf(block)
-                && !blockView.getBlockState(pos.offset(normal.texRight()).offset(normal)).isOf(block)
+                && (!interiorBorder || !blockView.getBlockState(pos.offset(normal.texRight()).offset(normal))
+            .isOf(block))
         val left = blockView.getBlockState(pos.offset(normal.texLeft())).isOf(block)
-                && !blockView.getBlockState(pos.offset(normal.texLeft()).offset(normal)).isOf(block)
+                && (!interiorBorder || !blockView.getBlockState(pos.offset(normal.texLeft()).offset(normal))
+            .isOf(block))
 
         return if (left) {
             0x41
@@ -130,9 +133,10 @@ class CTModelLayer(
     private fun getVerticals(blockView: BlockRenderView, pos: BlockPos, normal: Direction): Int {
         val block = blockView.getBlockState(pos).block
         val up = blockView.getBlockState(pos.offset(normal.texUp())).isOf(block)
-                && !blockView.getBlockState(pos.offset(normal.texUp()).offset(normal)).isOf(block)
+                && (!interiorBorder || !blockView.getBlockState(pos.offset(normal.texUp()).offset(normal)).isOf(block))
         val down = blockView.getBlockState(pos.offset(normal.texDown())).isOf(block)
-                && !blockView.getBlockState(pos.offset(normal.texDown()).offset(normal)).isOf(block)
+                && (!interiorBorder || !blockView.getBlockState(pos.offset(normal.texDown()).offset(normal))
+            .isOf(block))
 
         return if (down) {
             0x9
@@ -148,17 +152,25 @@ class CTModelLayer(
     private fun getCorners(blockView: BlockRenderView, pos: BlockPos, normal: Direction): Int {
         val block = blockView.getBlockState(pos).block
         val bl = blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texLeft())).isOf(block)
-                && !blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texLeft()).offset(normal))
-            .isOf(block)
+                && (!interiorBorder || !blockView.getBlockState(
+            pos.offset(normal.texDown()).offset(normal.texLeft()).offset(normal)
+        )
+            .isOf(block))
         val br = blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texRight())).isOf(block)
-                && !blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texRight()).offset(normal))
-            .isOf(block)
+                && (!interiorBorder || !blockView.getBlockState(
+            pos.offset(normal.texDown()).offset(normal.texRight()).offset(normal)
+        )
+            .isOf(block))
         val tl = blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texLeft())).isOf(block)
-                && !blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texLeft()).offset(normal))
-            .isOf(block)
+                && (!interiorBorder || !blockView.getBlockState(
+            pos.offset(normal.texUp()).offset(normal.texLeft()).offset(normal)
+        )
+            .isOf(block))
         val tr = blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texRight())).isOf(block)
-                && !blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texRight()).offset(normal))
-            .isOf(block)
+                && (!interiorBorder || !blockView.getBlockState(
+            pos.offset(normal.texUp()).offset(normal.texRight()).offset(normal)
+        )
+            .isOf(block))
 
         return if (bl) {
             0x1
