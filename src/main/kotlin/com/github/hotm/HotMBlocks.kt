@@ -122,6 +122,7 @@ object HotMBlocks {
      * Leyline blocks.
      */
     val SMOOTH_THINKING_STONE_LEYLINE = Block(THINKING_STONE_SETTINGS)
+    val SURFACE_MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
 
     /**
      * Register all Heart of the Machine blocks...
@@ -155,6 +156,7 @@ object HotMBlocks {
         register(SMOOTH_THINKING_STONE_SLAB, "smooth_thinking_stone_slab", HOTM_BUILDING_ITEM_SETTINGS)
         register(SMOOTH_THINKING_STONE_STAIRS, "smooth_thinking_stone_stairs", HOTM_BUILDING_ITEM_SETTINGS)
         register(SURFACE_MACHINE_CASING, "surface_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(SURFACE_MACHINE_CASING_LEYLINE, "surface_machine_casing_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(TEST_MACHINE_CASING, "test_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(THINKING_GLASS, "thinking_glass", HOTM_BUILDING_ITEM_SETTINGS)
         register(THINKING_STONE, "thinking_stone", HOTM_BUILDING_ITEM_SETTINGS)
