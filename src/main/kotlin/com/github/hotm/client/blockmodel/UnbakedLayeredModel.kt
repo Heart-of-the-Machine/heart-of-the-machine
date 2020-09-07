@@ -11,6 +11,7 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.client.texture.SpriteAtlasTexture
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
+import java.util.*
 import java.util.function.Function
 
 class UnbakedLayeredModel(
@@ -24,12 +25,11 @@ class UnbakedLayeredModel(
         val CODEC: Codec<UnbakedLayeredModel> =
             RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<UnbakedLayeredModel> ->
                 instance.group(
-                    Identifier.CODEC.fieldOf("transformation").orElse(DEFAULT_TRANSFORMATION)
-                        .forGetter(UnbakedLayeredModel::transformation),
+                    Identifier.CODEC.optionalFieldOf("transformation").forGetter { Optional.of(it.transformation) },
                     Identifier.CODEC.fieldOf("particle").forGetter(UnbakedLayeredModel::particle),
                     Codec.list(UnbakedModelLayer.CODEC).fieldOf("layers").forGetter(UnbakedLayeredModel::layers)
                 ).apply(instance) { transformation, particle, layers ->
-                    UnbakedLayeredModel(transformation, particle, layers)
+                    UnbakedLayeredModel(transformation.orElse(DEFAULT_TRANSFORMATION), particle, layers)
                 }
             }
     }

@@ -13,6 +13,7 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.client.texture.SpriteAtlasTexture
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
+import java.util.*
 import java.util.function.Function
 
 class UnbakedCTModelLayer(
@@ -33,13 +34,21 @@ class UnbakedCTModelLayer(
                     Identifier.CODEC.fieldOf("horizontal").forGetter(UnbakedCTModelLayer::horizontal),
                     Identifier.CODEC.fieldOf("vertical").forGetter(UnbakedCTModelLayer::vertical),
                     Identifier.CODEC.fieldOf("corner").forGetter(UnbakedCTModelLayer::corner),
-                    Identifier.CODEC.fieldOf("no_corner").orElse(null).forGetter(UnbakedCTModelLayer::noCorner),
-                    JsonMaterial.CODEC.fieldOf("material").orElse(JsonMaterial.DEFAULT)
-                        .forGetter(UnbakedCTModelLayer::material),
-                    Codec.FLOAT.fieldOf("depth").orElse(0.0f).forGetter(UnbakedCTModelLayer::depth),
-                    Codec.BOOL.fieldOf("cull_faces").orElse(true).forGetter(UnbakedCTModelLayer::cullFaces)
+                    Identifier.CODEC.optionalFieldOf("no_corner").forGetter { Optional.ofNullable(it.noCorner) },
+                    JsonMaterial.CODEC.optionalFieldOf("material").forGetter { Optional.of(it.material) },
+                    Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
+                    Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) }
                 ).apply(instance) { none, horizontal, vertical, corner, noCorner, material, depth, cullFaces ->
-                    UnbakedCTModelLayer(none, horizontal, vertical, corner, noCorner, material, depth, cullFaces)
+                    UnbakedCTModelLayer(
+                        none,
+                        horizontal,
+                        vertical,
+                        corner,
+                        noCorner.orElse(null),
+                        material.orElse(JsonMaterial.DEFAULT),
+                        depth.orElse(0.0f),
+                        cullFaces.orElse(true)
+                    )
                 }
             }
     }

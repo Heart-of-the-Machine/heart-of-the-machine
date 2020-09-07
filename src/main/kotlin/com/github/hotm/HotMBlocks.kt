@@ -119,41 +119,37 @@ object HotMBlocks {
     /*
      * Thinking Stone Blocks.
      */
-    val SMOOTH_THINKING_STONE =
-        Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE))
-    val THINKING_STONE =
-        Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE))
-    val THINKING_STONE_BRICKS =
-        Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE))
-    val THINKING_STONE_TILES =
-        Block(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE))
-    val SMOOTH_THINKING_STONE_STAIRS = BlockCreators.createStairsBlock(
-        SMOOTH_THINKING_STONE.defaultState,
-        FabricBlockSettings.copyOf(SMOOTH_THINKING_STONE)
-    )
-    val THINKING_STONE_STAIRS =
-        BlockCreators.createStairsBlock(THINKING_STONE.defaultState, FabricBlockSettings.copyOf(THINKING_STONE))
-    val THINKING_STONE_BRICK_STAIRS = BlockCreators.createStairsBlock(
-        THINKING_STONE_BRICKS.defaultState,
-        FabricBlockSettings.copyOf(THINKING_STONE_BRICKS)
-    )
-    val THINKING_STONE_TILE_STAIRS = BlockCreators.createStairsBlock(
-        THINKING_STONE_TILES.defaultState,
-        FabricBlockSettings.copyOf(THINKING_STONE_TILES)
-    )
-    val SMOOTH_THINKING_STONE_SLAB = SlabBlock(FabricBlockSettings.copyOf(SMOOTH_THINKING_STONE))
-    val THINKING_STONE_SLAB = SlabBlock(FabricBlockSettings.copyOf(THINKING_STONE))
-    val THINKING_STONE_BRICK_SLAB = SlabBlock(FabricBlockSettings.copyOf(THINKING_STONE_BRICKS))
-    val THINKING_STONE_TILE_SLAB = SlabBlock(FabricBlockSettings.copyOf(THINKING_STONE_TILES))
+    private val THINKING_STONE_SETTINGS =
+        FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
+    val SMOOTH_THINKING_STONE = Block(THINKING_STONE_SETTINGS)
+    val THINKING_STONE = Block(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_BRICKS = Block(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_TILES = Block(THINKING_STONE_SETTINGS)
+    val SMOOTH_THINKING_STONE_STAIRS =
+        BlockCreators.createStairsBlock(SMOOTH_THINKING_STONE.defaultState, THINKING_STONE_SETTINGS)
+    val THINKING_STONE_STAIRS = BlockCreators.createStairsBlock(THINKING_STONE.defaultState, THINKING_STONE_SETTINGS)
+    val THINKING_STONE_BRICK_STAIRS =
+        BlockCreators.createStairsBlock(THINKING_STONE_BRICKS.defaultState, THINKING_STONE_SETTINGS)
+    val THINKING_STONE_TILE_STAIRS =
+        BlockCreators.createStairsBlock(THINKING_STONE_TILES.defaultState, THINKING_STONE_SETTINGS)
+    val SMOOTH_THINKING_STONE_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_BRICK_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
+    val THINKING_STONE_TILE_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
 
     /*
      * Thinking glass blocks.
      */
     val THINKING_GLASS = GlassBlock(
-        FabricBlockSettings.of(Material.GLASS).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.GLASS)
-            .nonOpaque().allowsSpawning(HotMBlocks::never).solidBlock(HotMBlocks::never).suffocates(HotMBlocks::never)
-            .blockVision(HotMBlocks::never)
+        FabricBlockSettings.of(Material.GLASS).requiresTool().breakByTool(FabricToolTags.PICKAXES).strength(3.0f, 10.0f)
+            .sounds(BlockSoundGroup.GLASS).nonOpaque().allowsSpawning(HotMBlocks::never).solidBlock(HotMBlocks::never)
+            .suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
     )
+
+    /*
+     * Leyline blocks.
+     */
+    val SMOOTH_THINKING_STONE_LEYLINE = Block(THINKING_STONE_SETTINGS)
 
     /**
      * Register all Heart of the Machine blocks...
@@ -183,6 +179,7 @@ object HotMBlocks {
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING, "rusted_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(SMOOTH_THINKING_STONE, "smooth_thinking_stone", HOTM_BUILDING_ITEM_SETTINGS)
+        register(SMOOTH_THINKING_STONE_LEYLINE, "smooth_thinking_stone_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(SMOOTH_THINKING_STONE_SLAB, "smooth_thinking_stone_slab", HOTM_BUILDING_ITEM_SETTINGS)
         register(SMOOTH_THINKING_STONE_STAIRS, "smooth_thinking_stone_stairs", HOTM_BUILDING_ITEM_SETTINGS)
         register(SURFACE_MACHINE_CASING, "surface_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)

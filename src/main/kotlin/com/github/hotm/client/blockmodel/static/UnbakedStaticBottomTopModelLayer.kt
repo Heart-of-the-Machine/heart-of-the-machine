@@ -17,6 +17,7 @@ import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper
+import java.util.*
 import java.util.function.Function
 
 class UnbakedStaticBottomTopModelLayer(
@@ -34,12 +35,18 @@ class UnbakedStaticBottomTopModelLayer(
                     Identifier.CODEC.fieldOf("side").forGetter(UnbakedStaticBottomTopModelLayer::side),
                     Identifier.CODEC.fieldOf("bottom").forGetter(UnbakedStaticBottomTopModelLayer::bottom),
                     Identifier.CODEC.fieldOf("top").forGetter(UnbakedStaticBottomTopModelLayer::top),
-                    JsonMaterial.CODEC.fieldOf("material").orElse(JsonMaterial.DEFAULT)
-                        .forGetter(UnbakedStaticBottomTopModelLayer::material),
-                    Codec.FLOAT.fieldOf("depth").orElse(0.0f).forGetter(UnbakedStaticBottomTopModelLayer::depth),
-                    Codec.BOOL.fieldOf("cull_faces").orElse(true).forGetter(UnbakedStaticBottomTopModelLayer::cullFaces)
+                    JsonMaterial.CODEC.optionalFieldOf("material").forGetter { Optional.of(it.material) },
+                    Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
+                    Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) }
                 ).apply(instance) { side, bottom, top, material, depth, cullFaces ->
-                    UnbakedStaticBottomTopModelLayer(side, bottom, top, material, depth, cullFaces)
+                    UnbakedStaticBottomTopModelLayer(
+                        side,
+                        bottom,
+                        top,
+                        material.orElse(JsonMaterial.DEFAULT),
+                        depth.orElse(0.0f),
+                        cullFaces.orElse(true)
+                    )
                 }
             }
 

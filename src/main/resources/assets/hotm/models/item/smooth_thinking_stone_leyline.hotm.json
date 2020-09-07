@@ -1,0 +1,18 @@
+{
+  "type": "hotm:layered",
+  "particle": "hotm:block/smooth_thinking_stone",
+  "layers": [
+    {
+      "type": "hotm:static_all",
+      "all": "hotm:block/smooth_thinking_stone"
+    },
+    {
+      "type": "hotm:static_all",
+      "all": "hotm:block/leyline_none",
+      "material": {
+        "blend_mode": "cutout",
+        "emissive": true
+      }
+    }
+  ]
+}
