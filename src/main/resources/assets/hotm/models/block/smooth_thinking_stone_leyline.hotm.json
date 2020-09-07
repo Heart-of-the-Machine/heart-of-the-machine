@@ -17,7 +17,8 @@
         "emissive": true
       },
       "depth": -0.001,
-      "interior_border": false
+      "interior_border": false,
+      "connector": "hotm:leyline"
     }
   ]
 }

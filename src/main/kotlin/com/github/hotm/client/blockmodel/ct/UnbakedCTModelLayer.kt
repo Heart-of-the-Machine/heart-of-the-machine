@@ -3,6 +3,7 @@ package com.github.hotm.client.blockmodel.ct
 import com.github.hotm.client.blockmodel.BakedModelLayer
 import com.github.hotm.client.blockmodel.JsonMaterial
 import com.github.hotm.client.blockmodel.UnbakedModelLayer
+import com.github.hotm.client.blockmodel.connector.ModelConnector
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -25,7 +26,8 @@ class UnbakedCTModelLayer(
     private val material: JsonMaterial,
     private val depth: Float,
     private val cullFaces: Boolean,
-    private val interiorBorder: Boolean
+    private val interiorBorder: Boolean,
+    private val connector: ModelConnector
 ) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedCTModelLayer> =
@@ -39,20 +41,23 @@ class UnbakedCTModelLayer(
                     JsonMaterial.CODEC.optionalFieldOf("material").forGetter { Optional.of(it.material) },
                     Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
                     Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) },
-                    Codec.BOOL.optionalFieldOf("interior_border").forGetter { Optional.of(it.interiorBorder) }
-                ).apply(instance) { none, horizontal, vertical, corner, noCorner, material, depth, cullFaces, interiorBorder ->
-                    UnbakedCTModelLayer(
-                        none,
-                        horizontal,
-                        vertical,
-                        corner,
-                        noCorner.orElse(null),
-                        material.orElse(JsonMaterial.DEFAULT),
-                        depth.orElse(0.0f),
-                        cullFaces.orElse(true),
-                        interiorBorder.orElse(true)
-                    )
-                }
+                    Codec.BOOL.optionalFieldOf("interior_border").forGetter { Optional.of(it.interiorBorder) },
+                    ModelConnector.CODEC.optionalFieldOf("connector").forGetter { Optional.of(it.connector) }
+                )
+                    .apply(instance) { none, horizontal, vertical, corner, noCorner, material, depth, cullFaces, interiorBorder, connector ->
+                        UnbakedCTModelLayer(
+                            none,
+                            horizontal,
+                            vertical,
+                            corner,
+                            noCorner.orElse(null),
+                            material.orElse(JsonMaterial.DEFAULT),
+                            depth.orElse(0.0f),
+                            cullFaces.orElse(true),
+                            interiorBorder.orElse(true),
+                            connector.orElse(ModelConnector.DEFAULT)
+                        )
+                    }
             }
     }
 
@@ -91,7 +96,7 @@ class UnbakedCTModelLayer(
             arrayOf(sprite(none), sprite(horizontal), sprite(vertical), sprite(corner))
         }
 
-        return CTModelLayer(sprites, material.toRenderMaterial(), depth, cullFaces, interiorBorder)
+        return CTModelLayer(sprites, material.toRenderMaterial(), depth, cullFaces, interiorBorder, connector)
     }
 
     private fun spriteId(identifier: Identifier): SpriteIdentifier {

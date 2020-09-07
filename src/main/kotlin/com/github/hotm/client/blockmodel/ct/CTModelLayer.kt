@@ -1,6 +1,7 @@
 package com.github.hotm.client.blockmodel.ct
 
 import com.github.hotm.client.blockmodel.BakedModelLayer
+import com.github.hotm.client.blockmodel.connector.ModelConnector
 import com.github.hotm.util.DirectionUtils.texDown
 import com.github.hotm.util.DirectionUtils.texLeft
 import com.github.hotm.util.DirectionUtils.texRight
@@ -24,7 +25,8 @@ class CTModelLayer(
     private val material: RenderMaterial,
     depth: Float,
     private val cullFaces: Boolean,
-    private val interiorBorder: Boolean
+    private val interiorBorder: Boolean,
+    private val connector: ModelConnector
 ) : BakedModelLayer {
     private data class QuadPos(val left: Float, val bottom: Float, val right: Float, val top: Float, val depth: Float) {
         fun emit(emitter: QuadEmitter, face: Direction) {
@@ -111,13 +113,17 @@ class CTModelLayer(
     }
 
     private fun getHorizontals(blockView: BlockRenderView, pos: BlockPos, normal: Direction): Int {
-        val block = blockView.getBlockState(pos).block
-        val right = blockView.getBlockState(pos.offset(normal.texRight())).isOf(block)
-                && (!interiorBorder || !blockView.getBlockState(pos.offset(normal.texRight()).offset(normal))
-            .isOf(block))
-        val left = blockView.getBlockState(pos.offset(normal.texLeft())).isOf(block)
-                && (!interiorBorder || !blockView.getBlockState(pos.offset(normal.texLeft()).offset(normal))
-            .isOf(block))
+        val block = blockView.getBlockState(pos)
+        val right = connector.canConnect(blockView, pos, block, blockView.getBlockState(pos.offset(normal.texRight())))
+                && (!interiorBorder || !connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texRight()).offset(normal))
+        ))
+        val left = connector.canConnect(blockView, pos, block, blockView.getBlockState(pos.offset(normal.texLeft())))
+                && (!interiorBorder || !connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texLeft()).offset(normal))
+        ))
 
         return if (left) {
             0x41
@@ -131,12 +137,17 @@ class CTModelLayer(
     }
 
     private fun getVerticals(blockView: BlockRenderView, pos: BlockPos, normal: Direction): Int {
-        val block = blockView.getBlockState(pos).block
-        val up = blockView.getBlockState(pos.offset(normal.texUp())).isOf(block)
-                && (!interiorBorder || !blockView.getBlockState(pos.offset(normal.texUp()).offset(normal)).isOf(block))
-        val down = blockView.getBlockState(pos.offset(normal.texDown())).isOf(block)
-                && (!interiorBorder || !blockView.getBlockState(pos.offset(normal.texDown()).offset(normal))
-            .isOf(block))
+        val block = blockView.getBlockState(pos)
+        val up = connector.canConnect(blockView, pos, block, blockView.getBlockState(pos.offset(normal.texUp())))
+                && (!interiorBorder || !connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texUp()).offset(normal))
+        ))
+        val down = connector.canConnect(blockView, pos, block, blockView.getBlockState(pos.offset(normal.texDown())))
+                && (!interiorBorder || !connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texDown()).offset(normal))
+        ))
 
         return if (down) {
             0x9
@@ -150,27 +161,39 @@ class CTModelLayer(
     }
 
     private fun getCorners(blockView: BlockRenderView, pos: BlockPos, normal: Direction): Int {
-        val block = blockView.getBlockState(pos).block
-        val bl = blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texLeft())).isOf(block)
-                && (!interiorBorder || !blockView.getBlockState(
-            pos.offset(normal.texDown()).offset(normal.texLeft()).offset(normal)
+        val block = blockView.getBlockState(pos)
+        val bl = connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texLeft()))
         )
-            .isOf(block))
-        val br = blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texRight())).isOf(block)
-                && (!interiorBorder || !blockView.getBlockState(
-            pos.offset(normal.texDown()).offset(normal.texRight()).offset(normal)
+                && (!interiorBorder || !connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texLeft()).offset(normal))
+        ))
+        val br = connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texRight()))
         )
-            .isOf(block))
-        val tl = blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texLeft())).isOf(block)
-                && (!interiorBorder || !blockView.getBlockState(
-            pos.offset(normal.texUp()).offset(normal.texLeft()).offset(normal)
+                && (!interiorBorder || !connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texDown()).offset(normal.texRight()).offset(normal))
+        ))
+        val tl = connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texLeft()))
         )
-            .isOf(block))
-        val tr = blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texRight())).isOf(block)
-                && (!interiorBorder || !blockView.getBlockState(
-            pos.offset(normal.texUp()).offset(normal.texRight()).offset(normal)
+                && (!interiorBorder || !connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texLeft()).offset(normal))
+        ))
+        val tr = connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texRight()))
         )
-            .isOf(block))
+                && (!interiorBorder || !connector.canConnect(
+            blockView, pos, block,
+            blockView.getBlockState(pos.offset(normal.texUp()).offset(normal.texRight()).offset(normal))
+        ))
 
         return if (bl) {
             0x1

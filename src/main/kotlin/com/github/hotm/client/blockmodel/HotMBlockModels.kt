@@ -3,6 +3,8 @@ package com.github.hotm.client.blockmodel
 import com.github.hotm.HotMConstants
 import com.github.hotm.HotMLog
 import com.github.hotm.client.HotMClientRegistries
+import com.github.hotm.client.blockmodel.connector.IdentityModelConnector
+import com.github.hotm.client.blockmodel.connector.LeylineModelConnector
 import com.github.hotm.client.blockmodel.ct.UnbakedCTModelLayer
 import com.github.hotm.client.blockmodel.static.UnbakedStaticModelLayer
 import com.google.gson.JsonParseException
@@ -32,6 +34,16 @@ object HotMBlockModels {
             HotMClientRegistries.BLOCK_MODEL_LAYER,
             HotMConstants.identifier("static_all"),
             UnbakedStaticModelLayer.CODEC
+        )
+        Registry.register(
+            HotMClientRegistries.BLOCK_MODEL_CONNECTOR,
+            HotMConstants.identifier("identity"),
+            IdentityModelConnector
+        )
+        Registry.register(
+            HotMClientRegistries.BLOCK_MODEL_CONNECTOR,
+            HotMConstants.identifier("leyline"),
+            LeylineModelConnector
         )
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(HotMBlockModels::getResourceProvider)
