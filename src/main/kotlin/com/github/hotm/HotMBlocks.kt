@@ -61,7 +61,7 @@ object HotMBlocks {
     /*
      * Machine Casing Blocks.
      */
-    val MACHINE_CASING_SETTINGS =
+    private val MACHINE_CASING_SETTINGS =
         FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL)
     val MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
     val MACHINE_CASING_BRICKS = Block(MACHINE_CASING_SETTINGS)
@@ -91,7 +91,7 @@ object HotMBlocks {
     /*
      * Thinking Stone Blocks.
      */
-    val THINKING_STONE_SETTINGS =
+    private val THINKING_STONE_SETTINGS =
         FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
     val SMOOTH_THINKING_STONE = Block(THINKING_STONE_SETTINGS)
     val THINKING_STONE = Block(THINKING_STONE_SETTINGS)
