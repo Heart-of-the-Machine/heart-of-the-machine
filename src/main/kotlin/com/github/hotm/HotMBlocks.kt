@@ -112,11 +112,11 @@ object HotMBlocks {
     /*
      * Thinking glass blocks.
      */
-    val THINKING_GLASS = GlassBlock(
+    private val GLASS_SETTINGS =
         FabricBlockSettings.of(Material.GLASS).requiresTool().breakByTool(FabricToolTags.PICKAXES).strength(3.0f, 10.0f)
             .sounds(BlockSoundGroup.GLASS).nonOpaque().allowsSpawning(HotMBlocks::never).solidBlock(HotMBlocks::never)
             .suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
-    )
+    val THINKING_GLASS = GlassBlock(GLASS_SETTINGS)
 
     /*
      * Leyline blocks.
