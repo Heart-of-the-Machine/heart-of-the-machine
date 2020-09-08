@@ -2,6 +2,7 @@ package com.github.hotm.client.blockmodel.static
 
 import com.github.hotm.client.blockmodel.BakedModelLayer
 import com.github.hotm.client.blockmodel.JsonMaterial
+import com.github.hotm.client.blockmodel.QuadEmitterUtils
 import com.github.hotm.client.blockmodel.UnbakedModelLayer
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
@@ -27,6 +28,7 @@ class UnbakedStaticBottomTopModelLayer(
     private val material: JsonMaterial,
     private val depth: Float,
     private val cullFaces: Boolean,
+    private val rotate: Boolean,
 ) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedStaticBottomTopModelLayer> =
@@ -37,15 +39,17 @@ class UnbakedStaticBottomTopModelLayer(
                     Identifier.CODEC.fieldOf("top").forGetter(UnbakedStaticBottomTopModelLayer::top),
                     JsonMaterial.CODEC.optionalFieldOf("material").forGetter { Optional.of(it.material) },
                     Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
-                    Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) }
-                ).apply(instance) { side, bottom, top, material, depth, cullFaces ->
+                    Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) },
+                    Codec.BOOL.optionalFieldOf("rotate").forGetter { Optional.of(it.rotate) }
+                ).apply(instance) { side, bottom, top, material, depth, cullFaces, rotate ->
                     UnbakedStaticBottomTopModelLayer(
                         side,
                         bottom,
                         top,
                         material.orElse(JsonMaterial.DEFAULT),
                         depth.orElse(0.0f),
-                        cullFaces.orElse(true)
+                        cullFaces.orElse(true),
+                        rotate.orElse(true)
                     )
                 }
             }
@@ -91,14 +95,28 @@ class UnbakedStaticBottomTopModelLayer(
         val topSprite = textureGetter.apply(topSpriteId)
 
         for (normal in Direction.values()) {
-            emitter.square(
-                normal,
-                0.0f + depthClamped,
-                0.0f + depthClamped,
-                1.0f - depthClamped,
-                1.0f - depthClamped,
-                depthMaxed
-            )
+            if (rotate) {
+                QuadEmitterUtils.square(
+                    emitter,
+                    rotationContainer,
+                    normal,
+                    0.0f + depthClamped,
+                    0.0f + depthClamped,
+                    1.0f - depthClamped,
+                    1.0f - depthClamped,
+                    depthMaxed
+                )
+            } else {
+                emitter.square(
+                    normal,
+                    0.0f + depthClamped,
+                    0.0f + depthClamped,
+                    1.0f - depthClamped,
+                    1.0f - depthClamped,
+                    depthMaxed
+                )
+            }
+
             emitter.spriteColor(0, -1, -1, -1, -1)
             emitter.material(renderMaterial)
 
