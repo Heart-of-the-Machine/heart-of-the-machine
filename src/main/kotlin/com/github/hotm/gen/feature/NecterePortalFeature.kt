@@ -21,8 +21,9 @@ class NecterePortalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<Default
         config: DefaultFeatureConfig
     ): Boolean {
         val key = WorldUtils.getServerWorld(world)?.registryKey
+        val serverWorld = WorldUtils.getServerWorld(world)
 
-        return if (key != HotMDimensions.NECTERE_KEY) {
+        return if (key != HotMDimensions.NECTERE_KEY && serverWorld?.structureAccessor?.shouldGenerateStructures() == true) {
             val originalBlock = world.getBlockState(pos)
 
             world.setBlockState(pos, HotMBlocks.NECTERE_PORTAL_SPAWNER.defaultState, 3)

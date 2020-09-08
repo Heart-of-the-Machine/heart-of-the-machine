@@ -48,7 +48,7 @@ class NecterePortalSpawnerBlockEntity : BlockEntity(HotMBlockEntities.NECTERE_PO
 
     fun spawn() {
         val world = world
-        if (world != null && world is ServerWorld) {
+        if (world != null && world is ServerWorld && world.structureAccessor.shouldGenerateStructures()) {
             val random = Random()
             NecterePortalGen.generateForChunk(world, ChunkPos(pos), random)
         }
