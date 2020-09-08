@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial
+import java.util.*
 
 data class JsonMaterial(
     val blendMode: BlendMode,
@@ -32,22 +33,22 @@ data class JsonMaterial(
                         } catch (e: IllegalArgumentException) {
                             DataResult.error("Unknown blend mode: $str")
                         }
-                    }, { it.name.toLowerCase() }).fieldOf("blend_mode").orElse(BlendMode.DEFAULT)
-                        .forGetter(JsonMaterial::blendMode),
-                    Codec.BOOL.fieldOf("enable_ambient_occlusion").orElse(true)
-                        .forGetter(JsonMaterial::enableAmbientOcclusion),
-                    Codec.BOOL.fieldOf("enable_color_index").orElse(true).forGetter(JsonMaterial::enableColorIndex),
-                    Codec.BOOL.fieldOf("enable_diffuse_shading").orElse(true)
-                        .forGetter(JsonMaterial::enableDiffuseShading),
-                    Codec.BOOL.fieldOf("emissive").orElse(false).forGetter(JsonMaterial::emissive)
+                    }, { it.name.toLowerCase() }).optionalFieldOf("blend_mode")
+                        .forGetter { Optional.of(it.blendMode) },
+                    Codec.BOOL.optionalFieldOf("enable_ambient_occlusion")
+                        .forGetter { Optional.of(it.enableAmbientOcclusion) },
+                    Codec.BOOL.optionalFieldOf("enable_color_index").forGetter { Optional.of(it.enableColorIndex) },
+                    Codec.BOOL.optionalFieldOf("enable_diffuse_shading")
+                        .forGetter { Optional.of(it.enableDiffuseShading) },
+                    Codec.BOOL.optionalFieldOf("emissive").forGetter { Optional.of(it.emissive) }
                 )
                     .apply(instance) { blendMode, enableAmbientOcclusion, enableColorIndex, enableDiffuseShading, emissive ->
                         JsonMaterial(
-                            blendMode,
-                            enableAmbientOcclusion,
-                            enableColorIndex,
-                            enableDiffuseShading,
-                            emissive
+                            blendMode.orElse(BlendMode.DEFAULT),
+                            enableAmbientOcclusion.orElse(true),
+                            enableColorIndex.orElse(true),
+                            enableDiffuseShading.orElse(true),
+                            emissive.orElse(false)
                         )
                     }
             }
