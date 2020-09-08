@@ -18,25 +18,28 @@ import net.minecraft.util.math.MathHelper
 import java.util.*
 import java.util.function.Function
 
-class UnbakedStaticModelLayer(
-    private val all: Identifier,
+class UnbakedStaticColumnModelLayer(
+    private val side: Identifier,
+    private val end: Identifier,
     private val material: JsonMaterial,
     private val depth: Float,
     private val cullFaces: Boolean,
     private val rotate: Boolean
 ) : UnbakedModelLayer {
     companion object {
-        val CODEC: Codec<UnbakedStaticModelLayer> =
-            RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<UnbakedStaticModelLayer> ->
+        val CODEC: Codec<UnbakedStaticColumnModelLayer> =
+            RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<UnbakedStaticColumnModelLayer> ->
                 instance.group(
-                    Identifier.CODEC.fieldOf("all").forGetter(UnbakedStaticModelLayer::all),
+                    Identifier.CODEC.fieldOf("side").forGetter(UnbakedStaticColumnModelLayer::side),
+                    Identifier.CODEC.fieldOf("end").forGetter(UnbakedStaticColumnModelLayer::end),
                     JsonMaterial.CODEC.optionalFieldOf("material").forGetter { Optional.of(it.material) },
                     Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
                     Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) },
                     Codec.BOOL.optionalFieldOf("rotate").forGetter { Optional.of(it.rotate) }
-                ).apply(instance) { all, material, depth, cullFaces, rotate ->
-                    UnbakedStaticModelLayer(
-                        all,
+                ).apply(instance) { side, end, material, depth, cullFaces, rotate ->
+                    UnbakedStaticColumnModelLayer(
+                        side,
+                        end,
                         material.orElse(JsonMaterial.DEFAULT),
                         depth.orElse(0.0f),
                         cullFaces.orElse(true),
@@ -48,7 +51,8 @@ class UnbakedStaticModelLayer(
 
     private val depthClamped = MathHelper.clamp(depth, 0.0f, 0.5f)
     private val depthMaxed = depth.coerceAtMost(0.5f)
-    private val allSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, all)
+    private val sideSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, side)
+    private val endSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, end)
 
     override val codec = CODEC
 
@@ -60,7 +64,7 @@ class UnbakedStaticModelLayer(
         unbakedModelGetter: Function<Identifier, UnbakedModel>?,
         unresolvedTextureReferences: MutableSet<Pair<String, String>>?
     ): Collection<SpriteIdentifier> {
-        return listOf(allSpriteId)
+        return listOf(sideSpriteId, endSpriteId)
     }
 
     override fun bake(
@@ -69,21 +73,22 @@ class UnbakedStaticModelLayer(
         rotationContainer: ModelBakeSettings,
         modelId: Identifier
     ): BakedModelLayer {
-        val allSprite = textureGetter.apply(allSpriteId)
+        val sideSprite = textureGetter.apply(sideSpriteId)
+        val endSprite = textureGetter.apply(endSpriteId)
 
         return StaticModelLayer.createBlock(
             rotationContainer,
             material.toRenderMaterial(),
-            false,
+            rotate,
             cullFaces,
             depthClamped,
             depthMaxed,
-            allSprite,
-            allSprite,
-            allSprite,
-            allSprite,
-            allSprite,
-            allSprite
+            endSprite,
+            endSprite,
+            sideSprite,
+            sideSprite,
+            sideSprite,
+            sideSprite
         )
     }
 }
