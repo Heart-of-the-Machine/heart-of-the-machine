@@ -1,0 +1,20 @@
+{
+  "type": "hotm:layered",
+  "particle": "hotm:block/thinking_stone",
+  "layers": [
+    {
+      "type": "hotm:static_bottom_top",
+      "side": "hotm:block/rusted_machine_casing",
+      "bottom": "hotm:block/surface_machine_casing",
+      "top": "hotm:block/rusted_machine_casing_top"
+    },
+    {
+      "type": "hotm:static_all",
+      "all": "hotm:block/leyline_none",
+      "material": {
+        "blend_mode": "cutout",
+        "emissive": true
+      }
+    }
+  ]
+}

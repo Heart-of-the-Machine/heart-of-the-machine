@@ -13,6 +13,7 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.Vec2f
 import net.minecraft.world.BlockRenderView
 import java.util.*
 import java.util.function.Supplier
@@ -24,6 +25,13 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
             MutableQuadView.BAKE_FLIP_V,
             0,
         )
+
+        private val SPRITE_UV = arrayOf(
+                Vec2f(0f, 0f),
+                Vec2f(0f, 1f),
+                Vec2f(1f, 1f),
+                Vec2f(1f, 0f)
+            )
 
         fun createBlock(
             rotationContainer: ModelBakeSettings,
@@ -68,6 +76,10 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
 
                 emitter.spriteColor(0, -1, -1, -1, -1)
                 emitter.material(renderMaterial)
+                emitter.sprite(0, 0, SPRITE_UV[0].x, SPRITE_UV[0].y)
+                emitter.sprite(1, 0, SPRITE_UV[1].x, SPRITE_UV[1].y)
+                emitter.sprite(2, 0, SPRITE_UV[2].x, SPRITE_UV[2].y)
+                emitter.sprite(3, 0, SPRITE_UV[3].x, SPRITE_UV[3].y)
 
                 emitter.spriteBake(
                     0, when (normal) {
@@ -77,7 +89,7 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
                         Direction.SOUTH -> south
                         Direction.WEST -> west
                         Direction.EAST -> east
-                    }, MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[normal.axis.ordinal]
+                    }, MutableQuadView.BAKE_NORMALIZED
                 )
 
                 emitter.cullFace(

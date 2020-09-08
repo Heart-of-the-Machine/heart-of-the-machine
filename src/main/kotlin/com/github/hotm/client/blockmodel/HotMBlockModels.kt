@@ -6,6 +6,8 @@ import com.github.hotm.client.HotMClientRegistries
 import com.github.hotm.client.blockmodel.connector.IdentityModelConnector
 import com.github.hotm.client.blockmodel.connector.LeylineModelConnector
 import com.github.hotm.client.blockmodel.ct.UnbakedCTModelLayer
+import com.github.hotm.client.blockmodel.static.UnbakedStaticBottomTopModelLayer
+import com.github.hotm.client.blockmodel.static.UnbakedStaticColumnModelLayer
 import com.github.hotm.client.blockmodel.static.UnbakedStaticModelLayer
 import com.google.gson.JsonParseException
 import com.mojang.serialization.JsonOps
@@ -34,6 +36,16 @@ object HotMBlockModels {
             HotMClientRegistries.BLOCK_MODEL_LAYER,
             HotMConstants.identifier("static_all"),
             UnbakedStaticModelLayer.CODEC
+        )
+        Registry.register(
+            HotMClientRegistries.BLOCK_MODEL_LAYER,
+            HotMConstants.identifier("static_bottom_top"),
+            UnbakedStaticBottomTopModelLayer.CODEC
+        )
+        Registry.register(
+            HotMClientRegistries.BLOCK_MODEL_LAYER,
+            HotMConstants.identifier("static_column"),
+            UnbakedStaticColumnModelLayer.CODEC
         )
         Registry.register(
             HotMClientRegistries.BLOCK_MODEL_CONNECTOR,

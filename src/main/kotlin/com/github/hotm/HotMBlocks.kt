@@ -79,14 +79,14 @@ object HotMBlocks {
     /*
      * Plassein Growth Blocks.
      */
+    val PLASSEIN_STEM_SETTINGS =
+        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
+            .sounds(BlockSoundGroup.WOOD)
     val PLASSEIN_BLOOM = Block(
         FabricBlockSettings.of(Material.LEAVES).strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOL)
             .nonOpaque()
     )
-    val PLASSEIN_STEM = PillarBlock(
-        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
-            .sounds(BlockSoundGroup.WOOD)
-    )
+    val PLASSEIN_STEM = PillarBlock(PLASSEIN_STEM_SETTINGS)
 
     /*
      * Thinking Stone Blocks.
@@ -121,8 +121,12 @@ object HotMBlocks {
     /*
      * Leyline blocks.
      */
+    val MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
+    val PLASSEIN_STEM_LEYLINE = PillarBlock(PLASSEIN_STEM_SETTINGS)
+    val RUSTED_MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
     val SMOOTH_THINKING_STONE_LEYLINE = Block(THINKING_STONE_SETTINGS)
     val SURFACE_MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
+    val THINKING_STONE_LEYLINE = Block(THINKING_STONE_SETTINGS)
 
     /**
      * Register all Heart of the Machine blocks...
@@ -139,6 +143,7 @@ object HotMBlocks {
         register(MACHINE_CASING_BRICKS, "machine_casing_bricks", HOTM_BUILDING_ITEM_SETTINGS)
         register(MACHINE_CASING_BRICK_SLAB, "machine_casing_brick_slab", HOTM_BUILDING_ITEM_SETTINGS)
         register(MACHINE_CASING_BRICK_STAIRS, "machine_casing_brick_stairs", HOTM_BUILDING_ITEM_SETTINGS)
+        register(MACHINE_CASING_LEYLINE, "machine_casing_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(MAGENTA_CRYSTAL, "magenta_crystal", HOTM_BUILDING_ITEM_SETTINGS)
         register(MAGENTA_CRYSTAL_LAMP, "magenta_crystal_lamp", HOTM_BUILDING_ITEM_SETTINGS)
         register(MAGENTA_MACHINE_CASING_LAMP, "magenta_machine_casing_lamp", HOTM_BUILDING_ITEM_SETTINGS)
@@ -150,7 +155,9 @@ object HotMBlocks {
         register(PLASSEIN_BLOOM, "plassein_bloom", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_MACHINE_CASING, "plassein_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_STEM_LEYLINE, "plassein_stem_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING, "rusted_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(RUSTED_MACHINE_CASING_LEYLINE, "rusted_machine_casing_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(SMOOTH_THINKING_STONE, "smooth_thinking_stone", HOTM_BUILDING_ITEM_SETTINGS)
         register(SMOOTH_THINKING_STONE_LEYLINE, "smooth_thinking_stone_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(SMOOTH_THINKING_STONE_SLAB, "smooth_thinking_stone_slab", HOTM_BUILDING_ITEM_SETTINGS)
@@ -168,6 +175,7 @@ object HotMBlocks {
         register(THINKING_STONE_TILES, "thinking_stone_tiles", HOTM_BUILDING_ITEM_SETTINGS)
         register(THINKING_STONE_TILE_SLAB, "thinking_stone_tile_slab", HOTM_BUILDING_ITEM_SETTINGS)
         register(THINKING_STONE_TILE_STAIRS, "thinking_stone_tile_stairs", HOTM_BUILDING_ITEM_SETTINGS)
+        register(THINKING_STONE_LEYLINE, "thinking_stone_leyline", HOTM_BUILDING_ITEM_SETTINGS)
     }
 
     private fun register(block: Block, name: String, itemSettings: Item.Settings) {
