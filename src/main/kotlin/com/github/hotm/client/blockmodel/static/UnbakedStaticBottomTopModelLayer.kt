@@ -130,7 +130,7 @@ class UnbakedStaticBottomTopModelLayer(
 
             emitter.cullFace(
                 if (cullFaces) {
-                    normal
+                    Direction.transform(rotationContainer.rotation.matrix, normal)
                 } else {
                     null
                 }
