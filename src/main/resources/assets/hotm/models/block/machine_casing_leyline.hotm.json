@@ -1,0 +1,25 @@
+{
+  "type": "hotm:layered",
+  "particle": "hotm:block/machine_casing",
+  "layers": [
+    {
+      "type": "hotm:static_all",
+      "all": "hotm:block/machine_casing"
+    },
+    {
+      "type": "hotm:quarter_connected_texture",
+      "none": "hotm:block/leyline_none",
+      "horizontal": "hotm:block/leyline_horizontal",
+      "vertical": "hotm:block/leyline_vertical",
+      "corner": "hotm:block/leyline_corner",
+      "material": {
+        "blend_mode": "cutout",
+        "emissive": true
+      },
+      "depth": -0.001,
+      "interior_border": false,
+      "connector": "hotm:leyline",
+      "tintindex": 0
+    }
+  ]
+}

@@ -92,6 +92,8 @@ object HotMBiomes {
         effects.fogColor(0x7591c7)
         effects.moodSound(BiomeMoodSound.CAVE)
         effects.skyColor(getSkyColor(0.5f))
+        effects.grassColor(0x00c9db)
+        effects.foliageColor(0x00a9b8)
 
         val spawns = SpawnSettings.Builder()
 
@@ -123,6 +125,8 @@ object HotMBiomes {
         effects.fogColor(0x222222)
         effects.moodSound(BiomeMoodSound.CAVE)
         effects.skyColor(getSkyColor(0.8f))
+        effects.grassColor(0x7cdb00)
+        effects.foliageColor(0x62ad00)
 
         val spawns = SpawnSettings.Builder()
 

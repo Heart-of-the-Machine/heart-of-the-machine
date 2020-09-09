@@ -1,0 +1,21 @@
+{
+  "type": "hotm:layered",
+  "particle": "hotm:block/machine_casing",
+  "layers": [
+    {
+      "type": "hotm:static_all",
+      "all": "hotm:block/machine_casing"
+    },
+    {
+      "type": "hotm:static_all",
+      "all": {
+        "texture": "hotm:block/leyline_none",
+        "tintindex": 0
+      },
+      "material": {
+        "blend_mode": "cutout",
+        "emissive": true
+      }
+    }
+  ]
+}

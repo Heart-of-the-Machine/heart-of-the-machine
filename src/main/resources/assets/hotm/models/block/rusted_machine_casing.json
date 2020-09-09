@@ -1,7 +1,8 @@
 {
-  "parent": "block/cube_column",
+  "parent": "block/cube_bottom_top",
   "textures": {
-    "end": "hotm:block/rusted_machine_casing_top",
-    "side": "hotm:block/rusted_machine_casing"
+    "top": "hotm:block/rusted_machine_casing_top",
+    "side": "hotm:block/rusted_machine_casing",
+    "bottom": "hotm:block/surface_machine_casing"
   }
 }

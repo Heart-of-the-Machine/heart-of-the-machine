@@ -1,0 +1,22 @@
+{
+  "type": "hotm:layered",
+  "particle": "hotm:block/plassein_stem",
+  "layers": [
+    {
+      "type": "hotm:static_column",
+      "side": "hotm:block/plassein_stem",
+      "end": "hotm:block/plassein_stem_top"
+    },
+    {
+      "type": "hotm:static_all",
+      "all": {
+        "texture": "hotm:block/leyline_none",
+        "tintindex": 0
+      },
+      "material": {
+        "blend_mode": "cutout",
+        "emissive": true
+      }
+    }
+  ]
+}

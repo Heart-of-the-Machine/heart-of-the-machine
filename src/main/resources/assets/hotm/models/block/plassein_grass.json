@@ -1,0 +1,10 @@
+{
+  "parent": "block/grass_block",
+  "textures": {
+    "particle": "hotm:block/surface_machine_casing",
+    "bottom": "hotm:block/surface_machine_casing",
+    "top": "hotm:block/plassein_grass_top",
+    "side": "hotm:block/surface_machine_casing",
+    "overlay": "hotm:block/plassein_grass_side_overlay"
+  }
+}

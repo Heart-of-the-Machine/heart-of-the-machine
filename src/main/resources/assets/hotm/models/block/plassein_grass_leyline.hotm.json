@@ -1,0 +1,40 @@
+{
+  "type": "hotm:layered",
+  "particle": "hotm:block/surface_machine_casing",
+  "layers": [
+    {
+      "type": "hotm:static_all",
+      "all": "hotm:block/surface_machine_casing"
+    },
+    {
+      "type": "hotm:static_bottom_top",
+      "side": {
+        "texture": "hotm:block/plassein_grass_side_overlay",
+        "tintindex": 0
+      },
+      "top": {
+        "texture": "hotm:block/plassein_grass_top",
+        "tintindex": 0
+      },
+      "bottom": "hotm:block/plassein_machine_casing",
+      "material": {
+        "blend_mode": "cutout"
+      }
+    },
+    {
+      "type": "hotm:quarter_connected_texture",
+      "none": "hotm:block/leyline_none",
+      "horizontal": "hotm:block/leyline_horizontal",
+      "vertical": "hotm:block/leyline_vertical",
+      "corner": "hotm:block/leyline_corner",
+      "material": {
+        "blend_mode": "cutout",
+        "emissive": true
+      },
+      "depth": -0.001,
+      "interior_border": false,
+      "connector": "hotm:leyline",
+      "tintindex": 0
+    }
+  ]
+}
