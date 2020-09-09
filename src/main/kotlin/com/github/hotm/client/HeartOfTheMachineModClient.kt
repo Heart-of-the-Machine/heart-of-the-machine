@@ -9,4 +9,5 @@ import com.github.hotm.client.blockmodel.HotMBlockModels
 fun init() {
     HotMBlocksClient.register()
     HotMBlockModels.register()
+    HotMColorProviders.register()
 }

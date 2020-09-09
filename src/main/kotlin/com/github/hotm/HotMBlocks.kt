@@ -86,6 +86,7 @@ object HotMBlocks {
         FabricBlockSettings.of(Material.LEAVES).strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOL)
             .nonOpaque()
     )
+    val PLASSEIN_GRASS = Block(MACHINE_CASING_SETTINGS)
     val PLASSEIN_STEM = PillarBlock(PLASSEIN_STEM_SETTINGS)
 
     /*
@@ -153,6 +154,7 @@ object HotMBlocks {
         register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner", Item.Settings())
         register(OBELISK_PART, "obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BLOOM, "plassein_bloom", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_GRASS, "plassein_grass", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_MACHINE_CASING, "plassein_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM_LEYLINE, "plassein_stem_leyline", HOTM_BUILDING_ITEM_SETTINGS)
