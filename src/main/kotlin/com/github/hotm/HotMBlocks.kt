@@ -87,6 +87,10 @@ object HotMBlocks {
             .nonOpaque()
     )
     val PLASSEIN_GRASS = Block(MACHINE_CASING_SETTINGS)
+    val PLASSEIN_LEAVES = Block(
+        FabricBlockSettings.of(Material.LEAVES).strength(0.2f).sounds(BlockSoundGroup.GRASS).nonOpaque()
+            .suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
+    )
     val PLASSEIN_STEM = PillarBlock(PLASSEIN_STEM_SETTINGS)
 
     /*
@@ -155,6 +159,7 @@ object HotMBlocks {
         register(OBELISK_PART, "obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BLOOM, "plassein_bloom", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_GRASS, "plassein_grass", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_LEAVES, "plassein_leaves", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_MACHINE_CASING, "plassein_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM_LEYLINE, "plassein_stem_leyline", HOTM_BUILDING_ITEM_SETTINGS)

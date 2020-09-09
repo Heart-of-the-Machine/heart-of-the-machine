@@ -22,6 +22,17 @@ object HotMColorProviders {
             HotMBlocks.SURFACE_MACHINE_CASING_LEYLINE,
             HotMBlocks.THINKING_STONE_LEYLINE
         )
+        ColorProviderRegistry.BLOCK.register(
+            { _, view, pos, _ ->
+                if (view != null && pos != null) {
+                    BiomeColors.getFoliageColor(view, pos)
+                } else {
+                    0x1d8ccc
+                }
+            },
+            HotMBlocks.PLASSEIN_LEAVES
+        )
+
         ColorProviderRegistry.ITEM.register(
             { _, _ -> 0x4287f5 },
             HotMBlocks.MACHINE_CASING_LEYLINE.asItem(),
@@ -31,6 +42,10 @@ object HotMColorProviders {
             HotMBlocks.SMOOTH_THINKING_STONE_LEYLINE.asItem(),
             HotMBlocks.SURFACE_MACHINE_CASING_LEYLINE.asItem(),
             HotMBlocks.THINKING_STONE_LEYLINE.asItem()
+        )
+        ColorProviderRegistry.ITEM.register(
+            { _, _ -> 0x1d8ccc },
+            HotMBlocks.PLASSEIN_LEAVES.asItem()
         )
     }
 }

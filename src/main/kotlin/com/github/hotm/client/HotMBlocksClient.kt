@@ -15,6 +15,7 @@ object HotMBlocksClient {
     fun register() {
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.PLASSEIN_BLOOM, RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.PLASSEIN_GRASS, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.PLASSEIN_LEAVES, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.NECTERE_PORTAL, RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.THINKING_GLASS, RenderLayer.getCutout())
     }
