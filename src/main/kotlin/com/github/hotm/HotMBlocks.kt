@@ -84,12 +84,12 @@ object HotMBlocks {
             .sounds(BlockSoundGroup.WOOD)
     val PLASSEIN_BLOOM = Block(
         FabricBlockSettings.of(Material.LEAVES).strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOL)
-            .nonOpaque()
+            .nonOpaque().allowsSpawning(HotMBlocks::never)
     )
     val PLASSEIN_GRASS = Block(MACHINE_CASING_SETTINGS)
     val PLASSEIN_LEAVES = Block(
         FabricBlockSettings.of(Material.LEAVES).strength(0.2f).sounds(BlockSoundGroup.GRASS).nonOpaque()
-            .suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
+            .allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
     )
     val PLASSEIN_STEM = PillarBlock(PLASSEIN_STEM_SETTINGS)
 
@@ -118,9 +118,9 @@ object HotMBlocks {
      * Thinking glass blocks.
      */
     private val GLASS_SETTINGS =
-        FabricBlockSettings.of(Material.GLASS).requiresTool().breakByTool(FabricToolTags.PICKAXES).strength(3.0f, 10.0f)
-            .sounds(BlockSoundGroup.GLASS).nonOpaque().allowsSpawning(HotMBlocks::never).solidBlock(HotMBlocks::never)
-            .suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
+        FabricBlockSettings.of(Material.GLASS).strength(0.5f, 10.0f).sounds(BlockSoundGroup.GLASS).nonOpaque()
+            .allowsSpawning(HotMBlocks::never).solidBlock(HotMBlocks::never).suffocates(HotMBlocks::never)
+            .blockVision(HotMBlocks::never)
     val THINKING_GLASS = GlassBlock(GLASS_SETTINGS)
 
     /*
