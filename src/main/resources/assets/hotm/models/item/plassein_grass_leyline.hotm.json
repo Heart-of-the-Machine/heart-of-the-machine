@@ -23,6 +23,10 @@
       "all": {
         "texture": "hotm:block/leyline_none",
         "tintindex": 0
+      },
+      "material": {
+        "blend_mode": "cutout",
+        "emissive": true
       }
     }
   ]
