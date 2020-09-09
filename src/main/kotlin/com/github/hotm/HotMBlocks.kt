@@ -127,6 +127,7 @@ object HotMBlocks {
      * Leyline blocks.
      */
     val MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
+    val PLASSEIN_GRASS_LEYLINE = Block(MACHINE_CASING_SETTINGS)
     val PLASSEIN_STEM_LEYLINE = PillarBlock(PLASSEIN_STEM_SETTINGS)
     val RUSTED_MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
     val SMOOTH_THINKING_STONE_LEYLINE = Block(THINKING_STONE_SETTINGS)
@@ -159,6 +160,7 @@ object HotMBlocks {
         register(OBELISK_PART, "obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BLOOM, "plassein_bloom", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_GRASS, "plassein_grass", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_GRASS_LEYLINE, "plassein_grass_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_LEAVES, "plassein_leaves", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_MACHINE_CASING, "plassein_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)

@@ -2,11 +2,11 @@ package com.github.hotm.client.blockmodel.static
 
 import com.github.hotm.client.blockmodel.BakedModelLayer
 import com.github.hotm.client.blockmodel.JsonMaterial
+import com.github.hotm.client.blockmodel.JsonTexture
 import com.github.hotm.client.blockmodel.UnbakedModelLayer
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
 import net.minecraft.client.render.model.ModelBakeSettings
 import net.minecraft.client.render.model.ModelLoader
 import net.minecraft.client.render.model.UnbakedModel
@@ -19,28 +19,26 @@ import java.util.*
 import java.util.function.Function
 
 class UnbakedStaticBottomTopModelLayer(
-    private val side: Identifier,
-    private val bottom: Identifier,
-    private val top: Identifier,
+    private val side: JsonTexture,
+    private val bottom: JsonTexture,
+    private val top: JsonTexture,
     private val material: JsonMaterial,
     private val depth: Float,
     private val cullFaces: Boolean,
-    private val rotate: Boolean,
-    private val colorIndex: Int
+    private val rotate: Boolean
 ) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedStaticBottomTopModelLayer> =
             RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<UnbakedStaticBottomTopModelLayer> ->
                 instance.group(
-                    Identifier.CODEC.fieldOf("side").forGetter(UnbakedStaticBottomTopModelLayer::side),
-                    Identifier.CODEC.fieldOf("bottom").forGetter(UnbakedStaticBottomTopModelLayer::bottom),
-                    Identifier.CODEC.fieldOf("top").forGetter(UnbakedStaticBottomTopModelLayer::top),
+                    JsonTexture.CODEC.fieldOf("side").forGetter(UnbakedStaticBottomTopModelLayer::side),
+                    JsonTexture.CODEC.fieldOf("bottom").forGetter(UnbakedStaticBottomTopModelLayer::bottom),
+                    JsonTexture.CODEC.fieldOf("top").forGetter(UnbakedStaticBottomTopModelLayer::top),
                     JsonMaterial.CODEC.optionalFieldOf("material").forGetter { Optional.of(it.material) },
                     Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
                     Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) },
-                    Codec.BOOL.optionalFieldOf("rotate").forGetter { Optional.of(it.rotate) },
-                    Codec.INT.optionalFieldOf("color_index").forGetter { Optional.of(it.colorIndex) }
-                ).apply(instance) { side, bottom, top, material, depth, cullFaces, rotate, colorIndex ->
+                    Codec.BOOL.optionalFieldOf("rotate").forGetter { Optional.of(it.rotate) }
+                ).apply(instance) { side, bottom, top, material, depth, cullFaces, rotate ->
                     UnbakedStaticBottomTopModelLayer(
                         side,
                         bottom,
@@ -48,8 +46,7 @@ class UnbakedStaticBottomTopModelLayer(
                         material.orElse(JsonMaterial.DEFAULT),
                         depth.orElse(0.0f),
                         cullFaces.orElse(true),
-                        rotate.orElse(true),
-                        colorIndex.orElse(-1)
+                        rotate.orElse(true)
                     )
                 }
             }
@@ -57,9 +54,9 @@ class UnbakedStaticBottomTopModelLayer(
 
     private val depthClamped = MathHelper.clamp(depth, 0.0f, 0.5f)
     private val depthMaxed = depth.coerceAtMost(0.5f)
-    private val sideSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, side)
-    private val bottomSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, bottom)
-    private val topSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, top)
+    private val sideSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, side.texture)
+    private val bottomSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, bottom.texture)
+    private val topSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, top.texture)
 
     override val codec = CODEC
 
@@ -89,15 +86,20 @@ class UnbakedStaticBottomTopModelLayer(
             material.toRenderMaterial(),
             rotate,
             cullFaces,
-            colorIndex,
             depthClamped,
             depthMaxed,
             bottomSprite,
+            bottom.tintIndex,
             topSprite,
+            top.tintIndex,
             sideSprite,
+            side.tintIndex,
             sideSprite,
+            side.tintIndex,
             sideSprite,
-            sideSprite
+            side.tintIndex,
+            sideSprite,
+            side.tintIndex
         )
     }
 }

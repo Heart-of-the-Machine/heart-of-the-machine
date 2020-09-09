@@ -11,6 +11,7 @@ object LeylineModelConnector : ModelConnector {
 
     init {
         LEYLINE_BLOCKS.add(HotMBlocks.MACHINE_CASING_LEYLINE)
+        LEYLINE_BLOCKS.add(HotMBlocks.PLASSEIN_GRASS_LEYLINE)
         LEYLINE_BLOCKS.add(HotMBlocks.PLASSEIN_STEM_LEYLINE)
         LEYLINE_BLOCKS.add(HotMBlocks.RUSTED_MACHINE_CASING_LEYLINE)
         LEYLINE_BLOCKS.add(HotMBlocks.SMOOTH_THINKING_STONE_LEYLINE)

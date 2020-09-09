@@ -27,26 +27,31 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
         )
 
         private val SPRITE_UV = arrayOf(
-                Vec2f(0f, 0f),
-                Vec2f(0f, 1f),
-                Vec2f(1f, 1f),
-                Vec2f(1f, 0f)
-            )
+            Vec2f(0f, 0f),
+            Vec2f(0f, 1f),
+            Vec2f(1f, 1f),
+            Vec2f(1f, 0f)
+        )
 
         fun createBlock(
             rotationContainer: ModelBakeSettings,
             renderMaterial: RenderMaterial,
             rotate: Boolean,
             cullFaces: Boolean,
-            colorIndex: Int,
             sideDepth: Float,
             faceDepth: Float,
             down: Sprite,
+            downTintIndex: Int,
             up: Sprite,
+            upTintIndex: Int,
             north: Sprite,
+            northTintIndex: Int,
             south: Sprite,
+            southTintIndex: Int,
             west: Sprite,
-            east: Sprite
+            westTintIndex: Int,
+            east: Sprite,
+            eastTintIndex: Int
         ): StaticModelLayer {
             val renderer = RendererAccess.INSTANCE.renderer
             val meshBuilder = renderer.meshBuilder()
@@ -75,13 +80,23 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
                     )
                 }
 
-                emitter.colorIndex(colorIndex)
                 emitter.spriteColor(0, -1, -1, -1, -1)
                 emitter.material(renderMaterial)
                 emitter.sprite(0, 0, SPRITE_UV[0].x, SPRITE_UV[0].y)
                 emitter.sprite(1, 0, SPRITE_UV[1].x, SPRITE_UV[1].y)
                 emitter.sprite(2, 0, SPRITE_UV[2].x, SPRITE_UV[2].y)
                 emitter.sprite(3, 0, SPRITE_UV[3].x, SPRITE_UV[3].y)
+
+                emitter.colorIndex(
+                    when (normal) {
+                        Direction.DOWN -> downTintIndex
+                        Direction.UP -> upTintIndex
+                        Direction.NORTH -> northTintIndex
+                        Direction.SOUTH -> southTintIndex
+                        Direction.WEST -> westTintIndex
+                        Direction.EAST -> eastTintIndex
+                    }
+                )
 
                 emitter.spriteBake(
                     0, when (normal) {

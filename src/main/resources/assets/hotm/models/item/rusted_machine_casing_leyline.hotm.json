@@ -10,12 +10,14 @@
     },
     {
       "type": "hotm:static_all",
-      "all": "hotm:block/leyline_none",
+      "all": {
+        "texture": "hotm:block/leyline_none",
+        "tint_index": 0
+      },
       "material": {
         "blend_mode": "cutout",
         "emissive": true
-      },
-      "color_index": 0
+      }
     }
   ]
 }
