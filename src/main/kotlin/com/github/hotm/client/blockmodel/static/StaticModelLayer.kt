@@ -38,6 +38,7 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
             renderMaterial: RenderMaterial,
             rotate: Boolean,
             cullFaces: Boolean,
+            colorIndex: Int,
             sideDepth: Float,
             faceDepth: Float,
             down: Sprite,
@@ -74,6 +75,7 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
                     )
                 }
 
+                emitter.colorIndex(colorIndex)
                 emitter.spriteColor(0, -1, -1, -1, -1)
                 emitter.material(renderMaterial)
                 emitter.sprite(0, 0, SPRITE_UV[0].x, SPRITE_UV[0].y)

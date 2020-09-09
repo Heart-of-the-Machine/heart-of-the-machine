@@ -26,6 +26,7 @@ class UnbakedStaticBottomTopModelLayer(
     private val depth: Float,
     private val cullFaces: Boolean,
     private val rotate: Boolean,
+    private val colorIndex: Int
 ) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedStaticBottomTopModelLayer> =
@@ -37,8 +38,9 @@ class UnbakedStaticBottomTopModelLayer(
                     JsonMaterial.CODEC.optionalFieldOf("material").forGetter { Optional.of(it.material) },
                     Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
                     Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) },
-                    Codec.BOOL.optionalFieldOf("rotate").forGetter { Optional.of(it.rotate) }
-                ).apply(instance) { side, bottom, top, material, depth, cullFaces, rotate ->
+                    Codec.BOOL.optionalFieldOf("rotate").forGetter { Optional.of(it.rotate) },
+                    Codec.INT.optionalFieldOf("color_index").forGetter { Optional.of(it.colorIndex) }
+                ).apply(instance) { side, bottom, top, material, depth, cullFaces, rotate, colorIndex ->
                     UnbakedStaticBottomTopModelLayer(
                         side,
                         bottom,
@@ -46,7 +48,8 @@ class UnbakedStaticBottomTopModelLayer(
                         material.orElse(JsonMaterial.DEFAULT),
                         depth.orElse(0.0f),
                         cullFaces.orElse(true),
-                        rotate.orElse(true)
+                        rotate.orElse(true),
+                        colorIndex.orElse(-1)
                     )
                 }
             }
@@ -86,6 +89,7 @@ class UnbakedStaticBottomTopModelLayer(
             material.toRenderMaterial(),
             rotate,
             cullFaces,
+            colorIndex,
             depthClamped,
             depthMaxed,
             bottomSprite,

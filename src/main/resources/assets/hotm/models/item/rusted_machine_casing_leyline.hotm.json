@@ -14,7 +14,8 @@
       "material": {
         "blend_mode": "cutout",
         "emissive": true
-      }
+      },
+      "color_index": 0
     }
   ]
 }

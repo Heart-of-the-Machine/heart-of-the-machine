@@ -26,7 +26,8 @@ class CTModelLayer(
     depth: Float,
     private val cullFaces: Boolean,
     private val interiorBorder: Boolean,
-    private val connector: ModelConnector
+    private val connector: ModelConnector,
+    private val colorIndex: Int
 ) : BakedModelLayer {
     private data class QuadPos(val left: Float, val bottom: Float, val right: Float, val top: Float, val depth: Float) {
         fun emit(emitter: QuadEmitter, face: Direction) {
@@ -80,6 +81,7 @@ class CTModelLayer(
                     sprites[(indices shr (corner * 3)) and 0x7],
                     MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[axis]
                 )
+                emitter.colorIndex(colorIndex)
                 emitter.spriteColor(0, -1, -1, -1, -1)
                 emitter.material(material)
 

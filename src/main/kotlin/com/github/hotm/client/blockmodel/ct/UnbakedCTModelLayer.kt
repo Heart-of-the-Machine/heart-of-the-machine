@@ -27,7 +27,8 @@ class UnbakedCTModelLayer(
     private val depth: Float,
     private val cullFaces: Boolean,
     private val interiorBorder: Boolean,
-    private val connector: ModelConnector
+    private val connector: ModelConnector,
+    private val colorIndex: Int
 ) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedCTModelLayer> =
@@ -42,9 +43,10 @@ class UnbakedCTModelLayer(
                     Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
                     Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) },
                     Codec.BOOL.optionalFieldOf("interior_border").forGetter { Optional.of(it.interiorBorder) },
-                    ModelConnector.CODEC.optionalFieldOf("connector").forGetter { Optional.of(it.connector) }
+                    ModelConnector.CODEC.optionalFieldOf("connector").forGetter { Optional.of(it.connector) },
+                    Codec.INT.optionalFieldOf("color_index").forGetter { Optional.of(it.colorIndex) }
                 )
-                    .apply(instance) { none, horizontal, vertical, corner, noCorner, material, depth, cullFaces, interiorBorder, connector ->
+                    .apply(instance) { none, horizontal, vertical, corner, noCorner, material, depth, cullFaces, interiorBorder, connector, colorIndex ->
                         UnbakedCTModelLayer(
                             none,
                             horizontal,
@@ -55,7 +57,8 @@ class UnbakedCTModelLayer(
                             depth.orElse(0.0f),
                             cullFaces.orElse(true),
                             interiorBorder.orElse(true),
-                            connector.orElse(ModelConnector.DEFAULT)
+                            connector.orElse(ModelConnector.DEFAULT),
+                            colorIndex.orElse(-1)
                         )
                     }
             }
@@ -96,7 +99,15 @@ class UnbakedCTModelLayer(
             arrayOf(sprite(none), sprite(horizontal), sprite(vertical), sprite(corner))
         }
 
-        return CTModelLayer(sprites, material.toRenderMaterial(), depth, cullFaces, interiorBorder, connector)
+        return CTModelLayer(
+            sprites,
+            material.toRenderMaterial(),
+            depth,
+            cullFaces,
+            interiorBorder,
+            connector,
+            colorIndex
+        )
     }
 
     private fun spriteId(identifier: Identifier): SpriteIdentifier {

@@ -19,7 +19,8 @@
       },
       "depth": -0.001,
       "interior_border": false,
-      "connector": "hotm:leyline"
+      "connector": "hotm:leyline",
+      "color_index": 0
     }
   ]
 }
