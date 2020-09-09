@@ -13,7 +13,7 @@ data class JsonTexture(val texture: Identifier, val tintIndex: Int) {
             RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<JsonTexture> ->
                 instance.group(
                     Identifier.CODEC.fieldOf("texture").forGetter(JsonTexture::texture),
-                    Codec.INT.optionalFieldOf("tint_index").forGetter { Optional.of(it.tintIndex) }
+                    Codec.INT.optionalFieldOf("tintindex").forGetter { Optional.of(it.tintIndex) }
                 ).apply(instance) { texture, tintIndex ->
                     JsonTexture(texture, tintIndex.orElse(-1))
                 }

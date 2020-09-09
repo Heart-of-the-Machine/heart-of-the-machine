@@ -10,11 +10,11 @@
       "type": "hotm:static_bottom_top",
       "side": {
         "texture": "hotm:block/plassein_grass_side_overlay",
-        "tint_index": 0
+        "tintindex": 0
       },
       "top": {
         "texture": "hotm:block/plassein_grass_top",
-        "tint_index": 0
+        "tintindex": 0
       },
       "bottom": "hotm:block/plassein_machine_casing"
     },
@@ -22,7 +22,7 @@
       "type": "hotm:static_all",
       "all": {
         "texture": "hotm:block/leyline_none",
-        "tint_index": 0
+        "tintindex": 0
       }
     }
   ]

@@ -28,7 +28,7 @@ class UnbakedCTModelLayer(
     private val cullFaces: Boolean,
     private val interiorBorder: Boolean,
     private val connector: ModelConnector,
-    private val colorIndex: Int
+    private val tintIndex: Int
 ) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedCTModelLayer> =
@@ -44,7 +44,7 @@ class UnbakedCTModelLayer(
                     Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) },
                     Codec.BOOL.optionalFieldOf("interior_border").forGetter { Optional.of(it.interiorBorder) },
                     ModelConnector.CODEC.optionalFieldOf("connector").forGetter { Optional.of(it.connector) },
-                    Codec.INT.optionalFieldOf("color_index").forGetter { Optional.of(it.colorIndex) }
+                    Codec.INT.optionalFieldOf("tintindex").forGetter { Optional.of(it.tintIndex) }
                 )
                     .apply(instance) { none, horizontal, vertical, corner, noCorner, material, depth, cullFaces, interiorBorder, connector, colorIndex ->
                         UnbakedCTModelLayer(
@@ -106,7 +106,7 @@ class UnbakedCTModelLayer(
             cullFaces,
             interiorBorder,
             connector,
-            colorIndex
+            tintIndex
         )
     }
 

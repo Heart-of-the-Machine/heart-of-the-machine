@@ -12,7 +12,7 @@
       "type": "hotm:static_all",
       "all": {
         "texture": "hotm:block/leyline_none",
-        "tint_index": 0
+        "tintindex": 0
       },
       "material": {
         "blend_mode": "cutout",
