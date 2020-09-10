@@ -13,6 +13,7 @@ import com.github.hotm.gen.feature.HotMStructurePieces
 fun init() {
     HotMConfig.init()
     HotMBlocks.register()
+    HotMItems.register()
     HotMBlockEntities.register()
     HotMBiomes.register()
     HotMDimensions.register()
