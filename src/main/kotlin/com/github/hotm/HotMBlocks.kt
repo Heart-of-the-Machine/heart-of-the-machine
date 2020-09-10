@@ -4,6 +4,7 @@ import com.github.hotm.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
 import com.github.hotm.blocks.BracingBlock
 import com.github.hotm.blocks.NecterePortalBlock
 import com.github.hotm.blocks.NecterePortalSpawnerBlock
+import com.github.hotm.items.BracingItem
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
@@ -159,13 +160,13 @@ object HotMBlocks {
         register(MAGENTA_CRYSTAL_LAMP, "magenta_crystal_lamp", HOTM_BUILDING_ITEM_SETTINGS)
         register(MAGENTA_MACHINE_CASING_LAMP, "magenta_machine_casing_lamp", HOTM_BUILDING_ITEM_SETTINGS)
         register(MAGENTA_THINKING_STONE_LAMP, "magenta_thinking_stone_lamp", HOTM_BUILDING_ITEM_SETTINGS)
-        register(METAL_BRACING, "metal_bracing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(METAL_BRACING, "metal_bracing", BracingItem(METAL_BRACING, HOTM_BUILDING_ITEM_SETTINGS))
         register(METAL_MACHINE_CASING, "metal_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(NECTERE_PORTAL, "nectere_portal", Item.Settings())
         register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner", Item.Settings())
         register(OBELISK_PART, "obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BLOOM, "plassein_bloom", HOTM_BUILDING_ITEM_SETTINGS)
-        register(PLASSEIN_BRACING, "plassein_bracing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_BRACING, "plassein_bracing", BracingItem(PLASSEIN_BRACING, HOTM_BUILDING_ITEM_SETTINGS))
         register(PLASSEIN_GRASS, "plassein_grass", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_GRASS_LEYLINE, "plassein_grass_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_LEAVES, "plassein_leaves", HOTM_BUILDING_ITEM_SETTINGS)
@@ -195,9 +196,13 @@ object HotMBlocks {
     }
 
     private fun register(block: Block, name: String, itemSettings: Item.Settings) {
+        register(block, name, BlockItem(block, itemSettings))
+    }
+
+    private fun register(block: Block, name: String, item: BlockItem) {
         val identifier = HotMConstants.identifier(name)
         Registry.register(Registry.BLOCK, identifier, block)
-        Registry.register(Registry.ITEM, identifier, BlockItem(block, itemSettings))
+        Registry.register(Registry.ITEM, identifier, item)
     }
 
     private fun never(state: BlockState, world: BlockView, pos: BlockPos, entity: EntityType<*>): Boolean {
