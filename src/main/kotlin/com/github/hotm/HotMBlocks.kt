@@ -1,6 +1,7 @@
 package com.github.hotm
 
 import com.github.hotm.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
+import com.github.hotm.blocks.BracingBlock
 import com.github.hotm.blocks.NecterePortalBlock
 import com.github.hotm.blocks.NecterePortalSpawnerBlock
 import com.github.hotm.mixinapi.BlockCreators
@@ -77,8 +78,8 @@ object HotMBlocks {
     private val BRACING_SETTINGS =
         FabricBlockSettings.of(Material.METAL).requiresTool().strength(5.0f, 15.0f).sounds(BlockSoundGroup.METAL)
             .nonOpaque()
-    val METAL_BRACING = Block(BRACING_SETTINGS)
-    val PLASSEIN_BRACING = Block(BRACING_SETTINGS)
+    val METAL_BRACING = BracingBlock(BRACING_SETTINGS)
+    val PLASSEIN_BRACING = BracingBlock(BRACING_SETTINGS)
 
     /*
      * Plassein Growth Blocks.
