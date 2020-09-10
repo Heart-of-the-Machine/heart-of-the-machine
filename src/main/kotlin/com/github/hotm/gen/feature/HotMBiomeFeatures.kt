@@ -184,8 +184,8 @@ object HotMBiomeFeatures {
                             4,
                             0.125f,
                             0.125f,
-                            HotMBlocks.MACHINE_CASING.defaultState,
-                            HotMBlocks.PLASSEIN_MACHINE_CASING.defaultState,
+                            HotMBlocks.METAL_BRACING.defaultState,
+                            HotMBlocks.PLASSEIN_BRACING.defaultState,
                             PLASSEIN_BLOOM,
                             HotMBlocks.CYAN_MACHINE_CASING_LAMP.defaultState
                         )
@@ -200,8 +200,8 @@ object HotMBiomeFeatures {
                         4,
                         0.125f,
                         0.125f,
-                        HotMBlocks.MACHINE_CASING.defaultState,
-                        HotMBlocks.PLASSEIN_MACHINE_CASING.defaultState,
+                        HotMBlocks.METAL_BRACING.defaultState,
+                        HotMBlocks.PLASSEIN_BRACING.defaultState,
                         PLASSEIN_BLOOM,
                         HotMBlocks.MAGENTA_MACHINE_CASING_LAMP.defaultState
                     )
