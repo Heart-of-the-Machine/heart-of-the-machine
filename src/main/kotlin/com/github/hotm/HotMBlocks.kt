@@ -1,16 +1,15 @@
 package com.github.hotm
 
+import com.github.hotm.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
 import com.github.hotm.blocks.NecterePortalBlock
 import com.github.hotm.blocks.NecterePortalSpawnerBlock
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.*
 import net.minecraft.entity.EntityType
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
@@ -20,10 +19,6 @@ import net.minecraft.world.BlockView
  * Static block access and initialization.
  */
 object HotMBlocks {
-    val HOTM_BUILDING_ITEM_GROUP =
-        FabricItemGroupBuilder.build(HotMConstants.identifier("building"), HotMBlocks::mainGroupItem)
-
-    private val HOTM_BUILDING_ITEM_SETTINGS = Item.Settings().group(HOTM_BUILDING_ITEM_GROUP)
 
     /*
      * Crystals & Lamps.
@@ -191,10 +186,6 @@ object HotMBlocks {
         val identifier = HotMConstants.identifier(name)
         Registry.register(Registry.BLOCK, identifier, block)
         Registry.register(Registry.ITEM, identifier, BlockItem(block, itemSettings))
-    }
-
-    private fun mainGroupItem(): ItemStack {
-        return ItemStack(CYAN_THINKING_STONE_LAMP)
     }
 
     private fun never(state: BlockState, world: BlockView, pos: BlockPos, entity: EntityType<*>): Boolean {

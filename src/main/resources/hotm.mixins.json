@@ -3,7 +3,6 @@
   "package": "com.github.hotm.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "BuiltinBiomesMixin",
     "ChunkGeneratorMixin",
     "DimensionOptionsMixin",
     "DimensionTypeMixin",
