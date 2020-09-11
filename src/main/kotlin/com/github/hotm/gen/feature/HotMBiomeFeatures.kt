@@ -19,6 +19,7 @@ import net.minecraft.world.gen.feature.*
 object HotMBiomeFeatures {
     private val THINKING_STONE = HotMBlocks.THINKING_STONE.defaultState
     private val PLASSEIN_STEM = HotMBlocks.PLASSEIN_STEM.defaultState
+    private val PLASSEIN_LEAVES = HotMBlocks.PLASSEIN_LEAVES.defaultState
     private val PLASSEIN_BLOOM = HotMBlocks.PLASSEIN_BLOOM.defaultState
 
     /**
@@ -36,8 +37,8 @@ object HotMBiomeFeatures {
                     PLASSEIN_STEM,
                     8,
                     8,
-                    PlasseinBranchSegment(PLASSEIN_STEM, 2, 2, PlasseinLeafSegment(PLASSEIN_BLOOM, 2, 2, 1, 1)),
-                    PlasseinLeafSegment(PLASSEIN_BLOOM, 4, 3, 2, 2)
+                    PlasseinBranchSegment(PLASSEIN_STEM, 2, 2, PlasseinLeafSegment(PLASSEIN_LEAVES, 2, 2, 1, 1)),
+                    PlasseinLeafSegment(PLASSEIN_LEAVES, 4, 3, 2, 2)
                 )
             )
         )
@@ -186,7 +187,7 @@ object HotMBiomeFeatures {
                             0.125f,
                             HotMBlocks.METAL_BRACING.defaultState,
                             HotMBlocks.PLASSEIN_BRACING.defaultState,
-                            PLASSEIN_BLOOM,
+                            PLASSEIN_LEAVES,
                             HotMBlocks.CYAN_MACHINE_CASING_LAMP.defaultState
                         )
                     ).withChance(0.5f)
@@ -202,7 +203,7 @@ object HotMBiomeFeatures {
                         0.125f,
                         HotMBlocks.METAL_BRACING.defaultState,
                         HotMBlocks.PLASSEIN_BRACING.defaultState,
-                        PLASSEIN_BLOOM,
+                        PLASSEIN_LEAVES,
                         HotMBlocks.MAGENTA_MACHINE_CASING_LAMP.defaultState
                     )
                 )
