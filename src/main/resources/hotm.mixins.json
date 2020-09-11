@@ -8,6 +8,7 @@
     "DimensionTypeMixin",
     "EntityMixin",
     "GenerationSettingsBuilderMixin",
+    "LivingEntityMixin",
     "MinecraftServerMixin",
     "StructuresConfigMixin",
     "ChunkGeneratorSettingsInvoker",
