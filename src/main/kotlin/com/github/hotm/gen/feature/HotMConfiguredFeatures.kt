@@ -173,8 +173,8 @@ object HotMConfiguredFeatures {
                             5,
                             15,
                             4,
-                            0.125f,
-                            0.125f,
+                            0.25f,
+                            0.5f,
                             HotMBlocks.METAL_BRACING.defaultState,
                             HotMBlocks.PLASSEIN_BRACING.defaultState,
                             PLASSEIN_LEAVES,
@@ -189,8 +189,8 @@ object HotMConfiguredFeatures {
                         5,
                         15,
                         4,
-                        0.125f,
-                        0.125f,
+                        0.25f,
+                        0.5f,
                         HotMBlocks.METAL_BRACING.defaultState,
                         HotMBlocks.PLASSEIN_BRACING.defaultState,
                         PLASSEIN_LEAVES,
@@ -232,7 +232,7 @@ object HotMConfiguredFeatures {
      * Adds Plassein tree things.
      */
     fun addPlasseinSurfaceTrees(genSettings: GenerationSettings.Builder) {
-        genSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, PLASSEIN_SURFACE_GROWTH)
+        genSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, FOREST_SURFACE_GROWTHS)
     }
 
     /**

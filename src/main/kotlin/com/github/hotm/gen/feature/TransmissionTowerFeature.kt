@@ -51,7 +51,7 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
             }
 
             for (leafPos in leafList) {
-                world.setBlockState(leafPos, config.leaf, 3)
+                world.setBlockState(leafPos, config.leaf, 19)
             }
 
             for (lampPos in lampList) {
@@ -115,20 +115,20 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
 
                 if (random.nextFloat() < config.growthChance) {
                     structureGrowthList.add(mutable.toImmutable())
-                } else {
-                    structureList.add(mutable.toImmutable())
-                }
 
-                for (i in 0 until 4) {
-                    if (random.nextFloat() < config.leafChance) {
-                        val baseOffset = curPos.offset(Direction.fromHorizontal(i))
-                        val offset = mutable.offset(Direction.fromHorizontal(i))
-                        if (world.isAir(offset)
-                            && heights.getOrDefault(baseOffset as Any, 0) <= offset.y - baseOffset.y
-                        ) {
-                            leafList.add(offset)
+                    for (i in 0 until 4) {
+                        if (random.nextFloat() < config.leafChance) {
+                            val baseOffset = curPos.offset(Direction.fromHorizontal(i))
+                            val offset = mutable.offset(Direction.fromHorizontal(i))
+                            if (world.isAir(offset)
+                                && heights.getOrDefault(baseOffset as Any, 0) <= offset.y - baseOffset.y
+                            ) {
+                                leafList.add(offset)
+                            }
                         }
                     }
+                } else {
+                    structureList.add(mutable.toImmutable())
                 }
             }
         }
