@@ -2,14 +2,13 @@ package com.github.hotm.gen
 
 import com.github.hotm.HotMConstants
 import com.github.hotm.gen.biome.NectereBiomeData
-import com.github.hotm.gen.feature.HotMBiomeFeatures
+import com.github.hotm.gen.feature.HotMConfiguredFeatures
 import com.github.hotm.gen.feature.HotMStructureFeatures
 import com.github.hotm.mixin.BuiltinBiomesAccessor
 import net.minecraft.sound.BiomeMoodSound
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.registry.BuiltinRegistries
-import net.minecraft.util.registry.DynamicRegistryManager
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World
@@ -100,11 +99,11 @@ object HotMBiomes {
         val gen = GenerationSettings.Builder()
         gen.surfaceBuilder(HotMSurfaceBuilders.THINKING_FOREST)
         setupDefaultGen(gen)
-        HotMBiomeFeatures.addRefusePiles(gen)
-        HotMBiomeFeatures.addPlasseinGrowths(gen)
-        HotMBiomeFeatures.addPlasseinSurfaceTrees(gen)
-        HotMBiomeFeatures.addServerTowers(gen)
-        HotMBiomeFeatures.addTransmissionTowers(gen)
+        HotMConfiguredFeatures.addRefusePiles(gen)
+        HotMConfiguredFeatures.addPlasseinGrowths(gen)
+        HotMConfiguredFeatures.addPlasseinSurfaceTrees(gen)
+        HotMConfiguredFeatures.addServerTowers(gen)
+        HotMConfiguredFeatures.addTransmissionTowers(gen)
 
         val biome = Biome.Builder()
         biome.precipitation(Biome.Precipitation.RAIN)
@@ -133,7 +132,7 @@ object HotMBiomes {
         val gen = GenerationSettings.Builder()
         gen.surfaceBuilder(HotMSurfaceBuilders.WASTELAND)
         setupDefaultGen(gen)
-        HotMBiomeFeatures.addRefusePiles(gen)
+        HotMConfiguredFeatures.addRefusePiles(gen)
 
         val biome = Biome.Builder()
         biome.precipitation(Biome.Precipitation.NONE)
@@ -149,7 +148,7 @@ object HotMBiomes {
 
     private fun setupDefaultGen(gen: GenerationSettings.Builder) {
         gen.structureFeature(HotMStructureFeatures.NECTERE_SIDE_NECTERE_PORTAL)
-        HotMBiomeFeatures.addCrystalGrowths(gen)
+        HotMConfiguredFeatures.addCrystalGrowths(gen)
     }
 
     private fun register(

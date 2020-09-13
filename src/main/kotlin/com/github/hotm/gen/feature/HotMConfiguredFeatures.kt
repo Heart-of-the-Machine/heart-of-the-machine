@@ -4,7 +4,10 @@ import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
 import com.github.hotm.gen.feature.decorator.CountChanceInRangeDecoratorConfig
 import com.github.hotm.gen.feature.decorator.CountHeightmapInRangeDecoratorConfig
-import com.github.hotm.gen.feature.segment.*
+import com.github.hotm.gen.feature.segment.PlasseinBranchSegment
+import com.github.hotm.gen.feature.segment.PlasseinLeafSegment
+import com.github.hotm.gen.feature.segment.PlasseinStemSegment
+import com.github.hotm.gen.feature.segment.SegmentedFeatureConfig
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.GenerationSettings
@@ -13,66 +16,68 @@ import net.minecraft.world.gen.decorator.Decorator
 import net.minecraft.world.gen.decorator.RangeDecoratorConfig
 import net.minecraft.world.gen.feature.*
 
-/**
- * Features for Heart of the Machine biomes.
- */
-object HotMBiomeFeatures {
+object HotMConfiguredFeatures {
     private val THINKING_STONE = HotMBlocks.THINKING_STONE.defaultState
     private val PLASSEIN_STEM = HotMBlocks.PLASSEIN_STEM.defaultState
     private val PLASSEIN_LEAVES = HotMBlocks.PLASSEIN_LEAVES.defaultState
     private val PLASSEIN_BLOOM = HotMBlocks.PLASSEIN_BLOOM.defaultState
 
     /**
-     * Creates a segmented feature such as a plassein tree or other plant.
+     * General plassein surface growth.
      */
-    val SEGMENTED_FEATURE = register("segmented_feature", SegmentedFeature(SegmentedFeatureConfig.CODEC))
-
-    /**
-     * Configured plassein surface growth.
-     */
-    val CONFIGURED_PLASSEIN_SURFACE_GROWTH = register(
-        "plassein_surface_growth", SEGMENTED_FEATURE.configure(
+    val PLASSEIN_SURFACE_GROWTH = register(
+        "plassein_surface_growth", HotMFeatures.SEGMENTED_FEATURE.configure(
             SegmentedFeatureConfig(
                 PlasseinStemSegment(
                     PLASSEIN_STEM,
                     8,
                     8,
-                    PlasseinBranchSegment(PLASSEIN_STEM, 2, 2, PlasseinLeafSegment(PLASSEIN_LEAVES, 2, 2, 1, 1)),
+                    PlasseinBranchSegment(
+                        PLASSEIN_STEM,
+                        2,
+                        2,
+                        PlasseinLeafSegment(PLASSEIN_LEAVES, 2, 2, 1, 1)
+                    ),
                     PlasseinLeafSegment(PLASSEIN_LEAVES, 4, 3, 2, 2)
                 )
             )
         )
-            .decorate(
-                HotMDecorators.COUNT_CHANCE_HEIGHTMAP_IN_RANGE.configure(
-                    CountChanceInRangeDecoratorConfig(100, 200, 24, 0.5f)
-                )
-            )
     )
 
     /**
-     * Refuse pile feature. This is similar to the vanilla FOREST_ROCK feature but generates in more places.
+     * Plassein surface growth configured for generation in a forest.
      */
-    val REFUSE_PILE = register("refuse_pile", RefusePileFeature(PileFeatureConfig.CODEC))
+    val FOREST_SURFACE_GROWTHS = register(
+        "forest_surface_growths", PLASSEIN_SURFACE_GROWTH.decorate(
+            HotMDecorators.COUNT_CHANCE_HEIGHTMAP_IN_RANGE.configure(
+                CountChanceInRangeDecoratorConfig(100, 200, 24, 0.5f)
+            )
+        )
+    )
 
     /**
      * Configured refuse pile feature.
      */
-    val CONFIGURED_REFUSE_PILE = register(
-        "refuse_pile", REFUSE_PILE.configure(PileFeatureConfig(THINKING_STONE, 0))
+    val REFUSE_PILE = register(
+        "refuse_pile", HotMFeatures.REFUSE_PILE.configure(PileFeatureConfig(THINKING_STONE, 0))
             .decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeatRandomly(2)
     )
 
     /**
-     * Creates a plassein "tree" growth.
-     */
-    val PLASSEIN_GROWTH = register("plassein_growth", PlasseinGrowthFeature(PlasseinGrowthConfig.CODEC))
-
-    /**
      * Configured plassein growth.
      */
-    val CONFIGURED_PLASSEIN_GROWTH = register(
+    val PLASSEIN_GROWTH = register(
         "plassein_growth",
-        PLASSEIN_GROWTH.configure(PlasseinGrowthConfig(PLASSEIN_STEM, PLASSEIN_BLOOM, 10, 10, 0.5, 0.5))
+        HotMFeatures.PLASSEIN_GROWTH.configure(
+            PlasseinGrowthConfig(
+                PLASSEIN_STEM,
+                PLASSEIN_BLOOM,
+                10,
+                10,
+                0.5,
+                0.5
+            )
+        )
             .decorate(
                 HotMDecorators.COUNT_HEIGHTMAP_IN_RANGE.configure(
                     CountHeightmapInRangeDecoratorConfig(16, 100, 4)
@@ -81,18 +86,13 @@ object HotMBiomeFeatures {
     )
 
     /**
-     * Creates crystal structures originating from walls and ceilings.
-     */
-    val CRYSTAL_GROWTH = register("crystal_growth", CrystalGrowthFeature(CrystalGrowthConfig.CODEC))
-
-    /**
      * Configured crystal growth.
      */
-    val CONFIGURED_CRYSTAL_GROWTH = register(
+    val CRYSTAL_GROWTH = register(
         "crystal_growth", Feature.RANDOM_SELECTOR.configure(
             RandomFeatureConfig(
                 listOf(
-                    CRYSTAL_GROWTH.configure(
+                    HotMFeatures.CRYSTAL_GROWTH.configure(
                         CrystalGrowthConfig(
                             listOf(HotMBlocks.THINKING_STONE),
                             HotMBlocks.CYAN_CRYSTAL.defaultState,
@@ -101,7 +101,7 @@ object HotMBiomeFeatures {
                         )
                     ).withChance(0.5f)
                 ),
-                CRYSTAL_GROWTH.configure(
+                HotMFeatures.CRYSTAL_GROWTH.configure(
                     CrystalGrowthConfig(
                         listOf(HotMBlocks.THINKING_STONE),
                         HotMBlocks.MAGENTA_CRYSTAL.defaultState,
@@ -114,18 +114,13 @@ object HotMBiomeFeatures {
     )
 
     /**
-     * Creates server tower like structures.
-     */
-    val SERVER_TOWER = register("server_tower", ServerTowerFeature(ServerTowerConfig.CODEC))
-
-    /**
      * Configured server tower.
      */
-    val CONFIGURED_SERVER_TOWER = register(
+    val SERVER_TOWER = register(
         "server_tower", Feature.RANDOM_SELECTOR.configure(
             RandomFeatureConfig(
                 listOf(
-                    SERVER_TOWER.configure(
+                    HotMFeatures.SERVER_TOWER.configure(
                         ServerTowerConfig(
                             1,
                             5,
@@ -141,7 +136,7 @@ object HotMBiomeFeatures {
                         )
                     ).withChance(0.5f)
                 ),
-                SERVER_TOWER.configure(
+                HotMFeatures.SERVER_TOWER.configure(
                     ServerTowerConfig(
                         1,
                         5,
@@ -165,18 +160,13 @@ object HotMBiomeFeatures {
     )
 
     /**
-     * Creates metal towers with blinking lights.
-     */
-    val TRANSMISSION_TOWER = register("transmission_tower", TransmissionTowerFeature(TransmissionTowerConfig.CODEC))
-
-    /**
      * Configured transmission tower.
      */
-    val CONFIGURED_TRANSMISSION_TOWER = register(
+    val TRANSMISSION_TOWER = register(
         "transmission_tower", Feature.RANDOM_SELECTOR.configure(
             RandomFeatureConfig(
                 listOf(
-                    TRANSMISSION_TOWER.configure(
+                    HotMFeatures.TRANSMISSION_TOWER.configure(
                         TransmissionTowerConfig(
                             30,
                             60,
@@ -192,7 +182,7 @@ object HotMBiomeFeatures {
                         )
                     ).withChance(0.5f)
                 ),
-                TRANSMISSION_TOWER.configure(
+                HotMFeatures.TRANSMISSION_TOWER.configure(
                     TransmissionTowerConfig(
                         30,
                         60,
@@ -216,64 +206,61 @@ object HotMBiomeFeatures {
     )
 
     /**
-     * Nectere portal feature. (Only intended to be used in dimensions that are not the Nectere dimension.)
-     */
-    val NON_NECTERE_SIDE_NECTERE_PORTAL =
-        register("nns_nectere_portal", NecterePortalFeature(DefaultFeatureConfig.CODEC))
-
-    /**
      * Configured Nectere portal feature.
      */
-    val CONFIGURED_NON_NECTERE_SIDE_NECTERE_PORTAL =
-        register("nns_nectere_portal", NON_NECTERE_SIDE_NECTERE_PORTAL.configure(FeatureConfig.DEFAULT))
+    val NON_NECTERE_SIDE_NECTERE_PORTAL =
+        register(
+            "nns_nectere_portal",
+            HotMFeatures.NON_NECTERE_SIDE_NECTERE_PORTAL.configure(FeatureConfig.DEFAULT)
+        )
 
     /**
      * Adds refuse piles similar to the mossy rocks in Giant Spruce Taigas.
      */
     fun addRefusePiles(genSettings: GenerationSettings.Builder) {
-        genSettings.feature(GenerationStep.Feature.LOCAL_MODIFICATIONS, CONFIGURED_REFUSE_PILE)
+        genSettings.feature(GenerationStep.Feature.LOCAL_MODIFICATIONS, REFUSE_PILE)
     }
 
     /**
      * Adds Plassein growths.
      */
     fun addPlasseinGrowths(genSettings: GenerationSettings.Builder) {
-        genSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, CONFIGURED_PLASSEIN_GROWTH)
+        genSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, PLASSEIN_GROWTH)
     }
 
     /**
      * Adds Plassein tree things.
      */
     fun addPlasseinSurfaceTrees(genSettings: GenerationSettings.Builder) {
-        genSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, CONFIGURED_PLASSEIN_SURFACE_GROWTH)
+        genSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, PLASSEIN_SURFACE_GROWTH)
     }
 
     /**
      * Adds crystal growths.
      */
     fun addCrystalGrowths(genSettings: GenerationSettings.Builder) {
-        genSettings.feature(GenerationStep.Feature.UNDERGROUND_DECORATION, CONFIGURED_CRYSTAL_GROWTH)
+        genSettings.feature(GenerationStep.Feature.UNDERGROUND_DECORATION, CRYSTAL_GROWTH)
     }
 
     /**
      * Adds server towers.
      */
     fun addServerTowers(genSettings: GenerationSettings.Builder) {
-        genSettings.feature(GenerationStep.Feature.UNDERGROUND_STRUCTURES, CONFIGURED_SERVER_TOWER)
+        genSettings.feature(GenerationStep.Feature.UNDERGROUND_STRUCTURES, SERVER_TOWER)
     }
 
     /**
      * Adds transmission towers.
      */
     fun addTransmissionTowers(genSettings: GenerationSettings.Builder) {
-        genSettings.feature(GenerationStep.Feature.SURFACE_STRUCTURES, CONFIGURED_TRANSMISSION_TOWER)
+        genSettings.feature(GenerationStep.Feature.SURFACE_STRUCTURES, TRANSMISSION_TOWER)
     }
 
     /**
      * Adds Nectere portals.
      */
     private fun addNecterePortals(genSettings: GenerationSettings.Builder) {
-        genSettings.feature(GenerationStep.Feature.SURFACE_STRUCTURES, CONFIGURED_NON_NECTERE_SIDE_NECTERE_PORTAL)
+        genSettings.feature(GenerationStep.Feature.SURFACE_STRUCTURES, NON_NECTERE_SIDE_NECTERE_PORTAL)
     }
 
     /**
@@ -282,20 +269,6 @@ object HotMBiomeFeatures {
     fun addUbiquitousFeatures(settings: GenerationSettings.Builder) {
         // TODO: Investigate better ways to do this.
         addNecterePortals(settings)
-    }
-
-    /**
-     * Register our structures with the existing biomes.
-     */
-    fun register() {
-        HotMStructureFeatures.register()
-    }
-
-    /**
-     * Used for statically registering features.
-     */
-    private fun <FC : FeatureConfig, F : Feature<FC>> register(name: String, feature: F): F {
-        return Registry.register(Registry.FEATURE, HotMConstants.identifier(name), feature)
     }
 
     /**

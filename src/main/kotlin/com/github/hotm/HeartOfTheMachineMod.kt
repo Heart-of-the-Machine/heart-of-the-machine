@@ -2,9 +2,7 @@ package com.github.hotm
 
 import com.github.hotm.gen.HotMBiomes
 import com.github.hotm.gen.HotMDimensions
-import com.github.hotm.gen.feature.HotMBiomeFeatures
-import com.github.hotm.gen.feature.HotMStructureFeatures
-import com.github.hotm.gen.feature.HotMStructurePieces
+import com.github.hotm.gen.feature.HotMFeatures
 
 /**
  * Initializer for Heart of the Machine mod.
@@ -17,7 +15,7 @@ fun init() {
     HotMBlockEntities.register()
     HotMBiomes.register()
     HotMDimensions.register()
-    HotMBiomeFeatures.register()
+    HotMFeatures.register()
     HotMCommands.register()
     HotMDimensions.findBiomes()
 }

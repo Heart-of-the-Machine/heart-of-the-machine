@@ -1,10 +1,8 @@
 package com.github.hotm
 
 import com.github.hotm.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
-import com.github.hotm.blocks.BracingBlock
-import com.github.hotm.blocks.NecterePortalBlock
-import com.github.hotm.blocks.NecterePortalSpawnerBlock
-import com.github.hotm.blocks.PlasseinLeavesBlock
+import com.github.hotm.blocks.*
+import com.github.hotm.blocks.spore.StandardPlasseinSporeGenerator
 import com.github.hotm.items.BracingItem
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -98,6 +96,11 @@ object HotMBlocks {
         FabricBlockSettings.of(Material.LEAVES).strength(0.2f).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()
             .allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
     )
+    val PLASSEIN_SPORE = PlasseinSporeBlock(
+        StandardPlasseinSporeGenerator,
+        FabricBlockSettings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly()
+            .sounds(BlockSoundGroup.GRASS)
+    )
     val PLASSEIN_STEM = PillarBlock(PLASSEIN_STEM_SETTINGS)
 
     /*
@@ -172,6 +175,7 @@ object HotMBlocks {
         register(PLASSEIN_GRASS_LEYLINE, "plassein_grass_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_LEAVES, "plassein_leaves", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_MACHINE_CASING, "plassein_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_SPORE, "plassein_spore", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM_LEYLINE, "plassein_stem_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING, "rusted_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
