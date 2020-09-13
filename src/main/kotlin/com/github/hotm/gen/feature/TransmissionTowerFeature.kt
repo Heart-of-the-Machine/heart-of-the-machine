@@ -1,5 +1,6 @@
 package com.github.hotm.gen.feature
 
+import com.github.hotm.HotMProperties
 import com.mojang.serialization.Codec
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.minecraft.block.BlockState
@@ -51,7 +52,7 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
             }
 
             for (leafPos in leafList) {
-                world.setBlockState(leafPos, config.leaf, 19)
+                world.setBlockState(leafPos, config.leaf.with(HotMProperties.DISTANCE, 1), 19)
             }
 
             for (lampPos in lampList) {

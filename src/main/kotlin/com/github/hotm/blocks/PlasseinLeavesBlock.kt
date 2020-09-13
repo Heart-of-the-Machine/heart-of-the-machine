@@ -1,6 +1,7 @@
 package com.github.hotm.blocks
 
 import com.github.hotm.HotMBlockTags
+import com.github.hotm.HotMProperties
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -23,7 +24,7 @@ import java.util.*
 class PlasseinLeavesBlock(settings: Settings) : Block(settings) {
     companion object {
         const val MAX_DISTANCE = 16
-        val DISTANCE = IntProperty.of("distance", 1, MAX_DISTANCE)
+        val DISTANCE = HotMProperties.DISTANCE
         val PERSISTENT = Properties.PERSISTENT
     }
 
