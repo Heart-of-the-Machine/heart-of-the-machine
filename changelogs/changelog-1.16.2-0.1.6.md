@@ -8,3 +8,4 @@ For Minecraft 1.16.2.
 * Fixed a bug causing creative tabs to get initialized too early without vanilla items.
 * Added climbable bracing blocks.
 * Made transmission towers generate out of bracing blocks instead of machine casings.
+* Made the plassein surface "trees" growable from Plassein Spores.
