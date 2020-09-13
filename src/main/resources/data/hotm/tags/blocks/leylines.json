@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "hotm:machine_casing_leyline",
+    "hotm:plassein_grass_leyline",
+    "hotm:plassein_stem_leyline",
+    "hotm:rusted_machine_casing_leyline",
+    "hotm:smooth_thinking_stone_leyline",
+    "hotm:surface_machine_casing_leyline",
+    "hotm:thinking_stone_leyline"
+  ]
+}

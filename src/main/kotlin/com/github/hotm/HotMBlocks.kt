@@ -4,6 +4,7 @@ import com.github.hotm.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
 import com.github.hotm.blocks.BracingBlock
 import com.github.hotm.blocks.NecterePortalBlock
 import com.github.hotm.blocks.NecterePortalSpawnerBlock
+import com.github.hotm.blocks.PlasseinLeavesBlock
 import com.github.hotm.items.BracingItem
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -93,8 +94,8 @@ object HotMBlocks {
             .nonOpaque().allowsSpawning(HotMBlocks::never)
     )
     val PLASSEIN_GRASS = Block(MACHINE_CASING_SETTINGS)
-    val PLASSEIN_LEAVES = Block(
-        FabricBlockSettings.of(Material.LEAVES).strength(0.2f).sounds(BlockSoundGroup.GRASS).nonOpaque()
+    val PLASSEIN_LEAVES = PlasseinLeavesBlock(
+        FabricBlockSettings.of(Material.LEAVES).strength(0.2f).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()
             .allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
     )
     val PLASSEIN_STEM = PillarBlock(PLASSEIN_STEM_SETTINGS)
