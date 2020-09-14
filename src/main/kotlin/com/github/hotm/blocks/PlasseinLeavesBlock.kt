@@ -23,7 +23,7 @@ import java.util.*
 
 class PlasseinLeavesBlock(settings: Settings) : Block(settings) {
     companion object {
-        const val MAX_DISTANCE = 16
+        const val MAX_DISTANCE = HotMProperties.MAX_DISTANCE
         val DISTANCE = HotMProperties.DISTANCE
         val PERSISTENT = Properties.PERSISTENT
     }

@@ -14,9 +14,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.PillarBlock
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.world.ServerWorldAccess
 import net.minecraft.world.StructureWorldAccess
-import net.minecraft.world.gen.StructureAccessor
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import java.lang.Integer.max
 import java.lang.Integer.min
@@ -75,11 +73,11 @@ class PlasseinStemSegment(
         val east = pos.east()
         val eastUp = east.up(split)
 
-        if (!tryFill(blocks, world, pos, up, BlockPlacement(stalk, false, 19, 0))
-            || !tryFill(blocks, world, north, northUp, BlockPlacement(stalk, false, 19, 0))
-            || !tryFill(blocks, world, south, southUp, BlockPlacement(stalk, false, 19, 0))
-            || !tryFill(blocks, world, west, westUp, BlockPlacement(stalk, false, 19, 0))
-            || !tryFill(blocks, world, east, eastUp, BlockPlacement(stalk, false, 19, 0))
+        if (!tryFill(blocks, world, pos, up, BlockPlacement(stalk, false, 19, 0, LeafPlacement.SOURCE))
+            || !tryFill(blocks, world, north, northUp, BlockPlacement(stalk, false, 19, 0, LeafPlacement.SOURCE))
+            || !tryFill(blocks, world, south, southUp, BlockPlacement(stalk, false, 19, 0, LeafPlacement.SOURCE))
+            || !tryFill(blocks, world, west, westUp, BlockPlacement(stalk, false, 19, 0, LeafPlacement.SOURCE))
+            || !tryFill(blocks, world, east, eastUp, BlockPlacement(stalk, false, 19, 0, LeafPlacement.SOURCE))
         ) {
             return false
         }
@@ -161,7 +159,13 @@ class PlasseinBranchSegment(
 
                         val state = branch.with(PillarBlock.AXIS, branchDirection.axis)
 
-                        if (!tryPlace(blocks, world, mutable, BlockPlacement(state, false, 19, 0))) {
+                        if (!tryPlace(
+                                blocks,
+                                world,
+                                mutable,
+                                BlockPlacement(state, false, 19, 0, LeafPlacement.SOURCE)
+                            )
+                        ) {
                             return false
                         }
                     }
@@ -223,7 +227,7 @@ class PlasseinLeafSegment(
         val lower = Shapes.ellipsoid(radius.toDouble(), radius.toDouble(), radius.toDouble() / 2)
             .applyLayer(TranslateLayer.of(Position.of(pos.down(radius / 2 + depth / 2))))
         val bloom = upper.applyLayer(SubtractLayer(lower))
-        bloom.fill(SegmentFiller(blocks, BlockPlacement(leaf, false, 19, 10)))
+        bloom.fill(SegmentFiller(blocks, BlockPlacement(leaf, false, 19, 10, LeafPlacement.LEAF)))
 
         return true
     }
