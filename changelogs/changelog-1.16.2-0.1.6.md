@@ -9,3 +9,4 @@ For Minecraft 1.16.2.
 * Added climbable bracing blocks.
 * Made transmission towers generate out of bracing blocks instead of machine casings.
 * Made the plassein surface "trees" growable from Plassein Spores.
+* Added Null Sand which can be smelted into Thinking Glass.

@@ -125,6 +125,12 @@ object HotMBlocks {
     val THINKING_STONE_TILE_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
 
     /*
+     * Sand blocks.
+     */
+    private val SAND_SETTINGS = FabricBlockSettings.of(Material.AGGREGATE, MaterialColor.SAND).strength(0.5F).sounds(BlockSoundGroup.SAND)
+    val NULL_SAND = SandBlock(0x29261d, SAND_SETTINGS)
+
+    /*
      * Thinking glass blocks.
      */
     private val GLASS_SETTINGS =
@@ -168,6 +174,7 @@ object HotMBlocks {
         register(METAL_MACHINE_CASING, "metal_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(NECTERE_PORTAL, "nectere_portal", Item.Settings())
         register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner", Item.Settings())
+        register(NULL_SAND, "null_sand", HOTM_BUILDING_ITEM_SETTINGS)
         register(OBELISK_PART, "obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BLOOM, "plassein_bloom", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BRACING, "plassein_bracing", BracingItem(PLASSEIN_BRACING, HOTM_BUILDING_ITEM_SETTINGS))

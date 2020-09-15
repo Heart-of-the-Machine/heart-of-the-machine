@@ -97,7 +97,7 @@ object HotMBiomes {
         val spawns = SpawnSettings.Builder()
 
         val gen = GenerationSettings.Builder()
-        gen.surfaceBuilder(HotMSurfaceBuilders.THINKING_FOREST)
+        gen.surfaceBuilder(HotMConfiguredSurfaceBuilders.THINKING_FOREST)
         setupDefaultGen(gen)
         HotMConfiguredFeatures.addRefusePiles(gen)
         HotMConfiguredFeatures.addPlasseinGrowths(gen)
@@ -130,7 +130,7 @@ object HotMBiomes {
         val spawns = SpawnSettings.Builder()
 
         val gen = GenerationSettings.Builder()
-        gen.surfaceBuilder(HotMSurfaceBuilders.WASTELAND)
+        gen.surfaceBuilder(HotMConfiguredSurfaceBuilders.WASTELAND)
         setupDefaultGen(gen)
         HotMConfiguredFeatures.addRefusePiles(gen)
 
