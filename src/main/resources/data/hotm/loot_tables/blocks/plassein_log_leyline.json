@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hotm:plassein_stem_leyline"
+          "name": "hotm:plassein_log_leyline"
         }
       ],
       "conditions": [

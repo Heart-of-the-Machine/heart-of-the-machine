@@ -1,11 +1,11 @@
 {
   "type": "hotm:layered",
-  "particle": "hotm:block/plassein_stem",
+  "particle": "hotm:block/plassein_log",
   "layers": [
     {
       "type": "hotm:static_column",
-      "side": "hotm:block/plassein_stem",
-      "end": "hotm:block/plassein_stem_top"
+      "side": "hotm:block/plassein_log",
+      "end": "hotm:block/plassein_log_top"
     },
     {
       "type": "hotm:quarter_connected_texture",

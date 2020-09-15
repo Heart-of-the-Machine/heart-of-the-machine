@@ -18,9 +18,10 @@ import net.minecraft.world.gen.feature.*
 
 object HotMConfiguredFeatures {
     private val THINKING_STONE = HotMBlocks.THINKING_STONE.defaultState
-    private val PLASSEIN_STEM = HotMBlocks.PLASSEIN_STEM.defaultState
-    private val PLASSEIN_LEAVES = HotMBlocks.PLASSEIN_LEAVES.defaultState
     private val PLASSEIN_BLOOM = HotMBlocks.PLASSEIN_BLOOM.defaultState
+    private val PLASSEIN_LEAVES = HotMBlocks.PLASSEIN_LEAVES.defaultState
+    private val PLASSEIN_LOG = HotMBlocks.PLASSEIN_LOG.defaultState
+    private val PLASSEIN_STEM = HotMBlocks.PLASSEIN_STEM.defaultState
 
     /**
      * General plassein surface growth.
@@ -29,11 +30,11 @@ object HotMConfiguredFeatures {
         "plassein_surface_growth", HotMFeatures.SEGMENTED_FEATURE.configure(
             SegmentedFeatureConfig(
                 PlasseinStemSegment(
-                    PLASSEIN_STEM,
+                    PLASSEIN_LOG,
                     8,
                     8,
                     PlasseinBranchSegment(
-                        PLASSEIN_STEM,
+                        PLASSEIN_LOG,
                         2,
                         2,
                         PlasseinLeafSegment(PLASSEIN_LEAVES, 2, 2, 1, 1)
