@@ -11,3 +11,4 @@ For Minecraft 1.16.2.
 * Made the plassein surface "trees" growable from Plassein Spores.
 * Added Null Sand which can be smelted into Thinking Glass.
 * Added Plassein Log. (This will continue to be what the Plassein Stem is now.)
+* Added Plassein Planks.

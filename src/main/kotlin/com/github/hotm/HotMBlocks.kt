@@ -97,6 +97,7 @@ object HotMBlocks {
             .allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
     )
     val PLASSEIN_LOG = PillarBlock(PLASSEIN_LOG_SETTINGS)
+    val PLASSEIN_PLANKS = Block(PLASSEIN_LOG_SETTINGS)
     val PLASSEIN_SPORE = PlasseinSporeBlock(
         StandardPlasseinSporeGenerator,
         FabricBlockSettings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly()
@@ -185,6 +186,7 @@ object HotMBlocks {
         register(PLASSEIN_LOG, "plassein_log", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_LOG_LEYLINE, "plassein_log_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_MACHINE_CASING, "plassein_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_PLANKS, "plassein_planks", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_SPORE, "plassein_spore", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING, "rusted_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
