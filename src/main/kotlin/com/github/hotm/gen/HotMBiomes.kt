@@ -2,14 +2,13 @@ package com.github.hotm.gen
 
 import com.github.hotm.HotMConstants
 import com.github.hotm.gen.biome.NectereBiomeData
-import com.github.hotm.gen.feature.HotMBiomeFeatures
+import com.github.hotm.gen.feature.HotMConfiguredFeatures
 import com.github.hotm.gen.feature.HotMStructureFeatures
 import com.github.hotm.mixin.BuiltinBiomesAccessor
 import net.minecraft.sound.BiomeMoodSound
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.registry.BuiltinRegistries
-import net.minecraft.util.registry.DynamicRegistryManager
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World
@@ -93,18 +92,18 @@ object HotMBiomes {
         effects.moodSound(BiomeMoodSound.CAVE)
         effects.skyColor(getSkyColor(0.5f))
         effects.grassColor(0x00c9db)
-        effects.foliageColor(0x00a9b8)
+        effects.foliageColor(0x246ca3)
 
         val spawns = SpawnSettings.Builder()
 
         val gen = GenerationSettings.Builder()
-        gen.surfaceBuilder(HotMSurfaceBuilders.THINKING_FOREST)
+        gen.surfaceBuilder(HotMConfiguredSurfaceBuilders.THINKING_FOREST)
         setupDefaultGen(gen)
-        HotMBiomeFeatures.addRefusePiles(gen)
-        HotMBiomeFeatures.addPlasseinGrowths(gen)
-        HotMBiomeFeatures.addPlasseinSurfaceTrees(gen)
-        HotMBiomeFeatures.addServerTowers(gen)
-        HotMBiomeFeatures.addTransmissionTowers(gen)
+        HotMConfiguredFeatures.addRefusePiles(gen)
+        HotMConfiguredFeatures.addPlasseinGrowths(gen)
+        HotMConfiguredFeatures.addPlasseinSurfaceTrees(gen)
+        HotMConfiguredFeatures.addServerTowers(gen)
+        HotMConfiguredFeatures.addTransmissionTowers(gen)
 
         val biome = Biome.Builder()
         biome.precipitation(Biome.Precipitation.RAIN)
@@ -126,14 +125,14 @@ object HotMBiomes {
         effects.moodSound(BiomeMoodSound.CAVE)
         effects.skyColor(getSkyColor(0.8f))
         effects.grassColor(0x7cdb00)
-        effects.foliageColor(0x62ad00)
+        effects.foliageColor(0x778c18)
 
         val spawns = SpawnSettings.Builder()
 
         val gen = GenerationSettings.Builder()
-        gen.surfaceBuilder(HotMSurfaceBuilders.WASTELAND)
+        gen.surfaceBuilder(HotMConfiguredSurfaceBuilders.WASTELAND)
         setupDefaultGen(gen)
-        HotMBiomeFeatures.addRefusePiles(gen)
+        HotMConfiguredFeatures.addRefusePiles(gen)
 
         val biome = Biome.Builder()
         biome.precipitation(Biome.Precipitation.NONE)
@@ -149,7 +148,7 @@ object HotMBiomes {
 
     private fun setupDefaultGen(gen: GenerationSettings.Builder) {
         gen.structureFeature(HotMStructureFeatures.NECTERE_SIDE_NECTERE_PORTAL)
-        HotMBiomeFeatures.addCrystalGrowths(gen)
+        HotMConfiguredFeatures.addCrystalGrowths(gen)
     }
 
     private fun register(

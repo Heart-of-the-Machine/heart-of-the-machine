@@ -2,46 +2,31 @@ package com.github.hotm.gen
 
 import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
-import net.minecraft.util.registry.BuiltinRegistries
+import com.github.hotm.gen.surfacebuilder.NecterePartialSurfaceBuilder
+import com.github.hotm.gen.surfacebuilder.NectereSurfaceBuilder
+import com.github.hotm.gen.surfacebuilder.NectereSurfaceConfig
 import net.minecraft.util.registry.Registry
-import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder
 import net.minecraft.world.gen.surfacebuilder.SurfaceConfig
-import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig
 
-/**
- * Contains surface configs for the Heart of the Machine biomes.
- */
 object HotMSurfaceBuilders {
+    val GRASS_BLOCK = HotMBlocks.PLASSEIN_GRASS
     val RUSTED_SURFACE_BLOCK = HotMBlocks.RUSTED_MACHINE_CASING
+    val SAND_BLOCK = HotMBlocks.NULL_SAND
     val SURFACE_BLOCK = HotMBlocks.SURFACE_MACHINE_CASING
 
+    private val GRASS_STATE = GRASS_BLOCK.defaultState
     private val RUSTED_SURFACE_STATE = RUSTED_SURFACE_BLOCK.defaultState
+    private val SAND_STATE = SAND_BLOCK.defaultState
     private val SURFACE_STATE = SURFACE_BLOCK.defaultState
 
-    /**
-     * Thinking Forest biome surface builder.
-     */
-    val THINKING_FOREST = register(
-        "thinking_forest",
-        SurfaceBuilder.DEFAULT.method_30478(TernarySurfaceConfig(SURFACE_STATE, SURFACE_STATE, SURFACE_STATE))
-    )
+    val GRASS_CONFIG = NectereSurfaceConfig(GRASS_STATE, SURFACE_STATE, SAND_STATE)
+    val WASTELAND_CONFIG = NectereSurfaceConfig(RUSTED_SURFACE_STATE, SURFACE_STATE, SAND_STATE)
 
-    /**
-     * Wasteland biome surface builder.
-     */
-    val WASTELAND = register(
-        "wasteland",
-        SurfaceBuilder.DEFAULT.method_30478(TernarySurfaceConfig(RUSTED_SURFACE_STATE, SURFACE_STATE, SURFACE_STATE))
-    )
+    val DEFAULT = register("default", NectereSurfaceBuilder(NectereSurfaceConfig.CODEC))
+    val PARTIAL = register("partial", NecterePartialSurfaceBuilder(NectereSurfaceConfig.CODEC))
 
-    /**
-     * Used for statically registering configured surface builders.
-     */
-    private fun <SC : SurfaceConfig> register(
-        name: String,
-        builder: ConfiguredSurfaceBuilder<SC>
-    ): ConfiguredSurfaceBuilder<SC> {
-        return Registry.register(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, HotMConstants.identifier(name), builder)
+    private fun <C : SurfaceConfig?, F : SurfaceBuilder<C>> register(string: String, surfaceBuilder: F): F {
+        return Registry.register(Registry.SURFACE_BUILDER, HotMConstants.identifier(string), surfaceBuilder)
     }
 }

@@ -1,9 +1,8 @@
 package com.github.hotm
 
 import com.github.hotm.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
-import com.github.hotm.blocks.BracingBlock
-import com.github.hotm.blocks.NecterePortalBlock
-import com.github.hotm.blocks.NecterePortalSpawnerBlock
+import com.github.hotm.blocks.*
+import com.github.hotm.blocks.spore.StandardPlasseinSporeGenerator
 import com.github.hotm.items.BracingItem
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -85,7 +84,7 @@ object HotMBlocks {
     /*
      * Plassein Growth Blocks.
      */
-    val PLASSEIN_STEM_SETTINGS =
+    private val PLASSEIN_LOG_SETTINGS =
         FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
             .sounds(BlockSoundGroup.WOOD)
     val PLASSEIN_BLOOM = Block(
@@ -93,11 +92,18 @@ object HotMBlocks {
             .nonOpaque().allowsSpawning(HotMBlocks::never)
     )
     val PLASSEIN_GRASS = Block(MACHINE_CASING_SETTINGS)
-    val PLASSEIN_LEAVES = Block(
-        FabricBlockSettings.of(Material.LEAVES).strength(0.2f).sounds(BlockSoundGroup.GRASS).nonOpaque()
+    val PLASSEIN_LEAVES = PlasseinLeavesBlock(
+        FabricBlockSettings.of(Material.LEAVES).strength(0.2f).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()
             .allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
     )
-    val PLASSEIN_STEM = PillarBlock(PLASSEIN_STEM_SETTINGS)
+    val PLASSEIN_LOG = PillarBlock(PLASSEIN_LOG_SETTINGS)
+    val PLASSEIN_PLANKS = Block(PLASSEIN_LOG_SETTINGS)
+    val PLASSEIN_SPORE = PlasseinSporeBlock(
+        StandardPlasseinSporeGenerator,
+        FabricBlockSettings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly()
+            .sounds(BlockSoundGroup.GRASS)
+    )
+    val PLASSEIN_STEM = PillarBlock(PLASSEIN_LOG_SETTINGS)
 
     /*
      * Thinking Stone Blocks.
@@ -121,6 +127,12 @@ object HotMBlocks {
     val THINKING_STONE_TILE_SLAB = SlabBlock(THINKING_STONE_SETTINGS)
 
     /*
+     * Sand blocks.
+     */
+    private val SAND_SETTINGS = FabricBlockSettings.of(Material.AGGREGATE, MaterialColor.SAND).strength(0.5F).sounds(BlockSoundGroup.SAND)
+    val NULL_SAND = SandBlock(0x29261d, SAND_SETTINGS)
+
+    /*
      * Thinking glass blocks.
      */
     private val GLASS_SETTINGS =
@@ -134,7 +146,7 @@ object HotMBlocks {
      */
     val MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
     val PLASSEIN_GRASS_LEYLINE = Block(MACHINE_CASING_SETTINGS)
-    val PLASSEIN_STEM_LEYLINE = PillarBlock(PLASSEIN_STEM_SETTINGS)
+    val PLASSEIN_LOG_LEYLINE = PillarBlock(PLASSEIN_LOG_SETTINGS)
     val RUSTED_MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
     val SMOOTH_THINKING_STONE_LEYLINE = Block(THINKING_STONE_SETTINGS)
     val SURFACE_MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
@@ -164,15 +176,19 @@ object HotMBlocks {
         register(METAL_MACHINE_CASING, "metal_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(NECTERE_PORTAL, "nectere_portal", Item.Settings())
         register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner", Item.Settings())
+        register(NULL_SAND, "null_sand", HOTM_BUILDING_ITEM_SETTINGS)
         register(OBELISK_PART, "obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BLOOM, "plassein_bloom", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BRACING, "plassein_bracing", BracingItem(PLASSEIN_BRACING, HOTM_BUILDING_ITEM_SETTINGS))
         register(PLASSEIN_GRASS, "plassein_grass", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_GRASS_LEYLINE, "plassein_grass_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_LEAVES, "plassein_leaves", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_LOG, "plassein_log", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_LOG_LEYLINE, "plassein_log_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_MACHINE_CASING, "plassein_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_PLANKS, "plassein_planks", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PLASSEIN_SPORE, "plassein_spore", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
-        register(PLASSEIN_STEM_LEYLINE, "plassein_stem_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING, "rusted_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING_LEYLINE, "rusted_machine_casing_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(SMOOTH_THINKING_STONE, "smooth_thinking_stone", HOTM_BUILDING_ITEM_SETTINGS)

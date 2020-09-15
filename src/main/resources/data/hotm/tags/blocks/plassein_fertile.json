@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "hotm:plassein_grass",
+    "hotm:plassein_grass_leyline",
+    "hotm:rusted_machine_casing",
+    "hotm:rusted_machine_casing_leyline",
+    "hotm:surface_machine_casing",
+    "hotm:surface_machine_casing_leyline"
+  ]
+}

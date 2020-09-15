@@ -18,6 +18,7 @@ object HotMBlocksClient {
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.PLASSEIN_BRACING, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.PLASSEIN_GRASS, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.PLASSEIN_LEAVES, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.PLASSEIN_SPORE, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.NECTERE_PORTAL, RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(HotMBlocks.THINKING_GLASS, RenderLayer.getCutout())
     }

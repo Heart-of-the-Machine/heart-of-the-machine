@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "hotm:block/plassein_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "hotm:block/plassein_log"
+    },
+    "axis=z": {
+      "model": "hotm:block/plassein_log",
+      "x": 90
+    }
+  }
+}

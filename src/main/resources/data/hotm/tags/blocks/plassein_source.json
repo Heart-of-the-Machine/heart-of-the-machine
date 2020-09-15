@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "hotm:plassein_bracing",
+    "hotm:plassein_log",
+    "hotm:plassein_log_leyline",
+    "hotm:plassein_machine_casing",
+    "hotm:plassein_stem"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "item": "hotm:plassein_log"
+    }
+  ],
+  "result": {
+    "item": "hotm:plassein_planks",
+    "count": 4
+  }
+}

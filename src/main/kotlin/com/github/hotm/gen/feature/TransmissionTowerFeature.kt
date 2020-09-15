@@ -1,5 +1,6 @@
 package com.github.hotm.gen.feature
 
+import com.github.hotm.HotMProperties
 import com.mojang.serialization.Codec
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.minecraft.block.BlockState
@@ -51,7 +52,7 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
             }
 
             for (leafPos in leafList) {
-                world.setBlockState(leafPos, config.leaf, 3)
+                world.setBlockState(leafPos, config.leaf.with(HotMProperties.DISTANCE, 1), 19)
             }
 
             for (lampPos in lampList) {
@@ -115,20 +116,20 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
 
                 if (random.nextFloat() < config.growthChance) {
                     structureGrowthList.add(mutable.toImmutable())
-                } else {
-                    structureList.add(mutable.toImmutable())
-                }
 
-                for (i in 0 until 4) {
-                    if (random.nextFloat() < config.leafChance) {
-                        val baseOffset = curPos.offset(Direction.fromHorizontal(i))
-                        val offset = mutable.offset(Direction.fromHorizontal(i))
-                        if (world.isAir(offset)
-                            && heights.getOrDefault(baseOffset as Any, 0) <= offset.y - baseOffset.y
-                        ) {
-                            leafList.add(offset)
+                    for (i in 0 until 4) {
+                        if (random.nextFloat() < config.leafChance) {
+                            val baseOffset = curPos.offset(Direction.fromHorizontal(i))
+                            val offset = mutable.offset(Direction.fromHorizontal(i))
+                            if (world.isAir(offset)
+                                && heights.getOrDefault(baseOffset as Any, 0) <= offset.y - baseOffset.y
+                            ) {
+                                leafList.add(offset)
+                            }
                         }
                     }
+                } else {
+                    structureList.add(mutable.toImmutable())
                 }
             }
         }

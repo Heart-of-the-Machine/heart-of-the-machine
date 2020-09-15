@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "hotm:null_sand"
+  },
+  "result": "hotm:thinking_glass"
+}
