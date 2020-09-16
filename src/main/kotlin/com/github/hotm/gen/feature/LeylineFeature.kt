@@ -13,7 +13,6 @@ import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
 import java.util.*
-import java.util.stream.Collectors
 import java.util.stream.IntStream
 import java.util.stream.Stream
 
@@ -32,14 +31,16 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
         for (source in sources) {
             if (canLeyline(world, source)) {
                 generated = true
+                makeLeyline(world, source)
+
                 for (dir in DirectionUtils.horizontals()) {
                     val dests = Stream.concat(
                         getBoundaries(world.seed, chunkGenerator, chunkPos, dir),
                         getNeighborBoundaries(world.seed, chunkGenerator, chunkPos, dir)
-                    ).collect(Collectors.toSet())
-                    val paths = findBlockPaths(world, source, chunkPos, dests.toSet())
-                    for (path in paths) {
-                        makeLeylinePath(world, path)
+                    )
+
+                    for (dest in dests) {
+                        makeLeylineTo(world, source, chunkPos, dest)
                     }
                 }
             }
@@ -56,8 +57,9 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
         const val BORDER_STEP = -1614785170
         const val DIRECTION_INDEX = 94861301
         const val MAX_LEYLINES_PER_CHUNK = 2
-        const val MAX_BOUNDARIES_PER_CHUNNK_SIDE = 3
-        const val MAX_LEYLINE_LENGTH = 64
+        const val MAX_BOUNDARIES_PER_CHUNNK_SIDE = 2
+        const val MAX_LEYLINE_LENGTH = 32
+        const val MAX_LEYLINE_LENGTH_SQR = MAX_LEYLINE_LENGTH * MAX_LEYLINE_LENGTH
 
         fun getChunkRandom(worldSeed: Long, pos: ChunkPos, index: Int, step: Int): ChunkRandom {
             val random = ChunkRandom()
@@ -158,69 +160,53 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
             return nextBoundaries.map { it.offset(opposite) }
         }
 
+        fun distanceSqrBetween(a: BlockPos, b: BlockPos): Int {
+            val xDif = a.x - b.x
+            val yDif = a.y - b.y
+            val zDif = a.z - b.z
+            return xDif * xDif + yDif * yDif + zDif * zDif
+        }
+
         fun chunkContains(chunkPos: ChunkPos, blockPos: BlockPos): Boolean {
             return blockPos.x <= chunkPos.endX && blockPos.x >= chunkPos.startX
                     && blockPos.z <= chunkPos.endZ && blockPos.z >= chunkPos.startZ
         }
 
-        fun findBlockPaths(
-            world: StructureWorldAccess,
-            start: BlockPos,
-            chunkPos: ChunkPos,
-            ends: Set<BlockPos>
-        ): List<BlockPathNode> {
-            val toFind = ends.toMutableSet()
-            val traversed = mutableSetOf<BlockPos>()
-            val paths = mutableListOf<BlockPathNode>()
-            val layers = mutableListOf<Map<BlockPos, BlockPathNode>>()
-            layers.add(mapOf(start to BlockPathNode(start, null)))
-            var layer = 1
+        fun makeLeylineTo(world: StructureWorldAccess, start: BlockPos, chunkPos: ChunkPos, end: BlockPos) {
+            if (distanceSqrBetween(start, end) > MAX_LEYLINE_LENGTH_SQR) {
+                return
+            }
 
-            while (toFind.isNotEmpty()) {
-                val prevLayer = layers[layer - 1]
+            val mutable = start.mutableCopy()
+            val mutable2 = BlockPos.Mutable()
 
-                if (prevLayer.isEmpty()) {
-                    break
-                }
+            while (true) {
+                val curDistanceSqr = distanceSqrBetween(mutable, end)
 
-                if (layers.size > MAX_LEYLINE_LENGTH) {
-                    break
-                }
+                var nextDir: Direction? = null
+                var nextDistance = curDistanceSqr
 
-                val nextLayer = mutableMapOf<BlockPos, BlockPathNode>()
-                layers.add(nextLayer)
-
-                for (posPath in prevLayer) {
-                    for (dir in Direction.values()) {
-                        val pos = posPath.key.offset(dir)
-                        if (chunkContains(chunkPos, pos) && canLeyline(world, pos) && !traversed.contains(pos)) {
-                            val path = BlockPathNode(pos, posPath.value)
-
-                            if (toFind.contains(pos)) {
-                                paths.add(path)
-                                toFind.remove(pos)
-                            }
-
-                            traversed.add(pos)
-                            nextLayer[pos] = path
-                        }
+                for (dir in Direction.values()) {
+                    mutable2.set(mutable, dir)
+                    val distance = distanceSqrBetween(mutable2, end)
+                    if (distance < nextDistance && canLeyline(world, mutable2) && chunkContains(chunkPos, mutable2)) {
+                        nextDir = dir
+                        nextDistance = distance
                     }
                 }
 
-                layer++
-            }
+                if (nextDir == null) {
+                    break
+                }
 
-            return paths
-        }
+                mutable.move(nextDir)
 
-        fun makeLeylinePath(world: StructureWorldAccess, path: BlockPathNode) {
-            var cur: BlockPathNode? = path
-            while (cur != null) {
-                makeLeyline(world, cur.pos)
-                cur = cur.prev
+                makeLeyline(world, mutable)
+
+                if (mutable == end) {
+                    break
+                }
             }
         }
     }
-
-    data class BlockPathNode(val pos: BlockPos, val prev: BlockPathNode?)
 }
