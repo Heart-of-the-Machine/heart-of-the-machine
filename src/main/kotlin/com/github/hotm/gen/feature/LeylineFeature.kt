@@ -1,7 +1,6 @@
 package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMBlocks
-import com.github.hotm.HotMLog
 import com.github.hotm.blocks.Leylineable
 import com.github.hotm.util.DirectionUtils
 import com.mojang.serialization.Codec
@@ -42,7 +41,6 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
                     for (path in paths) {
                         makeLeylinePath(world, path)
                     }
-//                    HotMLog.log.debug(dests)
                 }
             }
         }
@@ -51,14 +49,15 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
     }
 
     companion object {
-        val MAX_LEYLINE_HEIGHT = 200
-        val SOURCE_INDEX = 538872585
-        val SOURCE_STEP = 1005715095
-        val BORDER_INDEX = 1456570221
-        val BORDER_STEP = -1614785170
-        val MAX_LEYLINES_PER_CHUNK = 2
-        val MAX_BOUNDARIES_PER_CHUNNK_SIDE = 3
-        val MAX_LEYLINE_LENGTH = 64
+        const val MAX_LEYLINE_HEIGHT = 200
+        const val SOURCE_INDEX = 538872585
+        const val SOURCE_STEP = 1005715095
+        const val BORDER_INDEX = 1456570221
+        const val BORDER_STEP = -1614785170
+        const val DIRECTION_INDEX = 94861301
+        const val MAX_LEYLINES_PER_CHUNK = 2
+        const val MAX_BOUNDARIES_PER_CHUNNK_SIDE = 3
+        const val MAX_LEYLINE_LENGTH = 64
 
         fun getChunkRandom(worldSeed: Long, pos: ChunkPos, index: Int, step: Int): ChunkRandom {
             val random = ChunkRandom()
@@ -94,7 +93,8 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
             direction: Direction
         ): Stream<BlockPos> {
             val seaLevel = chunkGenerator.seaLevel
-            val random = getChunkRandom(worldSeed, chunkPos, BORDER_INDEX + 94861301 * direction.ordinal, BORDER_STEP)
+            val random =
+                getChunkRandom(worldSeed, chunkPos, BORDER_INDEX + DIRECTION_INDEX * direction.ordinal, BORDER_STEP)
 
             return IntStream.range(0, MAX_BOUNDARIES_PER_CHUNNK_SIDE).mapToObj {
                 when (direction) {
@@ -153,8 +153,8 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
             direction: Direction
         ): Stream<BlockPos> {
             val nextChunk = getNextChunk(chunkPos, direction)
-            val nextBoundaries = getBoundaries(worldSeed, chunkGenerator, nextChunk, direction)
             val opposite = direction.opposite
+            val nextBoundaries = getBoundaries(worldSeed, chunkGenerator, nextChunk, opposite)
             return nextBoundaries.map { it.offset(opposite) }
         }
 
@@ -218,42 +218,6 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
             while (cur != null) {
                 makeLeyline(world, cur.pos)
                 cur = cur.prev
-            }
-        }
-
-        fun getChunkBoundary(seaLevel: Int, start: BlockPos, direction: Direction): BlockPos {
-            return when (direction) {
-                Direction.DOWN -> BlockPos(start.x, seaLevel, start.z)
-                Direction.UP -> BlockPos(start.x, MAX_LEYLINE_HEIGHT, start.z)
-                Direction.NORTH -> BlockPos(start.x, start.y, start.z and 0xFFFFFFF0.toInt())
-                Direction.SOUTH -> BlockPos(start.x, start.y, (start.z and 0xFFFFFFF0.toInt()) + 15)
-                Direction.WEST -> BlockPos(start.x and 0xFFFFFFF0.toInt(), start.y, start.z)
-                Direction.EAST -> BlockPos((start.x and 0xFFFFFFF0.toInt()) + 15, start.y, start.z)
-            }
-        }
-
-        fun leylineToChunkBoundary(world: StructureWorldAccess, seaLevel: Int, start: BlockPos, direction: Direction) {
-            if (canLeyline(world, start)) {
-                makeLeyline(world, start)
-
-                val end = getChunkBoundary(seaLevel, start, direction)
-                val mutable = start.mutableCopy()
-                var i = 0
-                while (mutable != end) {
-                    if (i > 16) {
-                        // catch any bugs or weirdness
-                        throw IllegalStateException("Generating leyline: Leyline missed chunk boundary")
-                    }
-
-                    mutable.move(direction)
-                    if (!canLeyline(world, mutable)) {
-                        break
-                    }
-
-                    makeLeyline(world, mutable)
-
-                    i++
-                }
             }
         }
     }
