@@ -149,6 +149,7 @@ object HotMBiomes {
     private fun setupDefaultGen(gen: GenerationSettings.Builder) {
         gen.structureFeature(HotMStructureFeatures.NECTERE_SIDE_NECTERE_PORTAL)
         HotMConfiguredFeatures.addCrystalGrowths(gen)
+        HotMConfiguredFeatures.addLeylines(gen)
     }
 
     private fun register(

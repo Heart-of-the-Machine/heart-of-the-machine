@@ -22,7 +22,7 @@ import net.minecraft.world.BlockView
 object HotMBlocks {
 
     /*
-     * Crystals & Lamps.
+     * Block Settings.
      */
     private val CRYSTAL_BLOCK_SETTINGS =
         FabricBlockSettings.of(Material.GLASS).requiresTool().breakByTool(FabricToolTags.PICKAXES).strength(2.0f, 5.0f)
@@ -33,6 +33,35 @@ object HotMBlocks {
     private val MACHINE_CASING_LAMP_BLOCK_SETTINGS =
         FabricBlockSettings.of(Material.METAL).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.METAL)
             .lightLevel(15)
+    private val OBELISK_PART_SETTINGS =
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
+    private val MACHINE_CASING_SETTINGS =
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL)
+    private val BRACING_SETTINGS =
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(5.0f, 15.0f).sounds(BlockSoundGroup.METAL)
+            .nonOpaque()
+    private val PLASSEIN_LOG_SETTINGS =
+        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
+            .sounds(BlockSoundGroup.WOOD)
+    private val THINKING_STONE_SETTINGS =
+        FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
+
+
+    /*
+     * Leyline blocks.
+     */
+    private val LEYLINE_BLOCKS = hashSetOf<Block>()
+    val MACHINE_CASING_LEYLINE = addLeyline(Block(MACHINE_CASING_SETTINGS))
+    val PLASSEIN_GRASS_LEYLINE = addLeyline(Block(MACHINE_CASING_SETTINGS))
+    val PLASSEIN_LOG_LEYLINE = addLeyline(PillarBlock(PLASSEIN_LOG_SETTINGS))
+    val RUSTED_MACHINE_CASING_LEYLINE = addLeyline(Block(MACHINE_CASING_SETTINGS))
+    val SMOOTH_THINKING_STONE_LEYLINE = addLeyline(Block(THINKING_STONE_SETTINGS))
+    val SURFACE_MACHINE_CASING_LEYLINE = addLeyline(Block(MACHINE_CASING_SETTINGS))
+    val THINKING_STONE_LEYLINE = addLeyline(Block(THINKING_STONE_SETTINGS))
+
+    /*
+     * Crystals & Lamps.
+     */
     val CYAN_CRYSTAL = Block(CRYSTAL_BLOCK_SETTINGS)
     val CYAN_CRYSTAL_LAMP = Block(LAMP_BLOCK_SETTINGS)
     val CYAN_MACHINE_CASING_LAMP = Block(MACHINE_CASING_LAMP_BLOCK_SETTINGS)
@@ -45,8 +74,6 @@ object HotMBlocks {
     /*
      * Obelisk parts.
      */
-    private val OBELISK_PART_SETTINGS =
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
     val GLOWY_OBELISK_PART = PillarBlock(OBELISK_PART_SETTINGS)
     val OBELISK_PART = PillarBlock(OBELISK_PART_SETTINGS)
     val NECTERE_PORTAL = NecterePortalBlock(
@@ -57,14 +84,12 @@ object HotMBlocks {
     /*
      * Machine Casing Blocks.
      */
-    private val MACHINE_CASING_SETTINGS =
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL)
-    val MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
+    val MACHINE_CASING = LeylineableBlock(MACHINE_CASING_LEYLINE, MACHINE_CASING_SETTINGS)
     val MACHINE_CASING_BRICKS = Block(MACHINE_CASING_SETTINGS)
     val METAL_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
     val PLASSEIN_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
-    val RUSTED_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
-    val SURFACE_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
+    val RUSTED_MACHINE_CASING = LeylineableBlock(RUSTED_MACHINE_CASING_LEYLINE, MACHINE_CASING_SETTINGS)
+    val SURFACE_MACHINE_CASING = LeylineableBlock(SURFACE_MACHINE_CASING_LEYLINE, MACHINE_CASING_SETTINGS)
     val TEST_MACHINE_CASING = Block(MACHINE_CASING_SETTINGS)
     val MACHINE_CASING_STAIRS = BlockCreators.createStairsBlock(MACHINE_CASING.defaultState, MACHINE_CASING_SETTINGS)
     val MACHINE_CASING_BRICK_STAIRS =
@@ -75,28 +100,22 @@ object HotMBlocks {
     /*
      * Bracing Blocks.
      */
-    private val BRACING_SETTINGS =
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(5.0f, 15.0f).sounds(BlockSoundGroup.METAL)
-            .nonOpaque()
     val METAL_BRACING = BracingBlock(BRACING_SETTINGS)
     val PLASSEIN_BRACING = BracingBlock(BRACING_SETTINGS)
 
     /*
      * Plassein Growth Blocks.
      */
-    private val PLASSEIN_LOG_SETTINGS =
-        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
-            .sounds(BlockSoundGroup.WOOD)
     val PLASSEIN_BLOOM = Block(
         FabricBlockSettings.of(Material.LEAVES).strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOL)
             .nonOpaque().allowsSpawning(HotMBlocks::never)
     )
-    val PLASSEIN_GRASS = Block(MACHINE_CASING_SETTINGS)
+    val PLASSEIN_GRASS = LeylineableBlock(PLASSEIN_GRASS_LEYLINE, MACHINE_CASING_SETTINGS)
     val PLASSEIN_LEAVES = PlasseinLeavesBlock(
         FabricBlockSettings.of(Material.LEAVES).strength(0.2f).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()
             .allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
     )
-    val PLASSEIN_LOG = PillarBlock(PLASSEIN_LOG_SETTINGS)
+    val PLASSEIN_LOG = LeylineablePillarBlock(PLASSEIN_LOG_LEYLINE, PLASSEIN_LOG_SETTINGS)
     val PLASSEIN_PLANKS = Block(PLASSEIN_LOG_SETTINGS)
     val PLASSEIN_SPORE = PlasseinSporeBlock(
         StandardPlasseinSporeGenerator,
@@ -108,10 +127,8 @@ object HotMBlocks {
     /*
      * Thinking Stone Blocks.
      */
-    private val THINKING_STONE_SETTINGS =
-        FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
-    val SMOOTH_THINKING_STONE = Block(THINKING_STONE_SETTINGS)
-    val THINKING_STONE = Block(THINKING_STONE_SETTINGS)
+    val SMOOTH_THINKING_STONE = LeylineableBlock(SMOOTH_THINKING_STONE_LEYLINE, THINKING_STONE_SETTINGS)
+    val THINKING_STONE = LeylineableBlock(THINKING_STONE_LEYLINE, THINKING_STONE_SETTINGS)
     val THINKING_STONE_BRICKS = Block(THINKING_STONE_SETTINGS)
     val THINKING_STONE_TILES = Block(THINKING_STONE_SETTINGS)
     val SMOOTH_THINKING_STONE_STAIRS =
@@ -129,7 +146,8 @@ object HotMBlocks {
     /*
      * Sand blocks.
      */
-    private val SAND_SETTINGS = FabricBlockSettings.of(Material.AGGREGATE, MaterialColor.SAND).strength(0.5F).sounds(BlockSoundGroup.SAND)
+    private val SAND_SETTINGS =
+        FabricBlockSettings.of(Material.AGGREGATE, MaterialColor.SAND).strength(0.5F).sounds(BlockSoundGroup.SAND)
     val NULL_SAND = SandBlock(0x29261d, SAND_SETTINGS)
 
     /*
@@ -140,17 +158,6 @@ object HotMBlocks {
             .allowsSpawning(HotMBlocks::never).solidBlock(HotMBlocks::never).suffocates(HotMBlocks::never)
             .blockVision(HotMBlocks::never)
     val THINKING_GLASS = GlassBlock(GLASS_SETTINGS)
-
-    /*
-     * Leyline blocks.
-     */
-    val MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
-    val PLASSEIN_GRASS_LEYLINE = Block(MACHINE_CASING_SETTINGS)
-    val PLASSEIN_LOG_LEYLINE = PillarBlock(PLASSEIN_LOG_SETTINGS)
-    val RUSTED_MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
-    val SMOOTH_THINKING_STONE_LEYLINE = Block(THINKING_STONE_SETTINGS)
-    val SURFACE_MACHINE_CASING_LEYLINE = Block(MACHINE_CASING_SETTINGS)
-    val THINKING_STONE_LEYLINE = Block(THINKING_STONE_SETTINGS)
 
     /**
      * Register all Heart of the Machine blocks...
@@ -209,6 +216,15 @@ object HotMBlocks {
         register(THINKING_STONE_TILE_SLAB, "thinking_stone_tile_slab", HOTM_BUILDING_ITEM_SETTINGS)
         register(THINKING_STONE_TILE_STAIRS, "thinking_stone_tile_stairs", HOTM_BUILDING_ITEM_SETTINGS)
         register(THINKING_STONE_LEYLINE, "thinking_stone_leyline", HOTM_BUILDING_ITEM_SETTINGS)
+    }
+
+    fun isLeyline(block: Block): Boolean {
+        return LEYLINE_BLOCKS.contains(block)
+    }
+
+    private fun <B : Block> addLeyline(block: B): B {
+        LEYLINE_BLOCKS.add(block)
+        return block
     }
 
     private fun register(block: Block, name: String, itemSettings: Item.Settings) {
