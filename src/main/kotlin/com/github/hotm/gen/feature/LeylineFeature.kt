@@ -50,7 +50,7 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
     }
 
     companion object {
-        const val MAX_LEYLINE_HEIGHT = 200
+        const val MAX_LEYLINE_HEIGHT = 160
         const val SOURCE_INDEX = 538872585
         const val SOURCE_STEP = 1005715095
         const val BORDER_INDEX = 1456570221
@@ -58,7 +58,7 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
         const val DIRECTION_INDEX = 94861301
         const val MAX_LEYLINES_PER_CHUNK = 2
         const val MAX_BOUNDARIES_PER_CHUNNK_SIDE = 2
-        const val MAX_LEYLINE_LENGTH = 32
+        const val MAX_LEYLINE_LENGTH = 24
         const val MAX_LEYLINE_LENGTH_SQR = MAX_LEYLINE_LENGTH * MAX_LEYLINE_LENGTH
 
         fun getChunkRandom(worldSeed: Long, pos: ChunkPos, index: Int, step: Int): ChunkRandom {
