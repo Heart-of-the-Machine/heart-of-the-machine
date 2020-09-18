@@ -4,7 +4,6 @@ import com.github.hotm.HotMBlocks
 import com.github.hotm.blocks.Leylineable
 import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper
 import net.minecraft.world.StructureWorldAccess
@@ -24,23 +23,25 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
         blockPos: BlockPos,
         featureConfig: DefaultFeatureConfig
     ): Boolean {
-        val chunkPos = ChunkPos(blockPos)
-        val regions = RegionPos.regionsForChunk(blockPos)
         var generated = false
 
-        for (regionPos in regions) {
-            val sources = regionPos.genSources(world.seed, chunkGenerator)
+        if (isGenChunk(blockPos)) {
+            val regions = RegionPos.regionsForChunk(blockPos)
 
-            for (source in sources) {
-                if (canLeyline(world, source)) {
-                    generated = true
-                    makeLeyline(world, source)
+            for (regionPos in regions) {
+                val sources = regionPos.genSources(world.seed, chunkGenerator)
 
-                    for (dir in Direction.values()) {
-                        val dests = regionPos.genBoundaries(world.seed, chunkGenerator, dir)
+                for (source in sources) {
+                    if (canLeyline(world, source)) {
+                        generated = true
+                        makeLeyline(world, source)
 
-                        for (dest in dests) {
-                            makeLeylineTo(world, source, chunkPos, regionPos, dest)
+                        for (dir in Direction.values()) {
+                            val dests = regionPos.genBoundaries(world.seed, chunkGenerator, dir)
+
+                            for (dest in dests) {
+                                makeLeylineTo(world, source, regionPos, dest)
+                            }
                         }
                     }
                 }
@@ -57,10 +58,10 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
         const val BORDER_INDEX = 1456570221
         const val BORDER_STEP = -1614785170
         const val DIRECTION_INDEX = 94861301
-        const val CHUNKS_PER_REGION = 4
+        const val CHUNKS_PER_REGION = 3
         const val BLOCKS_PER_REGION = CHUNKS_PER_REGION shl 4
-        const val MAX_LEYLINES_PER_REGION = 2
-        const val MAX_BOUNDARIES_PER_REGION_SIDE = 2
+        const val MAX_LEYLINES_PER_REGION = 1
+        const val MAX_BOUNDARIES_PER_REGION_SIDE = 1
         const val MAX_LEYLINE_LENGTH = 64
         const val MAX_LEYLINE_LENGTH_SQR = MAX_LEYLINE_LENGTH * MAX_LEYLINE_LENGTH
 
@@ -88,18 +89,7 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
             return xDif * xDif + yDif * yDif + zDif * zDif
         }
 
-        fun isWithinChunk(chunkPos: ChunkPos, blockPos: BlockPos): Boolean {
-            return blockPos.x >= chunkPos.startX && blockPos.x <= chunkPos.endX
-                    && blockPos.z >= chunkPos.startZ && blockPos.z <= chunkPos.endZ
-        }
-
-        fun makeLeylineTo(
-            world: StructureWorldAccess,
-            start: BlockPos,
-            chunkPos: ChunkPos,
-            regionPos: RegionPos,
-            end: BlockPos
-        ) {
+        fun makeLeylineTo(world: StructureWorldAccess, start: BlockPos, regionPos: RegionPos, end: BlockPos) {
             if (distanceSqrBetween(start, end) > MAX_LEYLINE_LENGTH_SQR) {
                 return
             }
@@ -128,9 +118,7 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
 
                 mutable.move(nextDir)
 
-                if (isWithinChunk(chunkPos, mutable)) {
-                    makeLeyline(world, mutable)
-                }
+                makeLeyline(world, mutable)
 
                 if (mutable == end) {
                     break
