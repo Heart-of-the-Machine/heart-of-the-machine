@@ -2,11 +2,11 @@ package com.github.hotm.gen.feature
 
 import com.github.hotm.HotMBlocks
 import com.github.hotm.blocks.Leylineable
-import com.github.hotm.util.DirectionUtils
 import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.MathHelper
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.ChunkRandom
 import net.minecraft.world.gen.chunk.ChunkGenerator
@@ -25,22 +25,23 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
         featureConfig: DefaultFeatureConfig
     ): Boolean {
         val chunkPos = ChunkPos(blockPos)
-        val sources = getSources(world.seed, chunkGenerator, chunkPos)
-
+        val regions = RegionPos.regionsForChunk(blockPos)
         var generated = false
-        for (source in sources) {
-            if (canLeyline(world, source)) {
-                generated = true
-                makeLeyline(world, source)
 
-                for (dir in DirectionUtils.horizontals()) {
-                    val dests = Stream.concat(
-                        getBoundaries(world.seed, chunkGenerator, chunkPos, dir),
-                        getNeighborBoundaries(world.seed, chunkGenerator, chunkPos, dir)
-                    )
+        for (regionPos in regions) {
+            val sources = regionPos.genSources(world.seed, chunkGenerator)
 
-                    for (dest in dests) {
-                        makeLeylineTo(world, source, chunkPos, dest)
+            for (source in sources) {
+                if (canLeyline(world, source)) {
+                    generated = true
+                    makeLeyline(world, source)
+
+                    for (dir in Direction.values()) {
+                        val dests = regionPos.genBoundaries(world.seed, chunkGenerator, dir)
+
+                        for (dest in dests) {
+                            makeLeylineTo(world, source, chunkPos, regionPos, dest)
+                        }
                     }
                 }
             }
@@ -50,82 +51,24 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
     }
 
     companion object {
-        const val MAX_LEYLINE_HEIGHT = 160
+        const val MAX_LEYLINE_HEIGHT = 192
         const val SOURCE_INDEX = 538872585
         const val SOURCE_STEP = 1005715095
         const val BORDER_INDEX = 1456570221
         const val BORDER_STEP = -1614785170
         const val DIRECTION_INDEX = 94861301
-        const val MAX_LEYLINES_PER_CHUNK = 2
-        const val MAX_BOUNDARIES_PER_CHUNNK_SIDE = 2
-        const val MAX_LEYLINE_LENGTH = 24
+        const val CHUNKS_PER_REGION = 4
+        const val BLOCKS_PER_REGION = CHUNKS_PER_REGION shl 4
+        const val MAX_LEYLINES_PER_REGION = 2
+        const val MAX_BOUNDARIES_PER_REGION_SIDE = 2
+        const val MAX_LEYLINE_LENGTH = 64
         const val MAX_LEYLINE_LENGTH_SQR = MAX_LEYLINE_LENGTH * MAX_LEYLINE_LENGTH
 
-        fun getChunkRandom(worldSeed: Long, pos: ChunkPos, index: Int, step: Int): ChunkRandom {
-            val random = ChunkRandom()
-            val populationSeed = random.setPopulationSeed(worldSeed, pos.startX, pos.startZ)
-            random.setDecoratorSeed(populationSeed, index, step)
-            return random
-        }
-
-        fun getSources(
-            worldSeed: Long,
-            chunkGenerator: ChunkGenerator,
-            chunkPos: ChunkPos
-        ): Stream<BlockPos> {
-            val random = getChunkRandom(worldSeed, chunkPos, SOURCE_INDEX, SOURCE_STEP)
-
-            val seaLevel = chunkGenerator.seaLevel
-            return IntStream.range(0, MAX_LEYLINES_PER_CHUNK).mapToObj {
-                BlockPos(
-                    random.nextInt(16) + chunkPos.startX,
-                    random.nextInt(MAX_LEYLINE_HEIGHT - seaLevel) + seaLevel,
-                    random.nextInt(16) + chunkPos.startZ
-                )
-            }.filter {
-                val sample = chunkGenerator.getColumnSample(it.x, it.z)
-                sample.getBlockState(it).block is Leylineable
-            }
-        }
-
-        fun getBoundaries(
-            worldSeed: Long,
-            chunkGenerator: ChunkGenerator,
-            chunkPos: ChunkPos,
-            direction: Direction
-        ): Stream<BlockPos> {
-            val seaLevel = chunkGenerator.seaLevel
-            val random =
-                getChunkRandom(worldSeed, chunkPos, BORDER_INDEX + DIRECTION_INDEX * direction.ordinal, BORDER_STEP)
-
-            return IntStream.range(0, MAX_BOUNDARIES_PER_CHUNNK_SIDE).mapToObj {
-                when (direction) {
-                    Direction.NORTH -> BlockPos(
-                        random.nextInt(16) + chunkPos.startX,
-                        random.nextInt(MAX_LEYLINE_HEIGHT - seaLevel) + seaLevel,
-                        chunkPos.startZ
-                    )
-                    Direction.SOUTH -> BlockPos(
-                        random.nextInt(16) + chunkPos.startX,
-                        random.nextInt(MAX_LEYLINE_HEIGHT - seaLevel) + seaLevel,
-                        chunkPos.endZ
-                    )
-                    Direction.WEST -> BlockPos(
-                        chunkPos.startX,
-                        random.nextInt(MAX_LEYLINE_HEIGHT - seaLevel) + seaLevel,
-                        random.nextInt(16) + chunkPos.startZ
-                    )
-                    Direction.EAST -> BlockPos(
-                        chunkPos.endX,
-                        random.nextInt(MAX_LEYLINE_HEIGHT - seaLevel) + seaLevel,
-                        random.nextInt(16) + chunkPos.startZ
-                    )
-                    else -> throw IllegalStateException("Invalid horizontal: $direction")
-                }
-            }.filter {
-                val sample = chunkGenerator.getColumnSample(it.x, it.z)
-                sample.getBlockState(it).block is Leylineable
-            }
+        fun isGenChunk(blockPos: BlockPos): Boolean {
+            val chunkX = blockPos.x shr 4
+            val chunkZ = blockPos.z shr 4
+            return MathHelper.floorMod(chunkX, CHUNKS_PER_REGION) == CHUNKS_PER_REGION / 2
+                    && MathHelper.floorMod(chunkZ, CHUNKS_PER_REGION) == CHUNKS_PER_REGION / 2
         }
 
         fun makeLeyline(world: StructureWorldAccess, blockPos: BlockPos) {
@@ -138,28 +81,6 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
             return block is Leylineable || HotMBlocks.isLeyline(block)
         }
 
-        fun getNextChunk(chunkPos: ChunkPos, direction: Direction): ChunkPos {
-            return when (direction) {
-                Direction.NORTH -> ChunkPos(chunkPos.x, chunkPos.z - 1)
-                Direction.SOUTH -> ChunkPos(chunkPos.x, chunkPos.z + 1)
-                Direction.WEST -> ChunkPos(chunkPos.x - 1, chunkPos.z)
-                Direction.EAST -> ChunkPos(chunkPos.x + 1, chunkPos.z)
-                else -> throw IllegalStateException("Invalid horizontal: $direction")
-            }
-        }
-
-        fun getNeighborBoundaries(
-            worldSeed: Long,
-            chunkGenerator: ChunkGenerator,
-            chunkPos: ChunkPos,
-            direction: Direction
-        ): Stream<BlockPos> {
-            val nextChunk = getNextChunk(chunkPos, direction)
-            val opposite = direction.opposite
-            val nextBoundaries = getBoundaries(worldSeed, chunkGenerator, nextChunk, opposite)
-            return nextBoundaries.map { it.offset(opposite) }
-        }
-
         fun distanceSqrBetween(a: BlockPos, b: BlockPos): Int {
             val xDif = a.x - b.x
             val yDif = a.y - b.y
@@ -167,12 +88,18 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
             return xDif * xDif + yDif * yDif + zDif * zDif
         }
 
-        fun chunkContains(chunkPos: ChunkPos, blockPos: BlockPos): Boolean {
-            return blockPos.x <= chunkPos.endX && blockPos.x >= chunkPos.startX
-                    && blockPos.z <= chunkPos.endZ && blockPos.z >= chunkPos.startZ
+        fun isWithinChunk(chunkPos: ChunkPos, blockPos: BlockPos): Boolean {
+            return blockPos.x >= chunkPos.startX && blockPos.x <= chunkPos.endX
+                    && blockPos.z >= chunkPos.startZ && blockPos.z <= chunkPos.endZ
         }
 
-        fun makeLeylineTo(world: StructureWorldAccess, start: BlockPos, chunkPos: ChunkPos, end: BlockPos) {
+        fun makeLeylineTo(
+            world: StructureWorldAccess,
+            start: BlockPos,
+            chunkPos: ChunkPos,
+            regionPos: RegionPos,
+            end: BlockPos
+        ) {
             if (distanceSqrBetween(start, end) > MAX_LEYLINE_LENGTH_SQR) {
                 return
             }
@@ -189,7 +116,7 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
                 for (dir in Direction.values()) {
                     mutable2.set(mutable, dir)
                     val distance = distanceSqrBetween(mutable2, end)
-                    if (distance < nextDistance && canLeyline(world, mutable2) && chunkContains(chunkPos, mutable2)) {
+                    if (distance < nextDistance && canLeyline(world, mutable2) && regionPos.isBlockWithin(mutable2)) {
                         nextDir = dir
                         nextDistance = distance
                     }
@@ -201,11 +128,179 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
 
                 mutable.move(nextDir)
 
-                makeLeyline(world, mutable)
+                if (isWithinChunk(chunkPos, mutable)) {
+                    makeLeyline(world, mutable)
+                }
 
                 if (mutable == end) {
                     break
                 }
+            }
+        }
+    }
+
+    data class RegionPos(val x: Int, val y: Int, val z: Int) {
+        companion object {
+            fun fromBlockPos(blockPos: BlockPos): RegionPos {
+                return RegionPos(
+                    MathHelper.floorDiv(blockPos.x, BLOCKS_PER_REGION),
+                    MathHelper.floorDiv(blockPos.y, BLOCKS_PER_REGION),
+                    MathHelper.floorDiv(blockPos.z, BLOCKS_PER_REGION)
+                )
+            }
+
+            fun regionsForChunk(blockPos: BlockPos): Stream<RegionPos> {
+                return IntStream.range(0, MAX_LEYLINE_HEIGHT / BLOCKS_PER_REGION).mapToObj { y ->
+                    RegionPos(
+                        MathHelper.floorDiv(blockPos.x, BLOCKS_PER_REGION),
+                        y,
+                        MathHelper.floorDiv(blockPos.z, BLOCKS_PER_REGION)
+                    )
+                }
+            }
+        }
+
+        val startX = x * BLOCKS_PER_REGION
+        val startY = y * BLOCKS_PER_REGION
+        val startZ = z * BLOCKS_PER_REGION
+        val endX = (x + 1) * BLOCKS_PER_REGION - 1
+        val endY = (y + 1) * BLOCKS_PER_REGION - 1
+        val endZ = (z + 1) * BLOCKS_PER_REGION - 1
+
+        val isHeightValid = y >= 0 && y < MAX_LEYLINE_HEIGHT / BLOCKS_PER_REGION
+        val isBottom = y == 0
+        val isTop = (y + 2) * BLOCKS_PER_REGION - 1 >= MAX_LEYLINE_HEIGHT
+
+        fun getRandom(worldSeed: Long, index: Int, step: Int): ChunkRandom {
+            val random = ChunkRandom()
+            random.setSeed(worldSeed)
+            val xMult = random.nextLong() or 1L
+            val yMult = random.nextLong() or 1L
+            val zMult = random.nextLong() or 1L
+            val regMult = BLOCKS_PER_REGION.toLong()
+            val populationSeed =
+                (x.toLong() * regMult * xMult + y.toLong() * regMult * yMult + z.toLong() * regMult * zMult) xor worldSeed
+            random.setDecoratorSeed(populationSeed, index, step)
+            return random
+        }
+
+        fun isBlockWithin(pos: BlockPos): Boolean {
+            return pos.x >= x * BLOCKS_PER_REGION && pos.x < (x + 1) * BLOCKS_PER_REGION
+                    && pos.y >= y * BLOCKS_PER_REGION && pos.y < (y + 1) * BLOCKS_PER_REGION
+                    && pos.z >= z * BLOCKS_PER_REGION && pos.z < (z + 1) * BLOCKS_PER_REGION
+        }
+
+        fun nextRegion(direction: Direction): RegionPos? {
+            return when (direction) {
+                Direction.DOWN -> if (isBottom) null else RegionPos(x, y - 1, z)
+                Direction.UP -> if (isTop) null else RegionPos(x, y + 1, z)
+                Direction.NORTH -> RegionPos(x, y, z - 1)
+                Direction.SOUTH -> RegionPos(x, y, z + 1)
+                Direction.WEST -> RegionPos(x - 1, y, z)
+                Direction.EAST -> RegionPos(x + 1, y, z)
+            }
+        }
+
+        fun genSources(
+            worldSeed: Long,
+            chunkGenerator: ChunkGenerator
+        ): Stream<BlockPos> {
+            val random = getRandom(worldSeed, SOURCE_INDEX, SOURCE_STEP)
+
+            return IntStream.range(0, MAX_LEYLINES_PER_REGION).mapToObj {
+                BlockPos(
+                    random.nextInt(BLOCKS_PER_REGION) + startX,
+                    random.nextInt(BLOCKS_PER_REGION) + startY,
+                    random.nextInt(BLOCKS_PER_REGION) + startZ
+                )
+            }.filter {
+                val sample = chunkGenerator.getColumnSample(it.x, it.z)
+                sample.getBlockState(it).block is Leylineable
+            }
+        }
+
+        private fun genRegionBoundaries(
+            worldSeed: Long,
+            chunkGenerator: ChunkGenerator,
+            direction: Direction
+        ): Stream<BlockPos> {
+            val random =
+                getRandom(worldSeed, BORDER_INDEX + DIRECTION_INDEX * direction.ordinal, BORDER_STEP)
+
+            return when (direction) {
+                Direction.DOWN -> IntStream.range(0, MAX_BOUNDARIES_PER_REGION_SIDE).mapToObj {
+                    BlockPos(
+                        random.nextInt(BLOCKS_PER_REGION) + startX,
+                        startY,
+                        random.nextInt(BLOCKS_PER_REGION) + startZ
+                    )
+                }
+                Direction.UP -> IntStream.range(0, MAX_BOUNDARIES_PER_REGION_SIDE).mapToObj {
+                    BlockPos(
+                        random.nextInt(BLOCKS_PER_REGION) + startX,
+                        endY,
+                        random.nextInt(BLOCKS_PER_REGION) + startZ
+                    )
+                }
+                Direction.NORTH -> IntStream.range(0, MAX_BOUNDARIES_PER_REGION_SIDE).mapToObj {
+                    BlockPos(
+                        random.nextInt(BLOCKS_PER_REGION) + startX,
+                        random.nextInt(BLOCKS_PER_REGION) + startY,
+                        startZ
+                    )
+                }
+                Direction.SOUTH -> IntStream.range(0, MAX_BOUNDARIES_PER_REGION_SIDE).mapToObj {
+                    BlockPos(
+                        random.nextInt(BLOCKS_PER_REGION) + startX,
+                        random.nextInt(BLOCKS_PER_REGION) + startY,
+                        endZ
+                    )
+                }
+                Direction.WEST -> IntStream.range(0, MAX_BOUNDARIES_PER_REGION_SIDE).mapToObj {
+                    BlockPos(
+                        startX,
+                        random.nextInt(BLOCKS_PER_REGION) + startY,
+                        random.nextInt(BLOCKS_PER_REGION) + startZ
+                    )
+                }
+                Direction.EAST -> IntStream.range(0, MAX_BOUNDARIES_PER_REGION_SIDE).mapToObj {
+                    BlockPos(
+                        endX,
+                        random.nextInt(BLOCKS_PER_REGION) + startY,
+                        random.nextInt(16) + startZ
+                    )
+                }
+            }.filter {
+                val sample = chunkGenerator.getColumnSample(it.x, it.z)
+                sample.getBlockState(it).block is Leylineable
+            }
+        }
+
+        private fun genNeighborBoundaries(
+            worldSeed: Long,
+            chunkGenerator: ChunkGenerator,
+            direction: Direction
+        ): Stream<BlockPos> {
+            val opposite = direction.opposite
+            return nextRegion(direction)?.let { region ->
+                region.genRegionBoundaries(worldSeed, chunkGenerator, opposite).map { it.offset(opposite) }
+            } ?: Stream.empty()
+        }
+
+        fun genBoundaries(worldSeed: Long, chunkGenerator: ChunkGenerator, direction: Direction): Stream<BlockPos> {
+            return when (direction) {
+                Direction.DOWN -> if (isBottom) Stream.empty() else Stream.concat(
+                    genRegionBoundaries(worldSeed, chunkGenerator, direction),
+                    genNeighborBoundaries(worldSeed, chunkGenerator, direction)
+                )
+                Direction.UP -> if (isTop) Stream.empty() else Stream.concat(
+                    genRegionBoundaries(worldSeed, chunkGenerator, direction),
+                    genNeighborBoundaries(worldSeed, chunkGenerator, direction)
+                )
+                else -> Stream.concat(
+                    genRegionBoundaries(worldSeed, chunkGenerator, direction),
+                    genNeighborBoundaries(worldSeed, chunkGenerator, direction)
+                )
             }
         }
     }
