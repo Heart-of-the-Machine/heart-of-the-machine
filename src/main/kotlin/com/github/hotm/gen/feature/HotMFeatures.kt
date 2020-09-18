@@ -34,6 +34,11 @@ object HotMFeatures {
     val CRYSTAL_GROWTH = register("crystal_growth", CrystalGrowthFeature(CrystalGrowthConfig.CODEC))
 
     /**
+     * Creates leylines that stretch throughout a chunk, connecting to leylines in adjacent chunks.
+     */
+    val LEYLINE = register("leyline", LeylineFeature(DefaultFeatureConfig.CODEC))
+
+    /**
      * Creates server tower like structures.
      */
     val SERVER_TOWER = register("server_tower", ServerTowerFeature(ServerTowerConfig.CODEC))

@@ -115,6 +115,11 @@ object HotMConfiguredFeatures {
     )
 
     /**
+     * Creates leylines that stretch throughout a chunk, connecting to leylines in adjacent chunks.
+     */
+    val LEYLINES = register("leylines", HotMFeatures.LEYLINE.configure(FeatureConfig.DEFAULT))
+
+    /**
      * Configured server tower.
      */
     val SERVER_TOWER = register(
@@ -241,6 +246,13 @@ object HotMConfiguredFeatures {
      */
     fun addCrystalGrowths(genSettings: GenerationSettings.Builder) {
         genSettings.feature(GenerationStep.Feature.UNDERGROUND_DECORATION, CRYSTAL_GROWTH)
+    }
+
+    /**
+     * Adds leylines.
+     */
+    fun addLeylines(genSettings: GenerationSettings.Builder) {
+        genSettings.feature(GenerationStep.Feature.UNDERGROUND_STRUCTURES, LEYLINES)
     }
 
     /**

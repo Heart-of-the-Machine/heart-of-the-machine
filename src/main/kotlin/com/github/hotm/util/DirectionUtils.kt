@@ -25,6 +25,8 @@ object DirectionUtils {
 
     private val LEFTS: Array<Direction> = RIGHTS.map { it.opposite }.toTypedArray()
 
+    private val HORIZONTALS = Array<Direction>(4) { Direction.fromHorizontal(it) }
+
     fun Direction.texUp(): Direction {
         return UPS[ordinal]
     }
@@ -39,5 +41,9 @@ object DirectionUtils {
 
     fun Direction.texLeft(): Direction {
         return LEFTS[ordinal]
+    }
+
+    fun horizontals(): Array<Direction> {
+        return HORIZONTALS
     }
 }
