@@ -111,7 +111,7 @@ object HotMConfiguredFeatures {
                     )
                 )
             )
-        ).decorate(Decorator.RANGE.configure(RangeDecoratorConfig(15, 8, 128)).spreadHorizontally().repeat(40))
+        ).decorate(Decorator.RANGE.configure(RangeDecoratorConfig(15, 8, 128)).spreadHorizontally().repeat(10))
     )
 
     /**

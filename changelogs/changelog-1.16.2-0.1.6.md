@@ -12,3 +12,7 @@ For Minecraft 1.16.2.
 * Added Null Sand which can be smelted into Thinking Glass.
 * Added Plassein Log. (This will continue to be what the Plassein Stem is now.)
 * Added Plassein Planks.
+* Changed Plassein Stem texture.
+* Added Plassein fuel which is smelted Plassein Stem.
+* Added Plassein Scaffolding.
+* Made crystals drop crystal shards.

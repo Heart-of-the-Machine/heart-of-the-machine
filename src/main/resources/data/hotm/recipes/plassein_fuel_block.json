@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "item": "hotm:plassein_fuel_chunk"
+    },
+    {
+      "item": "hotm:plassein_fuel_chunk"
+    },
+    {
+      "item": "hotm:plassein_fuel_chunk"
+    },
+    {
+      "item": "hotm:plassein_fuel_chunk"
+    },
+    {
+      "item": "hotm:plassein_fuel_chunk"
+    },
+    {
+      "item": "hotm:plassein_fuel_chunk"
+    },
+    {
+      "item": "hotm:plassein_fuel_chunk"
+    },
+    {
+      "item": "hotm:plassein_fuel_chunk"
+    },
+    {
+      "item": "hotm:plassein_fuel_chunk"
+    }
+  ],
+  "result": {
+    "item": "hotm:plassein_fuel_block"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PSP",
+    "P P",
+    "P P"
+  ],
+  "key": {
+    "P": {
+      "item": "hotm:plassein_stem"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "hotm:plassein_scaffolding",
+    "count": 6
+  }
+}

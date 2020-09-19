@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CC",
+    "CC"
+  ],
+  "key": {
+    "C": "hotm:magenta_crystal_shard"
+  },
+  "result": {
+    "item": "hotm:magenta_crystal"
+  }
+}
