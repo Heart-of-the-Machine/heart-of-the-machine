@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_column",
   "textures": {
-    "end": "hotm:block/plassein_log_top",
-    "side": "hotm:block/plassein_log"
+    "end": "hotm:block/plassein_stem_top",
+    "side": "hotm:block/plassein_stem"
   }
 }
