@@ -6,5 +6,6 @@ object HotMFuels {
     fun register() {
         FuelRegistry.INSTANCE.add(HotMBlocks.PLASSEIN_LOG, 300)
         FuelRegistry.INSTANCE.add(HotMBlocks.PLASSEIN_PLANKS, 300)
+        FuelRegistry.INSTANCE.add(HotMItems.PLASSEIN_FUEL_CHUNK, 2000)
     }
 }
