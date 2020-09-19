@@ -1,6 +1,7 @@
 package com.github.hotm
 
 import com.github.hotm.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
+import com.github.hotm.HotMItems.HOTM_MATERIAL_ITEM_SETTINGS
 import com.github.hotm.blocks.*
 import com.github.hotm.blocks.ScaffoldingBlock
 import com.github.hotm.blocks.spore.StandardPlasseinSporeGenerator
@@ -106,12 +107,14 @@ object HotMBlocks {
     val PLASSEIN_BRACING = BracingBlock(BRACING_SETTINGS)
 
     /*
-     * Plassein Growth Blocks.
+     * Plassein Blocks.
      */
     val PLASSEIN_BLOOM = Block(
         FabricBlockSettings.of(Material.LEAVES).strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOL)
             .nonOpaque().allowsSpawning(HotMBlocks::never)
     )
+    val PLASSEIN_FUEL_BLOCK =
+        Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).requiresTool().strength(5.0F, 6.0F))
     val PLASSEIN_GRASS = LeylineableBlock(PLASSEIN_GRASS_LEYLINE, MACHINE_CASING_SETTINGS)
     val PLASSEIN_LEAVES = PlasseinLeavesBlock(
         FabricBlockSettings.of(Material.LEAVES).strength(0.2f).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()
@@ -193,6 +196,7 @@ object HotMBlocks {
         register(OBELISK_PART, "obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BLOOM, "plassein_bloom", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_BRACING, "plassein_bracing", BracingItem(PLASSEIN_BRACING, HOTM_BUILDING_ITEM_SETTINGS))
+        register(PLASSEIN_FUEL_BLOCK, "plassein_fuel_block", HOTM_MATERIAL_ITEM_SETTINGS)
         register(PLASSEIN_GRASS, "plassein_grass", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_GRASS_LEYLINE, "plassein_grass_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_LEAVES, "plassein_leaves", HOTM_BUILDING_ITEM_SETTINGS)
