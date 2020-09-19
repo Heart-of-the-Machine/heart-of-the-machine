@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/scaffolding_stable",
+  "textures": {
+    "particle": "hotm:block/plassein_scaffolding_top",
+    "top": "hotm:block/plassein_scaffolding_top",
+    "side": "hotm:block/plassein_scaffolding_side",
+    "bottom": "hotm:block/plassein_scaffolding_bottom"
+  }
+}

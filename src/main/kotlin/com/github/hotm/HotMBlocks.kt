@@ -2,8 +2,10 @@ package com.github.hotm
 
 import com.github.hotm.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
 import com.github.hotm.blocks.*
+import com.github.hotm.blocks.ScaffoldingBlock
 import com.github.hotm.blocks.spore.StandardPlasseinSporeGenerator
 import com.github.hotm.items.BracingItem
+import com.github.hotm.items.ScaffoldingItem
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
@@ -38,7 +40,7 @@ object HotMBlocks {
     private val MACHINE_CASING_SETTINGS =
         FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL)
     private val BRACING_SETTINGS =
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(5.0f, 15.0f).sounds(BlockSoundGroup.METAL)
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(1.0f, 15.0f).sounds(BlockSoundGroup.METAL)
             .nonOpaque()
     private val PLASSEIN_LOG_SETTINGS =
         FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
@@ -117,6 +119,10 @@ object HotMBlocks {
     )
     val PLASSEIN_LOG = LeylineablePillarBlock(PLASSEIN_LOG_LEYLINE, PLASSEIN_LOG_SETTINGS)
     val PLASSEIN_PLANKS = Block(PLASSEIN_LOG_SETTINGS)
+    val PLASSEIN_SCAFFOLDING = ScaffoldingBlock(
+        FabricBlockSettings.of(Material.SUPPORTED, MaterialColor.BLUE).noCollision().sounds(BlockSoundGroup.SCAFFOLDING)
+            .dynamicBounds()
+    )
     val PLASSEIN_SPORE = PlasseinSporeBlock(
         StandardPlasseinSporeGenerator,
         FabricBlockSettings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly()
@@ -194,6 +200,11 @@ object HotMBlocks {
         register(PLASSEIN_LOG_LEYLINE, "plassein_log_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_MACHINE_CASING, "plassein_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_PLANKS, "plassein_planks", HOTM_BUILDING_ITEM_SETTINGS)
+        register(
+            PLASSEIN_SCAFFOLDING,
+            "plassein_scaffolding",
+            ScaffoldingItem(PLASSEIN_SCAFFOLDING, HOTM_BUILDING_ITEM_SETTINGS)
+        )
         register(PLASSEIN_SPORE, "plassein_spore", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING, "rusted_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
