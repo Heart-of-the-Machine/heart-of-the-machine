@@ -5,7 +5,9 @@
     "CC"
   ],
   "key": {
-    "C": "hotm:cyan_crystal_shard"
+    "C": {
+      "item": "hotm:cyan_crystal_shard"
+    }
   },
   "result": {
     "item": "hotm:cyan_crystal"
