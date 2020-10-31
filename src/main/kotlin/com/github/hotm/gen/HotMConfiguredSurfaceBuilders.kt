@@ -15,13 +15,13 @@ object HotMConfiguredSurfaceBuilders {
      * Thinking Forest biome surface builder.
      */
     val THINKING_FOREST =
-        register("thinking_forest", HotMSurfaceBuilders.PARTIAL.method_30478(HotMSurfaceBuilders.GRASS_CONFIG))
+        register("thinking_forest", HotMSurfaceBuilders.PARTIAL.withConfig(HotMSurfaceBuilders.GRASS_CONFIG))
 
     /**
      * Wasteland biome surface builder.
      */
     val WASTELAND =
-        register("wasteland", HotMSurfaceBuilders.DEFAULT.method_30478(HotMSurfaceBuilders.WASTELAND_CONFIG))
+        register("wasteland", HotMSurfaceBuilders.DEFAULT.withConfig(HotMSurfaceBuilders.WASTELAND_CONFIG))
 
     /**
      * Used for statically registering configured surface builders.

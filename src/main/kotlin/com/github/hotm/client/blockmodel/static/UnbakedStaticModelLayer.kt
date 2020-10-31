@@ -48,7 +48,7 @@ class UnbakedStaticModelLayer(
 
     private val depthClamped = MathHelper.clamp(depth, 0.0f, 0.5f)
     private val depthMaxed = depth.coerceAtMost(0.5f)
-    private val allSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, all.texture)
+    private val allSpriteId = SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, all.texture)
 
     override val codec = CODEC
 

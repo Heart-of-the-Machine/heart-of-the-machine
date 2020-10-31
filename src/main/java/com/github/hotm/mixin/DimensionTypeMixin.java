@@ -21,8 +21,8 @@ import java.io.File;
 @SuppressWarnings("unused")
 @Mixin(DimensionType.class)
 public class DimensionTypeMixin {
-    @Inject(method = "method_28517", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void onMethod_28517(Registry<DimensionType> dimensionTypes, Registry<Biome> biomes,
+    @Inject(method = "createDefaultDimensionOptions", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private static void onCreateDefaultDimensionOptions(Registry<DimensionType> dimensionTypes, Registry<Biome> biomes,
                                        Registry<ChunkGeneratorSettings> generatorSettings, long seed,
                                        CallbackInfoReturnable<SimpleRegistry<DimensionOptions>> cir,
                                        SimpleRegistry<DimensionOptions> simpleRegistry) {

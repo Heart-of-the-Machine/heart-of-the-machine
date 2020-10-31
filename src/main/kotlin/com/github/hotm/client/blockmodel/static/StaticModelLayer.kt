@@ -53,7 +53,7 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
             east: Sprite,
             eastTintIndex: Int
         ): StaticModelLayer {
-            val renderer = RendererAccess.INSTANCE.renderer
+            val renderer = RendererAccess.INSTANCE.renderer!!
             val meshBuilder = renderer.meshBuilder()
             val emitter = meshBuilder.emitter
 

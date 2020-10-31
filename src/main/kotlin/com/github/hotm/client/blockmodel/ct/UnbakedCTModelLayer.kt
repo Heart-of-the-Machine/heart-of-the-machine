@@ -111,6 +111,6 @@ class UnbakedCTModelLayer(
     }
 
     private fun spriteId(identifier: Identifier): SpriteIdentifier {
-        return SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, identifier)
+        return SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, identifier)
     }
 }

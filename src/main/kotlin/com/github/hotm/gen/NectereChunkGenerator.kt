@@ -602,7 +602,7 @@ class NectereChunkGenerator private constructor(
 //        if (!this.field_24774.method_28562()) {
         val i = region.centerChunkX
         val j = region.centerChunkZ
-        val biome = region.getBiome(ChunkPos(i, j).centerBlockPos)
+        val biome = region.getBiome(ChunkPos(i, j).startPos)
         val chunkRandom = ChunkRandom()
         chunkRandom.setPopulationSeed(region.seed, i shl 4, j shl 4)
         SpawnHelper.populateEntities(region, biome, i, j, chunkRandom)
