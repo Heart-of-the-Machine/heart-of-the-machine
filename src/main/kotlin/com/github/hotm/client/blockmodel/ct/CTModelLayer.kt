@@ -35,14 +35,6 @@ class CTModelLayer(
         }
     }
 
-    companion object {
-        private val EXTRA_FLAGS_PER_AXIS = arrayOf(
-            0,
-            MutableQuadView.BAKE_FLIP_V,
-            0,
-        )
-    }
-
     private val depthClamped = clamp(depth, 0.0f, 0.5f)
     private val depthMaxed = depth.coerceAtMost(0.5f)
 
@@ -51,12 +43,6 @@ class CTModelLayer(
         QuadPos(0.5f, 0.0f + depthClamped, 1.0f - depthClamped, 0.5f, depthMaxed),
         QuadPos(0.0f + depthClamped, 0.5f, 0.5f, 1.0f - depthClamped, depthMaxed),
         QuadPos(0.5f, 0.5f, 1.0f - depthClamped, 1.0f - depthClamped, depthMaxed)
-    )
-
-    private val cornersPerAxis = arrayOf(
-        corners,
-        corners,
-        arrayOf(corners[1], corners[0], corners[3], corners[2]),
     )
 
     private val doCorners = sprites.size > 4
@@ -71,15 +57,14 @@ class CTModelLayer(
         val emitter = context.emitter
 
         for (normal in Direction.values()) {
-            val axis = normal.axis.ordinal
             val indices = getIndices(blockView, pos, normal)
 
             for (corner in 0 until 4) {
-                cornersPerAxis[axis][corner].emit(emitter, normal)
+                corners[corner].emit(emitter, normal)
                 emitter.spriteBake(
                     0,
                     sprites[(indices shr (corner * 3)) and 0x7],
-                    MutableQuadView.BAKE_LOCK_UV or EXTRA_FLAGS_PER_AXIS[axis]
+                    MutableQuadView.BAKE_LOCK_UV
                 )
                 emitter.colorIndex(tintIndex)
                 emitter.spriteColor(0, -1, -1, -1, -1)
