@@ -2,9 +2,13 @@ package com.github.hotm.mixinapi;
 
 import com.github.hotm.HotMLog;
 import com.github.hotm.gen.HotMDimensions;
-import com.github.hotm.mixin.ChunkGeneratorSettingsInvoker;
-import com.github.hotm.mixin.DimensionTypeInvoker;
-import com.github.hotm.mixin.MultiNoiseBiomeSourceInvoker;
+import com.github.hotm.mixin.*;
+import com.google.common.collect.ImmutableMap;
+import com.mojang.datafixers.DSL;
+import com.mojang.datafixers.schemas.Schema;
+import com.mojang.datafixers.types.Type;
+import com.mojang.datafixers.types.templates.TaggedChoice;
+import com.mojang.datafixers.types.templates.TypeTemplate;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.BlockState;
@@ -27,8 +31,8 @@ import net.minecraft.world.gen.chunk.GenerationShapeConfig;
 import net.minecraft.world.gen.chunk.StructuresConfig;
 
 import javax.annotation.Nullable;
-import java.io.File;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -39,6 +43,7 @@ public class DimensionAdditions {
     private static final Map<RegistryKey<DimensionOptions>, DimensionAddition> DIMENSION_KEYS = new HashMap<>();
     private static final Map<RegistryKey<World>, EntityPlacer> DEFAULT_PLACERS = new HashMap<>();
     private static final ThreadLocal<EntityPlacer> CURRENT_PLACER = new ThreadLocal<>();
+    private static boolean schemaInjected = false;
 
     public static ChunkGeneratorSettings createChunkGeneratorSettings(StructuresConfig structuresConfig,
                                                                       GenerationShapeConfig generationShapeConfig,
@@ -163,5 +168,65 @@ public class DimensionAdditions {
         }
 
         return placer.placeEntity(entity, destination);
+    }
+
+    private static boolean replaceTypeTemplate(TypeTemplate base, String name,
+                                               Function<TypeTemplate, TypeTemplate> replacer) {
+        if (base instanceof ProductAccessor) {
+            if (replaceTypeTemplate(((ProductAccessor) base).getF(), name, replacer)) {
+                return true;
+            }
+            return replaceTypeTemplate(((ProductAccessor) base).getG(), name, replacer);
+        } else if (base instanceof TagAccessor) {
+            if (Objects.equals(((TagAccessor) base).getName(), name)) {
+                ((TagAccessor) base).setElement(replacer.apply(((TagAccessor) base).getElement()));
+                return true;
+            }
+            return replaceTypeTemplate(((TagAccessor) base).getElement(), name, replacer);
+        } else if (base instanceof CompoundListAccessor) {
+            return replaceTypeTemplate(((CompoundListAccessor) base).getElement(), name, replacer);
+        }
+
+        return false;
+    }
+
+    public static void injectChunkGeneratorSchema(TypeTemplate tt, Schema schema) {
+        if (!replaceTypeTemplate(tt, "generator", generator -> {
+            if (generator instanceof TaggedChoiceAccessor) {
+                TaggedChoiceAccessor<String> tc = (TaggedChoiceAccessor<String>) generator;
+
+                ImmutableMap.Builder<String, TypeTemplate> builder =
+                        ImmutableMap.<String, TypeTemplate>builder().putAll(tc.getTemplates());
+
+                HotMDimensions.INSTANCE.injectChunkGeneratorSchema(schema, builder);
+
+                schemaInjected = true;
+
+                return new TaggedChoice<>(tc.getName(), tc.getKeyType(), builder.build());
+            } else {
+                HotMLog.INSTANCE.getLog().error("Unable to find \"generator\" TypeTemplate of correct type (type: " +
+                        generator.getClass() +
+                        "). This means that worlds will not migrate between minecraft versions correctly!");
+            }
+            return generator;
+        })) {
+            HotMLog.INSTANCE.getLog()
+                    .error("Unable to find \"generator\" TypeTemplate. This means that worlds will not migrate between minecraft versions correctly!");
+        }
+    }
+
+    public static TaggedChoice.TaggedChoiceType<String> injectChunkGeneratorTypes(
+            TaggedChoice.TaggedChoiceType<String> original, Schema schema) {
+        if (!schemaInjected) {
+            HotMLog.INSTANCE.getLog().error("HotM schema was not injected, skipping data-fixer type injection...");
+            return original;
+        }
+
+        ImmutableMap.Builder<String, Type<?>> builder =
+                ImmutableMap.<String, Type<?>>builder().putAll(original.types());
+
+        HotMDimensions.INSTANCE.injectChunkGeneratorTypes(schema, builder);
+
+        return new TaggedChoice.TaggedChoiceType<>("type", DSL.string(), builder.build());
     }
 }

@@ -19,6 +19,9 @@
 
   "environment": "*",
   "entrypoints": {
+    "preLaunch": [
+      "com.github.hotm.prelaunch.HeartOfTheMachineModPreLaunch"
+    ],
     "main": [
       "com.github.hotm.HeartOfTheMachineModKt::init"
     ],

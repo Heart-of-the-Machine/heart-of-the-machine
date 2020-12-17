@@ -10,16 +10,22 @@
     "GenerationSettingsBuilderMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
+    "MissingDimensionFixMixin",
+    "Schema2551Mixin",
     "StructuresConfigMixin",
     "ChunkGeneratorSettingsInvoker",
     "DimensionTypeInvoker",
     "MultiNoiseBiomeSourceInvoker",
     "StairsBlockInvoker",
     "BuiltinBiomesAccessor",
+    "CompoundListAccessor",
     "DecoratorContextAccessor",
     "EntityAccessor",
+    "ProductAccessor",
     "StructureFeatureAccessor",
-    "StructurePieceAccessor"
+    "StructurePieceAccessor",
+    "TagAccessor",
+    "TaggedChoiceAccessor"
   ],
   "client": [
   ],
