@@ -3,13 +3,15 @@ package com.github.hotm.mixinapi;
 import com.github.hotm.HotMLog;
 import com.github.hotm.gen.HotMDimensions;
 import com.github.hotm.mixin.*;
-import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.schemas.Schema;
-import com.mojang.datafixers.types.Type;
+import com.mojang.datafixers.types.templates.CompoundList;
+import com.mojang.datafixers.types.templates.Tag;
 import com.mojang.datafixers.types.templates.TaggedChoice;
 import com.mojang.datafixers.types.templates.TypeTemplate;
+import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -192,17 +194,10 @@ public class DimensionAdditions {
 
     public static void injectChunkGeneratorSchema(TypeTemplate tt, Schema schema) {
         if (!replaceTypeTemplate(tt, "generator", generator -> {
-            if (generator instanceof TaggedChoiceAccessor) {
-                TaggedChoiceAccessor<String> tc = (TaggedChoiceAccessor<String>) generator;
-
-                ImmutableMap.Builder<String, TypeTemplate> builder =
-                        ImmutableMap.<String, TypeTemplate>builder().putAll(tc.getTemplates());
-
-                HotMDimensions.INSTANCE.injectChunkGeneratorSchema(schema, builder);
-
+            if (generator instanceof TaggedChoice) {
                 schemaInjected = true;
 
-                return new TaggedChoice<>(tc.getName(), tc.getKeyType(), builder.build());
+                return DSL.or(generator, DSL.remainder());
             } else {
                 HotMLog.INSTANCE.getLog().error("Unable to find \"generator\" TypeTemplate of correct type (type: " +
                         generator.getClass() +
@@ -215,18 +210,20 @@ public class DimensionAdditions {
         }
     }
 
-    public static TaggedChoice.TaggedChoiceType<String> injectChunkGeneratorTypes(
-            TaggedChoice.TaggedChoiceType<String> original, Schema schema) {
+    public static CompoundList.CompoundListType<String, ?> injectChunkGeneratorTypes(
+            CompoundList.CompoundListType<String, ?> original, Schema schema) {
         if (!schemaInjected) {
             HotMLog.INSTANCE.getLog().error("HotM schema was not injected, skipping data-fixer type injection...");
             return original;
         }
 
-        ImmutableMap.Builder<String, Type<?>> builder =
-                ImmutableMap.<String, Type<?>>builder().putAll(original.types());
+        TaggedChoice.TaggedChoiceType<String> field =
+                (TaggedChoice.TaggedChoiceType<String>) original.getElement().findFieldType("generator");
+        Tag.TagType<Either<Pair<String, ?>, Dynamic<?>>> newField =
+                DSL.field("generator", DSL.or(field, DSL.remainderType()));
+        CompoundList.CompoundListType<String, ?> adjusted =
+                DSL.compoundList(original.getKey(), DSL.and(newField, DSL.remainderType()));
 
-        HotMDimensions.INSTANCE.injectChunkGeneratorTypes(schema, builder);
-
-        return new TaggedChoice.TaggedChoiceType<>("type", DSL.string(), builder.build());
+        return adjusted;
     }
 }

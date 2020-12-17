@@ -13,14 +13,8 @@ import com.github.hotm.mixin.StructureFeatureAccessor
 import com.github.hotm.mixinapi.DimensionAdditions
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.ImmutableList
-import com.google.common.collect.ImmutableMap
-import com.mojang.datafixers.DSL
-import com.mojang.datafixers.schemas.Schema
-import com.mojang.datafixers.types.Type
-import com.mojang.datafixers.types.templates.TypeTemplate
 import com.mojang.datafixers.util.Pair
 import net.minecraft.block.Blocks
-import net.minecraft.datafixer.TypeReferences
 import net.minecraft.entity.Entity
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
@@ -193,95 +187,6 @@ object HotMDimensions {
             seed,
             { generatorSettings.getOrThrow(NECTERE_CHUNK_GENERATOR_SETTINGS_KEY) },
             biomes
-        )
-    }
-
-    /**
-     * Adds the Nectere chunk generator schema to the Schema2551's `TypeReferences.CHUNK_GENERATOR_SETTINGS` type registration.
-     */
-    fun injectChunkGeneratorSchema(schema: Schema, builder: ImmutableMap.Builder<String, TypeTemplate>) {
-        builder.put(
-            "hotm:nectere",
-            DSL.optionalFields(
-                "biome_source", DSL.taggedChoiceLazy(
-                    "type", DSL.string(),
-                    ImmutableMap.of("minecraft:fixed",
-                        Supplier { DSL.fields("biome", TypeReferences.BIOME.`in`(schema)) },
-                        "minecraft:multi_noise",
-                        Supplier { DSL.list(DSL.fields("biome", TypeReferences.BIOME.`in`(schema))) },
-                        "minecraft:checkerboard",
-                        Supplier { DSL.fields("biomes", DSL.list(TypeReferences.BIOME.`in`(schema))) },
-                        "minecraft:vanilla_layered", Supplier { DSL.remainder() }, "minecraft:the_end",
-                        Supplier { DSL.remainder() })
-                ), "settings", DSL.or(
-                    DSL.constType(DSL.string()),
-                    DSL.optionalFields(
-                        "default_block", TypeReferences.BLOCK_NAME.`in`(schema),
-                        "default_fluid", TypeReferences.BLOCK_NAME.`in`(schema)
-                    )
-                )
-            )
-        )
-    }
-
-    /**
-     * Adds the Nectere chunk generator schema to the MissingDimensionFix's set of chunk generator schemas.
-     */
-    fun injectChunkGeneratorTypes(schema: Schema, builder: ImmutableMap.Builder<String, Type<*>>) {
-        builder.put(
-            "hotm:nectere",
-            DSL.and(
-                DSL.optional(
-                    DSL.field(
-                        "biome_source",
-                        DSL.taggedChoiceType(
-                            "type", DSL.string(), ImmutableMap.of(
-                                "minecraft:fixed", DSL.and(
-                                    DSL.field("biome", schema.getType(TypeReferences.BIOME)),
-                                    DSL.remainderType()
-                                ),
-                                "minecraft:multi_noise", DSL.list(
-                                    DSL.and(
-                                        DSL.field("biome", schema.getType(TypeReferences.BIOME)),
-                                        DSL.remainderType()
-                                    )
-                                ),
-                                "minecraft:checkerboard", DSL.and(
-                                    DSL.field(
-                                        "biomes",
-                                        DSL.list(schema.getType(TypeReferences.BIOME))
-                                    ),
-                                    DSL.remainderType()
-                                ),
-                                "minecraft:vanilla_layered", DSL.remainderType(),
-                                "minecraft:the_end", DSL.remainderType()
-                            )
-                        )
-                    )
-                ),
-                DSL.optional(
-                    DSL.field(
-                        "settings",
-                        DSL.or(
-                            DSL.string(), DSL.and(
-                                DSL.optional(
-                                    DSL.field(
-                                        "default_block",
-                                        schema.getType(TypeReferences.BLOCK_NAME)
-                                    )
-                                ),
-                                DSL.optional(
-                                    DSL.field(
-                                        "default_fluid",
-                                        schema.getType(TypeReferences.BLOCK_NAME)
-                                    )
-                                ),
-                                DSL.remainderType()
-                            )
-                        )
-                    )
-                ), DSL.remainderType()
-            )
         )
     }
 
