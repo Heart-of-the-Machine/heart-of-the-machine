@@ -7,9 +7,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(CompoundList.class)
 public interface CompoundListAccessor {
-    @Accessor
+    @Accessor(remap = false)
     TypeTemplate getKey();
 
-    @Accessor
+    @Accessor(remap = false)
     TypeTemplate getElement();
 }

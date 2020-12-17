@@ -7,9 +7,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Product.class)
 public interface ProductAccessor {
-    @Accessor
+    @Accessor(remap = false)
     TypeTemplate getF();
 
-    @Accessor
+    @Accessor(remap = false)
     TypeTemplate getG();
 }

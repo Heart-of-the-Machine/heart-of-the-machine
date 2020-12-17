@@ -10,12 +10,12 @@ import java.util.Map;
 
 @Mixin(TaggedChoice.class)
 public interface TaggedChoiceAccessor<K> {
-    @Accessor
+    @Accessor(remap = false)
     String getName();
 
-    @Accessor
+    @Accessor(remap = false)
     Type<K> getKeyType();
 
-    @Accessor
+    @Accessor(remap = false)
     Map<K, TypeTemplate> getTemplates();
 }

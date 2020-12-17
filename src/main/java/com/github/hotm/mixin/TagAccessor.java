@@ -7,12 +7,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Tag.class)
 public interface TagAccessor {
-    @Accessor
+    @Accessor(remap = false)
     String getName();
 
-    @Accessor
+    @Accessor(remap = false)
     TypeTemplate getElement();
 
-    @Accessor
+    @Accessor(remap = false)
     void setElement(TypeTemplate element);
 }

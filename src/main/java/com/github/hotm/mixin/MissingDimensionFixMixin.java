@@ -15,10 +15,8 @@ public abstract class MissingDimensionFixMixin extends DataFix {
         super(outputSchema, changesType);
     }
 
-    @ModifyVariable(method = "makeRule", name = "compoundListType", at = @At(value = "INVOKE",
+    @ModifyVariable(method = "makeRule", at = @At(value = "INVOKE_ASSIGN",
             target = "Lcom/mojang/datafixers/DSL;compoundList(Lcom/mojang/datafixers/types/Type;Lcom/mojang/datafixers/types/Type;)Lcom/mojang/datafixers/types/templates/CompoundList$CompoundListType;",
-            shift = At.Shift.BY,
-            by = 2,
             remap = false))
     private CompoundList.CompoundListType<String, ?> onMakeRuleEditCompoundListType(
             CompoundList.CompoundListType<String, ?> compoundListType) {
