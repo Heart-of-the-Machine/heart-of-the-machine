@@ -1,0 +1,33 @@
+name: release
+
+on:
+  push:
+    tags:
+      - '*.*.*-*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: setup jdk 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8 # Use the minimum supported java version for releases
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+      - name: build
+        run: ./gradlew build
+      - name: gh release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/libs/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: curseforge release
+        run: ./gradlew curseforge
+        env:
+          CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
