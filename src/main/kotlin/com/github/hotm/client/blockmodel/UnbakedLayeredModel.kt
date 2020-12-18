@@ -46,7 +46,7 @@ class UnbakedLayeredModel(
     ): Collection<SpriteIdentifier> {
         return (layers.flatMap {
             it.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences)
-        } + SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, particle)).toSet()
+        } + SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, particle)).toSet()
     }
 
     override fun bake(
@@ -64,7 +64,7 @@ class UnbakedLayeredModel(
 
         return LayeredModel(
             transformationModel.transformations,
-            textureGetter.apply(SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, particle)),
+            textureGetter.apply(SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, particle)),
             layers.map { it.bake(loader, textureGetter, rotationContainer, modelId) }.toTypedArray()
         )
     }

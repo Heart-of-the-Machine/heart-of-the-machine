@@ -422,6 +422,8 @@ object HotMDimensions {
                         currentPos.z.toDouble() / nectereBiome.coordinateMultiplier
                     )
 
+                    // make sure the chunk is loaded
+                    nectereWorld.getBlockState(newPos)
                     if (nectereBiome.biome == nectereWorld.method_31081(newPos).orElse(null)) {
                         Stream.of(newPos)
                     } else {

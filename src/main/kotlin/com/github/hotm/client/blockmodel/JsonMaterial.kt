@@ -55,7 +55,7 @@ data class JsonMaterial(
     }
 
     fun toRenderMaterial(): RenderMaterial {
-        return RendererAccess.INSTANCE.renderer.materialFinder()
+        return RendererAccess.INSTANCE.renderer!!.materialFinder()
             .blendMode(0, blendMode)
             .disableAo(0, !enableAmbientOcclusion)
             .disableColorIndex(0, !enableColorIndex)

@@ -107,7 +107,7 @@ object HotMBiomes {
 
         val biome = Biome.Builder()
         biome.precipitation(Biome.Precipitation.RAIN)
-        biome.category(Biome.Category.JUNGLE)
+        biome.category(Biome.Category.NONE)
         biome.depth(0.45F).scale(0.3F)
         biome.temperature(0.5f).downfall(0.5f)
         biome.effects(effects.build())
@@ -136,7 +136,7 @@ object HotMBiomes {
 
         val biome = Biome.Builder()
         biome.precipitation(Biome.Precipitation.NONE)
-        biome.category(Biome.Category.PLAINS)
+        biome.category(Biome.Category.NONE)
         biome.depth(0.125F).scale(0.05F)
         biome.temperature(0.8F).downfall(0.0F)
         biome.effects(effects.build())

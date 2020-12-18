@@ -17,7 +17,15 @@ minecraft {
 
 repositories {
     maven { url = "http://maven.fabricmc.net/" }
-    // maven { name = "BuildCraft"; url = "https://mod-buildcraft.com/maven" }
+    maven { name = "BuildCraft"; url = "https://mod-buildcraft.com/maven" }
+    maven {
+        name "Modmaven"
+        url "https://modmaven.dev/"
+        // For Gradle 5.1 and above, limit it to just AE2
+        content {
+            includeGroup 'appeng'
+        }
+    }
 }
 
 dependencies {
@@ -36,8 +44,10 @@ dependencies {
     modImplementation "com.terraformersmc:shapes:${shapes_version}"
     include "com.terraformersmc:shapes:${shapes_version}"
 
-    // modRuntime "io.github.prospector:modmenu:1.14.6+build.31"
+    // mod compatibility checks
+    modRuntime "io.github.prospector:modmenu:1.14.6+build.31"
     // modRuntime "alexiil.mc.mod:simplepipes-all:0.4.0"
+    modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.12"
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
