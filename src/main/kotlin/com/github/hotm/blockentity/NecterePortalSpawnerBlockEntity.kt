@@ -2,7 +2,7 @@ package com.github.hotm.blockentity
 
 import com.github.hotm.HotMBlockEntities
 import com.github.hotm.HotMBlocks
-import com.github.hotm.gen.feature.NecterePortalGen
+import com.github.hotm.world.gen.feature.NecterePortalGen
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.entity.BlockEntity

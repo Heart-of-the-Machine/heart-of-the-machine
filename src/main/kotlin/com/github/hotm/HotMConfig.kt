@@ -1,9 +1,7 @@
 package com.github.hotm
 
-import com.github.hotm.gen.HotMBiomes
+import com.github.hotm.world.gen.HotMBiomes
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.util.registry.DynamicRegistryManager
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor

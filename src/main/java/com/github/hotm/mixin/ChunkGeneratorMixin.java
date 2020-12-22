@@ -1,7 +1,7 @@
 package com.github.hotm.mixin;
 
-import com.github.hotm.gen.HotMDimensions;
-import com.github.hotm.gen.feature.HotMStructureFeatures;
+import com.github.hotm.world.HotMDimensions;
+import com.github.hotm.world.gen.feature.HotMStructureFeatures;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.chunk.ChunkGenerator;

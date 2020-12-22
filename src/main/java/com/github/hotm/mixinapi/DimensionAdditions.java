@@ -1,7 +1,7 @@
 package com.github.hotm.mixinapi;
 
 import com.github.hotm.HotMLog;
-import com.github.hotm.gen.HotMDimensions;
+import com.github.hotm.world.HotMDimensions;
 import com.github.hotm.mixin.ChunkGeneratorSettingsInvoker;
 import com.github.hotm.mixin.DimensionTypeInvoker;
 import com.github.hotm.mixin.MultiNoiseBiomeSourceInvoker;
@@ -27,7 +27,6 @@ import net.minecraft.world.gen.chunk.GenerationShapeConfig;
 import net.minecraft.world.gen.chunk.StructuresConfig;
 
 import javax.annotation.Nullable;
-import java.io.File;
 import java.util.*;
 import java.util.function.Supplier;
 

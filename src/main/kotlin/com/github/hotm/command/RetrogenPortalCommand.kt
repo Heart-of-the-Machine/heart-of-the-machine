@@ -1,7 +1,7 @@
 package com.github.hotm.command
 
 import com.github.hotm.HotMConstants
-import com.github.hotm.gen.HotMDimensions
+import com.github.hotm.world.HotMDimensions
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType

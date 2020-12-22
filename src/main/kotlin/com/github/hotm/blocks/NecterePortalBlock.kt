@@ -1,7 +1,7 @@
 package com.github.hotm.blocks
 
 import com.github.hotm.HotMBlocks
-import com.github.hotm.gen.HotMDimensions
+import com.github.hotm.world.HotMDimensions
 import com.github.hotm.mixin.EntityAccessor
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState

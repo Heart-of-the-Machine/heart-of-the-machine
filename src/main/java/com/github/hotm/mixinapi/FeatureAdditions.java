@@ -1,7 +1,7 @@
 package com.github.hotm.mixinapi;
 
-import com.github.hotm.gen.feature.HotMConfiguredFeatures;
-import com.github.hotm.gen.feature.HotMStructureFeatures;
+import com.github.hotm.world.gen.feature.HotMConfiguredFeatures;
+import com.github.hotm.world.gen.feature.HotMStructureFeatures;
 import com.github.hotm.mixin.StructureFeatureAccessor;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.registry.Registry;

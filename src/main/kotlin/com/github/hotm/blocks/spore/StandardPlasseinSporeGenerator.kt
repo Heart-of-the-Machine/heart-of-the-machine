@@ -1,6 +1,6 @@
 package com.github.hotm.blocks.spore
 
-import com.github.hotm.gen.feature.HotMConfiguredFeatures
+import com.github.hotm.world.gen.feature.HotMConfiguredFeatures
 import net.minecraft.world.gen.feature.ConfiguredFeature
 import java.util.*
 

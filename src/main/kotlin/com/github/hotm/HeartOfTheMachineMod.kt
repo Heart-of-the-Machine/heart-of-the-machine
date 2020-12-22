@@ -1,8 +1,8 @@
 package com.github.hotm
 
-import com.github.hotm.gen.HotMBiomes
-import com.github.hotm.gen.HotMDimensions
-import com.github.hotm.gen.feature.HotMFeatures
+import com.github.hotm.world.gen.HotMBiomes
+import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.gen.feature.HotMFeatures
 
 /**
  * Initializer for Heart of the Machine mod.
