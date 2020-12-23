@@ -7,6 +7,11 @@ object HotMConstants {
     const val MOD_ID = "hotm"
 
     /**
+     * Data version used in DataFixers.
+     */
+    const val DATA_VERSION = 99
+
+    /**
      * Creates a mod-specific identifier for the given path.
      */
     fun identifier(path: String): Identifier {

@@ -57,6 +57,7 @@
   "command.hotm.retrogen_nectere_portal.wrong_world": "Nectere portal retro-generation cannot be executed in the Nectere dimension.",
   "command.hotm.retrogen_nectere_portal.found": "Found an existing Nectere portal at %s (%s blocks away)",
   "command.hotm.retrogen_nectere_portal.generated": "Generated a new Nectere portal at %s (%s blocks away)",
+  "command.hotm.base_aura": "Base Aura: %s",
   "item.hotm.cyan_crystal_shard": "Cyan Crystal Shard",
   "item.hotm.magenta_crystal_shard": "Magenta Crystal Shard",
   "item.hotm.plassein_fuel_chunk": "Plassein Fuel Chunk",

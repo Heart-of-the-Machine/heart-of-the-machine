@@ -2,6 +2,7 @@ package com.github.hotm
 
 import com.github.hotm.world.gen.HotMBiomes
 import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.auranet.AuraNetNodes
 import com.github.hotm.world.gen.feature.HotMFeatures
 
 /**
@@ -15,6 +16,7 @@ fun init() {
     HotMBlockEntities.register()
     HotMBiomes.register()
     HotMDimensions.register()
+    AuraNetNodes.register()
     HotMFeatures.register()
     HotMCommands.register()
     HotMFuels.register()
