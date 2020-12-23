@@ -74,7 +74,7 @@ class AuraNetData(
     }
 
     fun remove(pos: BlockPos) {
-        val container = nodesByPos[ChunkSectionPos.packLocal(pos)]
+        val container = nodesByPos.remove(ChunkSectionPos.packLocal(pos))
         if (container == null) {
             LOGGER.error("Aura Net Node data mismatch: never registered at $pos")
         } else {

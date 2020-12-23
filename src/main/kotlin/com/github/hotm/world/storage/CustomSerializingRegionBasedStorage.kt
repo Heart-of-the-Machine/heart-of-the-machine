@@ -148,13 +148,8 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
                 val dataResult: DataResult<T> =
                     (codecFactory(Runnable { onUpdate(l) })).encodeStart(dynamicOps, optional.get())
                 val string = i.toString()
-                val var10001 = LOGGER
-                var10001.javaClass
-                dataResult.resultOrPartial { message: String? ->
-                    var10001.error(
-                        message
-                    )
-                }.ifPresent { obj: T -> map[dynamicOps.createString(string)] = obj }
+                dataResult.resultOrPartial(LOGGER::error)
+                    .ifPresent { obj: T -> map[dynamicOps.createString(string)] = obj }
             }
         }
         return Dynamic(
