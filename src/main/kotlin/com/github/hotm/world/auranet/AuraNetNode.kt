@@ -1,21 +1,22 @@
 package com.github.hotm.world.auranet
 
 import com.github.hotm.HotMRegistries
+import com.github.hotm.util.DimBlockPos
 import com.mojang.serialization.Codec
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
+import java.util.function.Function
 
 interface AuraNetNode {
     companion object {
-        fun createCodec(updateListener: Runnable): Codec<AuraNetNode> {
-            return HotMRegistries.AURA_NET_NODE.dispatch(AuraNetNode::codec) { it(updateListener) }
-        }
+        val CODEC: Codec<AuraNetNode> = HotMRegistries.AURA_NET_NODE.dispatch(AuraNetNode::codec, Function.identity())
     }
 
-    val codec: (Runnable) -> Codec<out AuraNetNode>
-
-    fun getPos(): BlockPos
+    val codec: Codec<out AuraNetNode>
 
     fun storageEquals(auraNetNode: AuraNetNode): Boolean
 
-    fun recalculate()
+    fun recalculate(world: ServerWorld, pos: BlockPos): AuraNetNode
+
+    fun dependenants(world: ServerWorld, pos: BlockPos): Collection<DimBlockPos>
 }

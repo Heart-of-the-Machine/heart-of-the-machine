@@ -22,7 +22,7 @@ object HotMRegistries {
         RegistryKey.ofRegistry<FeatureSegmentType<Unit, *>>(UNIT_FEATURE_SEGMENT_TYPE_IDENTIFIER)
     val CARDINAL_FEATURE_SEGMENT_TYPE_KEY =
         RegistryKey.ofRegistry<FeatureSegmentType<CardinalDirection, *>>(CARDINAL_FEATURE_SEGMENT_TYPE_IDENTIFIER)
-    val AURA_NET_NODE_KEY = RegistryKey.ofRegistry<(Runnable) -> Codec<out AuraNetNode>>(AURA_NET_NODE_IDENTIFIER)
+    val AURA_NET_NODE_KEY = RegistryKey.ofRegistry<Codec<out AuraNetNode>>(AURA_NET_NODE_IDENTIFIER)
 
     // registries
 

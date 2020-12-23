@@ -2,8 +2,10 @@ package com.github.hotm.world.auranet
 
 import com.github.hotm.world.storage.CustomSerializingRegionBasedStorage
 import com.mojang.datafixers.DataFixer
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
 import java.io.File
+import java.util.*
 
 class AuraNetStorage(file: File, dataFixer: DataFixer, dsync: Boolean) :
     CustomSerializingRegionBasedStorage<AuraNetData>(
@@ -22,15 +24,15 @@ class AuraNetStorage(file: File, dataFixer: DataFixer, dsync: Boolean) :
         getOrCreate(pos.asLong()).baseValue = baseAura
     }
 
-//    fun add(pos: BlockPos, node: AuraNetNode) {
-//        getOrCreate(ChunkSectionPos.from(pos).asLong()).add(pos, node)
-//    }
-//
-//    operator fun get(pos: BlockPos): Optional<AuraNetNode> {
-//        return get(ChunkSectionPos.from(pos).asLong()).flatMap { it[pos] }
-//    }
-//
-//    fun remove(pos: BlockPos) {
-//        getOrCreate(ChunkSectionPos.from(pos).asLong()).remove(pos)
-//    }
+    fun set(pos: BlockPos, node: AuraNetNode) {
+        getOrCreate(ChunkSectionPos.from(pos).asLong()).set(pos, node)
+    }
+
+    operator fun get(pos: BlockPos): Optional<AuraNetNode> {
+        return get(ChunkSectionPos.from(pos).asLong()).flatMap { it[pos] }
+    }
+
+    fun remove(pos: BlockPos) {
+        getOrCreate(ChunkSectionPos.from(pos).asLong()).remove(pos)
+    }
 }
