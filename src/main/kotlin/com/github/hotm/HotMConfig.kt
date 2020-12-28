@@ -66,7 +66,9 @@ class HotMConfig {
             CONFIG = config
         }
 
-        fun init() {}
+        fun init() {
+            // Make sure the static initializer has been called
+        }
     }
 
     var necterePortalWorldGenBlacklistBiomes: MutableList<String>? = null
@@ -74,4 +76,8 @@ class HotMConfig {
     var forceNectereBiomeSource = false
 
     var generateMissingPortals = true
+
+    var nectereAuraBaseValue: Int = 64
+
+    var nonNectereAuraBaseValue: Int = 0
 }

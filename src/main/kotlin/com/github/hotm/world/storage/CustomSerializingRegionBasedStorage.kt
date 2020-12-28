@@ -180,7 +180,7 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
         return dynamic["DataVersion"].asInt(99)
     }
 
-    fun method_20436(chunkPos: ChunkPos) {
+    fun trySave(chunkPos: ChunkPos) {
         if (!unsavedElements.isEmpty()) {
             for (i in 0..15) {
                 val l = ChunkSectionPos.from(chunkPos, i).asLong()
