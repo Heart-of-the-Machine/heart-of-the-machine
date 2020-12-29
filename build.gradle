@@ -1,8 +1,11 @@
+import com.modrinth.minotaur.TaskModrinthUpload
+
 plugins {
     id 'fabric-loom'
     id 'maven-publish'
-    id "org.jetbrains.kotlin.jvm"
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'com.matthewprenger.cursegradle'
+    id 'com.modrinth.minotaur'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -116,8 +119,11 @@ if (System.getenv("CURSE_API_KEY") != null) {
             changelogType = 'markdown'
             changelog = file("changelogs/changelog-${project.mod_version}.md")
             releaseType = project.mod_release_type
-            addGameVersion project.minecraft_version
+            project.publish_minecraft_versions.split(",").toList().forEach {
+                addGameVersion it.trim()
+            }
             addGameVersion 'Java 8'
+            addGameVersion 'Fabric'
             mainArtifact(remapJar)
             relations {
                 requiredDependency "fabric-api"
@@ -131,6 +137,25 @@ if (System.getenv("CURSE_API_KEY") != null) {
 
     afterEvaluate {
         tasks.curseforge391897.dependsOn remapJar
+    }
+}
+
+if (System.getenv("GITHUB_TOKEN") != null) {
+    task publishModrinth(type: TaskModrinthUpload, dependsOn: remapJar) {
+        group('Upload')
+        description('Publish this mod to Modrinth')
+
+        token = System.getenv("GITHUB_TOKEN")
+        // found using https://api.modrinth.com/api/v1/mod/heart-of-the-machine
+        projectId = '7vleuAJ9'
+        versionNumber = project.mod_version
+        uploadFile = remapJar
+        releaseType = project.mod_release_type
+        changelog = file("changelogs/changelog-${project.mod_version}.md").text
+        project.publish_minecraft_versions.split(",").toList().forEach {
+            addGameVersion it.trim()
+        }
+        addLoader 'fabric'
     }
 }
 

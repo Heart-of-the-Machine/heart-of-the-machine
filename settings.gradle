@@ -10,7 +10,9 @@ pluginManagement {
 
     plugins {
         id 'fabric-loom' version loom_version
-        id "org.jetbrains.kotlin.jvm" version kotlin_version
+        id 'org.jetbrains.kotlin.jvm' version kotlin_version
+        id 'com.matthewprenger.cursegradle' version cursegradle_version
+        id 'com.modrinth.minotaur' version minotaur_version
     }
 
 }
