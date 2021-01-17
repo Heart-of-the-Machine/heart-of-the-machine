@@ -1,7 +1,6 @@
 package com.github.hotm.world.auranet
 
-import com.github.hotm.util.DimBlockPos
-import com.google.common.collect.ImmutableList
+import com.github.hotm.HotMBlocks
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 
@@ -14,9 +13,8 @@ data class BasicAuraNode(val value: Int) : AuraNode {
             }
     }
 
-    override val type = AuraNodes.BASIC_TYPE
-
-    override val dependenants: Collection<DimBlockPos> = ImmutableList.of()
+    override val codec = CODEC
+    override val block = HotMBlocks.BASIC_AURA_NODE
 
     override fun storageEquals(auraNode: AuraNode): Boolean {
         return this == auraNode
