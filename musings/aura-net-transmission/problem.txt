@@ -8,3 +8,15 @@ Questions:
  * Aura "beams" should render in the world. How do we do that?
  * How do we track updates; make sure no node thinks its transmitting to a node that doesn't exist?
  * How are "beams" synced to the client?
+
+Details:
+ * What happens when a transmitter node is removed as an event (like from its block being broken)?
+ * What happens when a transmitter node is removed during chunk scanning?
+ * What happens when a transmitter node is placed as an event?
+ * What happens when a transmitter node is placed during chunk scanning?
+ * What happens when a node is placed in the path of a beam?
+ * What happens when a child node is removed as an event?
+ * What happens when a child node is removed during chunk scanning?
+ * Can a child node be added during chunk scanning?
+ * How are child nodes connected?
+ * What happens when a child node is connected?
