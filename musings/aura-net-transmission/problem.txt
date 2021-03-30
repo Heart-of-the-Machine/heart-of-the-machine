@@ -10,6 +10,7 @@ Questions:
  * How are "beams" synced to the client?
 
 Details:
+ * What happens when a transmitter node's transmitted aura value changes?
  * What happens when a transmitter node is removed as an event (like from its block being broken)?
  * What happens when a transmitter node is removed during chunk scanning?
  * What happens when a transmitter node is placed as an event?
@@ -20,3 +21,7 @@ Details:
  * Can a child node be added during chunk scanning?
  * How are child nodes connected?
  * What happens when a child node is connected?
+ * Are looping parent-child connections a problem?
+ * How are looping parent-child connections detected?
+ * What happens when a looping parent-child connection is detected?
+ * Are there any measures to prevent looping parent-child connections?
