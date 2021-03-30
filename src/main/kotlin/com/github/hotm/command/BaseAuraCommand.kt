@@ -31,7 +31,7 @@ object BaseAuraCommand {
 
     private fun executeGet(context: CommandContext<ServerCommandSource>): Int {
         val sourceWorld = context.source.world
-        val storage = StorageUtils.getAuraNetStorage(sourceWorld)
+        val storage = StorageUtils.getServerAuraNetStorage(sourceWorld)
 
         val value = storage.getBaseAura(ChunkSectionPos.from(BlockPos(context.source.position)))
         context.source.sendFeedback(HotMConstants.commandText(COMMAND_NAME, value), false)
@@ -41,7 +41,7 @@ object BaseAuraCommand {
 
     private fun executeSet(context: CommandContext<ServerCommandSource>): Int {
         val sourceWorld = context.source.world
-        val storage = StorageUtils.getAuraNetStorage(sourceWorld)
+        val storage = StorageUtils.getServerAuraNetStorage(sourceWorld)
         val value = IntegerArgumentType.getInteger(context, "value")
 
         storage.setBaseAura(ChunkSectionPos.from(BlockPos(context.source.position)), value)

@@ -2,6 +2,7 @@ package com.github.hotm
 
 import com.github.hotm.util.CardinalDirection
 import com.github.hotm.world.auranet.AuraNode
+import com.github.hotm.world.auranet.AuraNodeType
 import com.github.hotm.world.gen.feature.segment.FeatureSegmentType
 import com.mojang.serialization.Codec
 import com.mojang.serialization.Lifecycle
@@ -22,7 +23,7 @@ object HotMRegistries {
         RegistryKey.ofRegistry<FeatureSegmentType<Unit, *>>(UNIT_FEATURE_SEGMENT_TYPE_IDENTIFIER)
     val CARDINAL_FEATURE_SEGMENT_TYPE_KEY =
         RegistryKey.ofRegistry<FeatureSegmentType<CardinalDirection, *>>(CARDINAL_FEATURE_SEGMENT_TYPE_IDENTIFIER)
-    val AURA_NODE_TYPE_KEY = RegistryKey.ofRegistry<Codec<out AuraNode>>(AURA_NODE_TYPE_IDENTIFIER)
+    val AURA_NODE_TYPE_KEY = RegistryKey.ofRegistry<AuraNodeType<out AuraNode>>(AURA_NODE_TYPE_IDENTIFIER)
 
     // registries
 

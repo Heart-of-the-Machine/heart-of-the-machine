@@ -28,8 +28,6 @@ import java.util.function.BooleanSupplier
 
 abstract class CustomSerializingRegionBasedStorage<R : Any>(
     directory: File,
-    private val codecFactory: (Runnable) -> Codec<R>,
-    private val factory: (Runnable) -> R,
     private val dataFixer: DataFixer,
     private val dataFixType: DataFixTypes?,
     bl: Boolean
@@ -42,7 +40,10 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
     private val loadedElements: Long2ObjectMap<Optional<R>?> = Long2ObjectOpenHashMap()
     private val unsavedElements = LongLinkedOpenHashSet()
 
-    fun tick(shouldKeepTicking: BooleanSupplier) {
+    protected abstract fun factory(updateListener: Runnable): R
+    protected abstract fun codecFactory(updateListener: Runnable): Codec<R>
+
+    open fun tick(shouldKeepTicking: BooleanSupplier) {
         while (!unsavedElements.isEmpty() && shouldKeepTicking.asBoolean) {
             val chunkPos = ChunkSectionPos.from(unsavedElements.firstLong()).toChunkPos()
             save(chunkPos)
@@ -64,8 +65,7 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
             } else {
                 loadDataAt(chunkSectionPos.toChunkPos())
                 optional = getIfLoaded(pos)
-                optional
-                    ?: throw (Util.throwOrPause(IllegalStateException()) as IllegalStateException)
+                optional ?: throw Util.throwOrPause(IllegalStateException("Error loading chunk section"))
             }
         }
     }
@@ -79,7 +79,7 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
         return if (optional.isPresent) {
             optional.get()
         } else {
-            val newObj = factory(Runnable { onUpdate(pos) })
+            val newObj = factory { onUpdate(pos) }
             loadedElements[pos] = Optional.of(newObj)
             newObj
         }
@@ -115,7 +115,7 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
             for (l in 0..15) {
                 val m = ChunkSectionPos.from(pos, l).asLong()
                 val optional = optionalDynamic[l.toString()].result().flatMap { dynamicx: Dynamic<T> ->
-                    (codecFactory(Runnable { onUpdate(m) })).parse(dynamicx).resultOrPartial(LOGGER::error)
+                    (codecFactory { onUpdate(m) }).parse(dynamicx).resultOrPartial(LOGGER::error)
                 }
                 loadedElements[m] = optional
                 optional.ifPresent {
@@ -129,7 +129,7 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
     }
 
     private fun save(chunkPos: ChunkPos) {
-        val dynamic = method_20367(chunkPos, NbtOps.INSTANCE)
+        val dynamic = writeDynamic(chunkPos, NbtOps.INSTANCE)
         val tag = dynamic.value
         if (tag is CompoundTag) {
             worker.setResult(chunkPos, tag)
@@ -138,7 +138,7 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
         }
     }
 
-    private fun <T> method_20367(chunkPos: ChunkPos, dynamicOps: DynamicOps<T>): Dynamic<T> {
+    private fun <T> writeDynamic(chunkPos: ChunkPos, dynamicOps: DynamicOps<T>): Dynamic<T> {
         val map: MutableMap<T, T?> = Maps.newHashMap()
         for (i in 0..15) {
             val l = ChunkSectionPos.from(chunkPos, i).asLong()
@@ -146,7 +146,7 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
             val optional: Optional<R>? = loadedElements[l]
             if (optional != null && optional.isPresent) {
                 val dataResult: DataResult<T> =
-                    (codecFactory(Runnable { onUpdate(l) })).encodeStart(dynamicOps, optional.get())
+                    (codecFactory { onUpdate(l) }).encodeStart(dynamicOps, optional.get())
                 val string = i.toString()
                 dataResult.resultOrPartial(LOGGER::error)
                     .ifPresent { obj: T -> map[dynamicOps.createString(string)] = obj }
@@ -165,9 +165,9 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
         )
     }
 
-    protected fun onLoad(pos: Long) {}
+    protected open fun onLoad(pos: Long) {}
 
-    protected fun onUpdate(pos: Long) {
+    protected open fun onUpdate(pos: Long) {
         val optional: Optional<R>? = loadedElements[pos]
         if (optional != null && optional.isPresent) {
             unsavedElements.add(pos)

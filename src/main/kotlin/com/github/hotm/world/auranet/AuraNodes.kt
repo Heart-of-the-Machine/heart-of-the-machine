@@ -7,10 +7,10 @@ import net.minecraft.util.registry.Registry
 
 object AuraNodes {
     fun register() {
-        register("basic", BasicAuraNode.CODEC)
+        register("basic", BasicAuraNode.Type)
     }
 
-    fun register(id: String, codec: Codec<out AuraNode>) {
+    fun register(id: String, codec: AuraNodeType<out AuraNode>) {
         Registry.register(HotMRegistries.AURA_NODE_TYPE, HotMConstants.identifier(id), codec)
     }
 }

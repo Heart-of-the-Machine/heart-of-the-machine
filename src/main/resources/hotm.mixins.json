@@ -25,6 +25,7 @@
     "StructurePieceAccessor"
   ],
   "client": [
+    "ClientChunkManagerMixin"
   ],
   "server": [
   ],

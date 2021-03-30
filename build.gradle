@@ -42,15 +42,45 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
+    // mc libraries
+
+    modImplementation("alexiil.mc.lib:libblockattributes-all:${project.lba_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    // jij lba
+    include "alexiil.mc.lib:libblockattributes-all:${project.lba_version}"
+
+    modImplementation("alexiil.mc.lib:libmultipart-all:${project.lmp_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    // jij lba
+    include "alexiil.mc.lib:libmultipart-all:${project.lmp_version}"
+
+    modImplementation("alexiil.mc.lib:libnetworkstack-base:${project.lns_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    // jij lns
+    include "alexiil.mc.lib:libnetworkstack-base:${project.lns_version}"
+
+    // normal libraries
+
     modImplementation "org.yaml:snakeyaml:${yaml_version}"
     include "org.yaml:snakeyaml:${yaml_version}"
     modImplementation "com.terraformersmc:shapes:${shapes_version}"
     include "com.terraformersmc:shapes:${shapes_version}"
 
     // mod compatibility checks
-    modRuntime "io.github.prospector:modmenu:1.14.6+build.31"
-    // modRuntime "alexiil.mc.mod:simplepipes-all:0.4.0"
-    modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.12"
+
+    modRuntime("io.github.prospector:modmenu:${project.modmenu_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    modRuntime("alexiil.mc.mod:simplepipes-all:${project.simplepipes_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+        exclude group: "alexiil.mc.lib"
+    }
+    modRuntime("appeng:appliedenergistics2-fabric:8.1.0-alpha.12") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 

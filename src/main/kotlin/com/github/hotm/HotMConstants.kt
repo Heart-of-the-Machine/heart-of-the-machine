@@ -12,6 +12,13 @@ object HotMConstants {
     const val DATA_VERSION = 99
 
     /**
+     * Creates a mod-specific string.
+     */
+    fun str(str: String): String {
+        return "$MOD_ID:$str"
+    }
+
+    /**
      * Creates a mod-specific identifier for the given path.
      */
     fun identifier(path: String): Identifier {
