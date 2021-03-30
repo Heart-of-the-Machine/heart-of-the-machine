@@ -31,12 +31,14 @@ Details:
      they should recalculate their aura values and update their children recursively.
  * What happens when a transmitter node is removed as an event (like from its block being broken)?
    - The transmitter node notifies its child nodes to tell them that it's no-longer supplying them aura and that they
-     should recalculate their aura values and update their children recursively.
+     should recalculate their aura values and update their children recursively. This removal would also cause the child
+     node to remove the parent node from its list of parents.
  * What happens when a transmitter node is removed during chunk scanning?
    - The transmitter node is added to a list of removed transmitter nodes during scanning, then, once the chunk's
      scanning is complete and all nodes are placed and removed from the storage, the transmitter attempts to notify its
      children to let them know it's been removed and that they should recalculate their aura values and update their
-     children recursively.
+     children recursively. This removal would also cause the child node to remove the parent node from its list of
+     parents.
  * What happens when a transmitter node is placed as an event?
    - Most new transmitters will not have any connections when placed. If a transmitter has a connection once placed,
      that is a special case. (Connections once placed would likely be for transmitters that transmit through portals.
@@ -49,15 +51,20 @@ Details:
      for the beam to that child. This might not be necessary, though, as the beam renderer could simply check to see if
      the target node exists before rendering anything, and, because aura is static, there shouldn't be any calculations.
      This requires consideration...
+      - This likely means that child nodes would also need to keep track of their parent nodes so as to notify them when
+        the child is removed.
  * What happens when a child node is removed during chunk scanning?
-   - This is a similar issue to the previous question.
+   - This is a similar issue to the previous question. Removal notifications would happen once chunk scanning is
+     complete, so as to reduce the likelihood of incorrect recalculations.
  * Can a child node be added during chunk scanning?
    - This would be unlikely except in the situation of portal transmitters, in which case, there needs to be a way to
      find the parent(s) and notify the child (and possibly the parents) to calculate the child's new aura value.
  * How are child nodes connected?
    - For normal transmitters, there would likely be a tool (item) for connecting a parent to a child.
  * What happens when a child node is connected?
-   -  This would notify the parent to connect to the child which would then update its aura value based on the parent.
+   - This would notify the parent to connect to the child which would then update its aura value based on the parent.
+     The child node would add the parent node to its list of parents and the parent node would add the child node to its
+     list of children.
  * Are looping parent-child connections a problem?
    - Yes. Due to the nature of static energy networks, a loop could create infinite energy, though would likely result
      in a StackOverflowException as the nodes attempt to recursively update their children.
