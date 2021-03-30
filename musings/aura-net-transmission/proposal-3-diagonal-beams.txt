@@ -67,7 +67,7 @@ Details:
      list of children.
  * Are looping parent-child connections a problem?
    - Yes. Due to the nature of static energy networks, a loop could create infinite energy, though would likely result
-     in a StackOverflowException as the nodes attempt to recursively update their children.
+     in a StackOverflowError as the nodes attempt to recursively update their children.
  * How are looping parent-child connections detected?
    - The recursive update methods would keep track of tall the positions of nodes that had been visited so far. If a
      node is visited that is already in the set of visited nodes then a loop is detected.
@@ -76,3 +76,15 @@ Details:
  * Are there any measures to prevent looping parent-child connections?
    - When the item is used to connect a parent to a child, there would likely be a check for loops. If a loop is
      detected, then the parent would refuse to connect to the child.
+
+Implementation Concerns:
+ * When a chunk scan happens, there could be a large number of nodes being deleted and added. In this situation, there
+   could be a large number of duplicate recalculate notifications. Is this an issue?
+   - Chunk scans adding and removing nodes should only happen if a node-chunk load has been corrupted which should be
+     unlikely.
+ * For large networks, causing an update could update a large number of nodes. Could this cause a StackOverflowError
+   on its own? Could this cause lag? Are there ways to reduce this lag?
+   _ Networks shouldn't be more than 1000 nodes deep, likely less than 100 nodes deep, so StackOverflowErrors shouldn't
+     be too much of a concern. Though this is something to keep in the back of my mind.
+   - As far as lag is concerned, reducing this update lag is one of the big purposes of storing aura nodes separately
+     from the rest of the world data.
