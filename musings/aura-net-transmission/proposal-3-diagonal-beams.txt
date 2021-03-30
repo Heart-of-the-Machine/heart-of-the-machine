@@ -22,4 +22,5 @@ Pros:
  * Beams are synced with the node that's transmitting them.
 
 Cons:
- * Keeping track of whether to render a beam is hard.
+ * Keeping track of whether to render a beam is hard. What would likely end up happening is that when a transmitter node
+   is not visible, its beam would disappear too. This is an annoyance, but it's not too major.
