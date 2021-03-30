@@ -1,0 +1,4 @@
+In this proposal, beams are separate from nodes but are stored in cubic chunks roughly the same way nodes are.
+
+When a transmitting node is placed, it tells the server-side storage to create a beam in a direction. The server-side
+storage then

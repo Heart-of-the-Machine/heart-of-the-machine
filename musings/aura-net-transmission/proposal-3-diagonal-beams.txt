@@ -1,0 +1,25 @@
+This proposal states that beams should only be kept track of by the node transmitting the beam. Furthermore, beams
+cannot be interrupted by placing other objects in the path of the beam. This allows transmitter nodes to do things such
+as having beams that are not aligned with any axis.
+
+Questions:
+ * Where are the connections between nodes stored?
+   - Connections are stored inside each node. Parent nodes keep track of the locations of nodes to which they're
+     transmitting to.
+ * Aura "beams" should render in the world. How do we do that?
+   - This is the tough part. The current, best solution is to just have beams render with the node that's transmitting
+     them.
+ * How do we track updates; make sure no node thinks its transmitting to a node that doesn't exist?
+   - When a node is removed, it updates its children and its parents. This allows parents to stop transmitting to a node
+     that doesn't exist. However, since energy is static, it might not even matter if a parent is sending energy to a
+     node that no-longer exists.
+ * How are "beams" synced to the client?
+   - Beams and beam changes are synced to the client by their transmitting node.
+
+Pros:
+ * Less complicated: chunks are not forced to keep track of where beams are and if anything is intersecting them.
+ * Beams can be diagonal.
+ * Beams are synced with the node that's transmitting them.
+
+Cons:
+ * Keeping track of whether to render a beam is hard.

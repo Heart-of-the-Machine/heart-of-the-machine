@@ -1,0 +1,1 @@
+This proposal just has beams be nodes themselves. This feels wasteful to me though.

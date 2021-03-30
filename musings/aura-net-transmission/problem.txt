@@ -1,0 +1,10 @@
+The aura net is a network. It needs to transmit its power from node to node. I've already established that the aura
+net's power is static: power is constant unless a block is updated; the network does not fluctuate on its own.
+
+This problem describes how nodes keep track of who they're transmitting their power to.
+
+Questions:
+ * Where are the connections between nodes stored?
+ * Aura "beams" should render in the world. How do we do that?
+ * How do we track updates; make sure no node thinks its transmitting to a node that doesn't exist?
+ * How are "beams" synced to the client?
