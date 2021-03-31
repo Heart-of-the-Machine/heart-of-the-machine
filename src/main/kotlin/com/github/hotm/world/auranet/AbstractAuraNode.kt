@@ -1,11 +1,12 @@
 package com.github.hotm.world.auranet
 
+import com.github.hotm.util.DimBlockPos
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 abstract class AbstractAuraNode(
     override val type: AuraNodeType<out AuraNode>, protected val access: AuraNetAccess,
-    private val updateListener: Runnable?, override val pos: BlockPos
+    private val updateListener: Runnable?, final override val pos: BlockPos
 ) : AuraNode {
     protected val isClient = access.isClient
 
@@ -19,6 +20,8 @@ abstract class AbstractAuraNode(
      */
     protected val world: World
         get() = access.world
+
+    override val dimPos = DimBlockPos(world.registryKey, pos)
 
     fun markDirty() {
         updateListener?.run()

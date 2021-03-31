@@ -10,6 +10,7 @@ import com.github.hotm.HotMConstants.str
 import com.github.hotm.HotMRegistries
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.net.HotMNetwork
+import com.github.hotm.util.DimBlockPos
 import com.mojang.serialization.*
 import net.minecraft.util.math.BlockPos
 import org.apache.logging.log4j.LogManager
@@ -155,10 +156,14 @@ interface AuraNode {
 
     val pos: BlockPos
 
+    val dimPos: DimBlockPos
+
     // TODO: Evaluate usefulness of this
     fun storageEquals(auraNode: AuraNode): Boolean
 
     fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx)
 
     fun recalculate() {}
+
+    fun onRemove() {}
 }
