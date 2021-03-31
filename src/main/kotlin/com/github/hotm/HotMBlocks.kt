@@ -171,13 +171,13 @@ object HotMBlocks {
     /*
      * Aura Node Blocks
      */
-    val BASIC_AURA_NODE = BasicAuraNodeBlock(THINKING_STONE_SETTINGS)
+//    val BASIC_AURA_NODE = BasicAuraNodeBlock(THINKING_STONE_SETTINGS)
 
     /**
      * Register all Heart of the Machine blocks...
      */
     fun register() {
-        register(BASIC_AURA_NODE, "basic_aura_node", HOTM_BUILDING_ITEM_SETTINGS)
+//        register(BASIC_AURA_NODE, "basic_aura_node", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_CRYSTAL, "cyan_crystal", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_CRYSTAL_LAMP, "cyan_crystal_lamp", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_MACHINE_CASING_LAMP, "cyan_machine_casing_lamp", HOTM_BUILDING_ITEM_SETTINGS)
