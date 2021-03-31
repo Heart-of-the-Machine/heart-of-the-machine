@@ -198,32 +198,32 @@ class ServerAuraNetChunk(
             }
         }
 
-        for (node in removed.values) {
-            val server = world.server
-            if (node is DependableAuraNode) {
-                for (dependant in node.getDependants()) {
-                    dependant.getAuraNode(server)?.recalculate()
-                }
-            }
-
-            if (node is SiphonAuraNode || node is SourceAuraNode) {
-                updateSiphons = true
-            }
-        }
-
-        if (updateSiphons) {
-            val tickScheduler = world.blockTickScheduler
-
-            for (siphon in nodesByPos.values.stream().filter { it.node.block is SiphonAuraNodeBlock }) {
-                val pos = siphon.pos
-                val index = ChunkSectionPos.packLocal(pos)
-
-                updateeBlocks[index]?.let { block ->
-                    signalExecutor.execute {
-                        tickScheduler.schedule(pos, block, 0)
-                    }
-                }
-            }
-        }
+//        for (node in removed.values) {
+//            val server = world.server
+//            if (node is DependableAuraNode) {
+//                for (dependant in node.getDependants()) {
+//                    dependant.getAuraNode(server)?.recalculate()
+//                }
+//            }
+//
+//            if (node is SiphonAuraNode || node is SourceAuraNode) {
+//                updateSiphons = true
+//            }
+//        }
+//
+//        if (updateSiphons) {
+//            val tickScheduler = world.blockTickScheduler
+//
+//            for (siphon in nodesByPos.values.stream().filter { it.node.block is SiphonAuraNodeBlock }) {
+//                val pos = siphon.pos
+//                val index = ChunkSectionPos.packLocal(pos)
+//
+//                updateeBlocks[index]?.let { block ->
+//                    signalExecutor.execute {
+//                        tickScheduler.schedule(pos, block, 0)
+//                    }
+//                }
+//            }
+//        }
     }
 }
