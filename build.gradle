@@ -170,12 +170,12 @@ if (System.getenv("CURSE_API_KEY") != null) {
     }
 }
 
-if (System.getenv("GITHUB_TOKEN") != null) {
+if (System.getenv("MODRINTH_API_KEY") != null) {
     task publishModrinth(type: TaskModrinthUpload, dependsOn: remapJar) {
         group('Upload')
         description('Publish this mod to Modrinth')
 
-        token = System.getenv("GITHUB_TOKEN")
+        token = System.getenv("MODRINTH_API_KEY")
         // found using https://api.modrinth.com/api/v1/mod/heart-of-the-machine
         projectId = '7vleuAJ9'
         versionNumber = project.mod_version
