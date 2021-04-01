@@ -6,7 +6,6 @@ import com.github.hotm.HotMConfig
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.DependableAuraNode
 import com.github.hotm.world.auranet.SiphonAuraNode
 import com.github.hotm.world.auranet.SourceAuraNode
 import com.google.common.collect.ImmutableList
@@ -26,6 +25,7 @@ import org.apache.logging.log4j.LogManager
 import java.util.*
 import java.util.function.Predicate
 import java.util.stream.Stream
+import kotlin.streams.toList
 
 /**
  * Represents a 16x16x16 area containing nodes and a base aura.
@@ -115,23 +115,26 @@ class ServerAuraNetChunk(
     }
 
     fun put(auraNode: AuraNode) {
-        if (putImpl(auraNode)) {
-            updateListener.run()
+        val prevNode = putImpl(auraNode)
+        updateListener.run()
+
+        prevNode?.onRemove()
+
+        if (prevNode is SourceAuraNode || prevNode is SiphonAuraNode
+            || auraNode is SourceAuraNode || auraNode is SiphonAuraNode
+        ) {
+            recalculateSiphons()
         }
     }
 
-    private fun putImpl(node: AuraNode): Boolean {
+    private fun putImpl(node: AuraNode): AuraNode? {
         val pos = node.pos
         val index = ChunkSectionPos.packLocal(pos)
         val curNode = nodesByPos[index]
-        return if (curNode != null && node.storageEquals(curNode)) {
-            false
-        } else {
-            nodesByPos[index] = node
+        nodesByPos[index] = node
 
-            LOGGER.debug("Set Aura Net node at $pos")
-            true
-        }
+        LOGGER.debug("Set Aura Net node at $pos")
+        return curNode
     }
 
     operator fun get(pos: BlockPos): AuraNode? {
@@ -139,11 +142,12 @@ class ServerAuraNetChunk(
     }
 
     fun remove(pos: BlockPos) {
-        val container = nodesByPos.remove(ChunkSectionPos.packLocal(pos))
-        if (container == null) {
+        val node = nodesByPos.remove(ChunkSectionPos.packLocal(pos))
+        if (node == null) {
             LOGGER.error("Aura Net Node data mismatch: never registered at $pos")
         } else {
-            LOGGER.debug("Removed Aura Net Node at ${container.pos}")
+            node.onRemove()
+            LOGGER.debug("Removed Aura Net Node at ${node.pos}")
             updateListener.run()
         }
     }
@@ -152,9 +156,16 @@ class ServerAuraNetChunk(
         return nodesByPos.values.stream().filter(filter)
     }
 
+    fun getTotalAura(): Int {
+        return base + nodesByPos.values.stream().filter { it is SourceAuraNode }
+            .mapToInt { (it as SourceAuraNode).getSourceAura() }.sum()
+    }
+
     private fun recalculateSiphons() {
-        for (siphon in nodesByPos.values.stream().filter { it is SiphonAuraNode }) {
-            siphon.recalculate()
+        val totalAura = getTotalAura()
+        val siphons = nodesByPos.values.stream().filter { it is SiphonAuraNode }.toList()
+        for (siphon in siphons) {
+            (siphon as SiphonAuraNode).recalculateSiphonValue(totalAura, siphons.size)
         }
     }
 

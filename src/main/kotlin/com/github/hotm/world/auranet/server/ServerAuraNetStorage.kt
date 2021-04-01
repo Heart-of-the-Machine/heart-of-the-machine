@@ -4,7 +4,9 @@ import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.net.HotMNetwork
-import com.github.hotm.world.auranet.*
+import com.github.hotm.world.auranet.AuraNetAccess
+import com.github.hotm.world.auranet.AuraNode
+import com.github.hotm.world.auranet.SiphonAuraNode
 import com.github.hotm.world.storage.CustomSerializingRegionBasedStorage
 import com.mojang.datafixers.DataFixer
 import com.mojang.serialization.Codec
@@ -124,16 +126,14 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
      * TODO: Figure out what to do with these.
      */
 
-    fun calculateSectionAura(pos: ChunkSectionPos): Int {
-        val data = getOrCreate(pos.asLong())
-        return data.getBaseAura() + data.getAllBy { it is SourceAuraNode }.mapToInt {
-            (it as SourceAuraNode).getSource()
-        }.sum()
+    fun getSectionAura(pos: ChunkSectionPos): Int {
+        return get(pos.asLong()).map { it.getTotalAura() }
+            .orElseGet { ServerAuraNetChunk.getBaseAura(world.registryKey) }
     }
 
     fun calculateSiphonValue(pos: BlockPos, initDenom: Int, finalDenom: Int): Int {
         val sectionPos = ChunkSectionPos.from(pos)
-        val baseAura = calculateSectionAura(sectionPos)
+        val baseAura = getSectionAura(sectionPos)
         val siphonCount =
             getOrCreate(sectionPos.asLong()).getAllBy { it is SiphonAuraNode }.count().toInt()
 
