@@ -16,6 +16,18 @@ interface DependantAuraNode {
     fun isParentValid(node: DependableAuraNode)
 
     /**
+     * Determines whether making the parent node a parent of this node would cause a dependency loop.
+     */
+    fun wouldCauseDepencencyLoop(potentialParent: DependableAuraNode): Boolean {
+        return wouldCauseDependencyLoop(potentialParent, hashSetOf())
+    }
+
+    /**
+     * Recursive portion of the dependency loop checking mechanism.
+     */
+    fun wouldCauseDependencyLoop(potentialAncestor: DependableAuraNode, visitedNodes: MutableSet<AuraNode>): Boolean
+
+    /**
      * Adds a parent node to this node's list of parent nodes. When this node gets removed from the world, it will
      * remove itself from its parents' lists of child nodes, allowing them to recalculate aura distribution.
      */
