@@ -25,7 +25,8 @@
     "StructurePieceAccessor"
   ],
   "client": [
-    "ClientChunkManagerMixin"
+    "ClientChunkManagerMixin",
+    "WorldRendererMixin"
   ],
   "server": [
   ],
