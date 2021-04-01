@@ -33,4 +33,9 @@ interface DependableAuraNode {
      * Adds a child node to this node's list of children and prompts it to add this node to its list of parents.
      */
     fun connectChild(pos: DimBlockPos)
+
+    /**
+     * Gets the aura this node supplies to the child aura node.
+     */
+    fun getSuppliedAura(child: DependantAuraNode): Int
 }

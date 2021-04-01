@@ -163,7 +163,5 @@ interface AuraNode {
 
     fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx)
 
-    fun recalculate() {}
-
     fun onRemove() {}
 }
