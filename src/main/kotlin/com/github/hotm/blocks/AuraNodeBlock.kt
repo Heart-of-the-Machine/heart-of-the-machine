@@ -5,7 +5,6 @@ import com.github.hotm.world.auranet.AuraNodeType
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
 
 interface AuraNodeBlock {
     val auraNodeType: AuraNodeType<out AuraNode>

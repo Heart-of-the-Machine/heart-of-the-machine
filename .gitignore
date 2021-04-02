@@ -1,5 +1,6 @@
 # gradle
 
+/.allure/
 /.gradle/
 /build/
 /out/
@@ -15,3 +16,7 @@
 
 /run/
 /minecraft/
+
+# ???
+
+/logs/
