@@ -1,5 +1,6 @@
 package com.github.hotm.world.auranet.server
 
+import com.github.hotm.EmptyClassLoader
 import com.github.hotm.world.auranet.AuraNode
 import com.github.hotm.world.auranet.SiphonAuraNode
 import com.github.hotm.world.auranet.SourceAuraNode
@@ -7,6 +8,7 @@ import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.*
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 
 class ServerAuraNetChunkTests : FunSpec({
@@ -29,6 +31,19 @@ class ServerAuraNetChunkTests : FunSpec({
         val node = mockk<AuraNode>()
         every { node.pos } returns BlockPos(0, 0, 0)
         every { node.onRemove() } just Runs
+
+//        val cl = EmptyClassLoader()
+//        val runnable = Runnable {
+            val world = mockk<ServerWorld>()
+            println("WORLD: $world")
+//        }
+//        val runnableClass = runnable.javaClass
+//        println("Runnable class: $runnableClass")
+//        val alteredClass = cl.loadClass(runnableClass.name)
+//        val runnable2 = EmptyClassLoader.OBJENISIS.newInstance(alteredClass)
+//        val runMethod = alteredClass.getMethod("run")
+//        runMethod.isAccessible = true
+//        runMethod.invoke(runnable2)
 
         val chunk = ServerAuraNetChunk(updateListener, 64, listOf())
 
