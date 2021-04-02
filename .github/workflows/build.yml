@@ -43,8 +43,8 @@ jobs:
         if: ${{ always() && !cancelled() }}
         run: ./gradlew allureReport
       - name: capture test reports
-        if: ${{ always() && !cancelled() && runner.os == 'Linux' && matrix.java == '1.8' }}
+        if: ${{ always() && !cancelled() }}
         uses: actions/upload-artifact@v2
         with:
-          name: Test-Reports
+          name: Test-Reports-${{ matrix.os }}-${{ matrix.java }}
           path: build/reports
