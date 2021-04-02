@@ -13,8 +13,6 @@ import com.github.hotm.util.DimBlockPos
 interface DependableAuraNode {
     /**
      * Determines whether a child is a valid connection. This is responsible for checking for recursion loops.
-     *
-     * TODO: add interface methods to look for and handle recursion loops.
      */
     fun isChildValid(node: DependantAuraNode)
 
