@@ -20,7 +20,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World
-import net.minecraft.world.WorldAccess
 import org.apache.logging.log4j.LogManager
 import java.util.*
 import java.util.function.Predicate
@@ -147,8 +146,14 @@ class ServerAuraNetChunk(
             LOGGER.error("Aura Net Node data mismatch: never registered at $pos")
         } else {
             node.onRemove()
-            LOGGER.debug("Removed Aura Net Node at ${node.pos}")
+
+            if (node is SourceAuraNode || node is SiphonAuraNode) {
+                recalculateSiphons()
+            }
+
             updateListener.run()
+
+            LOGGER.debug("Removed Aura Net Node at ${node.pos}")
         }
     }
 
