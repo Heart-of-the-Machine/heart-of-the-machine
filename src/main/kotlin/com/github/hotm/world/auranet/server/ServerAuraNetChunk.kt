@@ -13,7 +13,6 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap
-import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Util
@@ -21,6 +20,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World
+import net.minecraft.world.WorldAccess
 import org.apache.logging.log4j.LogManager
 import java.util.*
 import java.util.function.Predicate
@@ -173,11 +173,10 @@ class ServerAuraNetChunk(
         world: ServerWorld,
         updater: ((BlockState, AuraNodeBlock, BlockPos) -> Unit) -> Unit
     ) {
-        // TODO: Fix recalculation function
         val removed = Short2ObjectOpenHashMap(nodesByPos)
-        val updateeBlocks = Short2ObjectOpenHashMap<Block>()
-        var updateSiphons = false
         nodesByPos.clear()
+        var updateSiphons = false
+        var updateSave = false
         updater { state, block, pos ->
             val type = block.auraNodeType
             val index = ChunkSectionPos.packLocal(pos)
@@ -197,6 +196,9 @@ class ServerAuraNetChunk(
                     if (newNode is SiphonAuraNode || newNode is SourceAuraNode) {
                         updateSiphons = true
                     }
+
+                    // Stuff has changed, might as well save the changes
+                    updateSave = true
                 }
             } else {
                 // there didn't used to be a node block here
@@ -206,35 +208,26 @@ class ServerAuraNetChunk(
                 if (newNode is SiphonAuraNode || newNode is SourceAuraNode) {
                     updateSiphons = true
                 }
+
+                // Stuff has changed, might as well save the changes
+                updateSave = true
             }
         }
 
-//        for (node in removed.values) {
-//            val server = world.server
-//            if (node is DependableAuraNode) {
-//                for (dependant in node.getDependants()) {
-//                    dependant.getAuraNode(server)?.recalculate()
-//                }
-//            }
-//
-//            if (node is SiphonAuraNode || node is SourceAuraNode) {
-//                updateSiphons = true
-//            }
-//        }
-//
-//        if (updateSiphons) {
-//            val tickScheduler = world.blockTickScheduler
-//
-//            for (siphon in nodesByPos.values.stream().filter { it.node.block is SiphonAuraNodeBlock }) {
-//                val pos = siphon.pos
-//                val index = ChunkSectionPos.packLocal(pos)
-//
-//                updateeBlocks[index]?.let { block ->
-//                    signalExecutor.execute {
-//                        tickScheduler.schedule(pos, block, 0)
-//                    }
-//                }
-//            }
-//        }
+        for (node in removed.values) {
+            node.onRemove()
+
+            if (node is SiphonAuraNode || node is SourceAuraNode) {
+                updateSiphons = true
+            }
+        }
+
+        if (updateSiphons) {
+            recalculateSiphons()
+        }
+
+        if (updateSave) {
+            updateListener.run()
+        }
     }
 }
