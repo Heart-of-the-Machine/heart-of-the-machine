@@ -40,10 +40,10 @@ jobs:
           name: Artifacts
           path: build/libs/
       - name: generate allure report
-        if: ${{ always() && !canceled() }}
+        if: ${{ always() && !cancelled() }}
         run: ./gradlew allureReport
       - name: capture test reports
-        if: ${{ always() && !canceled() && runner.os == 'Linux' && matrix.java == '1.8' }}
+        if: ${{ always() && !cancelled() && runner.os == 'Linux' && matrix.java == '1.8' }}
         uses: actions/upload-artifact@v2
         with:
           name: Test-Reports
