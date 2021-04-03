@@ -52,7 +52,7 @@ class MockClassLoader : ClassLoader() {
     private fun loadClassBytecode(name: String): ByteArray? {
         try {
             val reader =
-                ClassReader(javaClass.classLoader.getResourceAsStream(name.replace('.', File.separatorChar) + ".class"))
+                ClassReader(javaClass.classLoader.getResourceAsStream(name.replace('.', '/') + ".class"))
             val writer = ClassWriter(ClassWriter.COMPUTE_FRAMES or ClassWriter.COMPUTE_MAXS)
 
             if (ALTERED_EXEMPT.find { name.startsWith(it) } != null) {
