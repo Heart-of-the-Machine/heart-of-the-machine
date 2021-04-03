@@ -8,23 +8,22 @@ import org.objenesis.ObjenesisStd
 import java.io.File
 import java.io.IOException
 
-class EmptyClassLoader : ClassLoader() {
+class MockClassLoader : ClassLoader() {
     companion object {
         @JvmStatic
         val OBJENISIS: Objenesis = ObjenesisStd()
+
+        val instance by lazy { MockClassLoader() }
+
+        private val ALTERED_LOAD = listOf("net.minecraft.", "com.github.hotm.")
+        private val ALTERED_EXEMPT = listOf("com.github.hotm.", "net.minecraft.util.")
     }
 
     override fun loadClass(name: String, resolve: Boolean): Class<*> {
         synchronized(getClassLoadingLock(name)) {
             var c = findLoadedClass(name)
 
-            if (c == null
-                && !name.startsWith("java.")
-                && !name.startsWith("jdk.")
-                && !name.startsWith("sun.")
-                && !name.startsWith("io.kotest")
-                && !name.startsWith("kotlin")
-            ) {
+            if (c == null && ALTERED_LOAD.find { name.startsWith(it) } != null) {
                 loadClassBytecode(name)?.let { input ->
                     val pkgDelimiterPos = name.lastIndexOf('.')
                     if (pkgDelimiterPos > 0) {
@@ -55,13 +54,12 @@ class EmptyClassLoader : ClassLoader() {
             val reader =
                 ClassReader(javaClass.classLoader.getResourceAsStream(name.replace('.', File.separatorChar) + ".class"))
             val writer = ClassWriter(ClassWriter.COMPUTE_FRAMES or ClassWriter.COMPUTE_MAXS)
-//        val printer = TraceClassVisitor(writer, PrintWriter(System.out))
 
-            if (name.startsWith("net.minecraft")) {
-                val emptier = EmptyClassVisitor(writer)
-                reader.accept(emptier, ClassReader.EXPAND_FRAMES)
-            } else {
+            if (ALTERED_EXEMPT.find { name.startsWith(it) } != null) {
                 reader.accept(writer, ClassReader.EXPAND_FRAMES)
+            } else {
+                val emptier = MockClassVisitor(writer)
+                reader.accept(emptier, ClassReader.EXPAND_FRAMES)
             }
 
             return writer.toByteArray()
@@ -71,7 +69,7 @@ class EmptyClassLoader : ClassLoader() {
         }
     }
 
-    class EmptyClassVisitor(cv: ClassVisitor) : ClassVisitor(Opcodes.ASM9, cv) {
+    class MockClassVisitor(cv: ClassVisitor) : ClassVisitor(Opcodes.ASM9, cv) {
         private var superType = Type.getType(Object::class.java)
 
         override fun visit(
@@ -96,24 +94,20 @@ class EmptyClassLoader : ClassLoader() {
             exceptions: Array<out String>?
         ): MethodVisitor {
             val mv = super.visitMethod(access, name, descriptor, signature, exceptions)
-            return EmptyMethodVisitor(
+            return MockMethodVisitor(
                 access,
                 name,
                 descriptor,
-                mv,
-                superType,
-                "<clinit>" != name
+                mv
             )
         }
     }
 
-    class EmptyMethodVisitor(
+    class MockMethodVisitor(
         private val access: Int,
         private val name: String,
         descriptor: String,
-        mv: MethodVisitor,
-        superType: Type,
-        private val except: Boolean
+        mv: MethodVisitor
     ) : MethodVisitor(Opcodes.ASM9, if (name == "<init>") mv else null) {
         private val method = Method(name, descriptor)
         private val ga = GeneratorAdapter(access, method, mv)
@@ -175,61 +169,11 @@ class EmptyClassLoader : ClassLoader() {
             if (access and Opcodes.ACC_ABSTRACT == 0) {
                 ga.mark()
 
-                if (except) {
+                if (name != "<clinit>") {
                     val reType = Type.getType(RuntimeException::class.java)
                     ga.throwException(reType, "Encountered stub method")
                 } else {
-                    when (method.returnType.sort) {
-                        Type.VOID -> {
-                            ga.visitInsn(Opcodes.RETURN)
-                        }
-                        Type.BOOLEAN -> {
-                            ga.push(false)
-                            ga.returnValue()
-                        }
-                        Type.CHAR -> {
-                            ga.push(20)
-                            ga.returnValue()
-                        }
-                        Type.BYTE -> {
-                            ga.push(0)
-                            ga.returnValue()
-                        }
-                        Type.SHORT -> {
-                            ga.push(0)
-                            ga.returnValue()
-                        }
-                        Type.INT -> {
-                            ga.push(0)
-                            ga.returnValue()
-                        }
-                        Type.FLOAT -> {
-                            ga.push(0f)
-                            ga.returnValue()
-                        }
-                        Type.LONG -> {
-                            ga.push(0L)
-                            ga.returnValue()
-                        }
-                        Type.DOUBLE -> {
-                            ga.push(0.0)
-                            ga.returnValue()
-                        }
-                        Type.ARRAY -> {
-                            ga.push(0)
-                            ga.newArray(method.returnType.elementType)
-                            ga.returnValue()
-                        }
-                        Type.OBJECT -> {
-                            val clType = Type.getType(EmptyClassLoader::class.java)
-                            val objType = Type.getType(Objenesis::class.java)
-                            ga.getStatic(clType, "OBJENESIS", objType)
-                            ga.push(method.returnType)
-                            ga.invokeInterface(objType, Method.getMethod("Object newInstance (Class)"))
-                            ga.checkCast(method.returnType)
-                            ga.returnValue()
-                        }
-                    }
+                    ga.visitInsn(Opcodes.RETURN)
                 }
             }
 
