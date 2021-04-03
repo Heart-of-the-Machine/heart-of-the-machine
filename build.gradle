@@ -94,6 +94,7 @@ dependencies {
     testImplementation "io.kotest:kotest-assertions-core:${project.kotest_version}"
     testImplementation "io.kotest:kotest-extensions-allure:${project.kotest_version}"
     testImplementation "io.mockk:mockk:${project.mockk_version}"
+    testImplementation "org.objenesis:objenesis:${project.objenesis_version}"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
