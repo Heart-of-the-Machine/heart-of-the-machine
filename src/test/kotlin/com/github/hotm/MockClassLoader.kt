@@ -65,6 +65,7 @@ class MockClassLoader : ClassLoader() {
             return writer.toByteArray()
         } catch (e: IOException) {
             System.err.println("Error loading class: $name")
+            e.printStackTrace()
             return null
         }
     }
