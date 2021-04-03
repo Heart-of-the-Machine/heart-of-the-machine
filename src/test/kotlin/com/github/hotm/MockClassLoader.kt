@@ -5,7 +5,6 @@ import org.objectweb.asm.commons.GeneratorAdapter
 import org.objectweb.asm.commons.Method
 import org.objenesis.Objenesis
 import org.objenesis.ObjenesisStd
-import java.io.File
 import java.io.IOException
 
 class MockClassLoader : ClassLoader() {

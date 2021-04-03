@@ -219,6 +219,10 @@ class ServerAuraNetChunk(
             }
         }
 
+        if (removed.isNotEmpty()) {
+            updateSave = true
+        }
+
         for (node in removed.values) {
             node.onRemove()
 
