@@ -147,19 +147,9 @@ interface AuraNode {
 
     val type: AuraNodeType<out AuraNode>
 
-    /**
-     * Used by AuraNetData to determine what blocks are updated if this aura node were to be removed during a save load.
-     */
-//    val dependants: Collection<DimBlockPos>
-
-//    val block: AuraNodeBlock
-
     val pos: BlockPos
 
     val dimPos: DimBlockPos
-
-    // TODO: Evaluate usefulness of this
-    fun storageEquals(auraNode: AuraNode): Boolean
 
     fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx)
 

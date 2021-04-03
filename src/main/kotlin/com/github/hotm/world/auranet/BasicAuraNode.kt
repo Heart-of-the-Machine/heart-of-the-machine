@@ -32,10 +32,6 @@ class BasicAuraNode(access: AuraNetAccess, updateListener: Runnable?, pos: Block
         ID_VALUE_CHANGE.sendToClients(world, pos, this)
     }
 
-    override fun storageEquals(auraNode: AuraNode): Boolean {
-        return this == auraNode
-    }
-
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
         buf.writeVarUnsignedInt(value)
     }
