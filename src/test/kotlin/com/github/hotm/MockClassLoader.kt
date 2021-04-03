@@ -28,7 +28,7 @@ class MockClassLoader : ClassLoader() {
                     val pkgDelimiterPos = name.lastIndexOf('.')
                     if (pkgDelimiterPos > 0) {
                         val pkgString = name.substring(0, pkgDelimiterPos)
-                        if (getDefinedPackage(pkgString) == null) {
+                        if (getPackage(pkgString) == null) {
                             definePackage(pkgString, null, null, null, null, null, null, null)
                         }
                     }
