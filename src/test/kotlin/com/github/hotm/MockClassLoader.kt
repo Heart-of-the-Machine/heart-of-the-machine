@@ -70,22 +70,6 @@ class MockClassLoader : ClassLoader() {
     }
 
     class MockClassVisitor(cv: ClassVisitor) : ClassVisitor(Opcodes.ASM9, cv) {
-        private var superType = Type.getType(Object::class.java)
-
-        override fun visit(
-            version: Int,
-            access: Int,
-            name: String?,
-            signature: String?,
-            superName: String?,
-            interfaces: Array<out String>?
-        ) {
-            super.visit(version, access, name, signature, superName, interfaces)
-            superName?.let {
-                superType = Type.getObjectType(it)
-            }
-        }
-
         override fun visitMethod(
             access: Int,
             name: String,
