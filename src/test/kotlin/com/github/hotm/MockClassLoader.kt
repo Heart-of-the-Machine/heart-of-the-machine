@@ -3,15 +3,10 @@ package com.github.hotm
 import org.objectweb.asm.*
 import org.objectweb.asm.commons.GeneratorAdapter
 import org.objectweb.asm.commons.Method
-import org.objenesis.Objenesis
-import org.objenesis.ObjenesisStd
 import java.io.IOException
 
 class MockClassLoader : ClassLoader() {
     companion object {
-        @JvmStatic
-        val OBJENISIS: Objenesis = ObjenesisStd()
-
         val instance by lazy { MockClassLoader() }
 
         private val ALTERED_LOAD = listOf("net.minecraft.", "com.github.hotm.")
