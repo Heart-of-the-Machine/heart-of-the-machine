@@ -40,8 +40,10 @@ class ServerAuraNetChunkTests : FunSpec({
             val world = mockk<ServerWorld>()
             val blockState = mockk<BlockState>()
             val block = mockk<AuraNodeBlock>()
-            every { block.createAuraNode(any(), any(), any()) } returns node
+            every { block.createAuraNode(any(), any(), any(), any()) } returns node
             every { block.auraNodeType } returns nodeType
+
+            val storage = mockk<ServerAuraNetStorage>()
 
             val chunk = ServerAuraNetChunk(updateListener, 64, listOf())
 
@@ -58,7 +60,7 @@ class ServerAuraNetChunkTests : FunSpec({
             }
 
             test("Calls updateListener on node add during chunk scan") {
-                chunk.updateAuraNodes(world) { callback ->
+                chunk.updateAuraNodes(world, storage) { callback ->
                     callback(blockState, block, BlockPos(0, 0, 0))
                 }
 
@@ -77,7 +79,9 @@ class ServerAuraNetChunkTests : FunSpec({
             val blockState = mockk<BlockState>()
             val block = mockk<AuraNodeBlock>()
             every { block.auraNodeType } returns nodeType
-            every { block.createAuraNode(any(), any(), any()) } returns node
+            every { block.createAuraNode(any(), any(), any(), any()) } returns node
+
+            val storage = mockk<ServerAuraNetStorage>()
 
             val chunk = ServerAuraNetChunk({}, 64, listOf(node))
 
@@ -90,7 +94,7 @@ class ServerAuraNetChunkTests : FunSpec({
             }
 
             test("Calls onRemove on a node being removed during chunk scan") {
-                chunk.updateAuraNodes(world) {
+                chunk.updateAuraNodes(world, storage) {
                 }
 
                 verify { node.onRemove() }
@@ -99,7 +103,7 @@ class ServerAuraNetChunkTests : FunSpec({
             }
 
             test("Does not remove a node if it's block is present during chunk scan") {
-                chunk.updateAuraNodes(world) { callback ->
+                chunk.updateAuraNodes(world, storage) { callback ->
                     callback(blockState, block, BlockPos(0, 0, 0))
                 }
 
@@ -122,7 +126,9 @@ class ServerAuraNetChunkTests : FunSpec({
             val blockState = mockk<BlockState>()
             val block = mockk<AuraNodeBlock>()
             every { block.auraNodeType } returns nodeType
-            every { block.createAuraNode(any(), any(), any()) } returns node
+            every { block.createAuraNode(any(), any(), any(), any()) } returns node
+
+            val storage = mockk<ServerAuraNetStorage>()
 
             val chunk = ServerAuraNetChunk(updateListener, 64, listOf(node))
 
@@ -133,14 +139,14 @@ class ServerAuraNetChunkTests : FunSpec({
             }
 
             test("Calls updateListener on node remove during chunk scan") {
-                chunk.updateAuraNodes(world) {
+                chunk.updateAuraNodes(world, storage) {
                 }
 
                 verify { updateListener.run() }
             }
 
             test("Does not call updateListener when a node is not removed during chunk scan") {
-                chunk.updateAuraNodes(world) { callback ->
+                chunk.updateAuraNodes(world, storage) { callback ->
                     callback(blockState, block, BlockPos(0, 0, 0))
                 }
 
@@ -179,11 +185,13 @@ class ServerAuraNetChunkTests : FunSpec({
             val siphonBlockState = mockk<BlockState>()
             val siphonBlock = mockk<AuraNodeBlock>()
             every { siphonBlock.auraNodeType } returns siphonType
-            every { siphonBlock.createAuraNode(any(), any(), any()) } returns siphon
+            every { siphonBlock.createAuraNode(any(), any(), any(), any()) } returns siphon
             val sourceBlockState = mockk<BlockState>()
             val sourceBlock = mockk<AuraNodeBlock>()
             every { sourceBlock.auraNodeType } returns sourceType
-            every { sourceBlock.createAuraNode(any(), any(), any()) } returns source
+            every { sourceBlock.createAuraNode(any(), any(), any(), any()) } returns source
+
+            val storage = mockk<ServerAuraNetStorage>()
 
             val chunk = ServerAuraNetChunk({}, 64, listOf(siphon))
 
@@ -200,7 +208,7 @@ class ServerAuraNetChunkTests : FunSpec({
             }
 
             test("Recalculates siphon values when a source is added during chunk scan") {
-                chunk.updateAuraNodes(world) { callback ->
+                chunk.updateAuraNodes(world, storage) { callback ->
                     callback(siphonBlockState, siphonBlock, BlockPos(0, 0, 0))
                     callback(sourceBlockState, sourceBlock, BlockPos(1, 0, 0))
                 }
@@ -227,11 +235,13 @@ class ServerAuraNetChunkTests : FunSpec({
             val siphonBlockState = mockk<BlockState>()
             val siphonBlock = mockk<AuraNodeBlock>()
             every { siphonBlock.auraNodeType } returns siphonType
-            every { siphonBlock.createAuraNode(any(), any(), any()) } returns siphon
+            every { siphonBlock.createAuraNode(any(), any(), any(), any()) } returns siphon
             val sourceBlockState = mockk<BlockState>()
             val sourceBlock = mockk<AuraNodeBlock>()
             every { sourceBlock.auraNodeType } returns sourceType
-            every { sourceBlock.createAuraNode(any(), any(), any()) } returns source
+            every { sourceBlock.createAuraNode(any(), any(), any(), any()) } returns source
+
+            val storage = mockk<ServerAuraNetStorage>()
 
             val chunk = ServerAuraNetChunk({}, 64, listOf(source, siphon))
 
@@ -242,7 +252,7 @@ class ServerAuraNetChunkTests : FunSpec({
             }
 
             test("Recalculates siphon values when a source is removed during chunk scan") {
-                chunk.updateAuraNodes(world) { callback ->
+                chunk.updateAuraNodes(world, storage) { callback ->
                     callback(siphonBlockState, siphonBlock, BlockPos(0, 0, 0))
                 }
 
@@ -250,7 +260,7 @@ class ServerAuraNetChunkTests : FunSpec({
             }
 
             test("Does not recalculate siphon values when no sources are removed during chunk scan") {
-                chunk.updateAuraNodes(world) { callback ->
+                chunk.updateAuraNodes(world, storage) { callback ->
                     callback(siphonBlockState, siphonBlock, BlockPos(0, 0, 0))
                     callback(sourceBlockState, sourceBlock, BlockPos(1, 0, 0))
                 }

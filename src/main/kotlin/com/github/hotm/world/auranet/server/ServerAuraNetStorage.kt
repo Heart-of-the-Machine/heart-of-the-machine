@@ -147,14 +147,14 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
     fun initForPalette(chunkPos: ChunkPos, section: ChunkSection) {
         val sectionPos = ChunkSectionPos.from(chunkPos, section.yOffset shr 4)
         Util.ifPresentOrElse(get(sectionPos.asLong()), { data ->
-            data.updateAuraNodes(world) { callback ->
+            data.updateAuraNodes(world, this) { callback ->
                 if (shouldScan(section)) {
                     scanAndPopulate(sectionPos, section, callback)
                 }
             }
         }, {
             if (shouldScan(section)) {
-                getOrCreate(sectionPos.asLong()).updateAuraNodes(world) { callback ->
+                getOrCreate(sectionPos.asLong()).updateAuraNodes(world, this) { callback ->
                     scanAndPopulate(sectionPos, section, callback)
                 }
             }

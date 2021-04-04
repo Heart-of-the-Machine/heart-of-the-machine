@@ -175,7 +175,7 @@ class ServerAuraNetChunk(
     }
 
     fun updateAuraNodes(
-        world: ServerWorld,
+        world: ServerWorld, storage: ServerAuraNetStorage,
         updater: ((BlockState, AuraNodeBlock, BlockPos) -> Unit) -> Unit
     ) {
         val removed = Short2ObjectOpenHashMap(nodesByPos)
@@ -194,7 +194,7 @@ class ServerAuraNetChunk(
                     removed.remove(index)
                 } else {
                     // the node's block has changed since we last loaded
-                    val newNode = block.createAuraNode(state, world, pos)
+                    val newNode = block.createAuraNode(state, world, storage, pos)
                     nodesByPos[index] = newNode
 
                     // oldNode is Siphon/Source checks are performed on the removed map instead of here
@@ -207,7 +207,7 @@ class ServerAuraNetChunk(
                 }
             } else {
                 // there didn't used to be a node block here
-                val newNode = block.createAuraNode(state, world, pos)
+                val newNode = block.createAuraNode(state, world, storage, pos)
                 nodesByPos[index] = newNode
 
                 if (newNode is SiphonAuraNode || newNode is SourceAuraNode) {
