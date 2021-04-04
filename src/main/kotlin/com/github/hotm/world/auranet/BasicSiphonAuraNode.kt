@@ -10,12 +10,12 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.util.math.BlockPos
 
-class BasicAuraNode(access: AuraNetAccess, updateListener: Runnable?, pos: BlockPos, value: Int) :
-    AbstractAuraNode(Type, access, updateListener, pos) {
+class BasicSiphonAuraNode(access: AuraNetAccess, updateListener: Runnable?, pos: BlockPos, value: Int) :
+    AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(
-            BasicAuraNode::class.java,
+            BasicSiphonAuraNode::class.java,
             str("basic_aura_node")
         )
 
@@ -32,6 +32,10 @@ class BasicAuraNode(access: AuraNetAccess, updateListener: Runnable?, pos: Block
         ID_VALUE_CHANGE.sendToClients(world, pos, this)
     }
 
+    override fun recalculateSiphonValue(chunkAura: Int, siphonCount: Int) {
+        updateValue(AuraNodeUtils.calculateSiphonValue(10f, 2f, chunkAura, siphonCount))
+    }
+
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
         buf.writeVarUnsignedInt(value)
     }
@@ -41,7 +45,7 @@ class BasicAuraNode(access: AuraNetAccess, updateListener: Runnable?, pos: Block
         if (javaClass != other?.javaClass) return false
         if (!super.equals(other)) return false
 
-        other as BasicAuraNode
+        other as BasicSiphonAuraNode
 
         if (value != other.value) return false
 
@@ -54,23 +58,27 @@ class BasicAuraNode(access: AuraNetAccess, updateListener: Runnable?, pos: Block
         return result
     }
 
-    object Type : AuraNodeType<BasicAuraNode> {
-        override fun createCodec(access: AuraNetAccess, updateListener: Runnable, pos: BlockPos): Codec<BasicAuraNode> {
-            return RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<BasicAuraNode> ->
+    object Type : AuraNodeType<BasicSiphonAuraNode> {
+        override fun createCodec(
+            access: AuraNetAccess,
+            updateListener: Runnable,
+            pos: BlockPos
+        ): Codec<BasicSiphonAuraNode> {
+            return RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<BasicSiphonAuraNode> ->
                 instance.group(
                     RecordCodecBuilder.point(access),
                     RecordCodecBuilder.point(updateListener),
                     RecordCodecBuilder.point(pos),
-                    Codec.INT.fieldOf("value").forGetter(BasicAuraNode::value)
-                ).apply(instance, ::BasicAuraNode)
+                    Codec.INT.fieldOf("value").forGetter(BasicSiphonAuraNode::value)
+                ).apply(instance, ::BasicSiphonAuraNode)
             }
         }
 
         override fun fromPacket(
             access: AuraNetAccess, pos: BlockPos, buf: NetByteBuf, ctx: IMsgReadCtx
-        ): BasicAuraNode {
+        ): BasicSiphonAuraNode {
             val value = buf.readVarUnsignedInt()
-            return BasicAuraNode(access, null, pos, value)
+            return BasicSiphonAuraNode(access, null, pos, value)
         }
     }
 }
