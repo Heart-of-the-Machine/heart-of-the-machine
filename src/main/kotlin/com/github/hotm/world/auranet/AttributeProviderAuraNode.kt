@@ -5,6 +5,6 @@ import alexiil.mc.lib.attributes.AttributeList
 /**
  * Called by AbstractAuraNodeBlock when retrieving attributes.
  */
-interface AttributeProviderAuraNode {
+interface AttributeProviderAuraNode : AuraNode {
     fun addAllAttributes(to: AttributeList<*>)
 }

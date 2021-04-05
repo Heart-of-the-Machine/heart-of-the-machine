@@ -9,7 +9,7 @@ import com.github.hotm.util.DimBlockPos
  * This interface should only be used server-side. Meaningful modifications here should be synced to clients by nodes
  * themselves.
  */
-interface DependantAuraNode {
+interface DependantAuraNode : AuraNode {
     /**
      * Determines whether the node is a suitable parent node for this node.
      */
@@ -42,6 +42,12 @@ interface DependantAuraNode {
      * Adds a parent node to this node's list of parent nodes and prompts it to add this node to its list of children.
      */
     fun connectParent(pos: DimBlockPos)
+
+    /**
+     * Removes a parent node from this node's list of parent nodes and prompts it to remove this node from its list of
+     * children.
+     */
+    fun disconnectParent(pos: DimBlockPos)
 
     /**
      * Causes the child node to recalculate its aura value and the aura values of all affected descendants.

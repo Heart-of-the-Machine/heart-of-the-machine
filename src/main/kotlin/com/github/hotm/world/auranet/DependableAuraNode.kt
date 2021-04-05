@@ -10,11 +10,11 @@ import com.github.hotm.util.DimBlockPos
  * This interface should only be used server-side. Meaningful modifications here should be synced to clients by nodes
  * themselves.
  */
-interface DependableAuraNode {
+interface DependableAuraNode : AuraNode {
     /**
      * Determines whether a child is a valid connection. This is responsible for checking for recursion loops.
      */
-    fun isChildValid(node: DependantAuraNode)
+    fun isChildValid(node: DependantAuraNode): Boolean
 
     /**
      * Adds a child node to this node's list of children. When this node gets removed from the world, it will remove
@@ -31,6 +31,12 @@ interface DependableAuraNode {
      * Adds a child node to this node's list of children and prompts it to add this node to its list of parents.
      */
     fun connectChild(pos: DimBlockPos)
+
+    /**
+     * Removes a child node from this node's list of children and prompts it to remove this node from its list of
+     * parents.
+     */
+    fun disconnectChild(pos: DimBlockPos)
 
     /**
      * Gets the aura this node supplies to the child aura node.
