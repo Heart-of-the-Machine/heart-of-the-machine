@@ -6,25 +6,33 @@ import com.github.hotm.world.gen.feature.NecterePortalGen
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.entity.BlockEntity
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtOps
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.Tickable
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
+import net.minecraft.world.World
 import java.util.*
 
-class NecterePortalSpawnerBlockEntity : BlockEntity(HotMBlockEntities.NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY), Tickable {
+class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
+    BlockEntity(HotMBlockEntities.NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY, pos, state) {
+    companion object {
+        fun tick(world: World, pos: BlockPos, state: BlockState, entity: NecterePortalSpawnerBlockEntity) {
+            entity.tick()
+        }
+    }
+
     var originalBlock = Blocks.AIR.defaultState
 
-    override fun fromTag(state: BlockState, tag: CompoundTag) {
-        super.fromTag(state, tag)
+    override fun readNbt(tag: NbtCompound) {
+        super.readNbt(tag)
 
         originalBlock =
             BlockState.CODEC.parse(NbtOps.INSTANCE, tag.get("original")).result().orElse(Blocks.AIR.defaultState)
     }
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        val newTag = super.toTag(tag)
+    override fun writeNbt(tag: NbtCompound): NbtCompound {
+        val newTag = super.writeNbt(tag)
 
         BlockState.CODEC.encodeStart(NbtOps.INSTANCE, originalBlock).result().ifPresent { encoded ->
             newTag.put("original", encoded)
@@ -33,7 +41,7 @@ class NecterePortalSpawnerBlockEntity : BlockEntity(HotMBlockEntities.NECTERE_PO
         return newTag
     }
 
-    override fun tick() {
+    fun tick() {
         val world = world
         if (world != null && world is ServerWorld) {
             world.removeBlockEntity(pos)

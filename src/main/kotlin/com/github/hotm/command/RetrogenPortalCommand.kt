@@ -11,6 +11,7 @@ import net.minecraft.text.*
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.MathHelper
+import net.minecraft.util.math.Vec3i
 
 object RetrogenPortalCommand {
     private const val COMMAND_NAME = "retrogen_nectere_portal"
@@ -54,7 +55,7 @@ object RetrogenPortalCommand {
         suffix: String,
         broadcastToOps: Boolean
     ) {
-        val i = MathHelper.floor(MathHelper.sqrt(sourcePos.getSquaredDistance(structurePos)))
+        val i = MathHelper.floor(getDistance(sourcePos, structurePos))
         val text: Text =
             Texts.bracketed(TranslatableText("chat.coordinates", structurePos.x, structurePos.y, structurePos.z))
                 .styled { style: Style ->
@@ -71,5 +72,11 @@ object RetrogenPortalCommand {
                     )
                 }
         source.sendFeedback(HotMConstants.commandText("$COMMAND_NAME.$suffix", text, i), broadcastToOps)
+    }
+
+    private fun getDistance(pos1: Vec3i, pos2: Vec3i): Float {
+        val i = pos2.x - pos1.x
+        val j = pos2.y - pos1.y
+        return MathHelper.sqrt((i * i + j * j).toFloat())
     }
 }

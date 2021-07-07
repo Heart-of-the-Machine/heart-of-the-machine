@@ -5,14 +5,14 @@ import com.github.hotm.HotMConfig
 import com.github.hotm.HotMConstants
 import com.github.hotm.HotMLog
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
+import com.github.hotm.mixin.EntityAccessor
+import com.github.hotm.mixin.StructureFeatureAccessor
+import com.github.hotm.mixinapi.DimensionAdditions
 import com.github.hotm.world.gen.HotMBiomes
 import com.github.hotm.world.gen.NectereChunkGenerator
 import com.github.hotm.world.gen.biome.NectereBiomeData
 import com.github.hotm.world.gen.feature.HotMStructureFeatures
 import com.github.hotm.world.gen.feature.NecterePortalGen
-import com.github.hotm.mixin.EntityAccessor
-import com.github.hotm.mixin.StructureFeatureAccessor
-import com.github.hotm.mixinapi.DimensionAdditions
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.ImmutableList
 import com.mojang.datafixers.util.Pair
@@ -52,12 +52,12 @@ object HotMDimensions {
      * Key used to reference the Nectere dimension.
      */
     val NECTERE_KEY: RegistryKey<World> =
-        RegistryKey.of(Registry.DIMENSION, HotMConstants.identifier("nectere"))
+        RegistryKey.of(Registry.WORLD_KEY, HotMConstants.identifier("nectere"))
 
     /**
      * Key used to reference the Nectere dimension options.
      */
-    val NECTERE_OPTIONS_KEY = RegistryKey.of(Registry.DIMENSION_OPTIONS, HotMConstants.identifier("nectere"))
+    val NECTERE_OPTIONS_KEY = RegistryKey.of(Registry.DIMENSION_KEY, HotMConstants.identifier("nectere"))
 
     /**
      * Dimension options that describe the Nectere dimension.
@@ -90,7 +90,7 @@ object HotMDimensions {
      * The registry key for the Nectere chunk generator settings.
      */
     val NECTERE_CHUNK_GENERATOR_SETTINGS_KEY =
-        RegistryKey.of(Registry.NOISE_SETTINGS_WORLDGEN, HotMConstants.identifier("nectere"))
+        RegistryKey.of(Registry.CHUNK_GENERATOR_SETTINGS_KEY, HotMConstants.identifier("nectere"))
 
     /**
      * ChunkGeneratorType preset for the Nectere dimension.
