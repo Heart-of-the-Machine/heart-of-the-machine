@@ -28,6 +28,11 @@ object NecterePortalGen {
         return startPos.add(PORTAL_OFFSET_X, PORTAL_OFFSET_Y, PORTAL_OFFSET_Z)
     }
 
+    fun portalPos(chunkPos: ChunkPos): BlockPos {
+        // FIXME: This just assumes the portal is at y: 64
+        return BlockPos(getPortalX(chunkPos.x), 64, getPortalZ(chunkPos.z))
+    }
+
     fun unPortalPos(portalPos: BlockPos): BlockPos {
         return portalPos.add(-PORTAL_OFFSET_X, -PORTAL_OFFSET_Y, -PORTAL_OFFSET_Z)
     }
@@ -94,7 +99,7 @@ object NecterePortalGen {
             ).filter { structurePos ->
                 // Make sure the portal is in an enabled biome and not in a Nectere biome.
                 val portalPos = portalPos(structurePos)
-                val biome = world.method_31081(portalPos).orElse(null)
+                val biome = world.getBiomeKey(portalPos).orElse(null)
 
                 biome != null
                         && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(biome.value.toString())

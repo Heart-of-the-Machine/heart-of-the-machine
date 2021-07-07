@@ -7,21 +7,19 @@ import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.TestableWorld
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
 import kotlin.collections.ArrayList
 
 class PlasseinGrowthFeature(codec: Codec<PlasseinGrowthConfig>) : Feature<PlasseinGrowthConfig>(codec) {
-    override fun generate(
-        world: StructureWorldAccess,
-        generator: ChunkGenerator,
-        random: Random,
-        pos: BlockPos,
-        config: PlasseinGrowthConfig
-    ): Boolean {
+    override fun generate(ctx: FeatureContext<PlasseinGrowthConfig>): Boolean {
+        val world = ctx.world
+        val config = ctx.config
+
         val stalkBlocks = ArrayList<BlockPos>()
         val leafBlocks = ArrayList<BlockPos>()
 
-        if (!tryGenerate(world, random, pos, config, stalkBlocks, leafBlocks)) {
+        if (!tryGenerate(world, ctx.random, ctx.origin, config, stalkBlocks, leafBlocks)) {
             return false
         }
 
@@ -43,7 +41,7 @@ class PlasseinGrowthFeature(codec: Codec<PlasseinGrowthConfig>) : Feature<Plasse
         stalkBlocks: MutableCollection<BlockPos>,
         leafBlocks: MutableCollection<BlockPos>
     ): Boolean {
-        if (!world.testBlockState(pos.down()) { FeatureUtils.isSurface(it.block) }) {
+        if (!world.testBlockState(pos.down(), FeatureUtils::isSurface)) {
             return false
         }
 

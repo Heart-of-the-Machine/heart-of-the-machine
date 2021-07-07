@@ -56,7 +56,7 @@ class PlasseinStemSegment(
         pos: BlockPos,
         context: Unit
     ): Boolean {
-        if (!world.testBlockState(pos.down()) { FeatureUtils.isSurface(it.block) }) {
+        if (!world.testBlockState(pos.down(), FeatureUtils::isSurface)) {
             return false
         }
 

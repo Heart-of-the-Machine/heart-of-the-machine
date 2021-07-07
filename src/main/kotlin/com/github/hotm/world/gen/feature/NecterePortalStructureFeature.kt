@@ -1,12 +1,12 @@
 package com.github.hotm.world.gen.feature
 
 import com.github.hotm.HotMConfig
-import com.github.hotm.world.gen.HotMBiomes
-import com.github.hotm.world.HotMDimensions
 import com.github.hotm.mixin.StructurePieceAccessor
 import com.github.hotm.util.WorldUtils
+import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.gen.HotMBiomes
 import com.mojang.serialization.Codec
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.structure.StructureManager
 import net.minecraft.structure.StructurePieceWithDimensions
@@ -18,6 +18,7 @@ import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.registry.DynamicRegistryManager
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
+import net.minecraft.world.HeightLimitView
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.biome.Biome
@@ -34,6 +35,7 @@ import java.util.*
 /**
  * Structure Feature for the Nectere Portal.
  */
+// TODO: Move all of this generation mechanism to the BlockEntity-based system to prevent worldgen deadlocks.
 class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
     StructureFeature<DefaultFeatureConfig>(config) {
     companion object {
@@ -46,22 +48,27 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                 )
             )
 
-            return biomeId != null && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(biomeId.toString())
+            return biomeId != null && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(
+                biomeId.toString()
+            )
         }
 
         private fun checkExactBiomes(nonNectereWorld: ServerWorld, nonNecterePos: BlockPos): Boolean {
-            val biomeId = nonNectereWorld.method_31081(nonNecterePos).orElse(null)?.value
+            val biomeId = nonNectereWorld.getBiomeKey(nonNecterePos).orElse(null)?.value
 
-            return biomeId != null && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(biomeId.toString())
+            return biomeId != null && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(
+                biomeId.toString()
+            )
         }
     }
 
     override fun getStructureStartFactory(): StructureStartFactory<DefaultFeatureConfig> {
-        return StructureStartFactory { feature, chunkX, chunkZ, box, references, seed ->
-            Start(feature, chunkX, chunkZ, box, references, seed)
+        return StructureStartFactory { feature, pos, references, seed ->
+            Start(feature, pos, references, seed)
         }
     }
 
+    // TODO: Move this somewhere else
     fun locateNonNectereSidePortal(
         nectereWorld: WorldAccess,
         structureAccessor: StructureAccessor,
@@ -99,9 +106,10 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                             )
 
                         if (structureStart != null && structureStart.hasChildren()) {
+                            // TODO: completely restructure this mechanism to generate portals on first tick
                             val portalPos = NecterePortalGen.portalPos(structureStart.pos)
 
-                            if (biomeKey == nectereWorld.method_31081(portalPos).orElse(null)) {
+                            if (biomeKey == nectereWorld.getBiomeKey(portalPos).orElse(null)) {
                                 // Don't locate portals in biomes that won't generate portals in the first place
                                 val nonNecterePos =
                                     HotMDimensions.getBaseCorrespondingNonNectereCoords(nectereWorld, portalPos)
@@ -142,26 +150,24 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
      */
     class Start(
         feature: StructureFeature<DefaultFeatureConfig>,
-        chunkX: Int,
-        chunkZ: Int,
-        box: BlockBox,
+        chunkPos: ChunkPos,
         references: Int,
         seed: Long
-    ) : StructureStart<DefaultFeatureConfig>(feature, chunkX, chunkZ, box, references, seed) {
+    ) : StructureStart<DefaultFeatureConfig>(feature, chunkPos, references, seed) {
         override fun init(
             registryManager: DynamicRegistryManager,
             chunkGenerator: ChunkGenerator,
             structureManager: StructureManager,
-            chunkX: Int,
-            chunkZ: Int,
+            chunkPos: ChunkPos,
             biome: Biome,
-            featureConfig: DefaultFeatureConfig
+            featureConfig: DefaultFeatureConfig,
+            heightLimitView: HeightLimitView
         ) {
             val portalBiome = registryManager.get(Registry.BIOME_KEY).getKey(
                 chunkGenerator.biomeSource.getBiomeForNoiseGen(
-                    NecterePortalGen.getPortalX(chunkX) shr 2,
+                    NecterePortalGen.getPortalX(chunkPos.x) shr 2,
                     64 shr 2,
-                    NecterePortalGen.getPortalZ(chunkZ) shr 2
+                    NecterePortalGen.getPortalZ(chunkPos.z) shr 2
                 )
             ).orElse(null)
 
@@ -173,8 +179,8 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                 children.add(
                     Piece(
                         random,
-                        NecterePortalGen.getPortalStructureX(chunkX),
-                        NecterePortalGen.getPortalStructureZ(chunkZ)
+                        NecterePortalGen.getPortalStructureX(chunkPos.x),
+                        NecterePortalGen.getPortalStructureZ(chunkPos.z)
                     )
                 )
             }
@@ -188,16 +194,16 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
     class Piece : StructurePieceWithDimensions {
         constructor(random: Random, x: Int, z: Int) : super(
             HotMStructurePieces.NECTERE_PORTAL,
-            random,
             x,
             64,
             z,
             5,
             4,
-            5
+            5,
+            getRandomHorizontalDirection(random)
         )
 
-        constructor(manager: StructureManager, tag: CompoundTag) : super(HotMStructurePieces.NECTERE_PORTAL, tag)
+        constructor(world: ServerWorld, tag: NbtCompound) : super(HotMStructurePieces.NECTERE_PORTAL, tag)
 
         override fun generate(
             world: StructureWorldAccess,

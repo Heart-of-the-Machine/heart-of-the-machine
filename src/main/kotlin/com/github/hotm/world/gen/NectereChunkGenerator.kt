@@ -2,25 +2,20 @@ package com.github.hotm.world.gen
 
 import com.github.hotm.HotMConfig
 import com.github.hotm.world.HotMDimensions
+import com.google.common.collect.Lists
+import com.google.common.collect.Sets
 import com.mojang.datafixers.util.Function4
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import it.unimi.dsi.fastutil.objects.ObjectArrayList
-import it.unimi.dsi.fastutil.objects.ObjectList
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.entity.SpawnGroup
-import net.minecraft.structure.JigsawJunction
-import net.minecraft.structure.PoolStructurePiece
-import net.minecraft.structure.StructurePiece
-import net.minecraft.structure.StructureStart
-import net.minecraft.structure.pool.StructurePool
 import net.minecraft.util.Util
+import net.minecraft.util.collection.Pool
+import net.minecraft.util.dynamic.RegistryLookupCodec
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.ChunkPos
-import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.noise.NoiseSampler
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler
@@ -28,25 +23,27 @@ import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler
 import net.minecraft.util.math.noise.SimplexNoiseSampler
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
-import net.minecraft.util.registry.RegistryLookupCodec
 import net.minecraft.world.*
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.SpawnSettings
 import net.minecraft.world.biome.source.BiomeSource
 import net.minecraft.world.biome.source.TheEndBiomeSource
 import net.minecraft.world.chunk.Chunk
+import net.minecraft.world.chunk.ChunkSection
 import net.minecraft.world.chunk.ProtoChunk
-import net.minecraft.world.gen.ChunkRandom
-import net.minecraft.world.gen.StructureAccessor
-import net.minecraft.world.gen.chunk.ChunkGenerator
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings
-import net.minecraft.world.gen.chunk.VerticalBlockSample
+import net.minecraft.world.gen.*
+import net.minecraft.world.gen.chunk.*
 import net.minecraft.world.gen.feature.StructureFeature
 import java.util.*
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+import java.util.function.Consumer
+import java.util.function.DoubleFunction
 import java.util.function.Predicate
 import java.util.function.Supplier
 import java.util.stream.IntStream
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.pow
 
 class NectereChunkGenerator private constructor(
@@ -88,11 +85,11 @@ class NectereChunkGenerator private constructor(
             random,
             IntStream.rangeClosed(-3, 0)
         ) else OctavePerlinNoiseSampler(random, IntStream.rangeClosed(-3, 0))
-        random.consume(2620)
+        random.skip(2620)
         randomDensityOffset = OctavePerlinNoiseSampler(random, IntStream.rangeClosed(-15, 0))
         islandNoiseOverride = if (shapeConfig.hasIslandNoiseOverride()) {
             val chunkRandom = ChunkRandom(genSeed)
-            chunkRandom.consume(17292)
+            chunkRandom.skip(17292)
             SimplexNoiseSampler(chunkRandom)
         } else {
             null
@@ -182,6 +179,8 @@ class NectereChunkGenerator private constructor(
     }
 
     private fun sampleNoiseColumn(buffer: DoubleArray, x: Int, z: Int) {
+        // FIXME: NoiseChunkGenerator uses a NoiseColumnSampler here. Look into building a NectereColumnSampler.
+
         val shapeConfig = settings().generationShapeConfig
 
         val biomeDepth: Double
@@ -284,20 +283,27 @@ class NectereChunkGenerator private constructor(
         return if (g < 0.0) g * 0.009486607142857142 else g.coerceAtMost(1.0) * 0.006640625
     }
 
-    override fun getHeight(x: Int, z: Int, heightmapType: Heightmap.Type): Int {
+    override fun getHeight(x: Int, z: Int, heightmapType: Heightmap.Type, heightLimitView: HeightLimitView): Int {
         return sampleHeightmap(x, z, null, heightmapType.blockPredicate)
     }
 
-    override fun getColumnSample(x: Int, z: Int): BlockView {
-        val blockStates =
-            arrayOfNulls<BlockState>(noiseSizeY * verticalNoiseResolution)
-        sampleHeightmap(x, z, blockStates, null)
-        return VerticalBlockSample(blockStates)
+    override fun getColumnSample(x: Int, z: Int, world: HeightLimitView): VerticalBlockSample {
+        val bottomY = max(settings().generationShapeConfig.minimumY, world.bottomY)
+        val topY = min(settings().generationShapeConfig.minimumY + settings().generationShapeConfig.height, world.topY)
+        val k = MathHelper.floorDiv(bottomY, verticalNoiseResolution)
+        val l = MathHelper.floorDiv(topY - bottomY, verticalNoiseResolution)
+        return if (l <= 0) {
+            VerticalBlockSample(bottomY, EMPTY)
+        } else {
+            val blockStates = arrayOfNulls<BlockState>(l * verticalNoiseResolution)
+            sampleHeightmap(x, z, blockStates, null, k, l)
+            VerticalBlockSample(bottomY, blockStates)
+        }
     }
 
     private fun sampleHeightmap(
         x: Int, z: Int, states: Array<BlockState?>?,
-        predicate: Predicate<BlockState?>?
+        predicate: Predicate<BlockState?>?, minY: Int, noiseSizeY: Int
     ): Int {
         val i = Math.floorDiv(x, horizontalNoiseResolution)
         val j = Math.floorDiv(z, horizontalNoiseResolution)
@@ -352,25 +358,23 @@ class NectereChunkGenerator private constructor(
         val k = chunkPos2.startX
         val l = chunkPos2.startZ
         val mutable = BlockPos.Mutable()
+
         for (m in 0..15) {
             for (n in 0..15) {
                 val o = k + m
                 val p = l + n
                 val q = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, m, n) + 1
-                val e = surfaceDepthNoise
-                    .sample(
-                        o.toDouble() * 0.0625,
-                        p.toDouble() * 0.0625,
-                        0.0625,
-                        m.toDouble() * 0.0625
-                    ) * 15.0
-                region.getBiome(mutable.set(k + m, q, l + n))
-                    .buildSurface(
-                        chunkRandom, chunk, o, p, q, e, defaultBlock, defaultFluid,
-                        this.seaLevel, region.seed
-                    )
+                val e = surfaceDepthNoise.sample(
+                    o.toDouble() * 0.0625, p.toDouble() * 0.0625, 0.0625, m.toDouble() * 0.0625
+                ) * 15.0
+                val r = settings().minSurfaceLevel
+                region.getBiome(mutable.set(k + m, q, l + n)).buildSurface(
+                    chunkRandom, chunk, o, p, q, e, defaultBlock,
+                    defaultFluid, this.seaLevel, r, region.seed
+                )
             }
         }
+
         buildBedrock(chunk, chunkRandom)
     }
 
@@ -416,156 +420,139 @@ class NectereChunkGenerator private constructor(
     }
 
     override fun populateNoise(
-        world: WorldAccess,
+        executor: Executor,
         accessor: StructureAccessor,
         chunk: Chunk
-    ) {
-        val objectList: ObjectList<StructurePiece> = ObjectArrayList(10)
-        val objectList2: ObjectList<JigsawJunction> = ObjectArrayList(32)
-        val chunkPos = chunk.pos
-        val i = chunkPos.x
-        val j = chunkPos.z
-        val k = i shl 4
-        val l = j shl 4
-        for (structureFeature in StructureFeature.JIGSAW_STRUCTURES) {
-            accessor.getStructuresWithChildren(ChunkSectionPos.from(chunkPos, 0), structureFeature)
-                .forEach { start: StructureStart<*>? ->
-                    val var6: Iterator<StructurePiece> = start!!.children.iterator()
+    ): CompletableFuture<Chunk> {
+        val generationShapeConfig = settings().generationShapeConfig
+        val i = Math.max(generationShapeConfig.minimumY, chunk.bottomY)
+        val j = Math.min(generationShapeConfig.minimumY + generationShapeConfig.height, chunk.topY)
+        val k = MathHelper.floorDiv(i, verticalNoiseResolution)
+        val l = MathHelper.floorDiv(j - i, verticalNoiseResolution)
+        return if (l <= 0) {
+            CompletableFuture.completedFuture(chunk)
+        } else {
+            val m = chunk.getSectionIndex(l * verticalNoiseResolution - 1 + i)
+            val n = chunk.getSectionIndex(i)
+            CompletableFuture.supplyAsync({
+                val set = Sets.newHashSet<ChunkSection>()
+                val var17: Chunk
+                try {
+                    var mx = m
                     while (true) {
-                        var structurePiece: StructurePiece
-                        do {
-                            if (!var6.hasNext()) {
-                                return@forEach
-                            }
-                            structurePiece = var6.next()
-                        } while (!structurePiece.intersectsChunk(chunkPos, 12))
-                        if (structurePiece is PoolStructurePiece) {
-                            val poolStructurePiece = structurePiece
-                            val projection =
-                                poolStructurePiece.poolElement.projection
-                            if (projection == StructurePool.Projection.RIGID) {
-                                objectList.add(poolStructurePiece)
-                            }
-                            for (jigsawJunction in poolStructurePiece.junctions) {
-                                val kx = jigsawJunction.sourceX
-                                val lx = jigsawJunction.sourceZ
-                                if (kx > k - 12 && lx > l - 12 && kx < k + 15 + 12 && lx < l + 15 + 12) {
-                                    objectList2.add(jigsawJunction)
-                                }
-                            }
-                        } else {
-                            objectList.add(structurePiece)
+                        if (mx < n) {
+                            var17 = populateNoise(accessor, chunk, k, l)
+                            break
                         }
+                        val chunkSection = chunk.getSection(mx)
+                        chunkSection.lock()
+                        set.add(chunkSection)
+                        --mx
+                    }
+                } finally {
+                    for (chunkSection3 in set) {
+                        chunkSection3.unlock()
                     }
                 }
-        }
-        val ds = Array(
-            2
-        ) { Array(noiseSizeZ + 1) { DoubleArray(noiseSizeY + 1) } }
-        for (m in 0 until noiseSizeZ + 1) {
-            ds[0][m] = DoubleArray(noiseSizeY + 1)
-            this.sampleNoiseColumn(ds[0][m], i * noiseSizeX, j * noiseSizeZ + m)
-            ds[1][m] = DoubleArray(noiseSizeY + 1)
-        }
-        val protoChunk = chunk as ProtoChunk
-        val heightmap = protoChunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG)
-        val heightmap2 = protoChunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG)
-        val mutable = BlockPos.Mutable()
-        val objectListIterator = objectList.iterator()
-        val objectListIterator2 = objectList2.iterator()
-        for (n in 0 until noiseSizeX) {
-            var p = 0
-            while (p < noiseSizeZ + 1) {
-                this.sampleNoiseColumn(ds[1][p], i * noiseSizeX + n + 1, j * noiseSizeZ + p)
-                ++p
-            }
-            p = 0
-            while (p < noiseSizeZ) {
-                var chunkSection = protoChunk.getSection(15)
-                chunkSection.lock()
-                for (q in noiseSizeY - 1 downTo 0) {
-                    val d = ds[0][p][q]
-                    val e = ds[0][p + 1][q]
-                    val f = ds[1][p][q]
-                    val g = ds[1][p + 1][q]
-                    val h = ds[0][p][q + 1]
-                    val r = ds[0][p + 1][q + 1]
-                    val s = ds[1][p][q + 1]
-                    val t = ds[1][p + 1][q + 1]
-                    for (u in verticalNoiseResolution - 1 downTo 0) {
-                        val v = q * verticalNoiseResolution + u
-                        val w = v and 15
-                        val x = v shr 4
-                        if (chunkSection.yOffset shr 4 != x) {
-                            chunkSection.unlock()
-                            chunkSection = protoChunk.getSection(x)
-                            chunkSection.lock()
-                        }
-                        val y = u.toDouble() / verticalNoiseResolution.toDouble()
-                        val z = MathHelper.lerp(y, d, h)
-                        val aa = MathHelper.lerp(y, f, s)
-                        val ab = MathHelper.lerp(y, e, r)
-                        val ac = MathHelper.lerp(y, g, t)
-                        for (ad in 0 until horizontalNoiseResolution) {
-                            val ae = k + n * horizontalNoiseResolution + ad
-                            val af = ae and 15
-                            val ag =
-                                ad.toDouble() / horizontalNoiseResolution.toDouble()
-                            val ah = MathHelper.lerp(ag, z, aa)
-                            val ai = MathHelper.lerp(ag, ab, ac)
-                            for (aj in 0 until horizontalNoiseResolution) {
-                                val ak = l + p * horizontalNoiseResolution + aj
-                                val al = ak and 15
-                                val am =
-                                    aj.toDouble() / horizontalNoiseResolution.toDouble()
-                                val an = MathHelper.lerp(am, ah, ai)
-                                var ao = MathHelper.clamp(an / 200.0, -1.0, 1.0)
-                                var at: Int
-                                var au: Int
-                                var ar: Int
-                                ao = ao / 2.0 - ao * ao * ao / 24.0
-                                while (objectListIterator.hasNext()) {
-                                    val structurePiece = objectListIterator.next()
-                                    val blockBox = structurePiece.boundingBox
-                                    at = max(blockBox.minX - ae, ae - blockBox.maxX).coerceAtLeast(0)
-                                    au =
-                                        v - (blockBox.minY + if (structurePiece is PoolStructurePiece) structurePiece.groundLevelDelta else 0)
-                                    ar = max(blockBox.minZ - ak, ak - blockBox.maxZ).coerceAtLeast(0)
-                                    ao += method_16572(at, au, ar) * 0.8
-                                }
-                                objectListIterator.back(objectList.size)
-                                while (objectListIterator2.hasNext()) {
-                                    val jigsawJunction = objectListIterator2.next()
-                                    val `as` = ae - jigsawJunction.sourceX
-                                    at = v - jigsawJunction.sourceGroundY
-                                    au = ak - jigsawJunction.sourceZ
-                                    ao += method_16572(`as`, at, au) * 0.4
-                                }
-                                objectListIterator2.back(objectList2.size)
-                                val blockState = getBlockState(ao, v)
-                                if (blockState !== AIR) {
-                                    if (blockState.luminance != 0) {
-                                        mutable[ae, v] = ak
-                                        protoChunk.addLightSource(mutable)
-                                    }
-                                    chunkSection.setBlockState(af, w, al, blockState, false)
-                                    heightmap.trackUpdate(af, v, al, blockState)
-                                    heightmap2.trackUpdate(af, v, al, blockState)
-                                }
-                            }
-                        }
-                    }
-                }
-                chunkSection.unlock()
-                ++p
-            }
-            val es = ds[0]
-            ds[0] = ds[1]
-            ds[1] = es
+                var17
+            }, Util.getMainWorkerExecutor())
         }
     }
 
-    override fun getMaxY(): Int {
+    private fun populateNoise(accessor: StructureAccessor, chunk: Chunk, startY: Int, noiseSizeY: Int): Chunk {
+        val heightmap = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG)
+        val heightmap2 = chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG)
+        val chunkPos = chunk.pos
+        val i = chunkPos.startX
+        val j = chunkPos.startZ
+        val structureWeightSampler = StructureWeightSampler(accessor, chunk)
+        val aquiferSampler: AquiferSampler = this.createBlockSampler(startY, noiseSizeY, chunkPos)
+        val noiseInterpolator = NoiseInterpolator(
+            noiseSizeX, noiseSizeY, noiseSizeZ, chunkPos, startY
+        ) { buffer: DoubleArray?, x: Int, z: Int, minY: Int, noiseSizeY: Int ->
+            this.sampleNoiseColumn(
+                buffer, x, z, minY, noiseSizeY
+            )
+        }
+        val list: MutableList<NoiseInterpolator> = Lists.newArrayList(*noiseInterpolator as Array<Any?>)
+        Objects.requireNonNull(list)
+        val consumer =
+            Consumer { e: NoiseInterpolator -> list.add(e) }
+        val doubleFunction: DoubleFunction<BlockSource> = this.createBlockSourceFactory(startY, chunkPos, consumer)
+        val doubleFunction2: DoubleFunction<WeightSampler> = this.createWeightSamplerFactory(startY, chunkPos, consumer)
+        list.forEach(Consumer { obj: NoiseInterpolator -> obj.sampleStartNoise() })
+        val mutable = BlockPos.Mutable()
+        for (k in 0 until noiseSizeX) {
+            list.forEach(Consumer { noiseInterpolatorx: NoiseInterpolator ->
+                noiseInterpolatorx.sampleEndNoise(
+                    k
+                )
+            })
+            for (m in 0 until noiseSizeZ) {
+                var chunkSection = chunk.getSection(chunk.countVerticalSections() - 1)
+                for (n in noiseSizeY - 1 downTo 0) {
+                    list.forEach(
+                        Consumer { noiseInterpolatorx: NoiseInterpolator ->
+                            noiseInterpolatorx.sampleNoiseCorners(
+                                n, m
+                            )
+                        })
+                    for (q in verticalNoiseResolution - 1 downTo 0) {
+                        val r = (startY + n) * verticalNoiseResolution + q
+                        val s = r and 15
+                        val t = chunk.getSectionIndex(r)
+                        if (chunk.getSectionIndex(chunkSection.yOffset) != t) {
+                            chunkSection = chunk.getSection(t)
+                        }
+                        val d = q.toDouble() / verticalNoiseResolution.toDouble()
+                        list.forEach(Consumer { noiseInterpolatorx: NoiseInterpolator ->
+                            noiseInterpolatorx.sampleNoiseY(
+                                d
+                            )
+                        })
+                        for (u in 0 until horizontalNoiseResolution) {
+                            val v = i + k * horizontalNoiseResolution + u
+                            val w = v and 15
+                            val e = u.toDouble() / horizontalNoiseResolution.toDouble()
+                            list.forEach(
+                                Consumer { noiseInterpolatorx: NoiseInterpolator ->
+                                    noiseInterpolatorx.sampleNoiseX(
+                                        e
+                                    )
+                                })
+                            for (x in 0 until horizontalNoiseResolution) {
+                                val y = j + m * horizontalNoiseResolution + x
+                                val z = y and 15
+                                val f = x.toDouble() / horizontalNoiseResolution.toDouble()
+                                val g = noiseInterpolator.sampleNoise(f)
+                                val blockState = getBlockState(
+                                    structureWeightSampler, aquiferSampler, doubleFunction.apply(f) as BlockSource,
+                                    doubleFunction2.apply(f) as WeightSampler, v, r, y, g
+                                )
+                                if (blockState !== NoiseChunkGenerator.AIR) {
+                                    if (blockState.luminance != 0 && chunk is ProtoChunk) {
+                                        mutable[v, r] = y
+                                        chunk.addLightSource(mutable)
+                                    }
+                                    chunkSection.setBlockState(w, s, z, blockState, false)
+                                    heightmap.trackUpdate(w, r, z, blockState)
+                                    heightmap2.trackUpdate(w, r, z, blockState)
+                                    if (aquiferSampler.needsFluidTick() && !blockState.fluidState.isEmpty) {
+                                        mutable[v, r] = y
+                                        chunk.fluidTickScheduler.schedule(mutable, blockState.fluidState.fluid, 0)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            list.forEach(Consumer { obj: NoiseInterpolator -> obj.swapBuffers() })
+        }
+        return chunk
+    }
+
+    override fun getWorldHeight(): Int {
         return terrainHeight
     }
 
@@ -576,7 +563,7 @@ class NectereChunkGenerator private constructor(
     override fun getEntitySpawnList(
         biome: Biome, accessor: StructureAccessor, group: SpawnGroup,
         pos: BlockPos
-    ): List<SpawnSettings.SpawnEntry> {
+    ): Pool<SpawnSettings.SpawnEntry> {
         if (accessor.getStructureAt(pos, true, StructureFeature.SWAMP_HUT).hasChildren()) {
             if (group == SpawnGroup.MONSTER) {
                 return StructureFeature.SWAMP_HUT.monsterSpawns
@@ -601,12 +588,11 @@ class NectereChunkGenerator private constructor(
 
     override fun populateEntities(region: ChunkRegion) {
 //        if (!this.field_24774.method_28562()) {
-        val i = region.centerChunkX
-        val j = region.centerChunkZ
-        val biome = region.getBiome(ChunkPos(i, j).startPos)
+        val centerChunk = region.centerPos
+        val biome = region.getBiome(centerChunk.startPos)
         val chunkRandom = ChunkRandom()
-        chunkRandom.setPopulationSeed(region.seed, i shl 4, j shl 4)
-        SpawnHelper.populateEntities(region, biome, i, j, chunkRandom)
+        chunkRandom.setPopulationSeed(region.seed, centerChunk.startX, centerChunk.startZ)
+        SpawnHelper.populateEntities(region, biome, centerChunk, chunkRandom)
         //        }
     }
 
@@ -689,5 +675,6 @@ class NectereChunkGenerator private constructor(
         }
 
         private val AIR: BlockState = Blocks.AIR.defaultState
+        private val EMPTY: Array<BlockState> = Array(0) { AIR }
     }
 }

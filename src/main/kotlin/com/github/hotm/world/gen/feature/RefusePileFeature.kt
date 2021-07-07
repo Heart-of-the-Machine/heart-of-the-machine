@@ -5,21 +5,19 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
 
 class RefusePileFeature(codec: Codec<PileFeatureConfig?>?) : Feature<PileFeatureConfig>(codec) {
-    override fun generate(
-        serverWorldAccess: StructureWorldAccess,
-        chunkGenerator: ChunkGenerator,
-        random: Random,
-        blockPos: BlockPos,
-        boulderFeatureConfig: PileFeatureConfig
-    ): Boolean {
-        var blockPosMut = blockPos
+    override fun generate(ctx: FeatureContext<PileFeatureConfig>): Boolean {
+        val world = ctx.world
+        val config = ctx.config
+        val random = ctx.random
+        var blockPosMut = ctx.origin
 
         while (true) {
             if (blockPosMut.y > 3) {
-                if (!FeatureUtils.isSurface(serverWorldAccess.getBlockState(blockPosMut.down()).block)) {
+                if (!FeatureUtils.isSurface(world.getBlockState(blockPosMut.down()))) {
                     blockPosMut = blockPosMut.down()
                     continue
                 }
@@ -29,7 +27,7 @@ class RefusePileFeature(codec: Codec<PileFeatureConfig?>?) : Feature<PileFeature
                 return false
             }
 
-            val startRadius = boulderFeatureConfig.startRadius
+            val startRadius = config.startRadius
             if (startRadius >= 0) {
                 for (i in 0 until 3) {
                     val sizeX = startRadius + random.nextInt(2)
@@ -42,7 +40,7 @@ class RefusePileFeature(codec: Codec<PileFeatureConfig?>?) : Feature<PileFeature
                         blockPosMut.add(sizeX, sizeY, sizeZ)
                     )) {
                         if (blockPos2.getSquaredDistance(blockPosMut) <= (f * f).toDouble()) {
-                            serverWorldAccess.setBlockState(blockPos2, boulderFeatureConfig.state, 4)
+                            world.setBlockState(blockPos2, config.state, 4)
                         }
                     }
 

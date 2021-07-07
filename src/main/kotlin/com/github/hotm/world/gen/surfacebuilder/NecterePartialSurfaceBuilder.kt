@@ -21,6 +21,7 @@ class NecterePartialSurfaceBuilder(codec: Codec<NectereSurfaceConfig>) : Surface
         defaultBlock: BlockState,
         fluidBlock: BlockState,
         seaLevel: Int,
+        minY: Int,
         seed: Long,
         ternarySurfaceConfig: NectereSurfaceConfig
     ) {
@@ -37,6 +38,7 @@ class NecterePartialSurfaceBuilder(codec: Codec<NectereSurfaceConfig>) : Surface
             ternarySurfaceConfig.topMaterial,
             ternarySurfaceConfig.underMaterial,
             ternarySurfaceConfig.beachMaterial,
+            minY,
             seaLevel
         )
     }
@@ -54,6 +56,7 @@ class NecterePartialSurfaceBuilder(codec: Codec<NectereSurfaceConfig>) : Surface
         topBlock: BlockState,
         underBlock: BlockState,
         beachBlock: BlockState,
+        minY: Int,
         seaLevel: Int
     ) {
         var surfaceState = if (noise < 1.0) {
@@ -68,7 +71,7 @@ class NecterePartialSurfaceBuilder(codec: Codec<NectereSurfaceConfig>) : Surface
         val chunkX = x and 15
         val chunkZ = z and 15
 
-        for (y in height downTo 0) {
+        for (y in height downTo minY) {
             mutable[chunkX, y] = chunkZ
             val curState = chunk.getBlockState(mutable)
 
