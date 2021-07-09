@@ -8,7 +8,7 @@ import net.minecraft.structure.StructurePieceType
 object HotMStructurePieces {
     // NOTE: The id should have been: "hotm:NePP"
     val NECTERE_PORTAL =
-        StructurePieceType.register(NecterePortalStructureFeature::Piece, "HotMNePP")
+        StructurePieceType.register(NecterePortalStructureFeature::Piece, "hotm:NePP")
 
     fun register() {}
 }
