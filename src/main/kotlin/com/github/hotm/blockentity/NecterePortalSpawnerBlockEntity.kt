@@ -44,6 +44,10 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
     fun tick() {
         val world = world
         if (world != null && world is ServerWorld) {
+            // This is an awful hack to get minecraft to stop complaining about these BlockEntities being removed but
+            // still pending.
+            world.getChunk(pos).addPendingBlockEntityNbt(writeNbt(NbtCompound()))
+
             world.removeBlockEntity(pos)
 
             if (originalBlock.block != HotMBlocks.NECTERE_PORTAL_SPAWNER) {
