@@ -27,27 +27,39 @@ object HotMBlocks {
     /*
      * Block Settings.
      */
-    private val CRYSTAL_BLOCK_SETTINGS =
-        FabricBlockSettings.of(Material.GLASS).requiresTool().breakByTool(FabricToolTags.PICKAXES).strength(2.0f, 5.0f)
-            .sounds(BlockSoundGroup.GLASS).lightLevel(15)
-    private val LAMP_BLOCK_SETTINGS =
-        FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.STONE)
-            .lightLevel(15)
-    private val MACHINE_CASING_LAMP_BLOCK_SETTINGS =
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.METAL)
-            .lightLevel(15)
-    private val OBELISK_PART_SETTINGS =
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
-    private val MACHINE_CASING_SETTINGS =
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.METAL)
     private val BRACING_SETTINGS =
-        FabricBlockSettings.of(Material.METAL).requiresTool().strength(1.0f, 15.0f).sounds(BlockSoundGroup.METAL)
-            .nonOpaque()
+        FabricBlockSettings.of(Material.METAL, MapColor.GRAY).requiresTool().strength(1.0f, 15.0f)
+            .sounds(BlockSoundGroup.METAL).nonOpaque()
+    private val CYAN_CRYSTAL_BLOCK_SETTINGS =
+        FabricBlockSettings.of(Material.GLASS, MapColor.CYAN).requiresTool().breakByTool(FabricToolTags.PICKAXES)
+            .strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS).luminance(15)
+    private val CYAN_LAMP_BLOCK_SETTINGS =
+        FabricBlockSettings.of(Material.STONE, MapColor.CYAN).requiresTool().strength(2.0f, 5.0f)
+            .sounds(BlockSoundGroup.STONE).luminance(15)
+    private val CYAN_MACHINE_CASING_LAMP_BLOCK_SETTINGS =
+        FabricBlockSettings.of(Material.METAL, MapColor.CYAN).requiresTool().strength(2.0f, 5.0f)
+            .sounds(BlockSoundGroup.METAL).luminance(15)
+    private val MACHINE_CASING_SETTINGS =
+        FabricBlockSettings.of(Material.METAL, MapColor.BLACK).requiresTool().strength(3.0f, 10.0f)
+            .sounds(BlockSoundGroup.METAL)
+    private val MAGENTA_CRYSTAL_BLOCK_SETTINGS =
+        FabricBlockSettings.of(Material.GLASS, MapColor.MAGENTA).requiresTool().breakByTool(FabricToolTags.PICKAXES)
+            .strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS).luminance(15)
+    private val MAGENTA_LAMP_BLOCK_SETTINGS =
+        FabricBlockSettings.of(Material.STONE, MapColor.MAGENTA).requiresTool().strength(2.0f, 5.0f)
+            .sounds(BlockSoundGroup.STONE).luminance(15)
+    private val MAGENTA_MACHINE_CASING_LAMP_BLOCK_SETTINGS =
+        FabricBlockSettings.of(Material.METAL, MapColor.MAGENTA).requiresTool().strength(2.0f, 5.0f)
+            .sounds(BlockSoundGroup.METAL).luminance(15)
+    private val OBELISK_PART_SETTINGS =
+        FabricBlockSettings.of(Material.METAL, MapColor.DARK_AQUA).requiresTool().strength(3.0f, 10.0f)
+            .sounds(BlockSoundGroup.STONE)
     private val PLASSEIN_LOG_SETTINGS =
-        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
+        FabricBlockSettings.of(Material.WOOD, MapColor.BLUE).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
             .sounds(BlockSoundGroup.WOOD)
     private val THINKING_STONE_SETTINGS =
-        FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
+        FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().strength(3.0f, 10.0f)
+            .sounds(BlockSoundGroup.STONE)
 
 
     /*
@@ -65,14 +77,14 @@ object HotMBlocks {
     /*
      * Crystals & Lamps.
      */
-    val CYAN_CRYSTAL = Block(CRYSTAL_BLOCK_SETTINGS)
-    val CYAN_CRYSTAL_LAMP = Block(LAMP_BLOCK_SETTINGS)
-    val CYAN_MACHINE_CASING_LAMP = Block(MACHINE_CASING_LAMP_BLOCK_SETTINGS)
-    val CYAN_THINKING_STONE_LAMP = Block(LAMP_BLOCK_SETTINGS)
-    val MAGENTA_CRYSTAL = Block(CRYSTAL_BLOCK_SETTINGS)
-    val MAGENTA_CRYSTAL_LAMP = Block(LAMP_BLOCK_SETTINGS)
-    val MAGENTA_MACHINE_CASING_LAMP = Block(MACHINE_CASING_LAMP_BLOCK_SETTINGS)
-    val MAGENTA_THINKING_STONE_LAMP = Block(LAMP_BLOCK_SETTINGS)
+    val CYAN_CRYSTAL = Block(CYAN_CRYSTAL_BLOCK_SETTINGS)
+    val CYAN_CRYSTAL_LAMP = Block(CYAN_LAMP_BLOCK_SETTINGS)
+    val CYAN_MACHINE_CASING_LAMP = Block(CYAN_MACHINE_CASING_LAMP_BLOCK_SETTINGS)
+    val CYAN_THINKING_STONE_LAMP = Block(CYAN_LAMP_BLOCK_SETTINGS)
+    val MAGENTA_CRYSTAL = Block(MAGENTA_CRYSTAL_BLOCK_SETTINGS)
+    val MAGENTA_CRYSTAL_LAMP = Block(MAGENTA_LAMP_BLOCK_SETTINGS)
+    val MAGENTA_MACHINE_CASING_LAMP = Block(MAGENTA_MACHINE_CASING_LAMP_BLOCK_SETTINGS)
+    val MAGENTA_THINKING_STONE_LAMP = Block(MAGENTA_LAMP_BLOCK_SETTINGS)
 
     /*
      * Obelisk parts.
@@ -80,9 +92,11 @@ object HotMBlocks {
     val GLOWY_OBELISK_PART = PillarBlock(OBELISK_PART_SETTINGS)
     val OBELISK_PART = PillarBlock(OBELISK_PART_SETTINGS)
     val NECTERE_PORTAL = NecterePortalBlock(
-        FabricBlockSettings.of(Material.PORTAL).noCollision().strength(-1.0f).sounds(BlockSoundGroup.GLASS).nonOpaque()
-            .lightLevel { 12 })
-    val NECTERE_PORTAL_SPAWNER = NecterePortalSpawnerBlock(FabricBlockSettings.of(Material.STONE).strength(-1.0f))
+        FabricBlockSettings.of(Material.PORTAL, MapColor.CYAN).noCollision().strength(-1.0f)
+            .sounds(BlockSoundGroup.GLASS).nonOpaque().luminance(12)
+    )
+    val NECTERE_PORTAL_SPAWNER =
+        NecterePortalSpawnerBlock(FabricBlockSettings.of(Material.STONE, MapColor.DARK_AQUA).strength(-1.0f))
 
     /*
      * Machine Casing Blocks.
@@ -110,15 +124,16 @@ object HotMBlocks {
      * Plassein Blocks.
      */
     val PLASSEIN_BLOOM = Block(
-        FabricBlockSettings.of(Material.LEAVES).strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOL)
+        FabricBlockSettings.of(Material.LEAVES, MapColor.BLUE).strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOL)
             .nonOpaque().allowsSpawning(HotMBlocks::never)
     )
     val PLASSEIN_FUEL_BLOCK =
         Block(FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().strength(5.0F, 6.0F))
     val PLASSEIN_GRASS = LeylineableBlock(PLASSEIN_GRASS_LEYLINE, MACHINE_CASING_SETTINGS)
     val PLASSEIN_LEAVES = PlasseinLeavesBlock(
-        FabricBlockSettings.of(Material.LEAVES).strength(0.2f).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()
-            .allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never).blockVision(HotMBlocks::never)
+        FabricBlockSettings.of(Material.LEAVES, MapColor.CYAN).strength(0.2f).ticksRandomly()
+            .sounds(BlockSoundGroup.GRASS).nonOpaque().allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never)
+            .blockVision(HotMBlocks::never)
     )
     val PLASSEIN_LOG = LeylineablePillarBlock(PLASSEIN_LOG_LEYLINE, PLASSEIN_LOG_SETTINGS)
     val PLASSEIN_PLANKS = Block(PLASSEIN_LOG_SETTINGS)
@@ -128,7 +143,7 @@ object HotMBlocks {
     )
     val PLASSEIN_SPORE = PlasseinSporeBlock(
         StandardPlasseinSporeGenerator,
-        FabricBlockSettings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly()
+        FabricBlockSettings.of(Material.PLANT, MapColor.BLUE).noCollision().ticksRandomly().breakInstantly()
             .sounds(BlockSoundGroup.GRASS)
     )
     val PLASSEIN_STEM = PillarBlock(PLASSEIN_LOG_SETTINGS)
@@ -163,8 +178,8 @@ object HotMBlocks {
      * Thinking glass blocks.
      */
     private val GLASS_SETTINGS =
-        FabricBlockSettings.of(Material.GLASS).strength(0.5f, 10.0f).sounds(BlockSoundGroup.GLASS).nonOpaque()
-            .allowsSpawning(HotMBlocks::never).solidBlock(HotMBlocks::never).suffocates(HotMBlocks::never)
+        FabricBlockSettings.of(Material.GLASS, MapColor.BLACK).strength(0.5f, 10.0f).sounds(BlockSoundGroup.GLASS)
+            .nonOpaque().allowsSpawning(HotMBlocks::never).solidBlock(HotMBlocks::never).suffocates(HotMBlocks::never)
             .blockVision(HotMBlocks::never)
     val THINKING_GLASS = GlassBlock(GLASS_SETTINGS)
 
