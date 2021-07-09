@@ -17,7 +17,7 @@ import net.minecraft.world.gen.feature.StructureFeature
  */
 object HotMStructureFeatures {
     val NECTERE_PORTAL = FeatureAdditions.registerStructure(
-        "nectere_portal", // NOTE: This should have been: "hotm:nectere_portal"
+        "hotm:nectere_portal", // NOTE: This should have been: "hotm:nectere_portal"
         NecterePortalStructureFeature(DefaultFeatureConfig.CODEC),
         GenerationStep.Feature.SURFACE_STRUCTURES
     )
