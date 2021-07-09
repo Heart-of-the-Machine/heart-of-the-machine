@@ -2,6 +2,7 @@ package com.github.hotm.blocks
 
 import com.github.hotm.HotMBlockEntities
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
+import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
 import net.minecraft.block.BlockWithEntity
 import net.minecraft.block.entity.BlockEntity
@@ -25,5 +26,9 @@ class NecterePortalSpawnerBlock(settings: Settings) : BlockWithEntity(settings) 
             HotMBlockEntities.NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY,
             NecterePortalSpawnerBlockEntity.Companion::tick
         )
+    }
+
+    override fun getRenderType(state: BlockState): BlockRenderType {
+        return BlockRenderType.MODEL
     }
 }
