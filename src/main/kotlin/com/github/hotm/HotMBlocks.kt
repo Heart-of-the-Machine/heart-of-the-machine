@@ -114,7 +114,7 @@ object HotMBlocks {
             .nonOpaque().allowsSpawning(HotMBlocks::never)
     )
     val PLASSEIN_FUEL_BLOCK =
-        Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).requiresTool().strength(5.0F, 6.0F))
+        Block(FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().strength(5.0F, 6.0F))
     val PLASSEIN_GRASS = LeylineableBlock(PLASSEIN_GRASS_LEYLINE, MACHINE_CASING_SETTINGS)
     val PLASSEIN_LEAVES = PlasseinLeavesBlock(
         FabricBlockSettings.of(Material.LEAVES).strength(0.2f).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()
@@ -123,7 +123,7 @@ object HotMBlocks {
     val PLASSEIN_LOG = LeylineablePillarBlock(PLASSEIN_LOG_LEYLINE, PLASSEIN_LOG_SETTINGS)
     val PLASSEIN_PLANKS = Block(PLASSEIN_LOG_SETTINGS)
     val PLASSEIN_SCAFFOLDING = ScaffoldingBlock(
-        FabricBlockSettings.of(Material.SUPPORTED, MaterialColor.BLUE).noCollision().sounds(BlockSoundGroup.SCAFFOLDING)
+        FabricBlockSettings.of(Material.DECORATION, MapColor.BLUE).noCollision().sounds(BlockSoundGroup.SCAFFOLDING)
             .dynamicBounds()
     )
     val PLASSEIN_SPORE = PlasseinSporeBlock(
@@ -156,7 +156,7 @@ object HotMBlocks {
      * Sand blocks.
      */
     private val SAND_SETTINGS =
-        FabricBlockSettings.of(Material.AGGREGATE, MaterialColor.SAND).strength(0.5F).sounds(BlockSoundGroup.SAND)
+        FabricBlockSettings.of(Material.AGGREGATE, MapColor.DEEPSLATE_GRAY).strength(0.5F).sounds(BlockSoundGroup.SAND)
     val NULL_SAND = SandBlock(0x29261d, SAND_SETTINGS)
 
     /*

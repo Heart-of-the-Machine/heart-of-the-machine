@@ -1,16 +1,14 @@
 package com.github.hotm.mixinapi;
 
 import com.github.hotm.HotMLog;
+import com.github.hotm.mixin.ChunkGeneratorSettingsAccessor;
+import com.github.hotm.mixin.MultiNoiseBiomeSourceAccessor;
 import com.github.hotm.world.HotMDimensions;
-import com.github.hotm.mixin.ChunkGeneratorSettingsInvoker;
-import com.github.hotm.mixin.DimensionTypeInvoker;
-import com.github.hotm.mixin.MultiNoiseBiomeSourceInvoker;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -18,7 +16,6 @@ import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeAccessType;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
@@ -38,35 +35,6 @@ public class DimensionAdditions {
     private static final Map<RegistryKey<DimensionOptions>, DimensionAddition> DIMENSION_KEYS = new HashMap<>();
     private static final Map<RegistryKey<World>, EntityPlacer> DEFAULT_PLACERS = new HashMap<>();
     private static final ThreadLocal<EntityPlacer> CURRENT_PLACER = new ThreadLocal<>();
-
-    public static ChunkGeneratorSettings createChunkGeneratorSettings(StructuresConfig structuresConfig,
-                                                                      GenerationShapeConfig generationShapeConfig,
-                                                                      BlockState defaultBlock, BlockState defaultFluid,
-                                                                      int bedrockCeilingY, int bedrockFloorY,
-                                                                      int seaLevel,
-                                                                      boolean mobGenerationDisabled) {
-        return ChunkGeneratorSettingsInvoker
-                .create(structuresConfig, generationShapeConfig, defaultBlock, defaultFluid, bedrockCeilingY,
-                        bedrockFloorY, seaLevel, mobGenerationDisabled);
-    }
-
-    public static MultiNoiseBiomeSource createMultiNoiseBiomeSource(long seed,
-                                                                    List<Pair<Biome.MixedNoisePoint, Supplier<Biome>>> list,
-                                                                    Optional<Pair<Registry<Biome>, MultiNoiseBiomeSource.Preset>> optional) {
-        return MultiNoiseBiomeSourceInvoker.create(seed, list, optional);
-    }
-
-    public static DimensionType createDimensionType(OptionalLong fixedTime, boolean hasSkylight, boolean hasCeiling,
-                                                    boolean ultrawarm, boolean natural, double coordinateScale,
-                                                    boolean hasEnderDragonFight, boolean piglinSafe, boolean bedWorks,
-                                                    boolean respawnAnchorWorks, boolean hasRaids, int logicalHeight,
-                                                    BiomeAccessType biomeAccessType, Identifier infiniburn,
-                                                    Identifier skyProperties, float ambientLight) {
-        return DimensionTypeInvoker
-                .create(fixedTime, hasSkylight, hasCeiling, ultrawarm, natural, coordinateScale, hasEnderDragonFight,
-                        piglinSafe, bedWorks, respawnAnchorWorks, hasRaids, logicalHeight, biomeAccessType, infiniburn,
-                        skyProperties, ambientLight);
-    }
 
     public static void addDimension(DimensionAddition addition) {
         DIMENSION_KEYS.put(addition.getOptionsRegistryKey(), addition);

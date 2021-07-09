@@ -5,14 +5,16 @@ import com.github.hotm.HotMConfig
 import com.github.hotm.HotMConstants
 import com.github.hotm.HotMLog
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
+import com.github.hotm.mixin.EntityAccessor
+import com.github.hotm.mixin.StructureFeatureAccessor
+import com.github.hotm.mixinapi.ChunkGeneratorSettingsAccess
+import com.github.hotm.mixinapi.DimensionAdditions
+import com.github.hotm.mixinapi.MultiNoiseBiomeSourceAccess
 import com.github.hotm.world.gen.HotMBiomes
-import com.github.hotm.world.gen.NectereChunkGenerator
+import com.github.hotm.world.gen.chunk.NectereChunkGenerator
 import com.github.hotm.world.gen.biome.NectereBiomeData
 import com.github.hotm.world.gen.feature.HotMStructureFeatures
 import com.github.hotm.world.gen.feature.NecterePortalGen
-import com.github.hotm.mixin.EntityAccessor
-import com.github.hotm.mixin.StructureFeatureAccessor
-import com.github.hotm.mixinapi.DimensionAdditions
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.ImmutableList
 import com.mojang.datafixers.util.Pair
@@ -52,17 +54,17 @@ object HotMDimensions {
      * Key used to reference the Nectere dimension.
      */
     val NECTERE_KEY: RegistryKey<World> =
-        RegistryKey.of(Registry.DIMENSION, HotMConstants.identifier("nectere"))
+        RegistryKey.of(Registry.WORLD_KEY, HotMConstants.identifier("nectere"))
 
     /**
      * Key used to reference the Nectere dimension options.
      */
-    val NECTERE_OPTIONS_KEY = RegistryKey.of(Registry.DIMENSION_OPTIONS, HotMConstants.identifier("nectere"))
+    val NECTERE_OPTIONS_KEY = RegistryKey.of(Registry.DIMENSION_KEY, HotMConstants.identifier("nectere"))
 
     /**
      * Dimension options that describe the Nectere dimension.
      */
-    val NECTERE_TYPE = DimensionAdditions.createDimensionType(
+    val NECTERE_TYPE = DimensionType.create(
         OptionalLong.empty(),
         true,
         false,
@@ -74,6 +76,8 @@ object HotMDimensions {
         false,
         false,
         false,
+        0,
+        256,
         256,
         HorizontalVoronoiBiomeAccessType.INSTANCE,
         BlockTags.INFINIBURN_OVERWORLD.id,
@@ -90,7 +94,7 @@ object HotMDimensions {
      * The registry key for the Nectere chunk generator settings.
      */
     val NECTERE_CHUNK_GENERATOR_SETTINGS_KEY =
-        RegistryKey.of(Registry.NOISE_SETTINGS_WORLDGEN, HotMConstants.identifier("nectere"))
+        RegistryKey.of(Registry.CHUNK_GENERATOR_SETTINGS_KEY, HotMConstants.identifier("nectere"))
 
     /**
      * ChunkGeneratorType preset for the Nectere dimension.
@@ -98,10 +102,11 @@ object HotMDimensions {
     val NECTERE_CHUNK_GENERATOR_SETTINGS_BUILTIN = Registry.register(
         BuiltinRegistries.CHUNK_GENERATOR_SETTINGS,
         NECTERE_CHUNK_GENERATOR_SETTINGS_KEY.value,
-        DimensionAdditions.createChunkGeneratorSettings(
+        ChunkGeneratorSettingsAccess.create(
             StructuresConfig(false),
-            GenerationShapeConfig(
-                150,
+            GenerationShapeConfig.create(
+                0,
+                160,
                 NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 60.0),
                 SlideConfig(-10, 3, 0),
                 SlideConfig(50, 4, -1),
@@ -119,7 +124,13 @@ object HotMDimensions {
             -10,
             0,
             16,
-            false
+            0,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
         )
     )
 
@@ -128,7 +139,7 @@ object HotMDimensions {
      */
     val NECTERE_BIOME_SOURCE_PRESET =
         MultiNoiseBiomeSource.Preset(HotMConstants.identifier("nectere")) { preset, registry, seed ->
-            DimensionAdditions.createMultiNoiseBiomeSource(
+            MultiNoiseBiomeSourceAccess.create(
                 seed,
                 HotMBiomes.biomeNoise().entries.stream().map<Pair<Biome.MixedNoisePoint, Supplier<Biome>>> { entry ->
                     Pair.of(entry.value, Supplier { registry.getOrThrow(entry.key) })
@@ -293,11 +304,11 @@ object HotMDimensions {
                 val up = init.up(offset)
                 val down = init.down(offset)
 
-                if (!World.isHeightInvalid(up) && world.getBlockState(up).block == HotMBlocks.NECTERE_PORTAL) {
+                if (!world.isOutOfHeightLimit(up) && world.getBlockState(up).block == HotMBlocks.NECTERE_PORTAL) {
                     return findPortalBase(world, up)
                 }
 
-                if (!World.isHeightInvalid(down) && world.getBlockState(down).block == HotMBlocks.NECTERE_PORTAL) {
+                if (!world.isOutOfHeightLimit(down) && world.getBlockState(down).block == HotMBlocks.NECTERE_PORTAL) {
                     return findPortalBase(world, down)
                 }
             }
@@ -412,7 +423,7 @@ object HotMDimensions {
                             MathHelper.floor(currentPos.z.toDouble() / nectereBiome.coordinateMultiplier),
                             MathHelper.floor((currentPos.z + 1).toDouble() / nectereBiome.coordinateMultiplier)
                         ).mapToObj { z -> BlockPos(x, currentPos.y, z) }
-                    }.filter { nectereBiome.biome == nectereWorld.method_31081(it).orElse(null) }
+                    }.filter { nectereBiome.biome == nectereWorld.getBiomeKey(it).orElse(null) }
                 } else {
                     val newPos = BlockPos(
                         currentPos.x.toDouble() / nectereBiome.coordinateMultiplier,
@@ -422,7 +433,7 @@ object HotMDimensions {
 
                     // make sure the chunk is loaded
                     nectereWorld.getBlockState(newPos)
-                    if (nectereBiome.biome == nectereWorld.method_31081(newPos).orElse(null)) {
+                    if (nectereBiome.biome == nectereWorld.getBiomeKey(newPos).orElse(null)) {
                         Stream.of(newPos)
                     } else {
                         Stream.empty()
@@ -522,11 +533,11 @@ object HotMDimensions {
                 biomeSource,
                 nectereWorld.seed,
                 chunkRandom,
-                necterePos.x,
-                necterePos.z,
+                necterePos,
                 biomeRegistry[nectereBiomeData.biome],
                 necterePos,
-                FeatureConfig.DEFAULT
+                FeatureConfig.DEFAULT,
+                nectereWorld
             )
         ) {
             val necterePortalPos =
@@ -569,7 +580,7 @@ object HotMDimensions {
      * Gets the non-Nectere-side block location that connects to the current Nectere-side block location.
      */
     fun getCorrespondingNonNectereCoords(nectereWorld: WorldAccess, necterePos: BlockPos): Stream<BlockPos> {
-        val biomeKey = nectereWorld.method_31081(necterePos).orElse(null)
+        val biomeKey = nectereWorld.getBiomeKey(necterePos).orElse(null)
 
         return if (biomeKey != null && HotMBiomes.biomeData()
                 .containsKey(biomeKey) && (HotMBiomes.biomeData()[biomeKey]
@@ -604,7 +615,7 @@ object HotMDimensions {
      * Gets the non-Nectere-side coordinate of a *generated* Nectere portal.
      */
     fun getBaseCorrespondingNonNectereCoords(nectereWorld: WorldAccess, necterePos: BlockPos): BlockPos? {
-        val biomeKey = nectereWorld.method_31081(necterePos).orElse(null)
+        val biomeKey = nectereWorld.getBiomeKey(necterePos).orElse(null)
 
         return if (biomeKey != null && HotMBiomes.biomeData()
                 .containsKey(biomeKey) && (HotMBiomes.biomeData()[biomeKey]
@@ -626,7 +637,7 @@ object HotMDimensions {
      */
     fun getCorrespondingNonNectereWorld(nectereWorld: ServerWorld, necterePos: BlockPos): ServerWorld? {
         val server = nectereWorld.server
-        val biomeKey = nectereWorld.method_31081(necterePos).orElse(null)
+        val biomeKey = nectereWorld.getBiomeKey(necterePos).orElse(null)
 
         return if (biomeKey != null && HotMBiomes.biomeData()
                 .containsKey(biomeKey) && (HotMBiomes.biomeData()[biomeKey]

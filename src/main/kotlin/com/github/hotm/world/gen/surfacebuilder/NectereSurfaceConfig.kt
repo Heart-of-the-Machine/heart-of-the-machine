@@ -30,4 +30,8 @@ data class NectereSurfaceConfig(
     override fun getUnderMaterial(): BlockState {
         return underMaterial
     }
+
+    override fun getUnderwaterMaterial(): BlockState {
+        return beachMaterial
+    }
 }

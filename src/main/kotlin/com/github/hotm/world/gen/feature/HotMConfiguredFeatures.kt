@@ -2,6 +2,7 @@ package com.github.hotm.world.gen.feature
 
 import com.github.hotm.HotMBlocks
 import com.github.hotm.HotMConstants
+import com.github.hotm.mixinapi.FeatureAccess
 import com.github.hotm.world.gen.feature.decorator.CountChanceInRangeDecoratorConfig
 import com.github.hotm.world.gen.feature.decorator.CountHeightmapInRangeDecoratorConfig
 import com.github.hotm.world.gen.feature.segment.PlasseinBranchSegment
@@ -12,9 +13,11 @@ import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.GenerationSettings
 import net.minecraft.world.gen.GenerationStep
-import net.minecraft.world.gen.decorator.Decorator
-import net.minecraft.world.gen.decorator.RangeDecoratorConfig
-import net.minecraft.world.gen.feature.*
+import net.minecraft.world.gen.YOffset
+import net.minecraft.world.gen.feature.ConfiguredFeature
+import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.FeatureConfig
+import net.minecraft.world.gen.feature.RandomFeatureConfig
 
 object HotMConfiguredFeatures {
     private val THINKING_STONE = HotMBlocks.THINKING_STONE.defaultState
@@ -61,7 +64,7 @@ object HotMConfiguredFeatures {
      */
     val REFUSE_PILE = register(
         "refuse_pile", HotMFeatures.REFUSE_PILE.configure(PileFeatureConfig(THINKING_STONE, 0))
-            .decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeatRandomly(2)
+            .decorate(FeatureAccess.getSquareHeightmap()).repeatRandomly(2)
     )
 
     /**
@@ -111,7 +114,7 @@ object HotMConfiguredFeatures {
                     )
                 )
             )
-        ).decorate(Decorator.RANGE.configure(RangeDecoratorConfig(15, 8, 128)).spreadHorizontally().repeat(10))
+        ).uniformRange(YOffset.fixed(15), YOffset.fixed(134)).spreadHorizontally().repeat(10)
     )
 
     /**
@@ -280,7 +283,7 @@ object HotMConfiguredFeatures {
      * Called to add Nectere portal potential to every biome.
      */
     fun addUbiquitousFeatures(settings: GenerationSettings.Builder) {
-        // TODO: Investigate better ways to do this.
+        // TODO: Use FAPI Biome-API
         addNecterePortals(settings)
     }
 

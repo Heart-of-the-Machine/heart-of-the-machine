@@ -10,16 +10,14 @@ import net.minecraft.world.ServerWorldAccess
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
 
 class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<TransmissionTowerConfig>(codec) {
-    override fun generate(
-        world: StructureWorldAccess,
-        generator: ChunkGenerator,
-        random: Random,
-        pos: BlockPos,
-        config: TransmissionTowerConfig
-    ): Boolean {
+    override fun generate(ctx: FeatureContext<TransmissionTowerConfig>): Boolean {
+        val world = ctx.world
+        val config = ctx.config
+
         val baseList = mutableListOf<BlockPos>()
         val structureList = mutableListOf<BlockPos>()
         val structureGrowthList = mutableListOf<BlockPos>()
@@ -28,8 +26,8 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
 
         return if (tryGenerate(
                 world,
-                random,
-                pos,
+                ctx.random,
+                ctx.origin,
                 config,
                 baseList,
                 structureList,
@@ -75,7 +73,7 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
         leafList: MutableCollection<BlockPos>,
         lampList: MutableCollection<BlockPos>
     ): Boolean {
-        if (!world.testBlockState(pos.down()) { FeatureUtils.isSurface(it.block) }) {
+        if (!world.testBlockState(pos.down(), FeatureUtils::isSurface)) {
             return false
         }
 

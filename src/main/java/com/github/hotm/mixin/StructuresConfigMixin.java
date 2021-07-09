@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Dirty mixin to add default structure configs when the StructuresConfig is initialized.
  */
+// TODO: Use FAPI Structure-API instead
 @Mixin(StructuresConfig.class)
 public class StructuresConfigMixin {
     @Shadow

@@ -9,6 +9,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
 
 /**
@@ -19,16 +20,12 @@ class SegmentedFeature(codec: Codec<SegmentedFeatureConfig>) : Feature<Segmented
         private val MAX_SEGMENTS = 128
     }
 
-    override fun generate(
-        world: StructureWorldAccess,
-        generator: ChunkGenerator,
-        random: Random,
-        pos: BlockPos,
-        config: SegmentedFeatureConfig
-    ): Boolean {
+    override fun generate(ctx: FeatureContext<SegmentedFeatureConfig>): Boolean {
+        val world = ctx.world
+
         val blocks = Maps.newHashMap<BlockPos, BlockPlacement>()
         val segments = Queues.newArrayDeque<PositionedFeatureSegment<*>>()
-        segments.add(PositionedFeatureSegment(pos, config.initial, Unit))
+        segments.add(PositionedFeatureSegment(ctx.origin, ctx.config.initial, Unit))
 
         var segmentCount = 0
         while (segments.isNotEmpty()) {
@@ -41,8 +38,8 @@ class SegmentedFeature(codec: Codec<SegmentedFeatureConfig>) : Feature<Segmented
                     blocks,
                     segments,
                     world,
-                    generator,
-                    random
+                    ctx.generator,
+                    ctx.random
                 )
             ) {
                 return false

@@ -7,18 +7,16 @@ import net.minecraft.world.ServerWorldAccess
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
 
 class CrystalGrowthFeature(codec: Codec<CrystalGrowthConfig>) : Feature<CrystalGrowthConfig>(codec) {
-    override fun generate(
-        world: StructureWorldAccess,
-        generator: ChunkGenerator,
-        random: Random,
-        pos: BlockPos,
-        config: CrystalGrowthConfig
-    ): Boolean {
+    override fun generate(ctx: FeatureContext<CrystalGrowthConfig>): Boolean {
+        val world = ctx.world
+        val pos = ctx.origin
+        val config = ctx.config
         return if (world.isAir(pos) && nextTo(world, pos, config) && beneathSomething(world, pos)) {
-            placeCrystals(world, pos, random, config.size, config)
+            placeCrystals(world, pos, ctx.random, config.size, config)
             true
         } else {
             false

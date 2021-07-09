@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * Invoker to allow creating MultiNoiseBiomeSources.
  */
 @Mixin(MultiNoiseBiomeSource.class)
-public interface MultiNoiseBiomeSourceInvoker {
+public interface MultiNoiseBiomeSourceAccessor {
     @Invoker("<init>")
     static MultiNoiseBiomeSource create(long seed, List<Pair<Biome.MixedNoisePoint, Supplier<Biome>>> list, Optional<Pair<Registry<Biome>, MultiNoiseBiomeSource.Preset>> optional) {
         throw new RuntimeException("MultiNoiseBiomeSourceInvoker mixin was not mixed in properly");

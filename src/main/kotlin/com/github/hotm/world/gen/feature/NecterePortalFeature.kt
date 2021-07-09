@@ -10,16 +10,15 @@ import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
 
 class NecterePortalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatureConfig>(codec) {
     override fun generate(
-        world: StructureWorldAccess,
-        generator: ChunkGenerator,
-        random: Random,
-        pos: BlockPos,
-        config: DefaultFeatureConfig
+        ctx: FeatureContext<DefaultFeatureConfig>
     ): Boolean {
+        val world = ctx.world
+        val pos = ctx.origin
         val key = WorldUtils.getServerWorld(world)?.registryKey
         val serverWorld = WorldUtils.getServerWorld(world)
 
