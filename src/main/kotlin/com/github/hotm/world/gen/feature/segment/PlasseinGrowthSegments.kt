@@ -6,10 +6,10 @@ import com.github.hotm.world.gen.feature.segment.FeatureSegmentUtils.tryPlace
 import com.github.hotm.util.CardinalDirection
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import com.terraformersmc.shapes.api.Position
-import com.terraformersmc.shapes.impl.Shapes
-import com.terraformersmc.shapes.impl.layer.pathfinder.SubtractLayer
-import com.terraformersmc.shapes.impl.layer.transform.TranslateLayer
+import com.terraformersmc.terraform.shapes.api.Position
+import com.terraformersmc.terraform.shapes.impl.Shapes
+import com.terraformersmc.terraform.shapes.impl.layer.pathfinder.SubtractLayer
+import com.terraformersmc.terraform.shapes.impl.layer.transform.TranslateLayer
 import net.minecraft.block.BlockState
 import net.minecraft.block.PillarBlock
 import net.minecraft.util.math.BlockPos

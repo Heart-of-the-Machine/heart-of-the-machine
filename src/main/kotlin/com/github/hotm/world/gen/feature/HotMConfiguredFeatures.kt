@@ -283,7 +283,7 @@ object HotMConfiguredFeatures {
      * Called to add Nectere portal potential to every biome.
      */
     fun addUbiquitousFeatures(settings: GenerationSettings.Builder) {
-        // TODO: Investigate better ways to do this.
+        // TODO: Use FAPI Biome-API
         addNecterePortals(settings)
     }
 

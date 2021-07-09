@@ -32,7 +32,7 @@ public class DimensionTypeMixin {
     @Inject(method = "addRegistryDefaults", at = @At("RETURN"))
     private static void onAddRegistryDefaults(DynamicRegistryManager.Impl registryManager,
                                               CallbackInfoReturnable<DynamicRegistryManager.Impl> cir) {
-        MutableRegistry<DimensionType> dimensionTypes = registryManager.get(Registry.DIMENSION_TYPE_KEY);
+        MutableRegistry<DimensionType> dimensionTypes = registryManager.getMutable(Registry.DIMENSION_TYPE_KEY);
         DimensionAdditions.setupDimensionTypes(dimensionTypes);
     }
 }

@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+// TODO: Use FAPI Biome-API instead
 @SuppressWarnings("unused")
 @Mixin(GenerationSettings.Builder.class)
 public class GenerationSettingsBuilderMixin {

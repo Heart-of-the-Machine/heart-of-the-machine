@@ -1,6 +1,6 @@
 package com.github.hotm.mixinapi;
 
-import com.github.hotm.mixin.StairsBlockInvoker;
+import com.github.hotm.mixin.StairsBlockAccessor;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;
@@ -10,6 +10,6 @@ import net.minecraft.block.StairsBlock;
  */
 public class BlockCreators {
     public static StairsBlock createStairsBlock(BlockState baseBlockState, AbstractBlock.Settings settings) {
-        return StairsBlockInvoker.create(baseBlockState, settings);
+        return StairsBlockAccessor.create(baseBlockState, settings);
     }
 }

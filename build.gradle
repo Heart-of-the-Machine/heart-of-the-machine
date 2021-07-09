@@ -36,6 +36,10 @@ repositories {
             includeModule "maven.modrinth", "modmenu"
         }
     }
+    maven {
+        name "Terraformers MC Archive"
+        url "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/"
+    }
 }
 
 dependencies {
@@ -51,8 +55,8 @@ dependencies {
 
     modImplementation "org.yaml:snakeyaml:${yaml_version}"
     include "org.yaml:snakeyaml:${yaml_version}"
-    modImplementation "com.terraformersmc:shapes:${shapes_version}"
-    include "com.terraformersmc:shapes:${shapes_version}"
+    modImplementation "com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}"
+    include "com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}"
 
     // mod compatibility checks
     modRuntime("maven.modrinth:modmenu:${modmenu_version}")
@@ -68,13 +72,10 @@ dependencies {
 processResources {
     inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
+    exclude("**/*.xcf")
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 

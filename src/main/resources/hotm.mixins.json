@@ -5,22 +5,22 @@
   "mixins": [
     "BuiltinBiomesAccessor",
     "ChunkGeneratorMixin",
-    "ChunkGeneratorSettingsInvoker",
+    "ChunkGeneratorSettingsAccessor",
     "ConfiguredFeaturesDecoratorsAccessor",
     "DecoratorContextAccessor",
     "DimensionOptionsMixin",
-    "DimensionTypeInvoker",
     "DimensionTypeMixin",
     "EntityAccessor",
     "EntityMixin",
     "GenerationSettingsBuilderMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
-    "MultiNoiseBiomeSourceInvoker",
-    "StairsBlockInvoker",
+    "MultiNoiseBiomeSourceAccessor",
+    "StairsBlockAccessor",
     "StructureFeatureAccessor",
     "StructurePieceAccessor",
-    "StructuresConfigMixin"
+    "StructuresConfigMixin",
+    "StructureWeightSamplerAccessor"
   ],
   "client": [
   ],

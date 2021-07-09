@@ -33,9 +33,8 @@ public abstract class MinecraftServerMixin {
     @Inject(method = "createWorlds", at = @At("HEAD"))
     private void onCreateWorlds(WorldGenerationProgressListener listener, CallbackInfo ci) {
         GeneratorOptions options = saveProperties.getGeneratorOptions();
-        DimensionAdditions
-                .setupDimensionOptions(registryManager.getDimensionTypes(), registryManager.get(Registry.BIOME_KEY),
-                        registryManager.get(Registry.NOISE_SETTINGS_WORLDGEN), options.getSeed(),
-                        options.getDimensions(), "existing world");
+        DimensionAdditions.setupDimensionOptions(registryManager.get(Registry.DIMENSION_TYPE_KEY),
+                registryManager.get(Registry.BIOME_KEY), registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY),
+                options.getSeed(), options.getDimensions(), "existing world");
     }
 }

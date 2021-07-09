@@ -7,9 +7,11 @@ import com.github.hotm.HotMLog
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
 import com.github.hotm.mixin.EntityAccessor
 import com.github.hotm.mixin.StructureFeatureAccessor
+import com.github.hotm.mixinapi.ChunkGeneratorSettingsAccess
 import com.github.hotm.mixinapi.DimensionAdditions
+import com.github.hotm.mixinapi.MultiNoiseBiomeSourceAccess
 import com.github.hotm.world.gen.HotMBiomes
-import com.github.hotm.world.gen.NectereChunkGenerator
+import com.github.hotm.world.gen.chunk.NectereChunkGenerator
 import com.github.hotm.world.gen.biome.NectereBiomeData
 import com.github.hotm.world.gen.feature.HotMStructureFeatures
 import com.github.hotm.world.gen.feature.NecterePortalGen
@@ -62,7 +64,7 @@ object HotMDimensions {
     /**
      * Dimension options that describe the Nectere dimension.
      */
-    val NECTERE_TYPE = DimensionAdditions.createDimensionType(
+    val NECTERE_TYPE = DimensionType.create(
         OptionalLong.empty(),
         true,
         false,
@@ -74,6 +76,8 @@ object HotMDimensions {
         false,
         false,
         false,
+        0,
+        256,
         256,
         HorizontalVoronoiBiomeAccessType.INSTANCE,
         BlockTags.INFINIBURN_OVERWORLD.id,
@@ -98,11 +102,11 @@ object HotMDimensions {
     val NECTERE_CHUNK_GENERATOR_SETTINGS_BUILTIN = Registry.register(
         BuiltinRegistries.CHUNK_GENERATOR_SETTINGS,
         NECTERE_CHUNK_GENERATOR_SETTINGS_KEY.value,
-        DimensionAdditions.createChunkGeneratorSettings(
+        ChunkGeneratorSettingsAccess.create(
             StructuresConfig(false),
             GenerationShapeConfig.create(
                 0,
-                150,
+                160,
                 NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 60.0),
                 SlideConfig(-10, 3, 0),
                 SlideConfig(50, 4, -1),
@@ -120,7 +124,13 @@ object HotMDimensions {
             -10,
             0,
             16,
-            false
+            0,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
         )
     )
 
@@ -129,7 +139,7 @@ object HotMDimensions {
      */
     val NECTERE_BIOME_SOURCE_PRESET =
         MultiNoiseBiomeSource.Preset(HotMConstants.identifier("nectere")) { preset, registry, seed ->
-            DimensionAdditions.createMultiNoiseBiomeSource(
+            MultiNoiseBiomeSourceAccess.create(
                 seed,
                 HotMBiomes.biomeNoise().entries.stream().map<Pair<Biome.MixedNoisePoint, Supplier<Biome>>> { entry ->
                     Pair.of(entry.value, Supplier { registry.getOrThrow(entry.key) })
@@ -523,11 +533,11 @@ object HotMDimensions {
                 biomeSource,
                 nectereWorld.seed,
                 chunkRandom,
-                necterePos.x,
-                necterePos.z,
+                necterePos,
                 biomeRegistry[nectereBiomeData.biome],
                 necterePos,
-                FeatureConfig.DEFAULT
+                FeatureConfig.DEFAULT,
+                nectereWorld
             )
         ) {
             val necterePortalPos =
