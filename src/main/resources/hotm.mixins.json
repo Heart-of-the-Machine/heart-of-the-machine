@@ -19,7 +19,6 @@
     "StairsBlockAccessor",
     "StructureFeatureAccessor",
     "StructurePieceAccessor",
-    "StructuresConfigMixin",
     "StructureWeightSamplerAccessor"
   ],
   "client": [
