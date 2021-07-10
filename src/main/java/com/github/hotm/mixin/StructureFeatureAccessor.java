@@ -20,11 +20,6 @@ import java.util.Map;
  */
 @Mixin(StructureFeature.class)
 public interface StructureFeatureAccessor {
-    @Accessor("STRUCTURE_TO_GENERATION_STEP")
-    static Map<StructureFeature<?>, GenerationStep.Feature> getStructureToGenerationStep() {
-        throw new RuntimeException("StructureFeatureAccessor mixin was not mixed in properly!");
-    }
-
     @Invoker
     boolean callShouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed,
                               ChunkRandom random, ChunkPos pos, Biome biome, ChunkPos chunkPos, FeatureConfig config,
