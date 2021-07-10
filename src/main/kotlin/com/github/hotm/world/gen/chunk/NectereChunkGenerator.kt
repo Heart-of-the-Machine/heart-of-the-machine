@@ -1,6 +1,6 @@
 package com.github.hotm.world.gen.chunk
 
-import com.github.hotm.HotMConfig
+import com.github.hotm.config.HotMConfig
 import com.github.hotm.mixinapi.ChunkGeneratorSettingsAccess.*
 import com.github.hotm.mixinapi.StructureWeightSamplerAccess
 import com.github.hotm.world.HotMDimensions

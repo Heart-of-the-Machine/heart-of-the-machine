@@ -1,15 +1,13 @@
 package com.github.hotm.world.gen
 
 import com.github.hotm.HotMConstants
+import com.github.hotm.mixinapi.BiomeRegistry
 import com.github.hotm.world.gen.biome.NectereBiomeData
 import com.github.hotm.world.gen.feature.HotMConfiguredFeatures
 import com.github.hotm.world.gen.feature.HotMStructureFeatures
-import com.github.hotm.mixin.BuiltinBiomesAccessor
 import net.minecraft.sound.BiomeMoodSound
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.MathHelper
-import net.minecraft.util.registry.BuiltinRegistries
-import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
@@ -29,38 +27,36 @@ object HotMBiomes {
     /**
      * The thinking forest biome.
      */
-    val THINKING_FOREST = register(
-        "thinking_forest",
-        createThinkingForest(),
-        8.0,
-        World.OVERWORLD,
-        true,
-        Biome.MixedNoisePoint(0.25f, 0.25f, 0.25f, 0.0f, 1.0f)
-    )
+    lateinit var THINKING_FOREST: RegistryKey<Biome>
+        private set
 
     /**
      * The wasteland biome.
      */
-    val WASTELAND = register(
-        "wasteland",
-        createWasteland(),
-        1.0,
-        World.OVERWORLD,
-        true,
-        Biome.MixedNoisePoint(0.0f, -0.5f, 0.0f, 0.0f, 1.0f)
-    )
+    lateinit var WASTELAND: RegistryKey<Biome>
+        private set
 
     /**
      * Makes sure everything is loaded and registered.
      */
-    fun register() {}
+    fun register() {
+        THINKING_FOREST = register(
+            "thinking_forest",
+            createThinkingForest(),
+            8.0,
+            World.OVERWORLD,
+            true,
+            Biome.MixedNoisePoint(0.25f, 0.25f, 0.25f, 0.0f, 1.0f)
+        )
 
-    /**
-     * Gets the builtin set of biomes by instantiating a new DynamicRegistryManager and getting the biome Registry from
-     * there.
-     */
-    fun builtinBiomeRegistry(): Registry<Biome> {
-        return BuiltinRegistries.BIOME
+        WASTELAND = register(
+            "wasteland",
+            createWasteland(),
+            1.0,
+            World.OVERWORLD,
+            true,
+            Biome.MixedNoisePoint(0.0f, -0.5f, 0.0f, 0.0f, 1.0f)
+        )
     }
 
     /**
@@ -161,19 +157,12 @@ object HotMBiomes {
         biomeNoise: Biome.MixedNoisePoint
     ): RegistryKey<Biome> {
         val ident = HotMConstants.identifier(name)
-        val key = RegistryKey.of(Registry.BIOME_KEY, ident)
+        val key = BiomeRegistry.register(ident, biome)
 
         BIOME_KEYS[ident] = key
         BIOME_DATA[key] = NectereBiomeData(key, coordinateMultiplier, targetWorld, isPortalable)
         BIOME_NOISE[key] = biomeNoise
         BIOME_DEFAULTS[key] = biome
-
-        val byRawId = BuiltinBiomesAccessor.getByRawId()
-        val rawId = byRawId.size
-
-        byRawId[rawId] = key
-        BuiltinRegistries.set(BuiltinRegistries.BIOME, rawId, key, biome)
-//        Registry.register(BuiltinRegistries.BIOME, ident, biome)
 
         return key
     }

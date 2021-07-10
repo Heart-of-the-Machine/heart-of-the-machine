@@ -1,7 +1,8 @@
 package com.github.hotm.world.gen.feature
 
 import com.github.hotm.HotMBlocks
-import com.github.hotm.HotMConfig
+import com.github.hotm.config.HotMBiomesConfig
+import com.github.hotm.config.HotMConfig
 import com.github.hotm.world.gen.HotMBiomes
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.mixin.StructurePieceAccessor
@@ -102,7 +103,7 @@ object NecterePortalGen {
                 val biome = world.getBiomeKey(portalPos).orElse(null)
 
                 biome != null
-                        && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(biome.value.toString())
+                        && !HotMBiomesConfig.CONFIG.necterePortalDenyBiomes!!.contains(biome.value.toString())
                         && !HotMBiomes.biomeData().containsKey(biome)
                         && HotMDimensions.findNecterePortal(world, listOf(portalPos)) == null
             }.forEach { structurePos ->

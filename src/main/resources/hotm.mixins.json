@@ -12,7 +12,6 @@
     "DimensionTypeMixin",
     "EntityAccessor",
     "EntityMixin",
-    "GenerationSettingsBuilderMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
     "MultiNoiseBiomeSourceAccessor",
