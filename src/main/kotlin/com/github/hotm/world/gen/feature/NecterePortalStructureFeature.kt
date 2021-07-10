@@ -1,6 +1,6 @@
 package com.github.hotm.world.gen.feature
 
-import com.github.hotm.HotMConfig
+import com.github.hotm.config.HotMBiomesConfig
 import com.github.hotm.mixin.StructurePieceAccessor
 import com.github.hotm.util.WorldUtils
 import com.github.hotm.world.HotMDimensions
@@ -48,7 +48,7 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                 )
             )
 
-            return biomeId != null && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(
+            return biomeId != null && !HotMBiomesConfig.CONFIG.necterePortalDenyBiomes!!.contains(
                 biomeId.toString()
             )
         }
@@ -56,7 +56,7 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
         private fun checkExactBiomes(nonNectereWorld: ServerWorld, nonNecterePos: BlockPos): Boolean {
             val biomeId = nonNectereWorld.getBiomeKey(nonNecterePos).orElse(null)?.value
 
-            return biomeId != null && !HotMConfig.CONFIG.necterePortalWorldGenBlacklistBiomes!!.contains(
+            return biomeId != null && !HotMBiomesConfig.CONFIG.necterePortalDenyBiomes!!.contains(
                 biomeId.toString()
             )
         }

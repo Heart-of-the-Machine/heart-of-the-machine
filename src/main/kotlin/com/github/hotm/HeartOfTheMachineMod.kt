@@ -1,7 +1,7 @@
 package com.github.hotm
 
-import com.github.hotm.world.gen.HotMBiomes
 import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.gen.HotMBiomes
 import com.github.hotm.world.gen.feature.HotMFeatures
 
 /**
@@ -9,7 +9,6 @@ import com.github.hotm.world.gen.feature.HotMFeatures
  */
 @Suppress("unused")
 fun init() {
-    HotMConfig.init()
     HotMBlocks.register()
     HotMItems.register()
     HotMBlockEntities.register()
