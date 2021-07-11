@@ -4,6 +4,7 @@ import com.github.hotm.config.HotMBiomesConfig
 import com.github.hotm.mixin.StructurePieceAccessor
 import com.github.hotm.util.WorldUtils
 import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.HotMPortalOffsets
 import com.github.hotm.world.gen.HotMBiomes
 import com.mojang.serialization.Codec
 import net.minecraft.nbt.NbtCompound
@@ -114,7 +115,7 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                                 val nonNecterePos =
                                     HotMDimensions.getBaseCorrespondingNonNectereCoords(nectereWorld, portalPos)
                                 if (nonNecterePos != null && checkExactBiomes(nonNectereWorld, nonNecterePos)) {
-                                    val nonNectereStructurePos = NecterePortalGen.unPortalPos(nonNecterePos)
+                                    val nonNectereStructurePos = HotMPortalOffsets.portal2StructurePos(nonNecterePos)
 
                                     if (skipExistingChunks && structureStart.isInExistingChunk) {
                                         structureStart.incrementReferences()
@@ -220,11 +221,8 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
 
             // Make sure we aren't generating in an area connected to a blacklisted biome
             val serverWorld = WorldUtils.getServerWorld(world) ?: return false
-            val portalPos = BlockPos(
-                applyXTransform(NecterePortalGen.PORTAL_OFFSET_X, NecterePortalGen.PORTAL_OFFSET_Z),
-                applyYTransform(NecterePortalGen.PORTAL_OFFSET_Y),
-                applyZTransform(NecterePortalGen.PORTAL_OFFSET_X, NecterePortalGen.PORTAL_OFFSET_Z)
-            )
+            val portalPos =
+                HotMPortalOffsets.transform2PortalPos(::applyXTransform, ::applyYTransform, ::applyZTransform)
             val otherWorld = HotMDimensions.getCorrespondingNonNectereWorld(serverWorld, portalPos) ?: return false
             val otherPoses = HotMDimensions.getBaseCorrespondingNonNectereCoords(world, portalPos)
 

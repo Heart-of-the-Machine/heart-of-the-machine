@@ -15,7 +15,6 @@ import com.github.hotm.world.gen.biome.NectereBiomeData
 import com.github.hotm.world.gen.chunk.NectereChunkGenerator
 import com.github.hotm.world.gen.feature.HotMStructureFeatures
 import com.github.hotm.world.gen.feature.NecterePortalGen
-import com.google.common.collect.HashMultimap
 import com.google.common.collect.ImmutableList
 import com.mojang.datafixers.util.Pair
 import net.minecraft.block.Blocks
@@ -335,17 +334,22 @@ object HotMDimensions {
     private fun createNecterePortal(world: WorldAccess, newPoses: List<BlockPos>): BlockPos {
         val rand = Random()
         val portalXZ = newPoses[rand.nextInt(newPoses.size)]
+        val structureY = NecterePortalGen.getPortalStructureY(
+            world,
+            portalXZ.x,
+            portalXZ.z,
+            rand
+        )
         val portalPos = BlockPos(
             portalXZ.x,
-            NecterePortalGen.getPortalStructureY(
-                world,
-                portalXZ.x,
-                portalXZ.z,
-                rand
-            ) + NecterePortalGen.PORTAL_OFFSET_Y,
+            HotMPortalOffsets.structure2PortalY(structureY),
             portalXZ.z
         )
-        val structurePos = NecterePortalGen.unPortalPos(portalPos)
+        val structurePos = BlockPos(
+            HotMPortalOffsets.portal2StructureX(portalXZ.x),
+            structureY,
+            HotMPortalOffsets.portal2StructureZ(portalXZ.z)
+        )
 
         NecterePortalGen.generate(world, structurePos)
 
@@ -484,15 +488,13 @@ object HotMDimensions {
                 val nonPos = HotMLocationConversions.nectere2StartNon(necterePortalPos, nectereBiomeData)!!
 
                 return if (nonPos.x shr 4 == currentPos.x && nonPos.z shr 4 == currentPos.z) {
-                    val resPos = NecterePortalGen.unPortalPos(
-                        BlockPos(
-                            nonPos.x,
-                            heightFn(nonPos.x, nonPos.z) + NecterePortalGen.PORTAL_OFFSET_Y,
-                            nonPos.z
-                        )
+                    val structurePos = BlockPos(
+                        HotMPortalOffsets.portal2StructureX(nonPos.x),
+                        heightFn(nonPos.x, nonPos.z),
+                        HotMPortalOffsets.portal2StructureZ(nonPos.z)
                     )
 
-                    Stream.of(resPos)
+                    Stream.of(structurePos)
                 } else {
                     Stream.empty()
                 }
@@ -603,14 +605,14 @@ object HotMDimensions {
         radius: Int
     ): RetrogenPortalResult {
         return locateNonNectereSidePortal(currentWorld, currentPos, radius, false)?.let { structurePos ->
-            val portalPos = listOf(NecterePortalGen.portalPos(structurePos))
+            val portalPos = listOf(HotMPortalOffsets.structure2PortalPos(structurePos))
             val foundPos = findNecterePortal(currentWorld, portalPos)
             if (foundPos == null) {
                 val genPos = createNecterePortal(currentWorld, portalPos)
 
-                RetrogenPortalResult.Generated(NecterePortalGen.unPortalPos(genPos))
+                RetrogenPortalResult.Generated(HotMPortalOffsets.portal2StructurePos(genPos))
             } else {
-                RetrogenPortalResult.Found(NecterePortalGen.unPortalPos(foundPos))
+                RetrogenPortalResult.Found(HotMPortalOffsets.portal2StructurePos(foundPos))
             }
         } ?: RetrogenPortalResult.Failure
     }

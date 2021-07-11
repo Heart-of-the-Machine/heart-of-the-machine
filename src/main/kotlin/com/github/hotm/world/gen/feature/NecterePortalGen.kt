@@ -2,10 +2,10 @@ package com.github.hotm.world.gen.feature
 
 import com.github.hotm.HotMBlocks
 import com.github.hotm.config.HotMBiomesConfig
-import com.github.hotm.config.HotMConfig
-import com.github.hotm.world.gen.HotMBiomes
-import com.github.hotm.world.HotMDimensions
 import com.github.hotm.mixin.StructurePieceAccessor
+import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.HotMPortalOffsets
+import com.github.hotm.world.gen.HotMBiomes
 import net.minecraft.block.*
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.BlockMirror
@@ -19,23 +19,11 @@ import net.minecraft.world.WorldAccess
 import java.util.*
 
 object NecterePortalGen {
-    const val PORTAL_OFFSET_X = 2
-    const val PORTAL_OFFSET_Y = 1
-    const val PORTAL_OFFSET_Z = 2
-
     private const val MIN_ROOF_HEIGHT = 32
-
-    fun portalPos(startPos: BlockPos): BlockPos {
-        return startPos.add(PORTAL_OFFSET_X, PORTAL_OFFSET_Y, PORTAL_OFFSET_Z)
-    }
 
     fun portalPos(chunkPos: ChunkPos): BlockPos {
         // FIXME: This just assumes the portal is at y: 64
         return BlockPos(getPortalX(chunkPos.x), 64, getPortalZ(chunkPos.z))
-    }
-
-    fun unPortalPos(portalPos: BlockPos): BlockPos {
-        return portalPos.add(-PORTAL_OFFSET_X, -PORTAL_OFFSET_Y, -PORTAL_OFFSET_Z)
     }
 
     fun getPortalStructureY(world: WorldAccess, x: Int, z: Int, random: Random): Int {
@@ -77,7 +65,7 @@ object NecterePortalGen {
     }
 
     fun getPortalX(chunkX: Int): Int {
-        return getPortalStructureX(chunkX) + PORTAL_OFFSET_X
+        return HotMPortalOffsets.structure2PortalX(getPortalStructureX(chunkX))
     }
 
     fun getPortalStructureZ(chunkZ: Int): Int {
@@ -85,7 +73,7 @@ object NecterePortalGen {
     }
 
     fun getPortalZ(chunkZ: Int): Int {
-        return getPortalStructureZ(chunkZ) + PORTAL_OFFSET_Z
+        return HotMPortalOffsets.structure2PortalZ(getPortalStructureZ(chunkZ))
     }
 
     fun generateForChunk(world: ServerWorld, pos: ChunkPos, random: Random) {
@@ -99,7 +87,7 @@ object NecterePortalGen {
                 nectereWorld
             ).filter { structurePos ->
                 // Make sure the portal is in an enabled biome and not in a Nectere biome.
-                val portalPos = portalPos(structurePos)
+                val portalPos = HotMPortalOffsets.structure2PortalPos(structurePos)
                 val biome = world.getBiomeKey(portalPos).orElse(null)
 
                 biome != null
@@ -133,9 +121,8 @@ object NecterePortalGen {
         mirror: BlockMirror,
         rotation: BlockRotation
     ) {
-        fun addBlock(block: BlockState, x: Int, y: Int, z: Int) {
+        fun addBlock(block: BlockState, blockPos: BlockPos) {
             var blockMut = block
-            val blockPos = BlockPos(applyXTransform(x, z), applyYTransform(y), applyZTransform(x, z))
             if (boundingBox == null || boundingBox.contains(blockPos)) {
                 if (mirror != BlockMirror.NONE) {
                     blockMut = blockMut.mirror(mirror)
@@ -152,6 +139,10 @@ object NecterePortalGen {
                     world.getChunk(blockPos).markBlockForPostProcessing(blockPos)
                 }
             }
+        }
+
+        fun addBlock(block: BlockState, x: Int, y: Int, z: Int) {
+            addBlock(block, BlockPos(applyXTransform(x, z), applyYTransform(y), applyZTransform(x, z)))
         }
 
         fun fill(minX: Int, minY: Int, minZ: Int, maxX: Int, maxY: Int, maxZ: Int) {
@@ -223,8 +214,8 @@ object NecterePortalGen {
         addBlock(eStairs, 0, 3, 2)
         addBlock(wStairs, 4, 3, 2)
 
-        addBlock(uPortal, PORTAL_OFFSET_X, PORTAL_OFFSET_Y, PORTAL_OFFSET_Z)
-        addBlock(dPortal, PORTAL_OFFSET_X, PORTAL_OFFSET_Y + 1, PORTAL_OFFSET_Z)
+        addBlock(uPortal, HotMPortalOffsets.transform2PortalPos(applyXTransform, applyYTransform, applyZTransform))
+        addBlock(dPortal, HotMPortalOffsets.transform2PortalPos(applyXTransform, applyYTransform, applyZTransform))
 
         fill(0, 1, 1, 4, 2, 1)
         fill(0, 1, 3, 4, 2, 3)
