@@ -1,4 +1,4 @@
-package com.github.hotm.world.gen
+package com.github.hotm.world.gen.surfacebuilder
 
 import com.github.hotm.HotMConstants
 import net.minecraft.util.registry.BuiltinRegistries

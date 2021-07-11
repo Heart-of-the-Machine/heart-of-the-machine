@@ -1,6 +1,6 @@
 package com.github.hotm.blocks
 
-import com.github.hotm.HotMBlockTags
+import com.github.hotm.misc.HotMBlockTags
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext

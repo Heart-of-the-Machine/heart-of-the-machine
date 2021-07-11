@@ -1,10 +1,11 @@
 package com.github.hotm.world.gen.feature
 
-import com.github.hotm.HotMBlocks
+import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.HotMConstants
 import com.github.hotm.mixinapi.FeatureAccess
 import com.github.hotm.world.gen.feature.decorator.CountChanceInRangeDecoratorConfig
 import com.github.hotm.world.gen.feature.decorator.CountHeightmapInRangeDecoratorConfig
+import com.github.hotm.world.gen.feature.decorator.HotMDecorators
 import com.github.hotm.world.gen.feature.segment.PlasseinBranchSegment
 import com.github.hotm.world.gen.feature.segment.PlasseinLeafSegment
 import com.github.hotm.world.gen.feature.segment.PlasseinStemSegment

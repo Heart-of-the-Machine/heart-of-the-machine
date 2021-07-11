@@ -1,6 +1,6 @@
 package com.github.hotm.world
 
-import com.github.hotm.world.gen.biome.NectereBiomeData
+import com.github.hotm.world.biome.NectereBiomeData
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.MathHelper

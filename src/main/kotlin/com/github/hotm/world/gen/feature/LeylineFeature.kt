@@ -1,6 +1,6 @@
 package com.github.hotm.world.gen.feature
 
-import com.github.hotm.HotMBlocks
+import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.blocks.Leylineable
 import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
@@ -13,7 +13,6 @@ import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.util.FeatureContext
-import java.util.*
 import java.util.stream.IntStream
 import java.util.stream.Stream
 

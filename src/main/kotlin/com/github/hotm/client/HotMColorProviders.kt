@@ -1,6 +1,6 @@
 package com.github.hotm.client
 
-import com.github.hotm.HotMBlocks
+import com.github.hotm.blocks.HotMBlocks
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
 import net.minecraft.client.color.world.BiomeColors
 

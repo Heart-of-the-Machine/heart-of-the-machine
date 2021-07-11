@@ -1,6 +1,5 @@
-package com.github.hotm.world
+package com.github.hotm.world.biome
 
-import com.github.hotm.world.gen.biome.NectereBiomeData
 import com.google.common.collect.HashMultimap
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World

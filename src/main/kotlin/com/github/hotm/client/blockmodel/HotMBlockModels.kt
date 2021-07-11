@@ -1,7 +1,7 @@
 package com.github.hotm.client.blockmodel
 
 import com.github.hotm.HotMConstants
-import com.github.hotm.HotMLog
+import com.github.hotm.misc.HotMLog
 import com.github.hotm.client.HotMClientRegistries
 import com.github.hotm.client.blockmodel.connector.IdentityModelConnector
 import com.github.hotm.client.blockmodel.connector.LeylineModelConnector

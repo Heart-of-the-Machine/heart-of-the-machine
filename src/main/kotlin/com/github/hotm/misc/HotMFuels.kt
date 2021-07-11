@@ -1,5 +1,7 @@
-package com.github.hotm
+package com.github.hotm.misc
 
+import com.github.hotm.blocks.HotMBlocks
+import com.github.hotm.items.HotMItems
 import net.fabricmc.fabric.api.registry.FuelRegistry
 
 object HotMFuels {

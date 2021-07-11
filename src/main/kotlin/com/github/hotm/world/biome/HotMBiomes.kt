@@ -1,9 +1,8 @@
-package com.github.hotm.world.gen
+package com.github.hotm.world.biome
 
 import com.github.hotm.HotMConstants
 import com.github.hotm.mixinapi.BiomeRegistry
-import com.github.hotm.world.HotMBiomeData
-import com.github.hotm.world.gen.biome.NectereBiomeData
+import com.github.hotm.world.gen.surfacebuilder.HotMConfiguredSurfaceBuilders
 import com.github.hotm.world.gen.feature.HotMConfiguredFeatures
 import com.github.hotm.world.gen.feature.HotMStructureFeatures
 import net.minecraft.sound.BiomeMoodSound

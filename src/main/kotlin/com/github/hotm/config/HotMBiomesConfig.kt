@@ -1,6 +1,6 @@
 package com.github.hotm.config
 
-import com.github.hotm.HotMLog
+import com.github.hotm.misc.HotMLog
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.world.biome.Biome

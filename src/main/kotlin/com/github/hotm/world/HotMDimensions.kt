@@ -1,8 +1,8 @@
 package com.github.hotm.world
 
-import com.github.hotm.HotMBlocks
+import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.HotMConstants
-import com.github.hotm.HotMLog
+import com.github.hotm.misc.HotMLog
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
 import com.github.hotm.config.HotMConfig
 import com.github.hotm.mixin.EntityAccessor
@@ -10,8 +10,9 @@ import com.github.hotm.mixin.StructureFeatureAccessor
 import com.github.hotm.mixinapi.ChunkGeneratorSettingsAccess
 import com.github.hotm.mixinapi.DimensionAdditions
 import com.github.hotm.mixinapi.MultiNoiseBiomeSourceAccess
-import com.github.hotm.world.gen.HotMBiomes
-import com.github.hotm.world.gen.biome.NectereBiomeData
+import com.github.hotm.world.biome.HotMBiomeData
+import com.github.hotm.world.biome.HotMBiomes
+import com.github.hotm.world.biome.NectereBiomeData
 import com.github.hotm.world.gen.chunk.NectereChunkGenerator
 import com.github.hotm.world.gen.feature.HotMStructureFeatures
 import com.github.hotm.world.gen.feature.NecterePortalGen

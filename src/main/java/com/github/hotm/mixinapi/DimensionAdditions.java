@@ -1,12 +1,8 @@
 package com.github.hotm.mixinapi;
 
-import com.github.hotm.HotMLog;
-import com.github.hotm.mixin.ChunkGeneratorSettingsAccessor;
-import com.github.hotm.mixin.MultiNoiseBiomeSourceAccessor;
+import com.github.hotm.misc.HotMLog;
 import com.github.hotm.world.HotMDimensions;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.registry.MutableRegistry;
@@ -16,16 +12,12 @@ import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
-import net.minecraft.world.gen.chunk.GenerationShapeConfig;
-import net.minecraft.world.gen.chunk.StructuresConfig;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * Used to register a new dimension with the dimension mixin.

@@ -3,7 +3,7 @@ package com.github.hotm.world.gen.feature
 import com.github.hotm.config.HotMBiomesConfig
 import com.github.hotm.mixin.StructurePieceAccessor
 import com.github.hotm.util.WorldUtils
-import com.github.hotm.world.HotMBiomeData
+import com.github.hotm.world.biome.HotMBiomeData
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.HotMPortalOffsets
 import com.mojang.serialization.Codec

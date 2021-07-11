@@ -1,6 +1,6 @@
 package com.github.hotm.client.blockmodel.connector
 
-import com.github.hotm.HotMBlocks
+import com.github.hotm.blocks.HotMBlocks
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockRenderView

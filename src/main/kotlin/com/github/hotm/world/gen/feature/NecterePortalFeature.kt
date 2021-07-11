@@ -1,17 +1,13 @@
 package com.github.hotm.world.gen.feature
 
-import com.github.hotm.HotMBlocks
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
-import com.github.hotm.world.HotMDimensions
+import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.util.WorldUtils
+import com.github.hotm.world.HotMDimensions
 import com.mojang.serialization.Codec
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.StructureWorldAccess
-import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.util.FeatureContext
-import java.util.*
 
 class NecterePortalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatureConfig>(codec) {
     override fun generate(

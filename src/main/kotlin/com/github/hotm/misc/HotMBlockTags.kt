@@ -1,5 +1,6 @@
-package com.github.hotm
+package com.github.hotm.misc
 
+import com.github.hotm.HotMConstants
 import net.fabricmc.fabric.api.tag.TagRegistry
 
 object HotMBlockTags {

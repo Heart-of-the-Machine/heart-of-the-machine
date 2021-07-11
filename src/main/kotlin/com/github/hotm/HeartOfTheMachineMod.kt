@@ -1,8 +1,12 @@
 package com.github.hotm
 
+import com.github.hotm.blockentity.HotMBlockEntities
+import com.github.hotm.blocks.HotMBlocks
+import com.github.hotm.command.HotMCommands
+import com.github.hotm.items.HotMItems
+import com.github.hotm.misc.HotMFuels
 import com.github.hotm.world.HotMDimensions
-import com.github.hotm.world.HotMBiomeData
-import com.github.hotm.world.gen.HotMBiomes
+import com.github.hotm.world.biome.HotMBiomes
 import com.github.hotm.world.gen.feature.HotMFeatures
 
 /**

@@ -1,7 +1,8 @@
-package com.github.hotm
+package com.github.hotm.misc
 
-import com.github.hotm.world.gen.feature.segment.FeatureSegmentType
+import com.github.hotm.HotMConstants
 import com.github.hotm.util.CardinalDirection
+import com.github.hotm.world.gen.feature.segment.FeatureSegmentType
 import com.mojang.serialization.Lifecycle
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
