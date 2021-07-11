@@ -1,6 +1,7 @@
 package com.github.hotm
 
 import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.HotMPortalableBiomes
 import com.github.hotm.world.gen.HotMBiomes
 import com.github.hotm.world.gen.feature.HotMFeatures
 
@@ -17,5 +18,5 @@ fun init() {
     HotMDimensions.register()
     HotMCommands.register()
     HotMFuels.register()
-    HotMDimensions.findBiomes()
+    HotMPortalableBiomes.findBiomes()
 }

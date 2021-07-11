@@ -50,8 +50,6 @@ import java.util.stream.Stream
 object HotMDimensions {
     private var registered = false
 
-    private val NECTERE_PORTAL_BIOMES = HashMultimap.create<RegistryKey<World>, NectereBiomeData>()
-
     /**
      * Key used to reference the Nectere dimension.
      */
@@ -391,20 +389,6 @@ object HotMDimensions {
     }
 
     /**
-     * Loads the current biomes from the registry and makes sure that all NectereBiomes are accounted for. This also
-     * makes sure new biomes that get added to the registry later and are NectereBiomes are also accounted for.
-     */
-    fun findBiomes() {
-        for (biomeData in HotMBiomes.biomeData().values) {
-            if (biomeData.isPortalable) {
-                NECTERE_PORTAL_BIOMES.put(biomeData.targetWorld, biomeData)
-            }
-        }
-
-        // TODO NectereBiomeData mod-compat/API
-    }
-
-    /**
      * Gets all Nectere-side block locations that could connect to the current non-Nectere-side block location.
      */
     fun getCorrespondingNectereCoords(
@@ -412,7 +396,7 @@ object HotMDimensions {
         currentPos: BlockPos,
         nectereWorld: ServerWorld
     ): Stream<BlockPos> {
-        return NECTERE_PORTAL_BIOMES.get(currentWorld.registryKey).stream().flatMap { nectereBiome ->
+        return HotMPortalableBiomes.stream(currentWorld.registryKey).flatMap { nectereBiome ->
             HotMLocationConversions.non2AllNectere(currentPos, nectereBiome)
                 .filter { nectereBiome.biome == nectereWorld.getBiomeKey(it).orElse(null) }
         }
@@ -432,7 +416,7 @@ object HotMDimensions {
             throw IllegalArgumentException("Cannot get non-Nectere portal gen coords in a Nectere world")
         }
 
-        return NECTERE_PORTAL_BIOMES.get(currentWorldKey).stream().flatMap { nectereBiome ->
+        return HotMPortalableBiomes.stream(currentWorldKey).flatMap { nectereBiome ->
             HotMLocationConversions.non2AllNectere(currentPos, nectereBiome).flatMap { necterePos ->
                 getNonNecterePortalCoordsForBiome(
                     registryManager,
@@ -581,7 +565,7 @@ object HotMDimensions {
     ): BlockPos? {
         val nectereWorld = getNectereWorld(currentWorld.server)
 
-        return NECTERE_PORTAL_BIOMES.get(currentWorld.registryKey).stream().flatMap { nectereBiome ->
+        return HotMPortalableBiomes.stream(currentWorld.registryKey).flatMap { nectereBiome ->
             if (nectereBiome.isPortalable) {
                 val necterePos = HotMLocationConversions.non2StartNectere(currentPos, nectereBiome)!!
 
