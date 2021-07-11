@@ -3,9 +3,9 @@ package com.github.hotm.world.gen.feature
 import com.github.hotm.config.HotMBiomesConfig
 import com.github.hotm.mixin.StructurePieceAccessor
 import com.github.hotm.util.WorldUtils
+import com.github.hotm.world.HotMBiomeData
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.HotMPortalOffsets
-import com.github.hotm.world.gen.HotMBiomes
 import com.mojang.serialization.Codec
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
@@ -170,13 +170,10 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                     64 shr 2,
                     NecterePortalGen.getPortalZ(chunkPos.z) shr 2
                 )
-            ).orElse(null)
+            )
 
             // Make sure Nectere portal structures only spawn in Nectere biomes that are portalable.
-            if (portalBiome != null && HotMBiomes.biomeData()
-                    .containsKey(portalBiome) && (HotMBiomes.biomeData()[portalBiome]
-                    ?: error("Invalid biome")).isPortalable
-            ) {
+            HotMBiomeData.ifPortalable(portalBiome) {
                 children.add(
                     Piece(
                         random,

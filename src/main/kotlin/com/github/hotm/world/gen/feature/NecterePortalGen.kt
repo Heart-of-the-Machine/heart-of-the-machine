@@ -3,9 +3,9 @@ package com.github.hotm.world.gen.feature
 import com.github.hotm.HotMBlocks
 import com.github.hotm.config.HotMBiomesConfig
 import com.github.hotm.mixin.StructurePieceAccessor
+import com.github.hotm.world.HotMBiomeData
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.HotMPortalOffsets
-import com.github.hotm.world.gen.HotMBiomes
 import net.minecraft.block.*
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.BlockMirror
@@ -92,7 +92,7 @@ object NecterePortalGen {
 
                 biome != null
                         && !HotMBiomesConfig.CONFIG.necterePortalDenyBiomes!!.contains(biome.value.toString())
-                        && !HotMBiomes.biomeData().containsKey(biome)
+                        && !HotMBiomeData.getDataById().containsKey(biome)
                         && HotMDimensions.findNecterePortal(world, listOf(portalPos)) == null
             }.forEach { structurePos ->
                 generate(world, structurePos)

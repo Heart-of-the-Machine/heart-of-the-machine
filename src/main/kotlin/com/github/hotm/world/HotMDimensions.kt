@@ -400,7 +400,7 @@ object HotMDimensions {
         currentPos: BlockPos,
         nectereWorld: ServerWorld
     ): Stream<BlockPos> {
-        return HotMPortalableBiomes.stream(currentWorld.registryKey).flatMap { nectereBiome ->
+        return HotMBiomeData.streamPortalables(currentWorld.registryKey).flatMap { nectereBiome ->
             HotMLocationConversions.non2AllNectere(currentPos, nectereBiome)
                 .filter { nectereBiome.biome == nectereWorld.getBiomeKey(it).orElse(null) }
         }
@@ -420,7 +420,7 @@ object HotMDimensions {
             throw IllegalArgumentException("Cannot get non-Nectere portal gen coords in a Nectere world")
         }
 
-        return HotMPortalableBiomes.stream(currentWorldKey).flatMap { nectereBiome ->
+        return HotMBiomeData.streamPortalables(currentWorldKey).flatMap { nectereBiome ->
             HotMLocationConversions.non2AllNectere(currentPos, nectereBiome).flatMap { necterePos ->
                 getNonNecterePortalCoordsForBiome(
                     registryManager,
@@ -510,27 +510,21 @@ object HotMDimensions {
      * Gets the non-Nectere-side block location that connects to the current Nectere-side block location.
      */
     fun getCorrespondingNonNectereCoords(nectereWorld: WorldAccess, necterePos: BlockPos): Stream<BlockPos> {
-        val biomeKey = nectereWorld.getBiomeKey(necterePos).orElse(null)
+        val biomeKey = nectereWorld.getBiomeKey(necterePos)
 
-        return if (biomeKey != null && HotMBiomes.biomeData().containsKey(biomeKey)) {
-            val biomeData = HotMBiomes.biomeData()[biomeKey] ?: error("Null biome data")
+        return HotMBiomeData.ifData(biomeKey) { biomeData ->
             HotMLocationConversions.nectere2AllNon(necterePos, biomeData)
-        } else {
-            Stream.empty()
-        }
+        } ?: Stream.empty()
     }
 
     /**
      * Gets the non-Nectere-side coordinate of a *generated* Nectere portal.
      */
     fun getBaseCorrespondingNonNectereCoords(nectereWorld: WorldAccess, necterePos: BlockPos): BlockPos? {
-        val biomeKey = nectereWorld.getBiomeKey(necterePos).orElse(null)
+        val biomeKey = nectereWorld.getBiomeKey(necterePos)
 
-        return if (biomeKey != null && HotMBiomes.biomeData().containsKey(biomeKey)) {
-            val biomeData = HotMBiomes.biomeData()[biomeKey] ?: error("Null biome data")
+        return HotMBiomeData.ifData(biomeKey) { biomeData ->
             HotMLocationConversions.nectere2StartNon(necterePos, biomeData)
-        } else {
-            null
         }
     }
 
@@ -539,20 +533,14 @@ object HotMDimensions {
      */
     fun getCorrespondingNonNectereWorld(nectereWorld: ServerWorld, necterePos: BlockPos): ServerWorld? {
         val server = nectereWorld.server
-        val biomeKey = nectereWorld.getBiomeKey(necterePos).orElse(null)
+        val biomeKey = nectereWorld.getBiomeKey(necterePos)
 
-        return if (biomeKey != null && HotMBiomes.biomeData()
-                .containsKey(biomeKey) && (HotMBiomes.biomeData()[biomeKey]
-                ?: error("Null biome data")).isPortalable
-        ) {
-            val biomeData = HotMBiomes.biomeData()[biomeKey] ?: error("Null biome data")
+        return HotMBiomeData.ifPortalable(biomeKey) { biomeData ->
             val world = server.getWorld(biomeData.targetWorld)
             if (world == null) {
                 HotMLog.log.warn("Attempted to get non-existent world for Nectere biome with world key: ${biomeData.targetWorld}")
             }
             world
-        } else {
-            null
         }
     }
 
@@ -567,7 +555,7 @@ object HotMDimensions {
     ): BlockPos? {
         val nectereWorld = getNectereWorld(currentWorld.server)
 
-        return HotMPortalableBiomes.stream(currentWorld.registryKey).flatMap { nectereBiome ->
+        return HotMBiomeData.streamPortalables(currentWorld.registryKey).flatMap { nectereBiome ->
             if (nectereBiome.isPortalable) {
                 val necterePos = HotMLocationConversions.non2StartNectere(currentPos, nectereBiome)!!
 
