@@ -1,8 +1,7 @@
 package com.github.hotm.world.gen.feature
 
-import com.github.hotm.HotMBlocks
-import com.github.hotm.world.gen.HotMSurfaceBuilders
-import net.minecraft.block.Block
+import com.github.hotm.blocks.HotMBlocks
+import com.github.hotm.world.gen.surfacebuilder.HotMSurfaceBuilders
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos

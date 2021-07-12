@@ -1,4 +1,4 @@
-package com.github.hotm.world.gen.feature
+package com.github.hotm.world.gen.feature.decorator
 
 import com.github.hotm.HotMConstants
 import com.github.hotm.world.gen.feature.decorator.*

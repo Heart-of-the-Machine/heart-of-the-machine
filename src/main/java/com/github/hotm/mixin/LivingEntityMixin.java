@@ -1,6 +1,6 @@
 package com.github.hotm.mixin;
 
-import com.github.hotm.HotMBlockTags;
+import com.github.hotm.misc.HotMBlockTags;
 import com.github.hotm.mixinapi.EntityClimbing;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;

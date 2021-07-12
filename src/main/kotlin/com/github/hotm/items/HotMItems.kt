@@ -1,5 +1,7 @@
-package com.github.hotm
+package com.github.hotm.items
 
+import com.github.hotm.HotMConstants
+import com.github.hotm.blocks.HotMBlocks
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack

@@ -1,8 +1,7 @@
 package com.github.hotm.blocks
 
-import com.github.hotm.HotMBlocks
-import com.github.hotm.world.HotMDimensions
 import com.github.hotm.mixin.EntityAccessor
+import com.github.hotm.world.HotMTeleporters
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.FacingBlock
@@ -87,7 +86,7 @@ class NecterePortalBlock(settings: Settings) : FacingBlock(settings) {
             && world.isTopSolid(down, entity) && !entity.hasVehicle() && !entity.hasPassengers()
             && entity.canUsePortals()
         ) {
-            if (!HotMDimensions.attemptNectereTeleportation(entity, world, pos) && entity is EntityAccessor) {
+            if (!HotMTeleporters.attemptNectereTeleportation(entity, world, pos) && entity is EntityAccessor) {
                 if (entity.netherPortalCooldown > 0) {
                     entity.netherPortalCooldown = entity.defaultNetherPortalCooldown
                 } else {

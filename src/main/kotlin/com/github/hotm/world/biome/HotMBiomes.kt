@@ -1,8 +1,8 @@
-package com.github.hotm.world.gen
+package com.github.hotm.world.biome
 
 import com.github.hotm.HotMConstants
 import com.github.hotm.mixinapi.BiomeRegistry
-import com.github.hotm.world.gen.biome.NectereBiomeData
+import com.github.hotm.world.gen.surfacebuilder.HotMConfiguredSurfaceBuilders
 import com.github.hotm.world.gen.feature.HotMConfiguredFeatures
 import com.github.hotm.world.gen.feature.HotMStructureFeatures
 import net.minecraft.sound.BiomeMoodSound
@@ -20,7 +20,6 @@ import net.minecraft.world.biome.SpawnSettings
  */
 object HotMBiomes {
     private val BIOME_KEYS = mutableMapOf<Identifier, RegistryKey<Biome>>()
-    private val BIOME_DATA = mutableMapOf<RegistryKey<Biome>, NectereBiomeData>()
     private val BIOME_NOISE = mutableMapOf<RegistryKey<Biome>, Biome.MixedNoisePoint>()
     private val BIOME_DEFAULTS = mutableMapOf<RegistryKey<Biome>, Biome>()
 
@@ -64,13 +63,6 @@ object HotMBiomes {
      */
     fun biomes(): Map<Identifier, RegistryKey<Biome>> {
         return BIOME_KEYS
-    }
-
-    /**
-     * Gets all Nectere biome data.
-     */
-    fun biomeData(): Map<RegistryKey<Biome>, NectereBiomeData> {
-        return BIOME_DATA
     }
 
     /**
@@ -160,9 +152,9 @@ object HotMBiomes {
         val key = BiomeRegistry.register(ident, biome)
 
         BIOME_KEYS[ident] = key
-        BIOME_DATA[key] = NectereBiomeData(key, coordinateMultiplier, targetWorld, isPortalable)
         BIOME_NOISE[key] = biomeNoise
         BIOME_DEFAULTS[key] = biome
+        HotMBiomeData.addBiomeData(NectereBiomeData(key, coordinateMultiplier, targetWorld, isPortalable))
 
         return key
     }

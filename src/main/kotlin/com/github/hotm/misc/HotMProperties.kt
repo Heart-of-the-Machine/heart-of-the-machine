@@ -1,4 +1,4 @@
-package com.github.hotm
+package com.github.hotm.misc
 
 import net.minecraft.state.property.IntProperty
 

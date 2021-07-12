@@ -1,6 +1,6 @@
 package com.github.hotm.blocks
 
-import com.github.hotm.HotMBlockEntities
+import com.github.hotm.blockentity.HotMBlockEntities
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState

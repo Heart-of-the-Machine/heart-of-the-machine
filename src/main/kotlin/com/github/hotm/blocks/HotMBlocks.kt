@@ -1,9 +1,8 @@
-package com.github.hotm
+package com.github.hotm.blocks
 
-import com.github.hotm.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
-import com.github.hotm.HotMItems.HOTM_MATERIAL_ITEM_SETTINGS
-import com.github.hotm.blocks.*
-import com.github.hotm.blocks.ScaffoldingBlock
+import com.github.hotm.HotMConstants
+import com.github.hotm.items.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
+import com.github.hotm.items.HotMItems.HOTM_MATERIAL_ITEM_SETTINGS
 import com.github.hotm.blocks.spore.StandardPlasseinSporeGenerator
 import com.github.hotm.items.BracingItem
 import com.github.hotm.items.ScaffoldingItem

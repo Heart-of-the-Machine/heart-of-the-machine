@@ -1,10 +1,7 @@
-package com.github.hotm.world.gen
+package com.github.hotm.world.gen.surfacebuilder
 
-import com.github.hotm.HotMBlocks
+import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.HotMConstants
-import com.github.hotm.world.gen.surfacebuilder.NecterePartialSurfaceBuilder
-import com.github.hotm.world.gen.surfacebuilder.NectereSurfaceBuilder
-import com.github.hotm.world.gen.surfacebuilder.NectereSurfaceConfig
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder
 import net.minecraft.world.gen.surfacebuilder.SurfaceConfig

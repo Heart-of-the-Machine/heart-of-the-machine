@@ -1,4 +1,4 @@
-package com.github.hotm.world.gen.biome
+package com.github.hotm.world.biome
 
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World
