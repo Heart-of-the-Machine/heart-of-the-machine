@@ -298,9 +298,9 @@ object HotMPortalFinders {
         ) {
             val necterePortalPos =
                 BlockPos(
-                    HotMPortalGenPositions.getPortalX(portalChunk.x),
+                    HotMPortalGenPositions.chunk2PortalX(portalChunk.x),
                     64,
-                    HotMPortalGenPositions.getPortalZ(portalChunk.z)
+                    HotMPortalGenPositions.chunk2PortalZ(portalChunk.z)
                 )
 
             val biomeId = nectereWorld.getBiomeKey(necterePortalPos).orElse(null)

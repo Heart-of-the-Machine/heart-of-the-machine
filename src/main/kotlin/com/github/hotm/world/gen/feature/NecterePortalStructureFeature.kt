@@ -79,9 +79,9 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
             val portalBiome = registryManager.get(Registry.BIOME_KEY).getKey(
                 HotMDimensions.NECTERE_TYPE.biomeAccessType.getBiome(
                     seed,
-                    HotMPortalGenPositions.getPortalX(chunkPos.x),
+                    HotMPortalGenPositions.chunk2PortalX(chunkPos.x),
                     0,
-                    HotMPortalGenPositions.getPortalZ(chunkPos.z),
+                    HotMPortalGenPositions.chunk2PortalZ(chunkPos.z),
                     chunkGenerator.biomeSource
                 )
             )
@@ -91,8 +91,8 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                 children.add(
                     Piece(
                         random,
-                        HotMPortalGenPositions.getPortalStructureX(chunkPos.x),
-                        HotMPortalGenPositions.getPortalStructureZ(chunkPos.z)
+                        HotMPortalGenPositions.chunk2StructureX(chunkPos.x),
+                        HotMPortalGenPositions.chunk2StructureZ(chunkPos.z)
                     )
                 )
             }
