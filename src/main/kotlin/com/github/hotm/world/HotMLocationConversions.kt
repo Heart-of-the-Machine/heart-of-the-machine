@@ -1,9 +1,13 @@
 package com.github.hotm.world
 
+import com.github.hotm.misc.HotMLog
+import com.github.hotm.world.biome.HotMBiomeData
 import com.github.hotm.world.biome.NectereBiomeData
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.MathHelper
+import net.minecraft.world.WorldAccess
 import java.util.stream.IntStream
 import java.util.stream.Stream
 
@@ -11,6 +15,9 @@ import java.util.stream.Stream
  * Utilities for converting from one dimension's coordinate system to another.
  */
 object HotMLocationConversions {
+
+    /* Direct Conversions */
+
     /**
      * Converts a non-nectere side x or z coordinate into a nectere side x or z coordinate.
      */
@@ -153,6 +160,57 @@ object HotMLocationConversions {
             ChunkPos(nectere2Non(necterePos.x, nectereBiome), nectere2Non(necterePos.z, nectereBiome))
         } else {
             null
+        }
+    }
+
+    /* Complex Conversions */
+
+    /**
+     * Gets the non-Nectere-side world that connects to the current Nectere-side block location.
+     */
+    fun nectere2NonWorld(nectereWorld: ServerWorld, necterePos: BlockPos): ServerWorld? {
+        val server = nectereWorld.server
+        val biomeKey = nectereWorld.getBiomeKey(necterePos)
+
+        return HotMBiomeData.ifPortalable(biomeKey) { biomeData ->
+            val world = server.getWorld(biomeData.targetWorld)
+            if (world == null) {
+                HotMLog.log.warn("Attempted to get non-existent world for Nectere biome with world key: ${biomeData.targetWorld}")
+            }
+            world
+        }
+    }
+
+    /**
+     * Gets the non-Nectere-side block location that connects to the current Nectere-side block location.
+     */
+    fun nectere2AllNon(nectereWorld: WorldAccess, necterePos: BlockPos): Stream<BlockPos> {
+        val biomeKey = nectereWorld.getBiomeKey(necterePos)
+
+        return HotMBiomeData.ifData(biomeKey) { biomeData ->
+            nectere2AllNon(necterePos, biomeData)
+        } ?: Stream.empty()
+    }
+
+    /**
+     * Gets all Nectere-side block locations that could connect to the current non-Nectere-side block location.
+     */
+    fun non2AllNectere(currentWorld: ServerWorld, currentPos: BlockPos, nectereWorld: ServerWorld): Stream<BlockPos> {
+        return HotMBiomeData.streamPortalables(currentWorld.registryKey).flatMap { nectereBiome ->
+            non2AllNectere(currentPos, nectereBiome).filter {
+                nectereBiome.biome == nectereWorld.getBiomeKey(it).orElse(null)
+            }
+        }
+    }
+
+    /**
+     * Gets the non-Nectere-side coordinate of a *generated* Nectere portal.
+     */
+    fun nectere2StartNon(nectereWorld: WorldAccess, necterePos: BlockPos): BlockPos? {
+        val biomeKey = nectereWorld.getBiomeKey(necterePos)
+
+        return HotMBiomeData.ifData(biomeKey) { biomeData ->
+            nectere2StartNon(necterePos, biomeData)
         }
     }
 }

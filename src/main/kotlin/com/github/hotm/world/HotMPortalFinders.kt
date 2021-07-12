@@ -1,26 +1,34 @@
 package com.github.hotm.world
 
+import com.github.hotm.blocks.HotMBlocks
+import com.github.hotm.mixin.StructureFeatureAccessor
 import com.github.hotm.util.BiomeUtils
 import com.github.hotm.util.StreamUtils
 import com.github.hotm.world.biome.HotMBiomeData
+import com.github.hotm.world.biome.NectereBiomeData
 import com.github.hotm.world.gen.feature.HotMStructureFeatures
-import com.github.hotm.world.gen.feature.NecterePortalGen
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.structure.StructureStart
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.ChunkSectionPos
+import net.minecraft.util.math.Direction
+import net.minecraft.util.registry.DynamicRegistryManager
+import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.RegistryWorldView
+import net.minecraft.world.World
 import net.minecraft.world.WorldView
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.chunk.ChunkStatus
 import net.minecraft.world.gen.ChunkRandom
 import net.minecraft.world.gen.StructureAccessor
 import net.minecraft.world.gen.chunk.StructureConfig
+import net.minecraft.world.gen.feature.FeatureConfig
 import net.minecraft.world.gen.feature.StructureFeature
+import java.util.stream.Stream
 
-object HotMLocators {
+object HotMPortalFinders {
     /**
      * Used to indicate to the structure locator whether the given structure location is valid or it the locator should
      * keep searching.
@@ -131,7 +139,7 @@ object HotMLocators {
             structureConfig,
             HotMStructureFeatures.NECTERE_PORTAL
         ) { structureStart ->
-            val portalPos = NecterePortalGen.portalPos(structureStart.pos)
+            val portalPos = HotMPortalOffsets.structure2PortalPos(structureStart.blockPos)
 
             if (biomeKey == nectereWorld.getBiomeKey(portalPos).orElse(null)) {
                 // Don't locate portals in biomes that won't generate portals in the first place
@@ -140,7 +148,7 @@ object HotMLocators {
                     HotMLocationConversions.nectere2StartNon(portalPos, biomeData)
                 }
 
-                if (nonNecterePos != null && BiomeUtils.checkNonNectereBiome(nonNectereWorld, nonNecterePos)) {
+                if (nonNecterePos != null && BiomeUtils.checkNonNectereBiomes(nonNectereWorld, nonNecterePos)) {
                     val nonNectereStructurePos = HotMPortalOffsets.portal2StructurePos(nonNecterePos)
 
                     if (skipExistingChunks && structureStart.isInExistingChunk) {
@@ -189,5 +197,129 @@ object HotMLocators {
             StreamUtils.ofNullable(foundPos)
         }.min(Comparator.comparing { portalPos -> portalPos.getSquaredDistance(currentPos) })
             .orElse(null)
+    }
+
+    /**
+     * Attempt to find a Nectere portal among a list of destination positions.
+     */
+    fun findNecterePortal(world: WorldView, newPoses: List<BlockPos>): BlockPos? {
+        for (offset in 0 until world.height) {
+            for (init in newPoses) {
+                val up = init.up(offset)
+                val down = init.down(offset)
+
+                if (!world.isOutOfHeightLimit(up) && world.getBlockState(up).block == HotMBlocks.NECTERE_PORTAL) {
+                    return findPortalBase(world, up)
+                }
+
+                if (!world.isOutOfHeightLimit(down) && world.getBlockState(down).block == HotMBlocks.NECTERE_PORTAL) {
+                    return findPortalBase(world, down)
+                }
+            }
+        }
+
+        return null
+    }
+
+    /**
+     * When given a portal block, finds the base portal block.
+     */
+    private fun findPortalBase(world: WorldView, portalPos: BlockPos): BlockPos {
+        val mut = portalPos.mutableCopy()
+        while (world.getBlockState(mut.down()).block == HotMBlocks.NECTERE_PORTAL) {
+            mut.move(Direction.DOWN)
+        }
+        return mut.toImmutable()
+    }
+
+    /**
+     * Gets the non-Nectere-coordinates of all Nectere portals within this chunk.
+     */
+    fun getNonNecterePortalCoords(
+        registryManager: DynamicRegistryManager,
+        currentWorldKey: RegistryKey<World>,
+        currentPos: ChunkPos,
+        nectereWorld: ServerWorld
+    ): Stream<BlockPos> {
+        if (currentWorldKey == HotMDimensions.NECTERE_KEY) {
+            throw IllegalArgumentException("Cannot get non-Nectere portal gen coords in a Nectere world")
+        }
+
+        return HotMBiomeData.streamPortalables(currentWorldKey).flatMap { nectereBiome ->
+            HotMLocationConversions.non2AllNectere(currentPos, nectereBiome).flatMap { necterePos ->
+                getNonNecterePortalCoordsForBiome(
+                    registryManager,
+                    currentPos,
+                    nectereWorld,
+                    nectereBiome,
+                    necterePos
+                )
+            }
+        }
+    }
+
+    /**
+     * Gets the non-Nectere-side location of all Nectere portals for the given Nectere-side chunk and Nectere-side biome.
+     */
+    private fun getNonNecterePortalCoordsForBiome(
+        registryManager: DynamicRegistryManager,
+        currentPos: ChunkPos,
+        nectereWorld: ServerWorld,
+        nectereBiomeData: NectereBiomeData,
+        necterePos: ChunkPos
+    ): Stream<BlockPos> {
+        val chunkRandom = ChunkRandom()
+        val structureConfig =
+            nectereWorld.chunkManager.chunkGenerator.structuresConfig.getForType(HotMStructureFeatures.NECTERE_PORTAL)
+        val portalChunk = HotMStructureFeatures.NECTERE_PORTAL.getStartChunk(
+            structureConfig,
+            nectereWorld.seed,
+            chunkRandom,
+            necterePos.x,
+            necterePos.z
+        )
+
+        val chunkGenerator = nectereWorld.chunkManager.chunkGenerator
+        val biomeSource = chunkGenerator.biomeSource
+        val biomeRegistry = registryManager[Registry.BIOME_KEY]
+
+        @Suppress("cast_never_succeeds")
+        if ((HotMStructureFeatures.NECTERE_PORTAL as StructureFeatureAccessor).callShouldStartAt(
+                chunkGenerator,
+                biomeSource,
+                nectereWorld.seed,
+                chunkRandom,
+                necterePos,
+                biomeRegistry[nectereBiomeData.biome],
+                portalChunk,
+                FeatureConfig.DEFAULT,
+                nectereWorld
+            )
+        ) {
+            val necterePortalPos =
+                BlockPos(
+                    HotMPortalGenPositions.getPortalX(portalChunk.x),
+                    64,
+                    HotMPortalGenPositions.getPortalZ(portalChunk.z)
+                )
+
+            val biomeId = nectereWorld.getBiomeKey(necterePortalPos).orElse(null)
+
+            return if (nectereBiomeData.biome == biomeId) {
+                val portalPos = HotMLocationConversions.nectere2StartNon(necterePortalPos, nectereBiomeData)!!
+
+                if (portalPos.x shr 4 == currentPos.x && portalPos.z shr 4 == currentPos.z) {
+                    val structurePos = HotMPortalOffsets.portal2StructurePos(portalPos)
+
+                    Stream.of(structurePos)
+                } else {
+                    Stream.empty()
+                }
+            } else {
+                Stream.empty()
+            }
+        } else {
+            return Stream.empty()
+        }
     }
 }

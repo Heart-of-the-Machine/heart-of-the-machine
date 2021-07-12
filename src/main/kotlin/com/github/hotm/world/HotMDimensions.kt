@@ -1,48 +1,29 @@
 package com.github.hotm.world
 
 import com.github.hotm.HotMConstants
-import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
 import com.github.hotm.blocks.HotMBlocks
-import com.github.hotm.config.HotMConfig
-import com.github.hotm.misc.HotMLog
-import com.github.hotm.mixin.EntityAccessor
-import com.github.hotm.mixin.StructureFeatureAccessor
 import com.github.hotm.mixinapi.ChunkGeneratorSettingsAccess
 import com.github.hotm.mixinapi.DimensionAdditions
 import com.github.hotm.mixinapi.MultiNoiseBiomeSourceAccess
-import com.github.hotm.world.biome.HotMBiomeData
 import com.github.hotm.world.biome.HotMBiomes
-import com.github.hotm.world.biome.NectereBiomeData
 import com.github.hotm.world.gen.chunk.NectereChunkGenerator
-import com.github.hotm.world.gen.feature.HotMStructureFeatures
-import com.github.hotm.world.gen.feature.NecterePortalGen
 import com.google.common.collect.ImmutableList
 import com.mojang.datafixers.util.Pair
 import net.minecraft.block.Blocks
-import net.minecraft.entity.Entity
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.tag.BlockTags
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.ChunkPos
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.BuiltinRegistries
-import net.minecraft.util.registry.DynamicRegistryManager
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
-import net.minecraft.world.*
+import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource
 import net.minecraft.world.dimension.DimensionType
-import net.minecraft.world.gen.ChunkRandom
 import net.minecraft.world.gen.chunk.*
-import net.minecraft.world.gen.feature.FeatureConfig
 import java.util.*
 import java.util.function.Supplier
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 /**
  * Initializes and registers dimension functionality.
@@ -176,10 +157,6 @@ object HotMDimensions {
             NECTERE_TYPE_KEY,
             NECTERE_TYPE
         ) { biomes, generatorSettings, seed -> createNectereGenerator(biomes, generatorSettings, seed) }
-
-        DimensionAdditions.registerDefaultPlacer(
-            NECTERE_KEY
-        ) { oldEntity, destination -> getGenericTeleportTarget(oldEntity, destination) }
     }
 
     /**
@@ -199,379 +176,9 @@ object HotMDimensions {
     }
 
     /**
-     * Performs a teleportation between the Overworld and the Nectere.
-     *
-     * @return whether the portal that attempted to teleport the entity is in a valid location.
-     */
-    fun attemptNectereTeleportation(entity: Entity, world: World, portalPos: BlockPos): Boolean {
-        return (world as? ServerWorld)?.let { serverWorld ->
-            if ((entity as EntityAccessor).netherPortalCooldown > 0) {
-                entity.netherPortalCooldown = entity.defaultNetherPortalCooldown
-
-                true
-            } else {
-                val server = serverWorld.server
-
-                if (world.registryKey == NECTERE_KEY) {
-                    val newWorld = getCorrespondingNonNectereWorld(serverWorld, portalPos)
-                    val newPoses = getCorrespondingNonNectereCoords(serverWorld, portalPos).collect(Collectors.toList())
-
-                    attemptTeleport(newWorld, newPoses, entity)
-                } else {
-                    val nectereWorld = getNectereWorld(server)
-                    val newPoses =
-                        getCorrespondingNectereCoords(serverWorld, portalPos, nectereWorld).collect(Collectors.toList())
-
-                    attemptTeleport(nectereWorld, newPoses, entity)
-                }
-            }
-        } ?: true
-    }
-
-    /**
-     * Attempts to perform a teleportation of the target entity to the destination world with a list of destination
-     * positions.
-     */
-    private fun attemptTeleport(
-        destWorld: ServerWorld?,
-        destPoses: List<BlockPos>,
-        entity: Entity
-    ): Boolean {
-        return if (destWorld != null && destPoses.isNotEmpty()) {
-            pregenPortals(destWorld, destPoses)
-
-            var destPos = findNecterePortal(destWorld, destPoses)
-
-            if (destPos == null && HotMConfig.CONFIG.generateMissingPortals) {
-                destPos = createNecterePortal(destWorld, destPoses)
-            }
-
-            val finalPos = destPos
-
-            if (finalPos != null) {
-                val res = DimensionAdditions.teleport(
-                    entity,
-                    destWorld
-                ) { oldEntity, _ ->
-                    getTeleportTarget(
-                        oldEntity,
-                        finalPos
-                    )
-                }
-
-                if (res != null) {
-                    (res as EntityAccessor).netherPortalCooldown = res.defaultNetherPortalCooldown
-
-                    true
-                } else {
-                    false
-                }
-            } else {
-                false
-            }
-        } else {
-            false
-        }
-    }
-
-    /**
-     * Makes sure all NecterePortalSpawnerBlockEntities in the destination chunks have generated their receiving portals.
-     */
-    fun pregenPortals(world: ServerWorld, newPoses: List<BlockPos>) {
-        if (world.registryKey != NECTERE_KEY) {
-            // look for and run nectere portal spawner block entities
-            val checked = mutableSetOf<ChunkPos>()
-
-            for (pos in newPoses) {
-                val chunkPos = ChunkPos(pos)
-                if (!checked.contains(chunkPos)) {
-                    checked.add(chunkPos)
-
-                    val spawnerPos = BlockPos(chunkPos.startX, 0, chunkPos.startZ)
-
-                    (world.getBlockEntity(spawnerPos) as? NecterePortalSpawnerBlockEntity)?.spawn()
-                }
-            }
-        }
-    }
-
-    /**
-     * Attempt to find a Nectere portal among a list of destination positions.
-     */
-    fun findNecterePortal(world: WorldView, newPoses: List<BlockPos>): BlockPos? {
-        for (offset in 0 until world.height) {
-            for (init in newPoses) {
-                val up = init.up(offset)
-                val down = init.down(offset)
-
-                if (!world.isOutOfHeightLimit(up) && world.getBlockState(up).block == HotMBlocks.NECTERE_PORTAL) {
-                    return findPortalBase(world, up)
-                }
-
-                if (!world.isOutOfHeightLimit(down) && world.getBlockState(down).block == HotMBlocks.NECTERE_PORTAL) {
-                    return findPortalBase(world, down)
-                }
-            }
-        }
-
-        return null
-    }
-
-    /**
-     * When given a portal block, finds the base portal block.
-     */
-    private fun findPortalBase(world: WorldView, portalPos: BlockPos): BlockPos {
-        val mut = portalPos.mutableCopy()
-        while (world.getBlockState(mut.down()).block == HotMBlocks.NECTERE_PORTAL) {
-            mut.move(Direction.DOWN)
-        }
-        return mut.toImmutable()
-    }
-
-    /**
-     * Creates a Nectere portal at an optimal position among a list of destination positions and returns the location of
-     * that portal.
-     */
-    private fun createNecterePortal(world: WorldAccess, newPoses: List<BlockPos>): BlockPos {
-        val rand = Random()
-        val portalXZ = newPoses[rand.nextInt(newPoses.size)]
-        val structureY = NecterePortalGen.getPortalStructureY(
-            world,
-            portalXZ.x,
-            portalXZ.z,
-            rand
-        )
-        val portalPos = BlockPos(
-            portalXZ.x,
-            HotMPortalOffsets.structure2PortalY(structureY),
-            portalXZ.z
-        )
-        val structurePos = BlockPos(
-            HotMPortalOffsets.portal2StructureX(portalXZ.x),
-            structureY,
-            HotMPortalOffsets.portal2StructureZ(portalXZ.z)
-        )
-
-        NecterePortalGen.generate(world, structurePos)
-
-        return portalPos
-    }
-
-    /**
-     * Finds the teleportation destination block in the Nectere dimension.
-     */
-    private fun getTeleportTarget(
-        oldEntity: Entity,
-        destinationPos: BlockPos
-    ): TeleportTarget {
-        return TeleportTarget(
-            Vec3d.of(destinationPos).add(0.5, 0.0, 0.5),
-            Vec3d.ZERO,
-            oldEntity.yaw,
-            oldEntity.pitch
-        )
-    }
-
-    /**
-     * Finds the teleportation destination block when the portal location is not known.
-     */
-    private fun getGenericTeleportTarget(
-        oldEntity: Entity,
-        destination: ServerWorld
-    ): TeleportTarget {
-        // load chunk so heightmap loading works properly
-        destination.getChunk(oldEntity.blockPos)
-
-        val position = destination.getTopPosition(Heightmap.Type.WORLD_SURFACE, oldEntity.blockPos)
-        return TeleportTarget(Vec3d.of(position).add(0.5, 0.5, 0.5), Vec3d.ZERO, oldEntity.yaw, oldEntity.pitch)
-    }
-
-    /**
      * Gets the Nectere dimension from the server, forcibly adding it if it does not exist already.
      */
     fun getNectereWorld(server: MinecraftServer): ServerWorld {
         return server.getWorld(NECTERE_KEY) ?: throw IllegalStateException("Nectere dimension was never added!")
-    }
-
-    /**
-     * Gets all Nectere-side block locations that could connect to the current non-Nectere-side block location.
-     */
-    fun getCorrespondingNectereCoords(
-        currentWorld: ServerWorld,
-        currentPos: BlockPos,
-        nectereWorld: ServerWorld
-    ): Stream<BlockPos> {
-        return HotMBiomeData.streamPortalables(currentWorld.registryKey).flatMap { nectereBiome ->
-            HotMLocationConversions.non2AllNectere(currentPos, nectereBiome)
-                .filter { nectereBiome.biome == nectereWorld.getBiomeKey(it).orElse(null) }
-        }
-    }
-
-    /**
-     * Gets the non-Nectere-coordinates of all Nectere portals within this chunk.
-     */
-    fun getNonNecterePortalCoords(
-        registryManager: DynamicRegistryManager,
-        currentWorldKey: RegistryKey<World>,
-        currentPos: ChunkPos,
-        heightFn: (Int, Int) -> Int,
-        nectereWorld: ServerWorld
-    ): Stream<BlockPos> {
-        if (currentWorldKey == NECTERE_KEY) {
-            throw IllegalArgumentException("Cannot get non-Nectere portal gen coords in a Nectere world")
-        }
-
-        return HotMBiomeData.streamPortalables(currentWorldKey).flatMap { nectereBiome ->
-            HotMLocationConversions.non2AllNectere(currentPos, nectereBiome).flatMap { necterePos ->
-                getNonNecterePortalCoordsForBiome(
-                    registryManager,
-                    currentPos,
-                    heightFn,
-                    nectereWorld,
-                    nectereBiome,
-                    necterePos
-                )
-            }
-        }
-    }
-
-    /**
-     * Gets the non-Nectere-side location of all Nectere portals for the given Nectere-side chunk and Nectere-side biome.
-     */
-    private fun getNonNecterePortalCoordsForBiome(
-        registryManager: DynamicRegistryManager,
-        currentPos: ChunkPos,
-        heightFn: (Int, Int) -> Int,
-        nectereWorld: ServerWorld,
-        nectereBiomeData: NectereBiomeData,
-        necterePos: ChunkPos
-    ): Stream<BlockPos> {
-        val chunkRandom = ChunkRandom()
-        val structureConfig =
-            nectereWorld.chunkManager.chunkGenerator.structuresConfig.getForType(HotMStructureFeatures.NECTERE_PORTAL)
-        val portalChunk = HotMStructureFeatures.NECTERE_PORTAL.getStartChunk(
-            structureConfig,
-            nectereWorld.seed,
-            chunkRandom,
-            necterePos.x,
-            necterePos.z
-        )
-
-        val chunkGenerator = nectereWorld.chunkManager.chunkGenerator
-        val biomeSource = chunkGenerator.biomeSource
-        val biomeRegistry = registryManager[Registry.BIOME_KEY]
-
-        @Suppress("cast_never_succeeds")
-        if ((HotMStructureFeatures.NECTERE_PORTAL as StructureFeatureAccessor).callShouldStartAt(
-                chunkGenerator,
-                biomeSource,
-                nectereWorld.seed,
-                chunkRandom,
-                necterePos,
-                biomeRegistry[nectereBiomeData.biome],
-                portalChunk,
-                FeatureConfig.DEFAULT,
-                nectereWorld
-            )
-        ) {
-            val necterePortalPos =
-                BlockPos(NecterePortalGen.getPortalX(portalChunk.x), 64, NecterePortalGen.getPortalZ(portalChunk.z))
-
-            val biome = biomeSource.getBiomeForNoiseGen(
-                necterePortalPos.x shr 2,
-                necterePortalPos.y shr 2,
-                necterePortalPos.z shr 2
-            )
-
-            val biomeId = biomeRegistry.getKey(biome).orElse(null)
-
-            if (nectereBiomeData.biome == biomeId) {
-                val nonPos = HotMLocationConversions.nectere2StartNon(necterePortalPos, nectereBiomeData)!!
-
-                return if (nonPos.x shr 4 == currentPos.x && nonPos.z shr 4 == currentPos.z) {
-                    val structurePos = BlockPos(
-                        HotMPortalOffsets.portal2StructureX(nonPos.x),
-                        heightFn(nonPos.x, nonPos.z),
-                        HotMPortalOffsets.portal2StructureZ(nonPos.z)
-                    )
-
-                    Stream.of(structurePos)
-                } else {
-                    Stream.empty()
-                }
-            } else {
-                return Stream.empty()
-            }
-        } else {
-            return Stream.empty()
-        }
-    }
-
-    /**
-     * Gets the non-Nectere-side block location that connects to the current Nectere-side block location.
-     */
-    fun getCorrespondingNonNectereCoords(nectereWorld: WorldAccess, necterePos: BlockPos): Stream<BlockPos> {
-        val biomeKey = nectereWorld.getBiomeKey(necterePos)
-
-        return HotMBiomeData.ifData(biomeKey) { biomeData ->
-            HotMLocationConversions.nectere2AllNon(necterePos, biomeData)
-        } ?: Stream.empty()
-    }
-
-    /**
-     * Gets the non-Nectere-side coordinate of a *generated* Nectere portal.
-     */
-    fun getBaseCorrespondingNonNectereCoords(nectereWorld: WorldAccess, necterePos: BlockPos): BlockPos? {
-        val biomeKey = nectereWorld.getBiomeKey(necterePos)
-
-        return HotMBiomeData.ifData(biomeKey) { biomeData ->
-            HotMLocationConversions.nectere2StartNon(necterePos, biomeData)
-        }
-    }
-
-    /**
-     * Gets the non-Nectere-side world that connects to the current Nectere-side block location.
-     */
-    fun getCorrespondingNonNectereWorld(nectereWorld: ServerWorld, necterePos: BlockPos): ServerWorld? {
-        val server = nectereWorld.server
-        val biomeKey = nectereWorld.getBiomeKey(necterePos)
-
-        return HotMBiomeData.ifPortalable(biomeKey) { biomeData ->
-            val world = server.getWorld(biomeData.targetWorld)
-            if (world == null) {
-                HotMLog.log.warn("Attempted to get non-existent world for Nectere biome with world key: ${biomeData.targetWorld}")
-            }
-            world
-        }
-    }
-
-    /**
-     * Retro-generates the "nearest" Nectere portal.
-     */
-    fun retrogenNonNectereSidePortal(
-        currentWorld: ServerWorld,
-        currentPos: BlockPos,
-        radius: Int
-    ): RetrogenPortalResult {
-        return HotMLocators.locateNonNectereSidePortal(currentWorld, currentPos, radius, false)?.let { structurePos ->
-            val portalPos = listOf(HotMPortalOffsets.structure2PortalPos(structurePos))
-            val foundPos = findNecterePortal(currentWorld, portalPos)
-            if (foundPos == null) {
-                val genPos = createNecterePortal(currentWorld, portalPos)
-
-                RetrogenPortalResult.Generated(HotMPortalOffsets.portal2StructurePos(genPos))
-            } else {
-                RetrogenPortalResult.Found(HotMPortalOffsets.portal2StructurePos(foundPos))
-            }
-        } ?: RetrogenPortalResult.Failure
-    }
-
-    /**
-     * The possible results of portal retro-generation.
-     */
-    sealed class RetrogenPortalResult {
-        object Failure : RetrogenPortalResult()
-        data class Found(val blockPos: BlockPos) : RetrogenPortalResult()
-        data class Generated(val blockPos: BlockPos) : RetrogenPortalResult()
     }
 }

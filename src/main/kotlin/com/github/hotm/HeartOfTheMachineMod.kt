@@ -6,6 +6,7 @@ import com.github.hotm.command.HotMCommands
 import com.github.hotm.items.HotMItems
 import com.github.hotm.misc.HotMFuels
 import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.HotMTeleporters
 import com.github.hotm.world.biome.HotMBiomes
 import com.github.hotm.world.gen.feature.HotMFeatures
 
@@ -20,6 +21,7 @@ fun init() {
     HotMFeatures.register()
     HotMBiomes.register()
     HotMDimensions.register()
+    HotMTeleporters.register()
     HotMCommands.register()
     HotMFuels.register()
 }

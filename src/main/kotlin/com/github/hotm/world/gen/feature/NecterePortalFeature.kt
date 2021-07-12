@@ -4,7 +4,9 @@ import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
 import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.util.WorldUtils
 import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.HotMPortalGenPositions
 import com.mojang.serialization.Codec
+import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.util.FeatureContext
@@ -14,7 +16,7 @@ class NecterePortalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<Default
         ctx: FeatureContext<DefaultFeatureConfig>
     ): Boolean {
         val world = ctx.world
-        val pos = ctx.origin
+        val pos = HotMPortalGenPositions.getPortalSpawnerPos(ChunkPos(ctx.origin))
         val key = WorldUtils.getServerWorld(world)?.registryKey
         val serverWorld = WorldUtils.getServerWorld(world)
 

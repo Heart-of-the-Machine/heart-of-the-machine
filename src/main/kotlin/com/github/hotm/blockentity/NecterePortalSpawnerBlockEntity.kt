@@ -1,7 +1,7 @@
 package com.github.hotm.blockentity
 
 import com.github.hotm.blocks.HotMBlocks
-import com.github.hotm.world.gen.feature.NecterePortalGen
+import com.github.hotm.world.gen.HotMPortalGen
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.entity.BlockEntity
@@ -11,7 +11,6 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
-import java.util.*
 
 class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
     BlockEntity(HotMBlockEntities.NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY, pos, state) {
@@ -42,6 +41,13 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
 
     fun tick() {
         val world = world
+        if (world != null && !world.isClient) {
+            spawn()
+        }
+    }
+
+    fun spawn() {
+        val world = world
         if (world != null && world is ServerWorld) {
             // This is an awful hack to get minecraft to stop complaining about these BlockEntities being removed but
             // still pending.
@@ -53,15 +59,9 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
                 world.setBlockState(pos, originalBlock)
             }
 
-            spawn()
-        }
-    }
-
-    fun spawn() {
-        val world = world
-        if (world != null && world is ServerWorld && world.structureAccessor.shouldGenerateStructures()) {
-            val random = Random()
-            NecterePortalGen.generateForChunk(world, ChunkPos(pos), random)
+            if (world.structureAccessor.shouldGenerateStructures()) {
+                HotMPortalGen.generateForChunk(world, ChunkPos(pos))
+            }
         }
     }
 }

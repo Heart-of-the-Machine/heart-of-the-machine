@@ -4,8 +4,11 @@ import com.github.hotm.config.HotMBiomesConfig
 import com.github.hotm.mixin.StructurePieceAccessor
 import com.github.hotm.util.WorldUtils
 import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.HotMLocationConversions
 import com.github.hotm.world.HotMPortalOffsets
+import com.github.hotm.world.HotMPortalGenPositions
 import com.github.hotm.world.biome.HotMBiomeData
+import com.github.hotm.world.gen.HotMPortalGen
 import com.mojang.serialization.Codec
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
@@ -15,19 +18,13 @@ import net.minecraft.structure.StructureStart
 import net.minecraft.util.math.BlockBox
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
-import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.registry.DynamicRegistryManager
 import net.minecraft.util.registry.Registry
-import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.HeightLimitView
 import net.minecraft.world.StructureWorldAccess
-import net.minecraft.world.WorldAccess
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.chunk.ChunkStatus
-import net.minecraft.world.gen.ChunkRandom
 import net.minecraft.world.gen.StructureAccessor
 import net.minecraft.world.gen.chunk.ChunkGenerator
-import net.minecraft.world.gen.chunk.StructureConfig
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.StructureFeature
 import net.minecraft.world.gen.feature.StructureFeature.StructureStartFactory
@@ -82,9 +79,9 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
             val portalBiome = registryManager.get(Registry.BIOME_KEY).getKey(
                 HotMDimensions.NECTERE_TYPE.biomeAccessType.getBiome(
                     seed,
-                    NecterePortalGen.getPortalX(chunkPos.x),
+                    HotMPortalGenPositions.getPortalX(chunkPos.x),
                     0,
-                    NecterePortalGen.getPortalZ(chunkPos.z),
+                    HotMPortalGenPositions.getPortalZ(chunkPos.z),
                     chunkGenerator.biomeSource
                 )
             )
@@ -94,8 +91,8 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
                 children.add(
                     Piece(
                         random,
-                        NecterePortalGen.getPortalStructureX(chunkPos.x),
-                        NecterePortalGen.getPortalStructureZ(chunkPos.z)
+                        HotMPortalGenPositions.getPortalStructureX(chunkPos.x),
+                        HotMPortalGenPositions.getPortalStructureZ(chunkPos.z)
                     )
                 )
             }
@@ -137,8 +134,8 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
             val serverWorld = WorldUtils.getServerWorld(world) ?: return false
             val portalPos =
                 HotMPortalOffsets.transform2PortalPos(::applyXTransform, ::applyYTransform, ::applyZTransform)
-            val otherWorld = HotMDimensions.getCorrespondingNonNectereWorld(serverWorld, portalPos) ?: return false
-            val otherPoses = HotMDimensions.getBaseCorrespondingNonNectereCoords(world, portalPos)
+            val otherWorld = HotMLocationConversions.nectere2NonWorld(serverWorld, portalPos) ?: return false
+            val otherPoses = HotMLocationConversions.nectere2StartNon(world, portalPos)
 
             if (otherPoses == null || !checkBiomes(otherWorld, otherPoses)) {
                 return false
@@ -147,7 +144,7 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
             @Suppress("cast_never_succeeds")
             val accessed = this as StructurePieceAccessor
 
-            NecterePortalGen.generate(
+            HotMPortalGen.generate(
                 world,
                 boundingBox,
                 this::applyXTransform,

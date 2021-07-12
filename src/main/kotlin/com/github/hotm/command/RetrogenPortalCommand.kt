@@ -2,6 +2,7 @@ package com.github.hotm.command
 
 import com.github.hotm.HotMConstants
 import com.github.hotm.world.HotMDimensions
+import com.github.hotm.world.gen.HotMPortalGen
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
@@ -35,13 +36,13 @@ object RetrogenPortalCommand {
             throw WRONG_WORLD_EXCEPTION.create()
         }
 
-        return when (val res = HotMDimensions.retrogenNonNectereSidePortal(source.world, sourcePos, 100)) {
-            HotMDimensions.RetrogenPortalResult.Failure -> throw FAILED_EXCEPTION.create()
-            is HotMDimensions.RetrogenPortalResult.Found -> {
+        return when (val res = HotMPortalGen.retrogenNonNectereSidePortal(source.world, sourcePos, 100)) {
+            HotMPortalGen.RetrogenPortalResult.Failure -> throw FAILED_EXCEPTION.create()
+            is HotMPortalGen.RetrogenPortalResult.Found -> {
                 sendCoordinates(source, sourcePos, res.blockPos, "found", false)
                 0
             }
-            is HotMDimensions.RetrogenPortalResult.Generated -> {
+            is HotMPortalGen.RetrogenPortalResult.Generated -> {
                 sendCoordinates(source, sourcePos, res.blockPos, "generated", true)
                 1
             }
