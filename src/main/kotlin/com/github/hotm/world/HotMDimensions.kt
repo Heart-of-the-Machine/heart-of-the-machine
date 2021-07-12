@@ -1,10 +1,10 @@
 package com.github.hotm.world
 
-import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.HotMConstants
-import com.github.hotm.misc.HotMLog
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
+import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.config.HotMConfig
+import com.github.hotm.misc.HotMLog
 import com.github.hotm.mixin.EntityAccessor
 import com.github.hotm.mixin.StructureFeatureAccessor
 import com.github.hotm.mixinapi.ChunkGeneratorSettingsAccess
@@ -299,7 +299,7 @@ object HotMDimensions {
      * Attempt to find a Nectere portal among a list of destination positions.
      */
     fun findNecterePortal(world: WorldView, newPoses: List<BlockPos>): BlockPos? {
-        for (offset in 0 until 256) {
+        for (offset in 0 until world.height) {
             for (init in newPoses) {
                 val up = init.up(offset)
                 val down = init.down(offset)
@@ -546,46 +546,6 @@ object HotMDimensions {
     }
 
     /**
-     * Locates a Nectere portal in a non-Nectere dimension.
-     */
-    fun locateNonNectereSidePortal(
-        currentWorld: ServerWorld,
-        currentPos: BlockPos,
-        radius: Int,
-        skipExistingChunks: Boolean
-    ): BlockPos? {
-        val nectereWorld = getNectereWorld(currentWorld.server)
-
-        return HotMBiomeData.streamPortalables(currentWorld.registryKey).flatMap { nectereBiome ->
-            if (nectereBiome.isPortalable) {
-                val necterePos = HotMLocationConversions.non2StartNectere(currentPos, nectereBiome)!!
-
-                val foundPos = HotMStructureFeatures.NECTERE_PORTAL.locateNonNectereSidePortal(
-                    nectereWorld,
-                    nectereWorld.structureAccessor,
-                    necterePos,
-                    radius,
-                    skipExistingChunks,
-                    nectereWorld.seed,
-                    nectereWorld.chunkManager.chunkGenerator.structuresConfig.getForType(HotMStructureFeatures.NECTERE_PORTAL)
-                        ?: error("Null Nectere Portal structure config"),
-                    nectereBiome.biome,
-                    currentWorld
-                )
-
-                if (foundPos != null) {
-                    Stream.of(foundPos)
-                } else {
-                    Stream.empty()
-                }
-            } else {
-                Stream.empty()
-            }
-        }.min(Comparator.comparing { portalPos -> portalPos.getSquaredDistance(currentPos) })
-            .orElse(null)
-    }
-
-    /**
      * Retro-generates the "nearest" Nectere portal.
      */
     fun retrogenNonNectereSidePortal(
@@ -593,7 +553,7 @@ object HotMDimensions {
         currentPos: BlockPos,
         radius: Int
     ): RetrogenPortalResult {
-        return locateNonNectereSidePortal(currentWorld, currentPos, radius, false)?.let { structurePos ->
+        return HotMLocators.locateNonNectereSidePortal(currentWorld, currentPos, radius, false)?.let { structurePos ->
             val portalPos = listOf(HotMPortalOffsets.structure2PortalPos(structurePos))
             val foundPos = findNecterePortal(currentWorld, portalPos)
             if (foundPos == null) {
