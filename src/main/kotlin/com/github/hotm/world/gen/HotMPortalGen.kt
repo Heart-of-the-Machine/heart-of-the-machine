@@ -96,15 +96,15 @@ object HotMPortalGen {
                 nectereWorld
             ).forEach { structureXZ ->
                 HotMPortalGenPositions.findValidNonNecterePortalPos(world, structureXZ.x, structureXZ.z)
-                    ?.let { structurePos ->
+                    ?.let { portalPos ->
                         // Make sure the portal is in an enabled biome and not in a Nectere biome.
-                        val portalPos = HotMPortalOffsets.structure2PortalPos(structurePos)
                         val biome = world.getBiomeKey(portalPos).orElse(null)
 
                         if (biome != null
                             && !HotMBiomeData.getDataById().containsKey(biome)
                             && HotMPortalFinders.findNecterePortal(world, listOf(portalPos)) == null
                         ) {
+                            val structurePos = HotMPortalOffsets.portal2StructurePos(portalPos)
                             generate(world, structurePos)
                         }
                     }
