@@ -163,21 +163,24 @@ object HotMLocationConversions {
         }
     }
 
+    fun nectere2NonWorld(nectereWorld: ServerWorld, biomeData: NectereBiomeData): ServerWorld? {
+        val world = nectereWorld.server.getWorld(biomeData.targetWorld)
+        if (world == null) {
+            HotMLog.log.warn("Attempted to get non-existent world for Nectere biome (${biomeData.biome}) with world key: ${biomeData.targetWorld}")
+        }
+        return world
+    }
+
     /* Complex Conversions */
 
     /**
      * Gets the non-Nectere-side world that connects to the current Nectere-side block location.
      */
     fun nectere2NonWorld(nectereWorld: ServerWorld, necterePos: BlockPos): ServerWorld? {
-        val server = nectereWorld.server
         val biomeKey = nectereWorld.getBiomeKey(necterePos)
 
         return HotMBiomeData.ifPortalable(biomeKey) { biomeData ->
-            val world = server.getWorld(biomeData.targetWorld)
-            if (world == null) {
-                HotMLog.log.warn("Attempted to get non-existent world for Nectere biome with world key: ${biomeData.targetWorld}")
-            }
-            world
+            nectere2NonWorld(nectereWorld, biomeData)
         }
     }
 

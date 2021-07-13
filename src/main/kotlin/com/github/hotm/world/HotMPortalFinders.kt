@@ -309,9 +309,7 @@ object HotMPortalFinders {
                 val portalPos = HotMLocationConversions.nectere2StartNon(necterePortalPos, nectereBiomeData)!!
 
                 if (portalPos.x shr 4 == currentPos.x && portalPos.z shr 4 == currentPos.z) {
-                    val structurePos = HotMPortalOffsets.portal2StructurePos(portalPos)
-
-                    Stream.of(structurePos)
+                    Stream.of(portalPos)
                 } else {
                     Stream.empty()
                 }
