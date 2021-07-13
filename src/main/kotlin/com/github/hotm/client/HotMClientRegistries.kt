@@ -19,25 +19,35 @@ object HotMClientRegistries {
 
     // keys
 
-    val BLOCK_MODEL_KEY = RegistryKey.ofRegistry<Codec<out UnbakedModel>>(BLOCK_MODEL_IDENTIFIER)
-    val BLOCK_MODEL_LAYER_KEY = RegistryKey.ofRegistry<Codec<out UnbakedModelLayer>>(BLOCK_MODEL_LAYER_IDENTIFIER)
-    val BLOCK_MODEL_CONNECTOR_KEY = RegistryKey.ofRegistry<ModelConnector>(BLOCK_MODEL_CONNECTOR_IDENTIFIER)
+    val BLOCK_MODEL_KEY by lazy { RegistryKey.ofRegistry<Codec<out UnbakedModel>>(BLOCK_MODEL_IDENTIFIER) }
+    val BLOCK_MODEL_LAYER_KEY by lazy {
+        RegistryKey.ofRegistry<Codec<out UnbakedModelLayer>>(
+            BLOCK_MODEL_LAYER_IDENTIFIER
+        )
+    }
+    val BLOCK_MODEL_CONNECTOR_KEY by lazy { RegistryKey.ofRegistry<ModelConnector>(BLOCK_MODEL_CONNECTOR_IDENTIFIER) }
 
     // registries
 
-    val BLOCK_MODEL: Registry<Codec<out UnbakedModel>> = Registry.register(
-        Registry.REGISTRIES as Registry<in Registry<*>>,
-        BLOCK_MODEL_IDENTIFIER,
-        SimpleRegistry(BLOCK_MODEL_KEY, Lifecycle.experimental())
-    )
-    val BLOCK_MODEL_LAYER: Registry<Codec<out UnbakedModelLayer>> = Registry.register(
-        Registry.REGISTRIES as Registry<in Registry<*>>,
-        BLOCK_MODEL_LAYER_IDENTIFIER,
-        SimpleRegistry(BLOCK_MODEL_LAYER_KEY, Lifecycle.experimental())
-    )
-    val BLOCK_MODEL_CONNECTOR: Registry<ModelConnector> = Registry.register(
-        Registry.REGISTRIES as Registry<in Registry<*>>,
-        BLOCK_MODEL_CONNECTOR_IDENTIFIER,
-        SimpleRegistry(BLOCK_MODEL_CONNECTOR_KEY, Lifecycle.experimental())
-    )
+    lateinit var BLOCK_MODEL: Registry<Codec<out UnbakedModel>>
+    lateinit var BLOCK_MODEL_LAYER: Registry<Codec<out UnbakedModelLayer>>
+    lateinit var BLOCK_MODEL_CONNECTOR: Registry<ModelConnector>
+
+    fun register() {
+        BLOCK_MODEL = Registry.register(
+            Registry.REGISTRIES as Registry<in Registry<*>>,
+            BLOCK_MODEL_IDENTIFIER,
+            SimpleRegistry(BLOCK_MODEL_KEY, Lifecycle.experimental())
+        )
+        BLOCK_MODEL_LAYER = Registry.register(
+            Registry.REGISTRIES as Registry<in Registry<*>>,
+            BLOCK_MODEL_LAYER_IDENTIFIER,
+            SimpleRegistry(BLOCK_MODEL_LAYER_KEY, Lifecycle.experimental())
+        )
+        BLOCK_MODEL_CONNECTOR = Registry.register(
+            Registry.REGISTRIES as Registry<in Registry<*>>,
+            BLOCK_MODEL_CONNECTOR_IDENTIFIER,
+            SimpleRegistry(BLOCK_MODEL_CONNECTOR_KEY, Lifecycle.experimental())
+        )
+    }
 }

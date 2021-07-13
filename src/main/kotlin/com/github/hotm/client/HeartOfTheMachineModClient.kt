@@ -7,6 +7,7 @@ import com.github.hotm.client.blockmodel.HotMBlockModels
  */
 @Suppress("unused")
 fun init() {
+    HotMClientRegistries.register()
     HotMBlocksClient.register()
     HotMBlockModels.register()
     HotMColorProviders.register()
