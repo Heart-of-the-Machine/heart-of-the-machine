@@ -266,7 +266,7 @@ object HotMPortalGen {
         addBlock(wStairs, 4, 3, 2)
 
         addBlock(uPortal, HotMPortalOffsets.transform2PortalPos(applyXTransform, applyYTransform, applyZTransform))
-        addBlock(dPortal, HotMPortalOffsets.transform2PortalPos(applyXTransform, applyYTransform, applyZTransform))
+        addBlock(dPortal, HotMPortalOffsets.transform2PortalPos(applyXTransform, applyYTransform, applyZTransform).up())
 
         fill(0, 1, 1, 4, 2, 1)
         fill(0, 1, 3, 4, 2, 3)
