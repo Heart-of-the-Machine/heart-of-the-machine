@@ -175,7 +175,7 @@ object HotMLocationConversions {
         return HotMBiomeData.ifPortalable(biomeKey) { biomeData ->
             val world = server.getWorld(biomeData.targetWorld)
             if (world == null) {
-                HotMLog.log.warn("Attempted to get non-existent world for Nectere biome with world key: ${biomeData.targetWorld}")
+                HotMLog.log.warn("Attempted to get non-existent world for Nectere biome (${biomeData.biome}) with world key: ${biomeData.targetWorld}")
             }
             world
         }

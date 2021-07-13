@@ -3,10 +3,9 @@ package com.github.hotm.world.gen
 import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
 import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.mixin.StructurePieceAccessor
-import com.github.hotm.world.HotMDimensions
-import com.github.hotm.world.HotMPortalFinders
-import com.github.hotm.world.HotMPortalOffsets
-import com.github.hotm.world.HotMPortalGenPositions
+import com.github.hotm.util.BiomeUtils
+import com.github.hotm.util.WorldUtils
+import com.github.hotm.world.*
 import com.github.hotm.world.biome.HotMBiomeData
 import net.minecraft.block.*
 import net.minecraft.server.world.ServerWorld
@@ -26,19 +25,17 @@ object HotMPortalGen {
      * Makes sure all NecterePortalSpawnerBlockEntities in the destination chunks have generated their receiving portals.
      */
     fun pregenPortals(world: ServerWorld, newPoses: List<BlockPos>) {
-        if (world.registryKey != HotMDimensions.NECTERE_KEY) {
-            // look for and run nectere portal spawner block entities
-            val checked = mutableSetOf<ChunkPos>()
+        // look for and run nectere portal spawner block entities
+        val checked = mutableSetOf<ChunkPos>()
 
-            for (pos in newPoses) {
-                val chunkPos = ChunkPos(pos)
-                if (!checked.contains(chunkPos)) {
-                    checked.add(chunkPos)
+        for (pos in newPoses) {
+            val chunkPos = ChunkPos(pos)
+            if (!checked.contains(chunkPos)) {
+                checked.add(chunkPos)
 
-                    val spawnerPos = HotMPortalGenPositions.getPortalSpawnerPos(chunkPos)
+                val spawnerPos = HotMPortalGenPositions.getPortalSpawnerPos(chunkPos)
 
-                    (world.getBlockEntity(spawnerPos) as? NecterePortalSpawnerBlockEntity)?.spawn()
-                }
+                (world.getBlockEntity(spawnerPos) as? NecterePortalSpawnerBlockEntity)?.spawn()
             }
         }
     }
@@ -69,26 +66,27 @@ object HotMPortalGen {
         currentPos: BlockPos,
         radius: Int
     ): RetrogenPortalResult {
-        return HotMPortalFinders.locateNonNectereSidePortal(currentWorld, currentPos, radius, false)?.let { structurePos ->
-            val portalPos = HotMPortalOffsets.structure2PortalPos(structurePos)
-            val foundPos = HotMPortalFinders.findNecterePortal(currentWorld, listOf(portalPos))
-            if (foundPos == null) {
-                val newPortalPos =
-                    HotMPortalGenPositions.findMaybeValidNonNecterePortalPos(currentWorld, portalPos.x, portalPos.z)
-                val newStructurePos = HotMPortalOffsets.portal2StructurePos(newPortalPos)
-                generate(currentWorld, newStructurePos)
+        return HotMPortalFinders.locateNonNectereSidePortal(currentWorld, currentPos, radius, false)
+            ?.let { structurePos ->
+                val portalPos = HotMPortalOffsets.structure2PortalPos(structurePos)
+                val foundPos = HotMPortalFinders.findNecterePortal(currentWorld, listOf(portalPos))
+                if (foundPos == null) {
+                    val newPortalPos =
+                        HotMPortalGenPositions.findMaybeValidNonNecterePortalPos(currentWorld, portalPos.x, portalPos.z)
+                    val newStructurePos = HotMPortalOffsets.portal2StructurePos(newPortalPos)
+                    generate(currentWorld, newStructurePos)
 
-                RetrogenPortalResult.Generated(newStructurePos)
-            } else {
-                RetrogenPortalResult.Found(HotMPortalOffsets.portal2StructurePos(foundPos))
-            }
-        } ?: RetrogenPortalResult.Failure
+                    RetrogenPortalResult.Generated(newStructurePos)
+                } else {
+                    RetrogenPortalResult.Found(HotMPortalOffsets.portal2StructurePos(foundPos))
+                }
+            } ?: RetrogenPortalResult.Failure
     }
 
     /**
      * Generates all non-nectere side portals for a given chunk.
      */
-    fun generateForChunk(world: ServerWorld, pos: ChunkPos) {
+    fun generateNonNectereSideForChunk(world: ServerWorld, pos: ChunkPos) {
         if (world.registryKey != HotMDimensions.NECTERE_KEY) {
             val nectereWorld = HotMDimensions.getNectereWorld(world.server)
             HotMPortalFinders.getNonNecterePortalCoords(
@@ -112,6 +110,38 @@ object HotMPortalGen {
                     }
             }
         }
+    }
+
+    /**
+     * Generates a nectere side portal that should be part of a portal structure.
+     *
+     * @return true if the portal was successfully generated, false otherwise.
+     */
+    fun generateNectereSideForStructure(
+        world: WorldAccess,
+        boundingBox: BlockBox?,
+        applyXTransform: (Int, Int) -> Int,
+        applyYTransform: (Int) -> Int,
+        applyZTransform: (Int, Int) -> Int,
+        mirror: BlockMirror,
+        rotation: BlockRotation
+    ): Boolean {
+        val serverWorld = WorldUtils.getServerWorld(world) ?: return false
+        val portalPos =
+            HotMPortalOffsets.transform2PortalPos(applyXTransform, applyYTransform, applyZTransform)
+
+        // This also makes sure the current biome is portalable
+        val otherWorld = HotMLocationConversions.nectere2NonWorld(serverWorld, portalPos) ?: return false
+        val otherPoses = HotMLocationConversions.nectere2StartNon(world, portalPos) ?: return false
+
+        // Make sure we aren't generating in an area connected to a denied biome
+        if (!BiomeUtils.checkNonNectereBiomes(otherWorld, otherPoses)) {
+            return false
+        }
+
+        generate(world, boundingBox, applyXTransform, applyYTransform, applyZTransform, mirror, rotation)
+
+        return true
     }
 
     /**

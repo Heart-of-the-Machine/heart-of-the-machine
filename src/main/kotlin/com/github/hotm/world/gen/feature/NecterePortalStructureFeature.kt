@@ -1,14 +1,10 @@
 package com.github.hotm.world.gen.feature
 
-import com.github.hotm.config.HotMBiomesConfig
-import com.github.hotm.mixin.StructurePieceAccessor
-import com.github.hotm.util.WorldUtils
+import com.github.hotm.blockentity.NecterePortalSpawnerBlockEntity
+import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.world.HotMDimensions
-import com.github.hotm.world.HotMLocationConversions
-import com.github.hotm.world.HotMPortalOffsets
 import com.github.hotm.world.HotMPortalGenPositions
 import com.github.hotm.world.biome.HotMBiomeData
-import com.github.hotm.world.gen.HotMPortalGen
 import com.mojang.serialization.Codec
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
@@ -33,24 +29,8 @@ import java.util.*
 /**
  * Structure Feature for the Nectere Portal.
  */
-// TODO: Move all of this generation mechanism to the BlockEntity-based system to prevent worldgen deadlocks.
 class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
     StructureFeature<DefaultFeatureConfig>(config) {
-    companion object {
-        private fun checkBiomes(nonNectereWorld: ServerWorld, nonNecterePos: BlockPos): Boolean {
-            val biomeId = nonNectereWorld.registryManager[Registry.BIOME_KEY].getId(
-                nonNectereWorld.chunkManager.chunkGenerator.biomeSource.getBiomeForNoiseGen(
-                    nonNecterePos.x shr 2,
-                    nonNecterePos.y shr 2,
-                    nonNecterePos.z shr 2
-                )
-            )
-
-            return biomeId != null && !HotMBiomesConfig.CONFIG.necterePortalDenyBiomes!!.contains(
-                biomeId.toString()
-            )
-        }
-    }
 
     override fun getStructureStartFactory(): StructureStartFactory<DefaultFeatureConfig> {
         return StructureStartFactory { feature, pos, references, seed ->
@@ -126,33 +106,24 @@ class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
             chunkPos: ChunkPos,
             blockPos: BlockPos
         ): Boolean {
+            val spawnerPos = HotMPortalGenPositions.getPortalSpawnerPos(chunkPos)
+
+            // Instead of checking validity and generating the portal structure here, we'll do it in a BlockEntity on
+            // the main server thread where we don't have to worry about deadlocks when we access other dimensions.
+            if (boundingBox.contains(spawnerPos)) {
+                val originalBlock = world.getBlockState(spawnerPos)
+
+                world.setBlockState(spawnerPos, HotMBlocks.NECTERE_PORTAL_SPAWNER.defaultState, 3)
+                (world.getBlockEntity(spawnerPos) as? NecterePortalSpawnerBlockEntity)?.let { be ->
+                    be.originalBlock = originalBlock
+                    be.structureCtx =
+                        NecterePortalSpawnerBlockEntity.StructureContext(getBoundingBox(), facing, mirror, rotation)
+                }
+            }
+
             if (!method_14839(world, boundingBox, 0)) {
                 return false
             }
-
-            // Make sure we aren't generating in an area connected to a blacklisted biome
-            val serverWorld = WorldUtils.getServerWorld(world) ?: return false
-            val portalPos =
-                HotMPortalOffsets.transform2PortalPos(::applyXTransform, ::applyYTransform, ::applyZTransform)
-            val otherWorld = HotMLocationConversions.nectere2NonWorld(serverWorld, portalPos) ?: return false
-            val otherPoses = HotMLocationConversions.nectere2StartNon(world, portalPos)
-
-            if (otherPoses == null || !checkBiomes(otherWorld, otherPoses)) {
-                return false
-            }
-
-            @Suppress("cast_never_succeeds")
-            val accessed = this as StructurePieceAccessor
-
-            HotMPortalGen.generate(
-                world,
-                boundingBox,
-                this::applyXTransform,
-                this::applyYTransform,
-                this::applyZTransform,
-                accessed.mirror,
-                accessed.rotation
-            )
 
             return true
         }

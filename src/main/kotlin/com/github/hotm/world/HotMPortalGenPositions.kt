@@ -22,7 +22,7 @@ object HotMPortalGenPositions {
     /**
      * Gets the location of the portal spawner block entity within a chunk.
      */
-    fun getPortalSpawnerPos(pos: ChunkPos): BlockPos = BlockPos(pos.startX, 0, pos.startZ)
+    fun getPortalSpawnerPos(pos: ChunkPos): BlockPos = BlockPos(pos.startX, 1, pos.startZ)
 
     /**
      * Scans the world at the given x and z coordinates for valid biomes and surfaces.
