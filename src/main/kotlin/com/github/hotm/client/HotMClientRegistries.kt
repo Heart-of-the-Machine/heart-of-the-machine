@@ -30,8 +30,11 @@ object HotMClientRegistries {
     // registries
 
     lateinit var BLOCK_MODEL: Registry<Codec<out UnbakedModel>>
+        private set
     lateinit var BLOCK_MODEL_LAYER: Registry<Codec<out UnbakedModelLayer>>
+        private set
     lateinit var BLOCK_MODEL_CONNECTOR: Registry<ModelConnector>
+        private set
 
     fun register() {
         BLOCK_MODEL = Registry.register(

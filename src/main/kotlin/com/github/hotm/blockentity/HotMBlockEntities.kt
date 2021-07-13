@@ -12,6 +12,7 @@ import net.minecraft.util.registry.Registry
 
 object HotMBlockEntities {
     lateinit var NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY: BlockEntityType<NecterePortalSpawnerBlockEntity>
+        private set
 
     fun register() {
         NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY =
