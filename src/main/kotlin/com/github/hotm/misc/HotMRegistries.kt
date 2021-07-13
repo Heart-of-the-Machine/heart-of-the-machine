@@ -16,21 +16,30 @@ object HotMRegistries {
 
     // keys
 
-    val UNIT_FEATURE_SEGMENT_TYPE_KEY =
+    val UNIT_FEATURE_SEGMENT_TYPE_KEY by lazy {
         RegistryKey.ofRegistry<FeatureSegmentType<Unit, *>>(UNIT_FEATURE_SEGMENT_TYPE_IDENTIFIER)
-    val CARDINAL_FEATURE_SEGMENT_TYPE_KEY =
+    }
+    val CARDINAL_FEATURE_SEGMENT_TYPE_KEY by lazy {
         RegistryKey.ofRegistry<FeatureSegmentType<CardinalDirection, *>>(CARDINAL_FEATURE_SEGMENT_TYPE_IDENTIFIER)
+    }
 
     // registries
 
-    val UNIT_FEATURE_SEGMENT_TYPE = Registry.register(
-        Registry.REGISTRIES as Registry<in Registry<*>>,
-        UNIT_FEATURE_SEGMENT_TYPE_IDENTIFIER,
-        SimpleRegistry(UNIT_FEATURE_SEGMENT_TYPE_KEY, Lifecycle.experimental())
-    )
-    val CARDINAL_FEATURE_SEGMENT_TYPE = Registry.register(
-        Registry.REGISTRIES as Registry<Registry<*>>,
-        CARDINAL_FEATURE_SEGMENT_TYPE_IDENTIFIER,
-        SimpleRegistry(CARDINAL_FEATURE_SEGMENT_TYPE_KEY, Lifecycle.experimental())
-    )
+    lateinit var UNIT_FEATURE_SEGMENT_TYPE: Registry<FeatureSegmentType<Unit, *>>
+        private set
+    lateinit var CARDINAL_FEATURE_SEGMENT_TYPE: Registry<FeatureSegmentType<CardinalDirection, *>>
+        private set
+
+    fun register() {
+        UNIT_FEATURE_SEGMENT_TYPE = Registry.register(
+            Registry.REGISTRIES as Registry<in Registry<*>>,
+            UNIT_FEATURE_SEGMENT_TYPE_IDENTIFIER,
+            SimpleRegistry(UNIT_FEATURE_SEGMENT_TYPE_KEY, Lifecycle.experimental())
+        )
+        CARDINAL_FEATURE_SEGMENT_TYPE = Registry.register(
+            Registry.REGISTRIES as Registry<Registry<*>>,
+            CARDINAL_FEATURE_SEGMENT_TYPE_IDENTIFIER,
+            SimpleRegistry(CARDINAL_FEATURE_SEGMENT_TYPE_KEY, Lifecycle.experimental())
+        )
+    }
 }
