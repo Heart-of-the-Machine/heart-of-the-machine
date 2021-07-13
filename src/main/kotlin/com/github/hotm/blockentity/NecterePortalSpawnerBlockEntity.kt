@@ -37,6 +37,20 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
 
         originalBlock =
             BlockState.CODEC.parse(NbtOps.INSTANCE, tag.get("original")).result().orElse(Blocks.AIR.defaultState)
+
+        if (tag.contains("structure")) {
+            val struct = tag.getCompound("structure")
+
+            structureCtx = StructureContext(
+                BlockBox.CODEC.parse(NbtOps.INSTANCE, struct.get("boundingBox")).result()
+                    .orElse(BlockBox(pos.x, 64, pos.z, pos.x + 5, 68, pos.z + 5)),
+                if (struct.contains("facing")) {
+                    Direction.byId(struct.getByte("facing").toInt())
+                } else null,
+                BlockMirror.values()[struct.getByte("mirror").toInt().coerceIn(0, 2)],
+                BlockRotation.values()[struct.getByte("rotation").toInt().coerceIn(0, 3)]
+            )
+        }
     }
 
     override fun writeNbt(tag: NbtCompound): NbtCompound {
@@ -44,6 +58,19 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
 
         BlockState.CODEC.encodeStart(NbtOps.INSTANCE, originalBlock).result().ifPresent { encoded ->
             newTag.put("original", encoded)
+        }
+
+        val structureCtx = structureCtx
+        if (structureCtx != null) {
+            val struct = NbtCompound()
+            BlockBox.CODEC.encodeStart(NbtOps.INSTANCE, structureCtx.boundingBox).result().ifPresent { encoded ->
+                struct.put("boundingBox", encoded)
+            }
+            if (structureCtx.facing != null) {
+                struct.putByte("facing", structureCtx.facing.id.toByte())
+            }
+            struct.putByte("mirror", structureCtx.mirror.ordinal.toByte())
+            struct.putByte("rotation", structureCtx.rotation.ordinal.toByte())
         }
 
         return newTag
