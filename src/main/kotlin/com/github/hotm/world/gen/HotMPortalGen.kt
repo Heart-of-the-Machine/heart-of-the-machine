@@ -94,8 +94,8 @@ object HotMPortalGen {
                 world.registryKey,
                 pos,
                 nectereWorld
-            ).forEach { structureXZ ->
-                HotMPortalGenPositions.findValidNonNecterePortalPos(world, structureXZ.x, structureXZ.z)
+            ).forEach { portalXZ ->
+                HotMPortalGenPositions.findValidNonNecterePortalPos(world, portalXZ.x, portalXZ.z)
                     ?.let { portalPos ->
                         // Make sure the portal is in an enabled biome and not in a Nectere biome.
                         val biome = world.getBiomeKey(portalPos).orElse(null)
