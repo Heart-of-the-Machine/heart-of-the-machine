@@ -1,6 +1,7 @@
 package com.github.hotm.world.gen.feature
 
 import com.github.hotm.HotMConstants
+import com.github.hotm.world.gen.feature.decorator.HotMDecorators
 import com.github.hotm.world.gen.feature.segment.SegmentedFeature
 import com.github.hotm.world.gen.feature.segment.SegmentedFeatureConfig
 import net.minecraft.util.registry.Registry
@@ -74,6 +75,8 @@ object HotMFeatures {
         TRANSMISSION_TOWER = register("transmission_tower", TransmissionTowerFeature(TransmissionTowerConfig.CODEC))
         NON_NECTERE_SIDE_NECTERE_PORTAL =
             register("nns_nectere_portal", NecterePortalFeature(DefaultFeatureConfig.CODEC))
+
+        HotMDecorators.register()
 
         HotMStructureFeatures.register()
 
