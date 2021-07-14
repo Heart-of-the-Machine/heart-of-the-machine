@@ -18,6 +18,7 @@ import net.minecraft.util.thread.ThreadExecutor;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkProvider;
+import net.minecraft.world.chunk.ChunkStatusChangeListener;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.LevelStorage;
@@ -44,20 +45,19 @@ public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAcces
 
     @Shadow
     @Final
-    private File saveDir;
-
-    @Shadow
-    @Final
-    private ServerWorld world;
+    ServerWorld world;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onCreate(ServerWorld serverWorld, LevelStorage.Session session, DataFixer dataFixer,
-                          StructureManager structureManager, Executor workerExecutor,
+    private void onCreate(ServerWorld world, LevelStorage.Session session, DataFixer dataFixer,
+                          StructureManager structureManager, Executor executor,
                           ThreadExecutor<Runnable> mainThreadExecutor, ChunkProvider chunkProvider,
                           ChunkGenerator chunkGenerator,
                           WorldGenerationProgressListener worldGenerationProgressListener,
-                          Supplier<PersistentStateManager> supplier, int i, boolean bl, CallbackInfo ci) {
-        hotm_auraNetStorage = new ServerAuraNetStorage(serverWorld, new File(saveDir, "hotm/auranet"), dataFixer, bl);
+                          ChunkStatusChangeListener chunkStatusChangeListener,
+                          Supplier<PersistentStateManager> persistentStateManagerFactory, int viewDistance,
+                          boolean dsync, CallbackInfo ci) {
+        hotm_auraNetStorage = new ServerAuraNetStorage(world,
+                new File(session.getWorldDirectory(world.getRegistryKey()), "hotm/auranet"), dataFixer, dsync);
     }
 
     @Inject(method = "close",
@@ -79,7 +79,7 @@ public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAcces
      * This is a lambda mixin. :/
      */
     @Inject(method = "method_17256", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/ChunkSerializer;deserialize(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/structure/StructureManager;Lnet/minecraft/world/poi/PointOfInterestStorage;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/chunk/ProtoChunk;"))
+            target = "Lnet/minecraft/world/ChunkSerializer;deserialize(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/structure/StructureManager;Lnet/minecraft/world/poi/PointOfInterestStorage;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/nbt/NbtCompound;)Lnet/minecraft/world/chunk/ProtoChunk;"))
     private void onLoadChunkStartDeserialize(ChunkPos pos,
                                              CallbackInfoReturnable<Either<Chunk, ChunkHolder.Unloaded>> cir) {
         StorageUtils.startDeserialize(hotm_auraNetStorage);
@@ -89,7 +89,7 @@ public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAcces
      * This is a lambda mixin. :/
      */
     @Inject(method = "method_17256", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/ChunkSerializer;deserialize(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/structure/StructureManager;Lnet/minecraft/world/poi/PointOfInterestStorage;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/chunk/ProtoChunk;",
+            target = "Lnet/minecraft/world/ChunkSerializer;deserialize(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/structure/StructureManager;Lnet/minecraft/world/poi/PointOfInterestStorage;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/nbt/NbtCompound;)Lnet/minecraft/world/chunk/ProtoChunk;",
             shift = At.Shift.AFTER))
     private void onLoadChunkEndDeserialize(ChunkPos pos,
                                            CallbackInfoReturnable<Either<Chunk, ChunkHolder.Unloaded>> cir) {

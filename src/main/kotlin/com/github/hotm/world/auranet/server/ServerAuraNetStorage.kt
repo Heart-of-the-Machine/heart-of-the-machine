@@ -4,7 +4,10 @@ import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.net.HotMNetwork
-import com.github.hotm.world.auranet.*
+import com.github.hotm.world.auranet.AuraNetAccess
+import com.github.hotm.world.auranet.AuraNode
+import com.github.hotm.world.auranet.SiphonAuraNode
+import com.github.hotm.world.auranet.SourceAuraNode
 import com.github.hotm.world.storage.CustomSerializingRegionBasedStorage
 import com.mojang.datafixers.DataFixer
 import com.mojang.serialization.Codec
@@ -24,13 +27,9 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
         file,
         dataFixer,
         null,
-        dsync
+        dsync,
+        world
     ), AuraNetAccess {
-
-    companion object {
-        private val MIN_CHUNK_Y = 0
-        private val MAX_CHUNK_Y = 15
-    }
 
     override val isClient = false
 
@@ -90,7 +89,7 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
         buf.writeInt(pos.x)
         buf.writeInt(pos.z)
 
-        for (y in MIN_CHUNK_Y..MAX_CHUNK_Y) {
+        for (y in world.bottomSectionCoord until world.topSectionCoord) {
             val sectionPos = ChunkSectionPos.from(pos, y)
             ServerAuraNetChunk.toPacket(buf, ctx, get(sectionPos.asLong()), world.registryKey)
         }

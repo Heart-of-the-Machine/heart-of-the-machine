@@ -84,7 +84,7 @@ dependencies {
     modRuntime("maven.modrinth:modmenu:${modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api"
     }
-    modRuntime("alexiil.mc.mod:simplepipes-all:${project.simplepipes_version}") {
+    modRuntime("alexiil.mc.mod:simplepipes-base:${simplepipes_version}") {
         exclude group: "net.fabricmc.fabric-api"
         exclude group: "alexiil.mc.lib"
     }
