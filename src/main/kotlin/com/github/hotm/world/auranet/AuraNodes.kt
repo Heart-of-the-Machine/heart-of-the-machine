@@ -1,8 +1,7 @@
 package com.github.hotm.world.auranet
 
 import com.github.hotm.HotMConstants
-import com.github.hotm.HotMRegistries
-import com.mojang.serialization.Codec
+import com.github.hotm.misc.HotMRegistries
 import net.minecraft.util.registry.Registry
 
 object AuraNodes {

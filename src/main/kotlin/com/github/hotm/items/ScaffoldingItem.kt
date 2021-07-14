@@ -32,7 +32,7 @@ class ScaffoldingItem(block: Block, settings: Settings) : BlockItem(block, setti
             var i = 0
             val mutable = blockPos.mutableCopy().move(direction2)
             while (i < 7) {
-                if (!world.isClient && !World.method_24794(mutable)) {
+                if (!world.isClient && !world.isInBuildLimit(mutable)) {
                     val playerEntity = context.player
                     val j = world.height
                     if (playerEntity is ServerPlayerEntity && mutable.y >= j) {

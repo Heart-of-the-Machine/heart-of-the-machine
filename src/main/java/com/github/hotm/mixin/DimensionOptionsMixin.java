@@ -29,10 +29,10 @@ public class DimensionOptionsMixin {
      * @param cir            used to signal a dimension verification failure.
      * @param list           the list minecraft checks for dimension customizations.
      */
-    @Inject(method = "method_29567", at = @At(value = "INVOKE_ASSIGN",
+    @Inject(method = "hasDefaultSettings", at = @At(value = "INVOKE_ASSIGN",
             target = "Lcom/google/common/collect/Lists;newArrayList(Ljava/lang/Iterable;)Ljava/util/ArrayList;", remap = false),
             locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-    private static void onMethod_29567_2(long seed, SimpleRegistry<DimensionOptions> simpleRegistry,
+    private static void onHasDefaultSettings(long seed, SimpleRegistry<DimensionOptions> simpleRegistry,
                                          CallbackInfoReturnable<Boolean> cir,
                                          List<Map.Entry<RegistryKey<DimensionOptions>, DimensionOptions>> list) {
         if (!DimensionAdditions.checkAndRemoveDimensions(seed, list)) {

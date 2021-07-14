@@ -6,16 +6,16 @@ import net.minecraft.world.ServerWorldAccess
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
 
 class ServerTowerFeature(codec: Codec<ServerTowerConfig>) : Feature<ServerTowerConfig>(codec) {
-    override fun generate(
-        world: StructureWorldAccess,
-        generator: ChunkGenerator,
-        random: Random,
-        pos: BlockPos,
-        config: ServerTowerConfig
-    ): Boolean {
+    override fun generate(ctx: FeatureContext<ServerTowerConfig>): Boolean {
+        val random = ctx.random
+        val config = ctx.config
+        val world = ctx.world
+        val pos = ctx.origin
+
         val height = random.nextInt(config.maxHeight - config.minHeight + 1) + config.minHeight
         val size = random.nextInt(config.maxSize - config.minSize + 1) + config.minSize
         val border = (random.nextInt(config.maxBorder - config.minBorder + 1) + config.minBorder).coerceAtMost(size - size / 2 - 1)

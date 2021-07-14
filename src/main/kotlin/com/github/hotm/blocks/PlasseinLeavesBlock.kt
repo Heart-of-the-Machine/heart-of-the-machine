@@ -1,7 +1,7 @@
 package com.github.hotm.blocks
 
-import com.github.hotm.HotMBlockTags
-import com.github.hotm.HotMProperties
+import com.github.hotm.misc.HotMBlockTags
+import com.github.hotm.misc.HotMProperties
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -10,7 +10,6 @@ import net.minecraft.item.ItemPlacementContext
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
-import net.minecraft.state.property.IntProperty
 import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction

@@ -1,11 +1,13 @@
 # gradle
 
+/.allure/
 /.gradle/
 /build/
 /out/
 
 # idea
 
+/bin/
 /.idea/
 *.iml
 *.ipr
@@ -15,3 +17,7 @@
 
 /run/
 /minecraft/
+
+# ???
+
+/logs/

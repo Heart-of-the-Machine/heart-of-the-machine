@@ -1,8 +1,7 @@
 package com.github.hotm.world.gen.feature
 
-import com.github.hotm.HotMBlocks
-import com.github.hotm.world.gen.HotMSurfaceBuilders
-import net.minecraft.block.Block
+import com.github.hotm.blocks.HotMBlocks
+import com.github.hotm.world.gen.surfacebuilder.HotMSurfaceBuilders
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
@@ -17,20 +16,20 @@ object FeatureUtils {
     /**
      * Used by HotM features to tell if they're generating on the surface.
      */
-    fun isSurface(block: Block): Boolean {
+    fun isSurface(block: BlockState): Boolean {
         return isNectereSurface(block) || Feature.isSoil(block) || isNectereStone(block) || isStone(block)
     }
 
-    fun isStone(block: Block): Boolean {
-        return block == Blocks.STONE || block == Blocks.GRANITE || block == Blocks.DIORITE || block == Blocks.ANDESITE
+    fun isStone(block: BlockState): Boolean {
+        return block.block == Blocks.STONE || block.block == Blocks.GRANITE || block.block == Blocks.DIORITE || block.block == Blocks.ANDESITE
     }
 
-    fun isNectereSurface(block: Block): Boolean {
-        return block == HotMSurfaceBuilders.RUSTED_SURFACE_BLOCK || block == HotMSurfaceBuilders.SURFACE_BLOCK || block == HotMSurfaceBuilders.GRASS_BLOCK
+    fun isNectereSurface(block: BlockState): Boolean {
+        return block.block == HotMSurfaceBuilders.RUSTED_SURFACE_BLOCK || block.block == HotMSurfaceBuilders.SURFACE_BLOCK || block.block == HotMSurfaceBuilders.GRASS_BLOCK
     }
 
-    fun isNectereStone(block: Block): Boolean {
-        return block == HotMBlocks.THINKING_STONE
+    fun isNectereStone(block: BlockState): Boolean {
+        return block.block == HotMBlocks.THINKING_STONE
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.github.hotm.mixin;
 
 import com.github.hotm.world.HotMDimensions;
+import com.github.hotm.world.HotMPortalFinders;
 import com.github.hotm.world.gen.feature.HotMStructureFeatures;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +24,7 @@ public class ChunkGeneratorMixin {
         if (!world.getRegistryKey().equals(HotMDimensions.INSTANCE.getNECTERE_KEY()) &&
                 feature == HotMStructureFeatures.INSTANCE.getNECTERE_PORTAL()) {
             cir.setReturnValue(
-                    HotMDimensions.INSTANCE.locateNonNectereSidePortal(world, center, radius, skipExistingChunks));
+                    HotMPortalFinders.INSTANCE.locateNonNectereSidePortal(world, center, radius, skipExistingChunks));
         }
     }
 }

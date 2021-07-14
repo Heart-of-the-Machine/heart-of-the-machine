@@ -8,8 +8,8 @@ plugins {
     id 'com.modrinth.minotaur'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -19,7 +19,7 @@ minecraft {
 }
 
 repositories {
-    maven { url = "http://maven.fabricmc.net/" }
+    maven { url = "https://maven.fabricmc.net/" }
     maven { name = "BuildCraft"; url = "https://mod-buildcraft.com/maven" }
     maven {
         name "Modmaven"
@@ -28,6 +28,17 @@ repositories {
         content {
             includeGroup 'appeng'
         }
+    }
+    maven {
+        name "Modrinth"
+        url "https://api.modrinth.com/maven/"
+        content {
+            includeModule "maven.modrinth", "modmenu"
+        }
+    }
+    maven {
+        name "Terraformers MC Archive"
+        url "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/"
     }
 }
 
@@ -53,7 +64,7 @@ dependencies {
     modImplementation("alexiil.mc.lib:libmultipart-all:${project.lmp_version}") {
         exclude group: "net.fabricmc.fabric-api"
     }
-    // jij lba
+    // jij lmp
     include "alexiil.mc.lib:libmultipart-all:${project.lmp_version}"
 
     modImplementation("alexiil.mc.lib:libnetworkstack-base:${project.lns_version}") {
@@ -66,21 +77,20 @@ dependencies {
 
     modImplementation "org.yaml:snakeyaml:${yaml_version}"
     include "org.yaml:snakeyaml:${yaml_version}"
-    modImplementation "com.terraformersmc:shapes:${shapes_version}"
-    include "com.terraformersmc:shapes:${shapes_version}"
+    modImplementation "com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}"
+    include "com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}"
 
     // mod compatibility checks
-
-    modRuntime("io.github.prospector:modmenu:${project.modmenu_version}") {
+    modRuntime("maven.modrinth:modmenu:${modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api"
     }
     modRuntime("alexiil.mc.mod:simplepipes-all:${project.simplepipes_version}") {
         exclude group: "net.fabricmc.fabric-api"
         exclude group: "alexiil.mc.lib"
     }
-    modRuntime("appeng:appliedenergistics2-fabric:8.1.0-alpha.12") {
-        exclude group: "net.fabricmc.fabric-api"
-    }
+//    modRuntime("appeng:appliedenergistics2-fabric:8.1.0-alpha.12") {
+//        exclude group: "net.fabricmc.fabric-api"
+//    }
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
@@ -91,13 +101,10 @@ dependencies {
 processResources {
     inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
+    exclude("**/*.xcf")
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 
@@ -152,7 +159,7 @@ if (System.getenv("CURSE_API_KEY") != null) {
             project.publish_minecraft_versions.split(",").toList().forEach {
                 addGameVersion it.trim()
             }
-            addGameVersion 'Java 8'
+            addGameVersion 'Java 16'
             addGameVersion 'Fabric'
             mainArtifact(remapJar)
             relations {
@@ -189,4 +196,4 @@ if (System.getenv("MODRINTH_API_KEY") != null) {
     }
 }
 
-compileKotlin.kotlinOptions.jvmTarget = "1.8"
+compileKotlin.kotlinOptions.jvmTarget = "16"

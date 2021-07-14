@@ -1,25 +1,21 @@
 package com.github.hotm.world.gen.feature
 
-import com.github.hotm.HotMProperties
+import com.github.hotm.misc.HotMProperties
 import com.mojang.serialization.Codec
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.ServerWorldAccess
-import net.minecraft.world.StructureWorldAccess
-import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
 
 class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<TransmissionTowerConfig>(codec) {
-    override fun generate(
-        world: StructureWorldAccess,
-        generator: ChunkGenerator,
-        random: Random,
-        pos: BlockPos,
-        config: TransmissionTowerConfig
-    ): Boolean {
+    override fun generate(ctx: FeatureContext<TransmissionTowerConfig>): Boolean {
+        val world = ctx.world
+        val config = ctx.config
+
         val baseList = mutableListOf<BlockPos>()
         val structureList = mutableListOf<BlockPos>()
         val structureGrowthList = mutableListOf<BlockPos>()
@@ -28,8 +24,8 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
 
         return if (tryGenerate(
                 world,
-                random,
-                pos,
+                ctx.random,
+                ctx.origin,
                 config,
                 baseList,
                 structureList,
@@ -75,7 +71,7 @@ class TransmissionTowerFeature(codec: Codec<TransmissionTowerConfig>) : Feature<
         leafList: MutableCollection<BlockPos>,
         lampList: MutableCollection<BlockPos>
     ): Boolean {
-        if (!world.testBlockState(pos.down()) { FeatureUtils.isSurface(it.block) }) {
+        if (!world.testBlockState(pos.down(), FeatureUtils::isSurface)) {
             return false
         }
 

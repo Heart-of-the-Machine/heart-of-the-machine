@@ -1,6 +1,7 @@
 package com.github.hotm.mixin;
 
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.ChunkRandom;
@@ -19,12 +20,8 @@ import java.util.Map;
  */
 @Mixin(StructureFeature.class)
 public interface StructureFeatureAccessor {
-    @Accessor("STRUCTURE_TO_GENERATION_STEP")
-    static Map<StructureFeature<?>, GenerationStep.Feature> getStructureToGenerationStep() {
-        throw new RuntimeException("StructureFeatureAccessor mixin was not mixed in properly!");
-    }
-
     @Invoker
-    boolean callShouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkRandom chunkRandom,
-                          int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, FeatureConfig featureConfig);
+    boolean callShouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed,
+                              ChunkRandom random, ChunkPos pos, Biome biome, ChunkPos chunkPos, FeatureConfig config,
+                              HeightLimitView world);
 }
