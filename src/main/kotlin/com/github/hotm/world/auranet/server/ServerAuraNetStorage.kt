@@ -26,13 +26,9 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
         file,
         dataFixer,
         null,
-        dsync
+        dsync,
+        world
     ), AuraNetAccess {
-
-    companion object {
-        private val MIN_CHUNK_Y = 0
-        private val MAX_CHUNK_Y = 15
-    }
 
     override val isClient = false
 
@@ -92,7 +88,7 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
         buf.writeInt(pos.x)
         buf.writeInt(pos.z)
 
-        for (y in MIN_CHUNK_Y..MAX_CHUNK_Y) {
+        for (y in world.bottomSectionCoord until world.topSectionCoord) {
             val sectionPos = ChunkSectionPos.from(pos, y)
             ServerAuraNetChunk.toPacket(buf, ctx, get(sectionPos.asLong()), world.registryKey)
         }

@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(BuiltinBiomes.class)
 public interface BuiltinBiomesAccessor {
-    @Accessor("BY_RAW_ID")
-    static Int2ObjectMap<RegistryKey<Biome>> getByRawId() {
+    @Accessor
+    static Int2ObjectMap<RegistryKey<Biome>> getBY_RAW_ID() {
         throw new RuntimeException("BuiltinBiomesAccessor mixin was not mixed in properly!");
     }
 }

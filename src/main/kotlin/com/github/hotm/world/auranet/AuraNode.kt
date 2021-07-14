@@ -7,7 +7,7 @@ import alexiil.mc.lib.net.ParentNetIdSingle
 import alexiil.mc.lib.net.impl.ActiveMinecraftConnection
 import alexiil.mc.lib.net.impl.McNetworkStack
 import com.github.hotm.HotMConstants.str
-import com.github.hotm.HotMRegistries
+import com.github.hotm.misc.HotMRegistries
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.net.HotMNetwork
 import com.github.hotm.util.DimBlockPos

@@ -1,35 +1,35 @@
 package com.github.hotm.world.gen.feature
 
-import com.github.hotm.HotMBlocks
+import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.blocks.Leylineable
 import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper
+import net.minecraft.world.HeightLimitView
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.ChunkRandom
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
-import java.util.*
+import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.stream.IntStream
 import java.util.stream.Stream
 
 class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatureConfig>(codec) {
     override fun generate(
-        world: StructureWorldAccess,
-        chunkGenerator: ChunkGenerator,
-        _random: Random,
-        blockPos: BlockPos,
-        featureConfig: DefaultFeatureConfig
+        ctx: FeatureContext<DefaultFeatureConfig>
     ): Boolean {
+        val world = ctx.world
+        val blockPos = ctx.origin
+        val chunkGenerator = ctx.generator
         var generated = false
 
         if (isGenChunk(blockPos)) {
             val regions = RegionPos.regionsForChunk(blockPos)
 
             for (regionPos in regions) {
-                val sources = regionPos.genSources(world.seed, chunkGenerator)
+                val sources = regionPos.genSources(world.seed, chunkGenerator, world)
 
                 for (source in sources) {
                     if (canLeyline(world, source)) {
@@ -37,7 +37,7 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
                         makeLeyline(world, source)
 
                         for (dir in Direction.values()) {
-                            val dests = regionPos.genBoundaries(world.seed, chunkGenerator, dir)
+                            val dests = regionPos.genBoundaries(world.seed, chunkGenerator, dir, world)
 
                             for (dest in dests) {
                                 makeLeylineTo(world, source, regionPos, dest)
@@ -191,7 +191,8 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
 
         fun genSources(
             worldSeed: Long,
-            chunkGenerator: ChunkGenerator
+            chunkGenerator: ChunkGenerator,
+            heightLimitView: HeightLimitView
         ): Stream<BlockPos> {
             val random = getRandom(worldSeed, SOURCE_INDEX, SOURCE_STEP)
 
@@ -202,15 +203,16 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
                     random.nextInt(BLOCKS_PER_REGION) + startZ
                 )
             }.filter {
-                val sample = chunkGenerator.getColumnSample(it.x, it.z)
-                sample.getBlockState(it).block is Leylineable
+                val sample = chunkGenerator.getColumnSample(it.x, it.z, heightLimitView)
+                sample.getState(it).block is Leylineable
             }
         }
 
         private fun genRegionBoundaries(
             worldSeed: Long,
             chunkGenerator: ChunkGenerator,
-            direction: Direction
+            direction: Direction,
+            heightLimitView: HeightLimitView
         ): Stream<BlockPos> {
             val random =
                 getRandom(worldSeed, BORDER_INDEX + DIRECTION_INDEX * direction.ordinal, BORDER_STEP)
@@ -259,35 +261,36 @@ class LeylineFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatur
                     )
                 }
             }.filter {
-                val sample = chunkGenerator.getColumnSample(it.x, it.z)
-                sample.getBlockState(it).block is Leylineable
+                val sample = chunkGenerator.getColumnSample(it.x, it.z, heightLimitView)
+                sample.getState(it).block is Leylineable
             }
         }
 
         private fun genNeighborBoundaries(
             worldSeed: Long,
             chunkGenerator: ChunkGenerator,
-            direction: Direction
+            direction: Direction,
+            heightLimitView: HeightLimitView
         ): Stream<BlockPos> {
             val opposite = direction.opposite
             return nextRegion(direction)?.let { region ->
-                region.genRegionBoundaries(worldSeed, chunkGenerator, opposite).map { it.offset(opposite) }
+                region.genRegionBoundaries(worldSeed, chunkGenerator, opposite, heightLimitView).map { it.offset(opposite) }
             } ?: Stream.empty()
         }
 
-        fun genBoundaries(worldSeed: Long, chunkGenerator: ChunkGenerator, direction: Direction): Stream<BlockPos> {
+        fun genBoundaries(worldSeed: Long, chunkGenerator: ChunkGenerator, direction: Direction, heightLimitView: HeightLimitView): Stream<BlockPos> {
             return when (direction) {
                 Direction.DOWN -> if (isBottom) Stream.empty() else Stream.concat(
-                    genRegionBoundaries(worldSeed, chunkGenerator, direction),
-                    genNeighborBoundaries(worldSeed, chunkGenerator, direction)
+                    genRegionBoundaries(worldSeed, chunkGenerator, direction, heightLimitView),
+                    genNeighborBoundaries(worldSeed, chunkGenerator, direction, heightLimitView)
                 )
                 Direction.UP -> if (isTop) Stream.empty() else Stream.concat(
-                    genRegionBoundaries(worldSeed, chunkGenerator, direction),
-                    genNeighborBoundaries(worldSeed, chunkGenerator, direction)
+                    genRegionBoundaries(worldSeed, chunkGenerator, direction, heightLimitView),
+                    genNeighborBoundaries(worldSeed, chunkGenerator, direction, heightLimitView)
                 )
                 else -> Stream.concat(
-                    genRegionBoundaries(worldSeed, chunkGenerator, direction),
-                    genNeighborBoundaries(worldSeed, chunkGenerator, direction)
+                    genRegionBoundaries(worldSeed, chunkGenerator, direction, heightLimitView),
+                    genNeighborBoundaries(worldSeed, chunkGenerator, direction, heightLimitView)
                 )
             }
         }

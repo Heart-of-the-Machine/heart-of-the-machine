@@ -2,8 +2,8 @@ package com.github.hotm.world.auranet.server
 
 import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
-import com.github.hotm.HotMConfig
 import com.github.hotm.blocks.AuraNodeBlock
+import com.github.hotm.config.HotMConfig
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNode
 import com.github.hotm.world.auranet.SiphonAuraNode
@@ -47,7 +47,7 @@ class ServerAuraNetChunk(
                     AuraNode.createCodec(storage, updateListener).listOf().fieldOf("nodes")
                         .forGetter { ImmutableList.copyOf(it.nodesByPos.values) }
                 ).apply(instance, ::ServerAuraNetChunk)
-            }.orElseGet(Util.method_29188("Failed to read Aura Net Data section: ", LOGGER::error)) {
+            }.orElseGet(Util.addPrefix("Failed to read Aura Net Data section: ", LOGGER::error)) {
                 ServerAuraNetChunk(updateListener, dim)
             }
         }

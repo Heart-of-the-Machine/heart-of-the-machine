@@ -7,7 +7,7 @@ import alexiil.mc.lib.net.NetObjectCache
 import alexiil.mc.lib.net.impl.CoreMinecraftNetUtil
 import alexiil.mc.lib.net.impl.McNetworkStack
 import com.github.hotm.HotMConstants.str
-import com.github.hotm.HotMRegistries
+import com.github.hotm.misc.HotMRegistries
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.world.auranet.client.ClientAuraNetStorage
 import com.github.hotm.world.auranet.server.ServerAuraNetStorage

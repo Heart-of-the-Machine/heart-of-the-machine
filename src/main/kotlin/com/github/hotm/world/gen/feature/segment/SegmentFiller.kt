@@ -2,8 +2,8 @@ package com.github.hotm.world.gen.feature.segment
 
 import com.github.hotm.world.gen.feature.segment.FeatureSegmentUtils.place
 import com.github.hotm.world.gen.feature.segment.FeatureSegmentUtils.tryPlace
-import com.terraformersmc.shapes.api.Filler
-import com.terraformersmc.shapes.api.Position
+import com.terraformersmc.terraform.shapes.api.Filler
+import com.terraformersmc.terraform.shapes.api.Position
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.WorldView
 

@@ -32,7 +32,7 @@ class BracingItem(block: Block, settings: Settings) : BlockItem(block, settings)
             val mutable = blockPos.mutableCopy().move(placementDir)
 
             while (i < BRACING_DISTANCE) {
-                if (!world.isClient && !World.method_24794(mutable)) {
+                if (!world.isClient && !world.isInBuildLimit(mutable)) {
                     val playerEntity = context.player
                     val j = world.height
                     if (playerEntity is ServerPlayerEntity && mutable.y >= j) {

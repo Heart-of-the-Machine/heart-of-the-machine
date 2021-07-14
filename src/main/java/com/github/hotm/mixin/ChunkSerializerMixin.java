@@ -3,8 +3,8 @@ package com.github.hotm.mixin;
 import com.github.hotm.mixinapi.StorageUtils;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.util.math.ChunkPos;
@@ -34,13 +34,13 @@ public class ChunkSerializerMixin {
             target = "Lnet/minecraft/world/poi/PointOfInterestStorage;initForPalette(Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/world/chunk/ChunkSection;)V"),
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private static void onDeserialize(ServerWorld world, StructureManager structureManager,
-                                      PointOfInterestStorage poiStorage, ChunkPos pos, CompoundTag tag,
+                                      PointOfInterestStorage poiStorage, ChunkPos pos, NbtCompound nbt,
                                       CallbackInfoReturnable<ProtoChunk> cir, ChunkGenerator chunkGenerator,
-                                      BiomeSource biomeSource, CompoundTag compoundTag, BiomeArray biomeArray,
+                                      BiomeSource biomeSource, NbtCompound nbtCompound, BiomeArray biomeArray,
                                       UpgradeData upgradeData, ChunkTickScheduler<Block> chunkTickScheduler,
-                                      ChunkTickScheduler<Fluid> chunkTickScheduler2, boolean bl, ListTag listTag, int i,
-                                      ChunkSection chunkSections[], boolean bl2, ChunkManager chunkManager,
-                                      LightingProvider lightingProvider, int j, CompoundTag compoundTag2, int k,
+                                      ChunkTickScheduler<Fluid> chunkTickScheduler2, boolean bl, NbtList nbtList, int i,
+                                      ChunkSection[] chunkSections, boolean bl2, ChunkManager chunkManager,
+                                      LightingProvider lightingProvider, int j, NbtCompound nbtCompound2, int k,
                                       ChunkSection chunkSection) {
         StorageUtils.handleDeserialize(pos, chunkSection);
     }

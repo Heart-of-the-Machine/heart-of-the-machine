@@ -13,12 +13,12 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.longs.LongLinkedOpenHashSet
 import net.minecraft.datafixer.DataFixTypes
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtOps
 import net.minecraft.util.Util
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.ChunkSectionPos
-import net.minecraft.world.World
+import net.minecraft.world.HeightLimitView
 import net.minecraft.world.storage.StorageIoWorker
 import org.apache.logging.log4j.LogManager
 import java.io.File
@@ -30,13 +30,16 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
     directory: File,
     private val dataFixer: DataFixer,
     private val dataFixType: DataFixTypes?,
-    bl: Boolean
+    dsync: Boolean,
+    private val world: HeightLimitView
 ) : AutoCloseable {
     companion object {
         private val LOGGER = LogManager.getLogger()
+
+        private fun asLong(pos: ChunkPos, y: Int): Long = ChunkSectionPos.asLong(pos.x, y, pos.z)
     }
 
-    private var worker: StorageIoWorker = StorageUtils.newStorageIoWorker(directory, bl, directory.name)
+    private var worker: StorageIoWorker = StorageUtils.newStorageIoWorker(directory, dsync, directory.name)
     private val loadedElements: Long2ObjectMap<Optional<R>?> = Long2ObjectOpenHashMap()
     private val unsavedElements = LongLinkedOpenHashSet()
 
@@ -55,33 +58,36 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
     }
 
     protected operator fun get(pos: Long): Optional<R> {
-        val chunkSectionPos = ChunkSectionPos.from(pos)
-        return if (isPosInvalid(chunkSectionPos)) {
+        return if (isPosInvalid(pos)) {
             Optional.empty()
         } else {
             var optional = getIfLoaded(pos)
             if (optional != null) {
                 optional
             } else {
-                loadDataAt(chunkSectionPos.toChunkPos())
+                loadDataAt(ChunkSectionPos.from(pos).toChunkPos())
                 optional = getIfLoaded(pos)
                 optional ?: throw Util.throwOrPause(IllegalStateException("Error loading chunk section"))
             }
         }
     }
 
-    protected fun isPosInvalid(pos: ChunkSectionPos): Boolean {
-        return World.isHeightInvalid(ChunkSectionPos.getBlockCoord(pos.sectionY))
+    protected fun isPosInvalid(pos: Long): Boolean {
+        return world.isOutOfHeightLimit(ChunkSectionPos.getBlockCoord(ChunkSectionPos.unpackY(pos)))
     }
 
     protected fun getOrCreate(pos: Long): R {
-        val optional = this[pos]
-        return if (optional.isPresent) {
-            optional.get()
+        if (isPosInvalid(pos)) {
+            throw Util.throwOrPause(IllegalArgumentException("sectionPos out of bounds"))
         } else {
-            val newObj = factory { onUpdate(pos) }
-            loadedElements[pos] = Optional.of(newObj)
-            newObj
+            val optional = this[pos]
+            return if (optional.isPresent) {
+                optional.get()
+            } else {
+                val newObj = factory { onUpdate(pos) }
+                loadedElements[pos] = Optional.of(newObj)
+                newObj
+            }
         }
     }
 
@@ -89,7 +95,7 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
         update(chunkPos, NbtOps.INSTANCE, loadNbt(chunkPos))
     }
 
-    private fun loadNbt(pos: ChunkPos): CompoundTag? {
+    private fun loadNbt(pos: ChunkPos): NbtCompound? {
         return try {
             worker.getNbt(pos)
         } catch (var3: IOException) {
@@ -100,8 +106,8 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
 
     private fun <T> update(pos: ChunkPos, dynamicOps: DynamicOps<T>, data: T?) {
         if (data == null) {
-            for (i in 0..15) {
-                loadedElements[ChunkSectionPos.from(pos, i).asLong()] = Optional.empty()
+            for (i in world.bottomSectionCoord until world.topSectionCoord) {
+                loadedElements[asLong(pos, i)] = Optional.empty()
             }
         } else {
             val dynamic: Dynamic<T> = Dynamic(dynamicOps, data)
@@ -112,8 +118,8 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
             } ?: dynamic
             val optionalDynamic = dataFixed["Sections"]
 
-            for (l in 0..15) {
-                val m = ChunkSectionPos.from(pos, l).asLong()
+            for (l in world.bottomSectionCoord until world.topSectionCoord) {
+                val m = asLong(pos, l)
                 val optional = optionalDynamic[l.toString()].result().flatMap { dynamicx: Dynamic<T> ->
                     (codecFactory { onUpdate(m) }).parse(dynamicx).resultOrPartial(LOGGER::error)
                 }
@@ -131,7 +137,7 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
     private fun save(chunkPos: ChunkPos) {
         val dynamic = writeDynamic(chunkPos, NbtOps.INSTANCE)
         val tag = dynamic.value
-        if (tag is CompoundTag) {
+        if (tag is NbtCompound) {
             worker.setResult(chunkPos, tag)
         } else {
             LOGGER.error("Expected compound tag, got {}", tag)
@@ -139,9 +145,9 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
     }
 
     private fun <T> writeDynamic(chunkPos: ChunkPos, dynamicOps: DynamicOps<T>): Dynamic<T> {
-        val map: MutableMap<T, T?> = Maps.newHashMap()
-        for (i in 0..15) {
-            val l = ChunkSectionPos.from(chunkPos, i).asLong()
+        val map: MutableMap<T, T> = Maps.newHashMap()
+        for (i in world.bottomSectionCoord until world.topSectionCoord) {
+            val l = asLong(chunkPos, i)
             unsavedElements.remove(l)
             val optional: Optional<R>? = loadedElements[l]
             if (optional != null && optional.isPresent) {
@@ -182,8 +188,8 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
 
     fun trySave(chunkPos: ChunkPos) {
         if (!unsavedElements.isEmpty()) {
-            for (i in 0..15) {
-                val l = ChunkSectionPos.from(chunkPos, i).asLong()
+            for (i in world.bottomSectionCoord until world.topSectionCoord) {
+                val l = asLong(chunkPos, i)
                 if (unsavedElements.contains(l)) {
                     save(chunkPos)
                     return
