@@ -45,8 +45,6 @@ public class DimensionAdditions {
             long seed,
             SimpleRegistry<DimensionOptions> optionsRegistry,
             String message) {
-        // Make sure dimensions are registered in time.
-        HotMDimensions.INSTANCE.register();
 
         HotMLog.INSTANCE.getLog().info("HotM Adding Dimensions to " + message + ":");
         for (DimensionAddition addition : ADDITIONS) {
