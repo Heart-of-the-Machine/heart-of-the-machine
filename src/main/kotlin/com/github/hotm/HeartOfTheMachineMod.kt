@@ -11,6 +11,7 @@ import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.HotMTeleporters
 import com.github.hotm.world.biome.HotMBiomes
 import com.github.hotm.world.gen.feature.HotMFeatures
+import com.github.hotm.world.gen.surfacebuilder.HotMSurfaceBuilders
 
 /**
  * Initializer for Heart of the Machine mod.
@@ -23,6 +24,7 @@ fun init() {
     HotMItems.register()
     HotMBlockEntities.register()
     HotMFeatures.register()
+    HotMSurfaceBuilders.register()
     HotMBiomes.register()
     HotMDimensions.register()
     HotMTeleporters.register()
