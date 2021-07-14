@@ -20,6 +20,7 @@ import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource
+import net.minecraft.world.dimension.DimensionOptions
 import net.minecraft.world.dimension.DimensionType
 import net.minecraft.world.gen.chunk.*
 import java.util.*
@@ -34,100 +35,48 @@ object HotMDimensions {
     /**
      * Key used to reference the Nectere dimension.
      */
-    val NECTERE_KEY: RegistryKey<World> =
+    val NECTERE_KEY: RegistryKey<World> by lazy {
         RegistryKey.of(Registry.WORLD_KEY, HotMConstants.identifier("nectere"))
+    }
 
     /**
      * Key used to reference the Nectere dimension options.
      */
-    val NECTERE_OPTIONS_KEY = RegistryKey.of(Registry.DIMENSION_KEY, HotMConstants.identifier("nectere"))
-
-    /**
-     * Dimension options that describe the Nectere dimension.
-     */
-    val NECTERE_TYPE = DimensionType.create(
-        OptionalLong.empty(),
-        true,
-        false,
-        false,
-        true,
-        1.0,
-        false,
-        false,
-        false,
-        false,
-        false,
-        0,
-        256,
-        256,
-        HorizontalVoronoiBiomeAccessType.INSTANCE,
-        BlockTags.INFINIBURN_OVERWORLD.id,
-        DimensionType.OVERWORLD_ID,
-        0.1f
-    )
+    val NECTERE_OPTIONS_KEY: RegistryKey<DimensionOptions> by lazy {
+        RegistryKey.of(Registry.DIMENSION_KEY, HotMConstants.identifier("nectere"))
+    }
 
     /**
      * Key used to reference the Nectere dimension type.
      */
-    val NECTERE_TYPE_KEY = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, HotMConstants.identifier("nectere"))
+    val NECTERE_TYPE_KEY by lazy {
+        RegistryKey.of(Registry.DIMENSION_TYPE_KEY, HotMConstants.identifier("nectere"))
+    }
 
     /**
      * The registry key for the Nectere chunk generator settings.
      */
-    val NECTERE_CHUNK_GENERATOR_SETTINGS_KEY =
+    val NECTERE_CHUNK_GENERATOR_SETTINGS_KEY by lazy {
         RegistryKey.of(Registry.CHUNK_GENERATOR_SETTINGS_KEY, HotMConstants.identifier("nectere"))
+    }
+
+    /**
+     * Dimension options that describe the Nectere dimension.
+     */
+    lateinit var NECTERE_TYPE: DimensionType
+        private set
 
     /**
      * ChunkGeneratorType preset for the Nectere dimension.
      */
-    val NECTERE_CHUNK_GENERATOR_SETTINGS_BUILTIN = Registry.register(
-        BuiltinRegistries.CHUNK_GENERATOR_SETTINGS,
-        NECTERE_CHUNK_GENERATOR_SETTINGS_KEY.value,
-        ChunkGeneratorSettingsAccess.create(
-            StructuresConfig(false),
-            GenerationShapeConfig.create(
-                0,
-                160,
-                NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 60.0),
-                SlideConfig(-10, 3, 0),
-                SlideConfig(50, 4, -1),
-                1,
-                2,
-                -0.02,
-                -0.02,
-                true,
-                true,
-                false,
-                false
-            ),
-            HotMBlocks.THINKING_STONE.defaultState,
-            Blocks.WATER.defaultState,
-            -10,
-            0,
-            16,
-            0,
-            false,
-            false,
-            false,
-            false,
-            false,
-            true
-        )
-    )
+    lateinit var NECTERE_CHUNK_GENERATOR_SETTINGS_BUILTIN: ChunkGeneratorSettings
+        private set
 
     /**
      * Biome source preset for the Nectere dimension.
      */
-    val NECTERE_BIOME_SOURCE_PRESET =
-        MultiNoiseBiomeSource.Preset(HotMConstants.identifier("nectere")) { preset, registry, seed ->
-            MultiNoiseBiomeSourceAccess.create(
-                seed,
-                HotMBiomes.biomeNoise().entries.stream().map<Pair<Biome.MixedNoisePoint, Supplier<Biome>>> { entry ->
-                    Pair.of(entry.value, Supplier { registry.getOrThrow(entry.key) })
-                }.collect(ImmutableList.toImmutableList()),
-                Optional.of(Pair.of(registry, preset))
-            )
-        }
+    lateinit var NECTERE_BIOME_SOURCE_PRESET: MultiNoiseBiomeSource.Preset
+        private set
 
     /**
      * Calls this Registers this mods dimensions.
@@ -146,6 +95,74 @@ object HotMDimensions {
      * Registers the world generator for the Nectere dimension.
      */
     private fun registerImpl() {
+        NECTERE_TYPE = DimensionType.create(
+            OptionalLong.empty(),
+            true,
+            false,
+            false,
+            true,
+            1.0,
+            false,
+            false,
+            false,
+            false,
+            false,
+            0,
+            256,
+            256,
+            HorizontalVoronoiBiomeAccessType.INSTANCE,
+            BlockTags.INFINIBURN_OVERWORLD.id,
+            DimensionType.OVERWORLD_ID,
+            0.1f
+        )
+
+        NECTERE_CHUNK_GENERATOR_SETTINGS_BUILTIN = Registry.register(
+            BuiltinRegistries.CHUNK_GENERATOR_SETTINGS,
+            NECTERE_CHUNK_GENERATOR_SETTINGS_KEY.value,
+            ChunkGeneratorSettingsAccess.create(
+                StructuresConfig(false),
+                GenerationShapeConfig.create(
+                    0,
+                    160,
+                    NoiseSamplingConfig(0.9999999814507745, 0.9999999814507745, 80.0, 60.0),
+                    SlideConfig(-10, 3, 0),
+                    SlideConfig(50, 4, -1),
+                    1,
+                    2,
+                    -0.02,
+                    -0.02,
+                    true,
+                    true,
+                    false,
+                    false
+                ),
+                HotMBlocks.THINKING_STONE.defaultState,
+                Blocks.WATER.defaultState,
+                -10,
+                0,
+                16,
+                0,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true
+            )
+        )
+
+        NECTERE_BIOME_SOURCE_PRESET =
+            MultiNoiseBiomeSource.Preset(HotMConstants.identifier("nectere")) { preset, registry, seed ->
+                MultiNoiseBiomeSourceAccess.create(
+                    seed,
+                    HotMBiomes.biomeNoise().entries.stream()
+                        .map<Pair<Biome.MixedNoisePoint, Supplier<Biome>>> { entry ->
+                            Pair.of(entry.value, Supplier { registry.getOrThrow(entry.key) })
+                        }.collect(ImmutableList.toImmutableList()),
+                    Optional.of(Pair.of(registry, preset))
+                )
+            }
+
         Registry.register(
             Registry.CHUNK_GENERATOR,
             HotMConstants.identifier("nectere"),
