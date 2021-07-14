@@ -13,16 +13,18 @@ import java.util.*
  */
 interface FeatureSegment<C> {
     companion object {
-        val UNIT_CODEC: Codec<FeatureSegment<Unit>> =
-            HotMRegistries.UNIT_FEATURE_SEGMENT_TYPE.dispatch<FeatureSegment<Unit>>(
+        val UNIT_CODEC: Codec<FeatureSegment<Unit>> by lazy {
+            HotMRegistries.UNIT_FEATURE_SEGMENT_TYPE.dispatch(
                 FeatureSegment<Unit>::type,
                 FeatureSegmentType<Unit, out FeatureSegment<Unit>>::codec
             )
-        val CARDINAL_CODEC: Codec<FeatureSegment<CardinalDirection>> =
-            HotMRegistries.CARDINAL_FEATURE_SEGMENT_TYPE.dispatch<FeatureSegment<CardinalDirection>>(
+        }
+        val CARDINAL_CODEC: Codec<FeatureSegment<CardinalDirection>> by lazy {
+            HotMRegistries.CARDINAL_FEATURE_SEGMENT_TYPE.dispatch(
                 FeatureSegment<CardinalDirection>::type,
                 FeatureSegmentType<CardinalDirection, out FeatureSegment<CardinalDirection>>::codec
             )
+        }
     }
 
     val type: FeatureSegmentType<C, *>

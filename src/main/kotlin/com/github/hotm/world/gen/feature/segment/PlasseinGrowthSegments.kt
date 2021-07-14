@@ -1,9 +1,9 @@
 package com.github.hotm.world.gen.feature.segment
 
+import com.github.hotm.util.CardinalDirection
 import com.github.hotm.world.gen.feature.FeatureUtils
 import com.github.hotm.world.gen.feature.segment.FeatureSegmentUtils.tryFill
 import com.github.hotm.world.gen.feature.segment.FeatureSegmentUtils.tryPlace
-import com.github.hotm.util.CardinalDirection
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.terraformersmc.terraform.shapes.api.Position
@@ -45,7 +45,7 @@ class PlasseinStemSegment(
             }
     }
 
-    override val type = FeatureSegmentType.PLASSEIN_STEM_FEATURE_SEGMENT
+    override val type = HotMFeatureSegmentTypes.PLASSEIN_STEM_FEATURE_SEGMENT
 
     override fun tryGenerate(
         blocks: MutableMap<BlockPos, BlockPlacement>,
@@ -120,7 +120,7 @@ class PlasseinBranchSegment(
             }
     }
 
-    override val type = FeatureSegmentType.PLASSEIN_BRANCH_FEATURE_SEGMENT
+    override val type = HotMFeatureSegmentTypes.PLASSEIN_BRANCH_FEATURE_SEGMENT
 
     override fun tryGenerate(
         blocks: MutableMap<BlockPos, BlockPlacement>,
@@ -207,7 +207,7 @@ class PlasseinLeafSegment(
             }
     }
 
-    override val type = FeatureSegmentType.PLASSEIN_LEAF_FEATURE_SEGMENT
+    override val type = HotMFeatureSegmentTypes.PLASSEIN_LEAF_FEATURE_SEGMENT
 
     override fun tryGenerate(
         blocks: MutableMap<BlockPos, BlockPlacement>,

@@ -1,7 +1,7 @@
 package com.github.hotm.blockentity
 
-import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.HotMConstants
+import com.github.hotm.blocks.HotMBlocks
 import com.google.common.collect.Sets
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -11,10 +11,13 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
 
 object HotMBlockEntities {
-    val NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY =
-        newBlockEntityType(::NecterePortalSpawnerBlockEntity, HotMBlocks.NECTERE_PORTAL_SPAWNER)
+    lateinit var NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY: BlockEntityType<NecterePortalSpawnerBlockEntity>
+        private set
 
     fun register() {
+        NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY =
+            newBlockEntityType(::NecterePortalSpawnerBlockEntity, HotMBlocks.NECTERE_PORTAL_SPAWNER)
+
         register(NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY, "nectere_portal_spawner")
     }
 
