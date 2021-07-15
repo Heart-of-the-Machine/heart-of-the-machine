@@ -6,6 +6,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'com.matthewprenger.cursegradle'
     id 'com.modrinth.minotaur'
+    id 'de.undercouch.download'
 }
 
 sourceCompatibility = JavaVersion.VERSION_16
@@ -20,8 +21,13 @@ minecraft {
 
 repositories {
     maven { url = "https://maven.fabricmc.net/" }
-    maven { name = "BuildCraft"; url = "https://mod-buildcraft.com/maven" }
     maven {
+        // For LBA, LMP, and LNS
+        name "BuildCraft"
+        url "https://mod-buildcraft.com/maven"
+    }
+    maven {
+        // For AE2
         name "Modmaven"
         url "https://modmaven.dev/"
         // For Gradle 5.1 and above, limit it to just AE2
@@ -30,6 +36,7 @@ repositories {
         }
     }
     maven {
+        // For ModMenu
         name "Modrinth"
         url "https://api.modrinth.com/maven/"
         content {
@@ -37,8 +44,29 @@ repositories {
         }
     }
     maven {
+        // For Shapes
         name "Terraformers MC Archive"
         url "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/"
+    }
+    maven {
+        // For REI
+        name "Shedaniel Maven"
+        url "https://maven.shedaniel.me/"
+    }
+    maven {
+        // For Canvas
+        name = "dblsaiko"
+        url = "https://maven.dblsaiko.net/"
+    }
+    maven {
+        // For Cotton-Config for Canvas
+        name = "Cotton"
+        url = "https://server.bbkr.space/artifactory/libs-release/"
+    }
+    maven {
+        // For REI, odds and ends for Canvas
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven"
     }
 }
 
@@ -58,10 +86,28 @@ dependencies {
     modImplementation "com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}"
     include "com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}"
 
-    // mod compatibility checks
+    // Runtime Dependencies
+
+    // Mod Menu
     modRuntime("maven.modrinth:modmenu:${modmenu_version}")
-    // modRuntime "alexiil.mc.mod:simplepipes-all:0.4.0"
-//    modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.12"
+
+    // REI
+    modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    modRuntime("dev.architectury:architectury-fabric:${architectury_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+
+    // Canvas
+    modRuntime("grondag:canvas-mc117-1.17:${canvas_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    modRuntime("grondag:bitraster:${bitraster_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+
+    // Sadly there are no usable minimap mods that work in the dev environment
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
