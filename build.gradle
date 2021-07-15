@@ -36,14 +36,6 @@ repositories {
         }
     }
     maven {
-        // For ModMenu
-        name "Modrinth"
-        url "https://api.modrinth.com/maven/"
-        content {
-            includeModule "maven.modrinth", "modmenu"
-        }
-    }
-    maven {
         // For Shapes
         name "Terraformers MC Archive"
         url "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/"
@@ -89,7 +81,9 @@ dependencies {
     // Runtime Dependencies
 
     // Mod Menu
-    modRuntime("maven.modrinth:modmenu:${modmenu_version}")
+    modRuntime("com.terraformersmc:modmenu:${modmenu_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
 
     // REI
     modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}") {
