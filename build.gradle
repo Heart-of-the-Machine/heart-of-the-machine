@@ -73,10 +73,30 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
+    // Mod dependencies
+
+    // FREX
+    modApi("grondag:frex-${grondag_mc_tag}:${frex_version}") {
+        transitive false
+    }
+    include "grondag:frex-${grondag_mc_tag}:${frex_version}"
+
+    // JMX
+    modImplementation("grondag:jmx-${grondag_mc_tag}:${jmx_version}") {
+        transitive false
+    }
+    include "grondag:jmx-${grondag_mc_tag}:${jmx_version}"
+
+    // Shapes
+    modImplementation("com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    include "com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}"
+
+    // Non-mod dependencies
+
     modImplementation "org.yaml:snakeyaml:${yaml_version}"
     include "org.yaml:snakeyaml:${yaml_version}"
-    modImplementation "com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}"
-    include "com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}"
 
     // Runtime Dependencies
 
@@ -94,10 +114,15 @@ dependencies {
     }
 
     // Canvas
-    modRuntime("grondag:canvas-mc117-1.17:${canvas_version}") {
+    modRuntime("grondag:canvas-${grondag_mc_tag}-${canvas_mc_tag}:${canvas_version}") {
         exclude group: "net.fabricmc.fabric-api"
     }
     modRuntime("grondag:bitraster:${bitraster_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+
+    // Exotic Blocks
+    modRuntime("grondag:exotic-blocks-${grondag_mc_tag}:${xb_version}") {
         exclude group: "net.fabricmc.fabric-api"
     }
 
