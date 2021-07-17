@@ -45,10 +45,11 @@ class BasicSiphonAuraNode(
     var childPos = childPos
         private set
 
-    fun updateValue(value: Int) {
+    fun updateValue(value: Int, visitedNodes: MutableSet<DimBlockPos>) {
         this.value = value
         markDirty()
         ID_VALUE_CHANGE.sendToClients(world, pos, this)
+        AuraNodeUtils.nodeAt<DependantAuraNode>(childPos, access)?.recalculateDescendants(visitedNodes)
     }
 
     fun updateChildPos(childPos: BlockPos?) {
@@ -57,54 +58,47 @@ class BasicSiphonAuraNode(
         ID_CHILD_POS_CHANGE.sendToClients(world, pos, this)
     }
 
-    override fun recalculateSiphonValue(chunkAura: Int, siphonCount: Int) {
-        updateValue(AuraNodeUtils.calculateSiphonValue(10f, 2f, chunkAura, siphonCount))
+    override fun wouldCauseDependencyLoop(
+        potentialAncestor: DimBlockPos,
+        visitedNodes: MutableSet<DimBlockPos>
+    ): Boolean {
+        return if (potentialAncestor == dimPos || visitedNodes.contains(dimPos)) {
+            true
+        } else {
+            visitedNodes.add(dimPos)
+
+            AuraNodeUtils.nodeAt<DependantAuraNode>(childPos, access)
+                ?.wouldCauseDependencyLoop(potentialAncestor, visitedNodes) ?: false
+        }
+    }
+
+    override fun recalculateSiphonValue(chunkAura: Int, siphonCount: Int, visitedNodes: MutableSet<DimBlockPos>) {
+        if (visitedNodes.contains(dimPos)) {
+            // Dependency loop detected, disconnect the child because that's the only place the loop could be coming
+            // from.
+            DependencyAuraNodeUtils.parentDisconnect(childPos, access, this)
+            return
+        }
+
+        visitedNodes.add(dimPos)
+
+        updateValue(AuraNodeUtils.calculateSiphonValue(10f, 2f, chunkAura, siphonCount), visitedNodes)
     }
 
     override fun isChildValid(node: DependantAuraNode): Boolean {
-        // TODO: evaluate whether this should be done here
-        return !node.wouldCauseDepencencyLoop(this)
+        return true
     }
 
     override fun addChild(node: DependantAuraNode) {
         // remove previous child
-        // TODO: evaluate whether to do this here or in connectChild(...)
-        childPos?.let { childPos ->
-            (access[childPos] as? DependantAuraNode)?.removeParent(dimPos)
-        }
+        DependencyAuraNodeUtils.parentDisconnect(childPos, access, this)
+
         updateChildPos(node.pos)
     }
 
-    override fun removeChild(pos: DimBlockPos) {
-        if (pos.dim != world.registryKey) return
-        if (pos.pos != childPos) return
+    override fun removeChild(pos: BlockPos) {
+        if (pos != childPos) return
 
-        updateChildPos(null)
-    }
-
-    override fun connectChild(pos: DimBlockPos) {
-        // TODO: should this be some kind of assertion?
-        //  Should I even be using DimBlockPos for general dependency tracking?
-        if (pos.dim != world.registryKey) return
-
-        // TODO: figure out what variants I need to uphold here. Do I need to add myself to a child's list of parents
-        //  before or after I've added that child to my list of children?
-        childPos?.let { childPos ->
-            (access[childPos] as? DependantAuraNode)?.removeParent(dimPos)
-        }
-        (access[pos.pos] as? DependantAuraNode)?.let { child ->
-            child.addParent(this)
-            updateChildPos(pos.pos)
-        }
-    }
-
-    override fun disconnectChild(pos: DimBlockPos) {
-        if (pos.dim != world.registryKey) return
-        if (pos.pos != childPos) return
-
-        childPos?.let { childPos ->
-            (access[childPos] as? DependantAuraNode)?.removeParent(dimPos)
-        }
         updateChildPos(null)
     }
 
@@ -114,6 +108,19 @@ class BasicSiphonAuraNode(
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
         buf.writeVarUnsignedInt(value)
+
+        val childPos = childPos
+        if (childPos != null) {
+            buf.writeBoolean(true)
+            buf.writeBlockPos(childPos)
+        } else {
+            buf.writeBoolean(false)
+        }
+    }
+
+    override fun onRemove() {
+        // Remove self from the child's parents
+        DependencyAuraNodeUtils.parentDisconnect(childPos, access, this)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -124,6 +131,7 @@ class BasicSiphonAuraNode(
         other as BasicSiphonAuraNode
 
         if (value != other.value) return false
+        if (childPos != other.childPos) return false
 
         return true
     }
@@ -131,6 +139,7 @@ class BasicSiphonAuraNode(
     override fun hashCode(): Int {
         var result = super.hashCode()
         result = 31 * result + value
+        result = 31 * result + (childPos?.hashCode() ?: 0)
         return result
     }
 

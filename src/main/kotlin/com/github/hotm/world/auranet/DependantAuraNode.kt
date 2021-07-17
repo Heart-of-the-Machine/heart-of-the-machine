@@ -1,6 +1,7 @@
 package com.github.hotm.world.auranet
 
 import com.github.hotm.util.DimBlockPos
+import net.minecraft.util.math.BlockPos
 
 /**
  * Represents a node that can have "parents" dependencies added to it or removed from it. When it
@@ -13,19 +14,19 @@ interface DependantAuraNode : AuraNode {
     /**
      * Determines whether the node is a suitable parent node for this node.
      */
-    fun isParentValid(node: DependableAuraNode)
+    fun isParentValid(node: DependableAuraNode): Boolean
 
     /**
      * Determines whether making the parent node a parent of this node would cause a dependency loop.
      */
-    fun wouldCauseDepencencyLoop(potentialParent: DependableAuraNode): Boolean {
+    fun wouldCauseDependencyLoop(potentialParent: DimBlockPos): Boolean {
         return wouldCauseDependencyLoop(potentialParent, hashSetOf())
     }
 
     /**
      * Recursive portion of the dependency loop checking mechanism.
      */
-    fun wouldCauseDependencyLoop(potentialAncestor: DependableAuraNode, visitedNodes: MutableSet<AuraNode>): Boolean
+    fun wouldCauseDependencyLoop(potentialAncestor: DimBlockPos, visitedNodes: MutableSet<DimBlockPos>): Boolean
 
     /**
      * Adds a parent node to this node's list of parent nodes. When this node gets removed from the world, it will
@@ -36,18 +37,19 @@ interface DependantAuraNode : AuraNode {
     /**
      * Removes a parent node from this node's list of parent nodes.
      */
-    fun removeParent(pos: DimBlockPos)
+    fun removeParent(pos: BlockPos)
 
     /**
-     * Adds a parent node to this node's list of parent nodes and prompts it to add this node to its list of children.
+     * Called after a parent node has been added and had this node added to its list of children.
      */
-    fun connectParent(pos: DimBlockPos)
+    fun onParentAdded(node: DependableAuraNode) {
+    }
 
     /**
-     * Removes a parent node from this node's list of parent nodes and prompts it to remove this node from its list of
-     * children.
+     * Called after a parent node has been removed and had this node removed from its list of children.
      */
-    fun disconnectParent(pos: DimBlockPos)
+    fun onParentRemoved(pos: BlockPos) {
+    }
 
     /**
      * Causes the child node to recalculate its aura value and the aura values of all affected descendants.
@@ -61,8 +63,8 @@ interface DependantAuraNode : AuraNode {
     /**
      * This handles the recursive portion of aura value recalculation.
      *
-     * If a dependency loop is detected, the node that identified itself as part of the loop should remove itself and
-     * its accompanying block, dropping items on the ground.
+     * If a dependency loop is detected, the node that identified itself as part of the loop should break the connection
+     * in some way, possibly by removing itself and its accompanying block, dropping items on the ground.
      */
-    fun recalculateDescendants(visitedNodes: MutableSet<AuraNode>)
+    fun recalculateDescendants(visitedNodes: MutableSet<DimBlockPos>)
 }

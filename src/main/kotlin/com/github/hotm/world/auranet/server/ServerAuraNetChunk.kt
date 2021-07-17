@@ -4,6 +4,7 @@ import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.config.HotMConfig
+import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNode
 import com.github.hotm.world.auranet.SiphonAuraNode
@@ -24,13 +25,12 @@ import org.apache.logging.log4j.LogManager
 import java.util.*
 import java.util.function.Predicate
 import java.util.stream.Stream
-import kotlin.streams.toList
 
 /**
  * Represents a 16x16x16 area containing nodes and a base aura.
  */
 class ServerAuraNetChunk(
-    private val updateListener: Runnable,
+    val updateListener: Runnable,
     private var base: Int,
     initialNodes: List<AuraNode>
 ) {
@@ -166,11 +166,15 @@ class ServerAuraNetChunk(
             .mapToInt { (it as SourceAuraNode).getSourceAura() }.sum()
     }
 
-    private fun recalculateSiphons() {
+    fun recalculateSiphons() {
+        recalculateSiphons(hashSetOf())
+    }
+
+    fun recalculateSiphons(visitedNodes: MutableSet<DimBlockPos>) {
         val totalAura = getTotalAura()
         val siphons = nodesByPos.values.stream().filter { it is SiphonAuraNode }.toList()
         for (siphon in siphons) {
-            (siphon as SiphonAuraNode).recalculateSiphonValue(totalAura, siphons.size)
+            (siphon as SiphonAuraNode).recalculateSiphonValue(totalAura, siphons.size, visitedNodes)
         }
     }
 

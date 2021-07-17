@@ -172,7 +172,7 @@ class ServerAuraNetChunkTests : FunSpec({
             val siphonType = mockk<AuraNodeType<*>>()
             val siphon = mockk<SiphonAuraNode>()
             every { siphon.pos } returns BlockPos(0, 0, 0)
-            every { siphon.recalculateSiphonValue(any(), any()) } just Runs
+            every { siphon.recalculateSiphonValue(any(), any(), visitedNodes) } just Runs
             every { siphon.type } returns siphonType
 
             val sourceType = mockk<AuraNodeType<*>>()
@@ -198,13 +198,13 @@ class ServerAuraNetChunkTests : FunSpec({
             test("Recalculates siphon values on base aura change") {
                 chunk.setBaseAura(32)
 
-                verify { siphon.recalculateSiphonValue(32, 1) }
+                verify { siphon.recalculateSiphonValue(32, 1, visitedNodes) }
             }
 
             test("Recalculates siphon values when a source is added") {
                 chunk.put(source)
 
-                verify { siphon.recalculateSiphonValue(65, 1) }
+                verify { siphon.recalculateSiphonValue(65, 1, visitedNodes) }
             }
 
             test("Recalculates siphon values when a source is added during chunk scan") {
@@ -213,7 +213,7 @@ class ServerAuraNetChunkTests : FunSpec({
                     callback(sourceBlockState, sourceBlock, BlockPos(1, 0, 0))
                 }
 
-                verify { siphon.recalculateSiphonValue(65, 1) }
+                verify { siphon.recalculateSiphonValue(65, 1, visitedNodes) }
             }
         }
 
@@ -221,7 +221,7 @@ class ServerAuraNetChunkTests : FunSpec({
             val siphonType = mockk<AuraNodeType<*>>()
             val siphon = mockk<SiphonAuraNode>()
             every { siphon.pos } returns BlockPos(0, 0, 0)
-            every { siphon.recalculateSiphonValue(any(), any()) } just Runs
+            every { siphon.recalculateSiphonValue(any(), any(), visitedNodes) } just Runs
             every { siphon.type } returns siphonType
 
             val sourceType = mockk<AuraNodeType<*>>()
@@ -248,7 +248,7 @@ class ServerAuraNetChunkTests : FunSpec({
             test("Recalculates siphon values when a source is removed") {
                 chunk.remove(BlockPos(1, 0, 0))
 
-                verify { siphon.recalculateSiphonValue(64, 1) }
+                verify { siphon.recalculateSiphonValue(64, 1, visitedNodes) }
             }
 
             test("Recalculates siphon values when a source is removed during chunk scan") {
@@ -256,7 +256,7 @@ class ServerAuraNetChunkTests : FunSpec({
                     callback(siphonBlockState, siphonBlock, BlockPos(0, 0, 0))
                 }
 
-                verify { siphon.recalculateSiphonValue(64, 1) }
+                verify { siphon.recalculateSiphonValue(64, 1, visitedNodes) }
             }
 
             test("Does not recalculate siphon values when no sources are removed during chunk scan") {
@@ -265,7 +265,7 @@ class ServerAuraNetChunkTests : FunSpec({
                     callback(sourceBlockState, sourceBlock, BlockPos(1, 0, 0))
                 }
 
-                verify(exactly = 0) { siphon.recalculateSiphonValue(any(), any()) }
+                verify(exactly = 0) { siphon.recalculateSiphonValue(any(), any(), visitedNodes) }
             }
         }
     }

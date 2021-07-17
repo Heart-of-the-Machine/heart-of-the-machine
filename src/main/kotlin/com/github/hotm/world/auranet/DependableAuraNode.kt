@@ -1,6 +1,6 @@
 package com.github.hotm.world.auranet
 
-import com.github.hotm.util.DimBlockPos
+import net.minecraft.util.math.BlockPos
 
 /**
  * Represents a node that can have "children" dependants added to it or removed from it. When it
@@ -12,7 +12,7 @@ import com.github.hotm.util.DimBlockPos
  */
 interface DependableAuraNode : AuraNode {
     /**
-     * Determines whether a child is a valid connection. This is responsible for checking for recursion loops.
+     * Determines whether a child is a valid connection. This is *not* responsible for checking for recursion loops.
      */
     fun isChildValid(node: DependantAuraNode): Boolean
 
@@ -25,18 +25,19 @@ interface DependableAuraNode : AuraNode {
     /**
      * Removes a child node from this node's list of children.
      */
-    fun removeChild(pos: DimBlockPos)
+    fun removeChild(pos: BlockPos)
 
     /**
-     * Adds a child node to this node's list of children and prompts it to add this node to its list of parents.
+     * Called after a child has been added and had this node added to its list of parents.
      */
-    fun connectChild(pos: DimBlockPos)
+    fun onChildAdded(node: DependantAuraNode) {
+    }
 
     /**
-     * Removes a child node from this node's list of children and prompts it to remove this node from its list of
-     * parents.
+     * Called after a child has been removed and had this node removed from its list of parents.
      */
-    fun disconnectChild(pos: DimBlockPos)
+    fun onChildRemoved(pos: BlockPos) {
+    }
 
     /**
      * Gets the aura this node supplies to the child aura node.

@@ -43,6 +43,9 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
     /*
      * AuraNodeAccess functions.
      */
+    override fun getUpdateListener(pos: ChunkSectionPos): Runnable {
+        return getOrCreate(pos.asLong()).updateListener
+    }
 
     override fun getBaseAura(pos: ChunkSectionPos): Int {
         return getOrCreate(pos.asLong()).getBaseAura()

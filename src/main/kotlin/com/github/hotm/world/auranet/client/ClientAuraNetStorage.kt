@@ -44,6 +44,10 @@ class ClientAuraNetStorage(override val world: ClientWorld, private val radius: 
 
     override val isClient = true
 
+    override fun getUpdateListener(pos: ChunkSectionPos): Runnable? {
+        return null
+    }
+
     override fun getBaseAura(pos: ChunkSectionPos): Int {
         return getChunk(pos)?.baseAura ?: 0
     }
