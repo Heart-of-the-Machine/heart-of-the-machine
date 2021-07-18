@@ -162,7 +162,7 @@ dependencies {
 
     testImplementation "io.kotest:kotest-runner-junit5:${project.kotest_version}"
     testImplementation "io.kotest:kotest-assertions-core:${project.kotest_version}"
-    testImplementation "io.kotest:kotest-extensions-allure:${project.kotest_version}"
+    testImplementation "io.kotest.extensions:kotest-extensions-allure:${project.kotest_extensions_allure_version}"
     testImplementation "io.mockk:mockk:${project.mockk_version}"
     testImplementation "org.objenesis:objenesis:${project.objenesis_version}"
 
