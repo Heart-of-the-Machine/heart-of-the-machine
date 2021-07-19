@@ -7,6 +7,7 @@ import net.minecraft.util.registry.Registry
 object AuraNodes {
     fun register() {
         register("basic_siphon", BasicSiphonAuraNode.Type)
+        register("basic_source", BasicSourceAuraNode.Type)
     }
 
     fun register(id: String, codec: AuraNodeType<out AuraNode>) {

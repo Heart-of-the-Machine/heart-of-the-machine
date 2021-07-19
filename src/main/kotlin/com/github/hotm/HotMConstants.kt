@@ -28,14 +28,21 @@ object HotMConstants {
     /**
      * Creates a TranslatableText for Heart of the Machine with the given prefix and suffix.
      */
-    fun text(prefix: String, suffix: String, vararg args: Any): TranslatableText {
+    fun text(prefix: String, suffix: String, vararg args: Any?): TranslatableText {
         return TranslatableText("$prefix.$MOD_ID.$suffix", *args)
     }
 
     /**
      * Creates a command TranslatableText for Heart of the Machine with the given path.
      */
-    fun commandText(path: String, vararg args: Any): TranslatableText {
+    fun commandText(path: String, vararg args: Any?): TranslatableText {
         return text("command", path, *args)
+    }
+
+    /**
+     * Creates a message TranslatableText for Heart of the Machine with the given path and arguments.
+     */
+    fun message(path: String, vararg args: Any?): TranslatableText {
+        return text("message", path, *args)
     }
 }

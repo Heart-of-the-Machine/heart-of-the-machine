@@ -24,11 +24,10 @@ class ClientAuraNetChunk private constructor(
             val nodesByPos = Short2ObjectOpenHashMap<AuraNode>()
             val nodeCount = buf.readVarUnsignedInt()
 
-            if (nodeCount != 0) {
+            if (nodeCount > 0) {
                 // make more resilient against invalid node ids and misbehaving node decoders
                 val nodesBufSize = buf.readVarUnsignedInt()
-                val nodesBytes = buf.readByteArray(nodesBufSize)
-                val nodesBuf = NetByteBuf.asNetByteBuf(Unpooled.wrappedBuffer(nodesBytes))
+                val nodesBuf = buf.readBytes(nodesBufSize)
                 for (i in 0 until nodeCount) {
                     val node = AuraNode.fromPacket(access, nodesBuf, ctx) ?: break
                     nodesByPos[ChunkSectionPos.packLocal(node.pos)] = node

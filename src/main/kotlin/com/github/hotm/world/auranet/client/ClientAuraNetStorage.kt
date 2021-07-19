@@ -2,6 +2,7 @@ package com.github.hotm.world.auranet.client
 
 import alexiil.mc.lib.net.IMsgReadCtx
 import alexiil.mc.lib.net.NetByteBuf
+import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.auranet.AuraNetAccess
 import com.github.hotm.world.auranet.AuraNode
 import net.minecraft.client.world.ClientWorld
@@ -59,6 +60,10 @@ class ClientAuraNetStorage(override val world: ClientWorld, private val radius: 
 
     override fun getAllBy(pos: ChunkSectionPos, filter: Predicate<AuraNode>): Stream<AuraNode> {
         return getChunk(pos)?.getAllBy(filter) ?: Stream.empty()
+    }
+
+    override fun recalculateSiphons(pos: ChunkSectionPos, visitedNodes: MutableSet<DimBlockPos>) {
+        // Nothing to do client-side
     }
 
     fun receiveChunkPillar(buf: NetByteBuf, ctx: IMsgReadCtx) {

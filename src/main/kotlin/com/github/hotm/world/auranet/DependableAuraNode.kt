@@ -12,6 +12,12 @@ import net.minecraft.util.math.BlockPos
  */
 interface DependableAuraNode : AuraNode {
     /**
+     * Provides the maximum distance that this node is able to connect over. This is added to the child's maxDistance to
+     * obtain the full max distance.
+     */
+    val maxDistance: Double
+
+    /**
      * Determines whether a child is a valid connection. This is *not* responsible for checking for recursion loops.
      */
     fun isChildValid(node: DependantAuraNode): Boolean

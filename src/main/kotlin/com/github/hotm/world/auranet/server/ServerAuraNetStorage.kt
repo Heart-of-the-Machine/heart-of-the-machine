@@ -4,6 +4,7 @@ import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.net.HotMNetwork
+import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.auranet.AuraNetAccess
 import com.github.hotm.world.auranet.AuraNode
 import com.github.hotm.world.auranet.SiphonAuraNode
@@ -62,6 +63,10 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
 
     override fun getAllBy(pos: ChunkSectionPos, filter: Predicate<AuraNode>): Stream<AuraNode> {
         return getOrCreate(pos.asLong()).getAllBy(filter)
+    }
+
+    override fun recalculateSiphons(pos: ChunkSectionPos, visitedNodes: MutableSet<DimBlockPos>) {
+        getOrCreate(pos.asLong()).recalculateSiphons(visitedNodes)
     }
 
     /*

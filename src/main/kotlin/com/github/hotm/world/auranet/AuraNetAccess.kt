@@ -1,5 +1,6 @@
 package com.github.hotm.world.auranet
 
+import com.github.hotm.util.DimBlockPos
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.world.World
@@ -40,4 +41,9 @@ interface AuraNetAccess {
      * Gets all the aura nodes in a chunk section depending on a filter predicate.
      */
     fun getAllBy(pos: ChunkSectionPos, filter: Predicate<AuraNode>): Stream<AuraNode>
+
+    /**
+     * Causes this aura net access to recalculate all siphons within a chunk section.
+     */
+    fun recalculateSiphons(pos: ChunkSectionPos, visitedNodes: MutableSet<DimBlockPos>)
 }

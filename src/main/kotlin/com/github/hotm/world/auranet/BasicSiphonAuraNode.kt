@@ -18,13 +18,12 @@ class BasicSiphonAuraNode(
     pos: BlockPos,
     value: Int,
     childPos: BlockPos?
-) :
-    AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, DependableAuraNode {
+) : AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, DependableAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(
             BasicSiphonAuraNode::class.java,
-            str("basic_aura_node")
+            str("basic_siphon_aura_node")
         )
 
         private val ID_VALUE_CHANGE = NET_PARENT.idData("VALUE_CHANGE")
@@ -44,6 +43,8 @@ class BasicSiphonAuraNode(
 
     var childPos = childPos
         private set
+
+    override val maxDistance = 32.0
 
     fun updateValue(value: Int, visitedNodes: MutableSet<DimBlockPos>) {
         this.value = value
@@ -67,8 +68,12 @@ class BasicSiphonAuraNode(
         } else {
             visitedNodes.add(dimPos)
 
-            AuraNodeUtils.nodeAt<DependantAuraNode>(childPos, access)
+            val res = AuraNodeUtils.nodeAt<DependantAuraNode>(childPos, access)
                 ?.wouldCauseDependencyLoop(potentialAncestor, visitedNodes) ?: false
+
+            visitedNodes.remove(dimPos)
+
+            res
         }
     }
 
@@ -83,6 +88,8 @@ class BasicSiphonAuraNode(
         visitedNodes.add(dimPos)
 
         updateValue(AuraNodeUtils.calculateSiphonValue(10f, 2f, chunkAura, siphonCount), visitedNodes)
+
+        visitedNodes.remove(dimPos)
     }
 
     override fun isChildValid(node: DependantAuraNode): Boolean {
@@ -155,9 +162,10 @@ class BasicSiphonAuraNode(
                     RecordCodecBuilder.point(updateListener),
                     RecordCodecBuilder.point(pos),
                     Codec.INT.fieldOf("value").forGetter(BasicSiphonAuraNode::value),
-                    BlockPos.CODEC.optionalFieldOf("child_pos").xmap({ it.orElse(null) }, { Optional.ofNullable(it) })
-                        .forGetter(BasicSiphonAuraNode::childPos)
-                ).apply(instance, ::BasicSiphonAuraNode)
+                    BlockPos.CODEC.optionalFieldOf("child_pos").forGetter { Optional.ofNullable(it.childPos) }
+                ).apply(instance) { access, updateListener, pos, value, childPos ->
+                    BasicSiphonAuraNode(access, updateListener, pos, value, childPos.orElse(null))
+                }
             }
         }
 

@@ -16,6 +16,11 @@ object DependencyAuraNodeUtils {
             return ConnectionError.WRONG_DIMENSION
         }
 
+        val maxDistance = parent.maxDistance + child.maxDistance
+        if (!parent.pos.isWithinDistance(child.pos, maxDistance)) {
+            return ConnectionError.TOO_FAR
+        }
+
         if (!parent.isChildValid(child)) {
             return ConnectionError.REJECTED_CHILD
         }
@@ -62,6 +67,15 @@ object DependencyAuraNodeUtils {
     }
 
     /**
+     * Disconnects a parent and child aura node. This is useful for child aura nodes.
+     */
+    fun childDisconnect(pos: BlockPos?, access: AuraNetAccess, child: DependantAuraNode) {
+        AuraNodeUtils.nodeAt<DependableAuraNode>(pos, access)?.let { parent ->
+            disconnect(parent, child)
+        }
+    }
+
+    /**
      * Describes whether there was an error while connecting aura nodes.
      */
     enum class ConnectionError {
@@ -74,6 +88,11 @@ object DependencyAuraNodeUtils {
          * Indicates that the parent and child nodes were in different dimensions.
          */
         WRONG_DIMENSION,
+
+        /**
+         * Indicates that the parent and child nodes are too far apart to connect.
+         */
+        TOO_FAR,
 
         /**
          * Indicates that the parent aura node rejected the child.

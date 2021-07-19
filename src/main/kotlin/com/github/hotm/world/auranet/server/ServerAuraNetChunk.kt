@@ -74,19 +74,23 @@ class ServerAuraNetChunk(
                 // base aura
                 buf.writeVarUnsignedInt(chunk.base)
 
-                val nodes = chunk.nodesByPos.values.toTypedArray()
                 // node count
-                buf.writeVarUnsignedInt(nodes.size)
+                val nodes = chunk.nodesByPos.values.toTypedArray()
+                val nodesCount = nodes.size
+                buf.writeVarUnsignedInt(nodesCount)
 
-                val nodesBuf = NetByteBuf.buffer()
-                for (node in nodes) {
-                    AuraNode.toPacket(node, nodesBuf, ctx)
+                if (nodesCount > 0) {
+                    val nodesBuf = NetByteBuf.buffer()
+                    for (node in nodes) {
+                        AuraNode.toPacket(node, nodesBuf, ctx)
+                    }
+
+                    // nodes buf size
+                    val readableBytes = nodesBuf.readableBytes()
+                    buf.writeVarUnsignedInt(readableBytes)
+                    // nodes buf
+                    buf.writeBytes(nodesBuf)
                 }
-
-                // nodes buf size
-                buf.writeVarUnsignedInt(nodesBuf.writerIndex())
-                // nodes buf
-                buf.writeByteArray(nodesBuf.array())
             }
         }
     }

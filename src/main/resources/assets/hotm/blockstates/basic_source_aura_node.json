@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hotm:block/basic_source_aura_node"
+    }
+  }
+}
