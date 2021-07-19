@@ -18,7 +18,7 @@ class BasicSourceAuraNode(
     updateListener: Runnable?,
     pos: BlockPos,
     value: Int,
-    parents: List<BlockPos>
+    parents: Collection<BlockPos>
 ) : AbstractAuraNode(Type, access, updateListener, pos), SourceAuraNode, DependantAuraNode {
 
     companion object {
@@ -46,7 +46,7 @@ class BasicSourceAuraNode(
     var value = value
         private set
 
-    private val parents = parents.toMutableList()
+    private val parents = parents.toMutableSet()
 
     override val maxDistance = 32.0
 
@@ -130,6 +130,13 @@ class BasicSourceAuraNode(
         visitedNodes.remove(dimPos)
     }
 
+    override fun onRemove() {
+        val parentsCopy = parents.toList()
+        for (parent in parentsCopy) {
+            DependencyAuraNodeUtils.childDisconnect(parent, access, this)
+        }
+    }
+
     object Type : AuraNodeType<BasicSourceAuraNode> {
         override fun createCodec(
             access: AuraNetAccess,
@@ -142,7 +149,7 @@ class BasicSourceAuraNode(
                     RecordCodecBuilder.point(updateListener),
                     RecordCodecBuilder.point(pos),
                     Codec.INT.fieldOf("value").forGetter(BasicSourceAuraNode::value),
-                    BlockPos.CODEC.listOf().fieldOf("parents").forGetter(BasicSourceAuraNode::parents)
+                    BlockPos.CODEC.listOf().fieldOf("parents").forGetter { it.parents.toList() }
                 ).apply(instance, ::BasicSourceAuraNode)
             }
         }
@@ -155,7 +162,7 @@ class BasicSourceAuraNode(
         ): BasicSourceAuraNode {
             val value = buf.readVarUnsignedInt()
             val parentCount = buf.readVarUnsignedInt()
-            val parents = mutableListOf<BlockPos>()
+            val parents = mutableSetOf<BlockPos>()
 
             for (i in 0 until parentCount) {
                 parents.add(buf.readBlockPos())

@@ -1,6 +1,7 @@
 package com.github.hotm.client
 
 import com.github.hotm.client.blockmodel.HotMBlockModels
+import com.github.hotm.client.render.blockentity.HotMBlockEntityRenderers
 
 /**
  * Client mod entry point.
@@ -11,4 +12,5 @@ fun init() {
     HotMBlocksClient.register()
     HotMBlockModels.register()
     HotMColorProviders.register()
+    HotMBlockEntityRenderers.register()
 }
