@@ -7,7 +7,7 @@ object HotMBlockEntityRenderers {
     fun register() {
         BlockEntityRendererRegistry.INSTANCE.register(
             HotMBlockEntities.BASIC_SIPHON_AURA_NODE,
-            ::BasicSiphonAuraNodeBlockEntityRenderer
+            ::SimpleDependableAuraNodeBlockEntityRenderer
         )
     }
 }

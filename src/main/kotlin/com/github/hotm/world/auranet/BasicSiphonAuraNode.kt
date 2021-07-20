@@ -7,10 +7,12 @@ import com.github.hotm.HotMConstants.str
 import com.github.hotm.net.s2cReadWrite
 import com.github.hotm.net.sendToClients
 import com.github.hotm.util.DimBlockPos
+import com.github.hotm.util.StreamUtils
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.util.math.BlockPos
 import java.util.*
+import java.util.stream.Stream
 
 class BasicSiphonAuraNode(
     access: AuraNetAccess,
@@ -18,7 +20,7 @@ class BasicSiphonAuraNode(
     pos: BlockPos,
     value: Int,
     childPos: BlockPos?
-) : AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, DependableAuraNode {
+) : AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, RenderedDependableAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(
@@ -111,6 +113,10 @@ class BasicSiphonAuraNode(
 
     override fun getSuppliedAura(child: DependantAuraNode): Int {
         return value
+    }
+
+    override fun getChildrenForRender(): Stream<BlockPos> {
+        return StreamUtils.ofNullable(childPos)
     }
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
