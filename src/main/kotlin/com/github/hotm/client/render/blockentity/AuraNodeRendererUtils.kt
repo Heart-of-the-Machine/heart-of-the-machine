@@ -1,8 +1,8 @@
 package com.github.hotm.client.render.blockentity
 
+import com.github.hotm.client.render.HotMRenderMaterials
 import com.github.hotm.icon.HotMIcons
 import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.util.math.MatrixStack
@@ -45,7 +45,7 @@ object AuraNodeRendererUtils {
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rollShift))
         renderBeamCross(
             matrices,
-            consumers.getBuffer(RenderLayer.getBeaconBeam(HotMIcons.AURA_NODE_BEAM, true)),
+            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM, false),
             1f,
             len,
             innerRadius,
@@ -56,20 +56,22 @@ object AuraNodeRendererUtils {
         )
         matrices.pop()
 
-        matrices.push()
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-rollShift))
-        renderBeamSquare(
-            matrices,
-            consumers.getBuffer(RenderLayer.getBeaconBeam(HotMIcons.AURA_NODE_BEAM, true)),
-            0.125f,
-            len,
-            outerRadius,
-            0.0f,
-            1.0f,
-            len * (0.5f / outerRadius) + v2,
-            v2
-        )
-        matrices.pop()
+        if (HotMRenderMaterials.shouldRenderOuterAuraNodeBeam()) {
+            matrices.push()
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-rollShift))
+            renderBeamSquare(
+                matrices,
+                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM, true),
+                0.125f,
+                len,
+                outerRadius,
+                0.0f,
+                1.0f,
+                len * (0.5f / outerRadius) + v2,
+                v2
+            )
+            matrices.pop()
+        }
 
         matrices.pop()
     }
