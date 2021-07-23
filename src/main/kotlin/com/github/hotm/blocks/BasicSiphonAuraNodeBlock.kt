@@ -7,12 +7,19 @@ import com.github.hotm.world.auranet.BasicSiphonAuraNode
 import com.github.hotm.world.auranet.server.ServerAuraNetStorage
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
+import net.minecraft.block.ShapeContext
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
+import net.minecraft.util.shape.VoxelShape
+import net.minecraft.world.BlockView
 
 class BasicSiphonAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEntity(settings) {
+    companion object {
+        private val SHAPE = createCuboidShape(4.0, 4.0, 4.0, 12.0, 12.0, 12.0)
+    }
+
     override val auraNodeType: AuraNodeType<out AuraNode>
         get() = BasicSiphonAuraNode.Type
 
@@ -31,5 +38,14 @@ class BasicSiphonAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEn
 
     override fun getRenderType(state: BlockState): BlockRenderType {
         return BlockRenderType.MODEL
+    }
+
+    override fun getOutlineShape(
+        state: BlockState,
+        world: BlockView,
+        pos: BlockPos,
+        context: ShapeContext
+    ): VoxelShape {
+        return SHAPE
     }
 }
