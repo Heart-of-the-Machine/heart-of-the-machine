@@ -1,7 +1,6 @@
 package com.github.hotm.client.blockmodel
 
 import com.github.hotm.HotMConstants
-import com.github.hotm.misc.HotMLog
 import com.github.hotm.client.HotMClientRegistries
 import com.github.hotm.client.blockmodel.connector.IdentityModelConnector
 import com.github.hotm.client.blockmodel.connector.LeylineModelConnector
@@ -9,10 +8,12 @@ import com.github.hotm.client.blockmodel.ct.UnbakedCTModelLayer
 import com.github.hotm.client.blockmodel.static.UnbakedStaticBottomTopModelLayer
 import com.github.hotm.client.blockmodel.static.UnbakedStaticColumnModelLayer
 import com.github.hotm.client.blockmodel.static.UnbakedStaticModelLayer
+import com.github.hotm.misc.HotMLog
 import com.google.gson.JsonParseException
 import com.mojang.serialization.JsonOps
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.model.ModelResourceProvider
+import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.resource.ResourceManager
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
@@ -21,7 +22,13 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 object HotMBlockModels {
+    val AURA_NODE_BEAM_CROWN_PIECE = ModelIdentifier(HotMConstants.identifier("aura_node_beam_crown_piece"), "")
+
     fun register() {
+        ModelLoadingRegistry.INSTANCE.registerModelProvider { _, out ->
+            out.accept(AURA_NODE_BEAM_CROWN_PIECE)
+        }
+
         Registry.register(
             HotMClientRegistries.BLOCK_MODEL,
             HotMConstants.identifier("layered"),

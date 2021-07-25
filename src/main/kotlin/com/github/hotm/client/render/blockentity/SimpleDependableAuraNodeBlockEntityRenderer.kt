@@ -44,6 +44,9 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T : BlockEntity>(protecte
             matrices.translate(0.5, 0.5, 0.5)
 
             AuraNodeRendererUtils.renderBeam(
+                world,
+                world.getBlockState(pos),
+                pos,
                 matrices,
                 vertexConsumers,
                 offset.x.toFloat(),
@@ -51,6 +54,7 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T : BlockEntity>(protecte
                 offset.z.toFloat(),
                 world.time,
                 tickDelta,
+                overlay,
                 0.0625f,
                 0.125f
             )
