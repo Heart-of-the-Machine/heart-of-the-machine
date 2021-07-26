@@ -39,24 +39,23 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T : BlockEntity>(protecte
                 return
             }
 
+            val energy = node.getSuppliedAuraForRender(childPos)
+            val roll = node.getCrownRoll(world.time, tickDelta, childPos)
+
             matrices.push()
 
             matrices.translate(0.5, 0.5, 0.5)
 
             AuraNodeRendererUtils.renderBeam(
                 world,
-                world.getBlockState(pos),
                 pos,
                 matrices,
                 vertexConsumers,
-                offset.x.toFloat(),
-                offset.y.toFloat(),
-                offset.z.toFloat(),
-                world.time,
                 tickDelta,
                 overlay,
-                0.0625f,
-                0.125f
+                offset,
+                energy,
+                roll
             )
 
             matrices.pop()

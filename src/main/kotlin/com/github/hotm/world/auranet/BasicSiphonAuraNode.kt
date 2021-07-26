@@ -48,6 +48,12 @@ class BasicSiphonAuraNode(
 
     override val maxDistance = 32.0
 
+    /* Crown render variables */
+
+    private var lastRenderWorldTime = world.time
+    private var lastRenderTickDelta = 0f
+    private var crownRoll = 0f
+
     fun updateValue(value: Int, visitedNodes: MutableSet<DimBlockPos>) {
         this.value = value
         markDirty()
@@ -117,6 +123,22 @@ class BasicSiphonAuraNode(
 
     override fun getChildrenForRender(): Stream<BlockPos> {
         return StreamUtils.ofNullable(childPos)
+    }
+
+    override fun getSuppliedAuraForRender(pos: BlockPos): Int {
+        return value
+    }
+
+    override fun getCrownRoll(worldTime: Long, tickDelta: Float, pos: BlockPos): Float {
+        val dwt = worldTime - lastRenderWorldTime
+        val dtd = tickDelta - lastRenderTickDelta
+        lastRenderWorldTime = worldTime
+        lastRenderTickDelta = tickDelta
+
+        val diff = dwt.toFloat() + dtd
+        crownRoll += diff * value.toFloat() * 3f
+
+        return crownRoll
     }
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {

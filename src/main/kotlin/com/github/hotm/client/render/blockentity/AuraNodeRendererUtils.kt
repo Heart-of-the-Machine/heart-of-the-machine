@@ -13,14 +13,54 @@ import net.minecraft.client.render.block.BlockRenderManager
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.*
 import net.minecraft.world.BlockRenderView
+import net.minecraft.world.World
 import java.util.*
 import kotlin.math.PI
 import kotlin.math.atan2
+import kotlin.math.exp
 
 object AuraNodeRendererUtils {
     fun renderBeam(
+        world: World,
+        pos: BlockPos,
+        matrices: MatrixStack,
+        consumers: VertexConsumerProvider,
+        tickDelta: Float,
+        overlay: Int,
+        offset: Vec3i,
+        energy: Int,
+        crownRoll: Float
+    ) {
+        renderBeam(
+            world,
+            world.getBlockState(pos),
+            pos,
+            matrices,
+            consumers,
+            offset.x.toFloat(),
+            offset.y.toFloat(),
+            offset.z.toFloat(),
+            world.time,
+            tickDelta,
+            crownRoll,
+            overlay,
+            display(energy, 0.03125f, 0.24f, 0.01f),
+            display(energy, 0.0625f, 0.25f, 0.01f),
+            display(energy, 0.125f, 0.25f, 0.01f)
+        )
+    }
+
+    private fun display(energy: Int, min: Float, max: Float, rate: Float): Float {
+        return logistic((max - min) * 2f, rate, 0f, energy.toFloat()) - max + 2f * min
+    }
+
+    private fun logistic(max: Float, rate: Float, mid: Float, x: Float): Float {
+        return max / (1 + exp(-rate * (x - mid)))
+    }
+
+    fun renderBeam(
         world: BlockRenderView,
-        blockstate: BlockState,
+        state: BlockState,
         pos: BlockPos,
         matrices: MatrixStack,
         consumers: VertexConsumerProvider,
@@ -29,9 +69,11 @@ object AuraNodeRendererUtils {
         dz: Float,
         worldTime: Long,
         tickDelta: Float,
+        crownRoll: Float,
         overlay: Int,
         innerRadius: Float,
         outerRadius: Float,
+        crownRadius: Float,
     ) {
         val xzLen = MathHelper.sqrt(dx * dx + dz * dz)
         val len = MathHelper.sqrt(dx * dx + dy * dy + dz * dz)
@@ -83,7 +125,7 @@ object AuraNodeRendererUtils {
 
         matrices.push()
         matrices.translate(0.0, 0.35, 0.0)
-        renderCrown(world, blockstate, pos, matrices, consumers, overlay, 4, 0.15, animationAmount * 18f, 0.75f)
+        renderCrown(world, state, pos, matrices, consumers, overlay, 4, crownRadius.toDouble(), crownRoll, 0.75f)
         matrices.pop()
 
         matrices.pop()
