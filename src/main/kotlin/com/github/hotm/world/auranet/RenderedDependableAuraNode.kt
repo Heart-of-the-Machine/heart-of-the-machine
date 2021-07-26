@@ -8,7 +8,5 @@ interface RenderedDependableAuraNode : DependableAuraNode {
 
     fun getSuppliedAuraForRender(pos: BlockPos): Int
 
-    fun updateRenderValues(worldTime: Long, tickDelta: Float)
-
-    fun getCrownRoll(pos: BlockPos): Float
+    fun getCrownRollSpeed(pos: BlockPos): Float
 }

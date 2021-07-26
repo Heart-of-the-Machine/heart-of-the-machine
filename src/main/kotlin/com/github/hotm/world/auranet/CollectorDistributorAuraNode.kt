@@ -70,11 +70,6 @@ class CollectorDistributorAuraNode(
 
     override val maxDistance = 32.0
 
-    /* Crown render variables */
-    private var lastRenderWorldTime = world.time
-    private var lastRenderTickDelta = 0f
-    private val crownRolls = Object2FloatOpenHashMap<BlockPos>()
-
     private fun updateValue(value: Int, visitedNodes: MutableSet<DimBlockPos>) {
         this.value = value
         markDirty()
@@ -174,21 +169,8 @@ class CollectorDistributorAuraNode(
         return value / children.size
     }
 
-    override fun updateRenderValues(worldTime: Long, tickDelta: Float) {
-        val dwt = worldTime - lastRenderWorldTime
-        val dtd = tickDelta - lastRenderTickDelta
-        lastRenderWorldTime = worldTime
-        lastRenderTickDelta = tickDelta
-
-        val diff = dwt.toFloat() + dtd
-
-        for (child in children) {
-            crownRolls.addTo(child, diff * 3f * (value / children.size).toFloat())
-        }
-    }
-
-    override fun getCrownRoll(pos: BlockPos): Float {
-        return crownRolls.getFloat(pos)
+    override fun getCrownRollSpeed(pos: BlockPos): Float {
+        return 3f * (value / children.size).toFloat()
     }
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {

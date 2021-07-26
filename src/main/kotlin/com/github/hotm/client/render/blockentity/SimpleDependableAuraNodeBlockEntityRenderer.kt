@@ -1,6 +1,6 @@
 package com.github.hotm.client.render.blockentity
 
-import com.github.hotm.misc.HotMLog
+import com.github.hotm.blockentity.RenderedDependableAuraNodeBlockEntity
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.world.auranet.RenderedDependableAuraNode
 import net.minecraft.block.entity.BlockEntity
@@ -9,8 +9,8 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory
 import net.minecraft.client.util.math.MatrixStack
 
-open class SimpleDependableAuraNodeBlockEntityRenderer<T : BlockEntity>(protected val ctx: BlockEntityRendererFactory.Context) :
-    BlockEntityRenderer<T> {
+open class SimpleDependableAuraNodeBlockEntityRenderer<T>(protected val ctx: BlockEntityRendererFactory.Context) :
+    BlockEntityRenderer<T> where T : BlockEntity, T : RenderedDependableAuraNodeBlockEntity {
     override fun rendersOutsideBoundingBox(blockEntity: T): Boolean {
         return true
     }
@@ -35,7 +35,7 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T : BlockEntity>(protecte
         val node = access[pos] as? RenderedDependableAuraNode ?: return
         val children = node.getChildrenForRender()
 
-        node.updateRenderValues(world.time, tickDelta)
+        entity.updateRenderValues(world.time, tickDelta)
 
         for (childPos in children) {
             val offset = childPos.subtract(pos)
@@ -45,7 +45,8 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T : BlockEntity>(protecte
             }
 
             val energy = node.getSuppliedAuraForRender(childPos)
-            val roll = node.getCrownRoll(childPos)
+            val rollSpeed = node.getCrownRollSpeed(childPos)
+            val roll = entity.getAndUpdateCrownRoll(childPos, rollSpeed)
 
             matrices.push()
 
