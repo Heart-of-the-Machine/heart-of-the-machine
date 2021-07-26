@@ -93,7 +93,7 @@ object AuraNodeRendererUtils {
 
         matrices.push()
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rollShift))
-        renderBeamCross(
+        renderBeamSquare(
             matrices,
             HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM, false),
             1f,
