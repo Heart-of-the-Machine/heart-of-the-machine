@@ -23,7 +23,7 @@ class NecterePortalSpawnerBlock(settings: Settings) : BlockWithEntity(settings) 
     ): BlockEntityTicker<T>? {
         return checkType(
             type,
-            HotMBlockEntities.NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY,
+            HotMBlockEntities.NECTERE_PORTAL_SPAWNER,
             NecterePortalSpawnerBlockEntity.Companion::tick
         )
     }

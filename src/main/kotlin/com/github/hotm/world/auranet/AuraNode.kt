@@ -10,6 +10,7 @@ import com.github.hotm.HotMConstants.str
 import com.github.hotm.misc.HotMRegistries
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.net.HotMNetwork
+import com.github.hotm.util.DimBlockPos
 import com.mojang.serialization.*
 import net.minecraft.util.math.BlockPos
 import org.apache.logging.log4j.LogManager
@@ -146,19 +147,11 @@ interface AuraNode {
 
     val type: AuraNodeType<out AuraNode>
 
-    /**
-     * Used by AuraNetData to determine what blocks are updated if this aura node were to be removed during a save load.
-     */
-//    val dependants: Collection<DimBlockPos>
-
-//    val block: AuraNodeBlock
-
     val pos: BlockPos
 
-    // TODO: Evaluate usefulness of this
-    fun storageEquals(auraNode: AuraNode): Boolean
+    val dimPos: DimBlockPos
 
     fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx)
 
-    fun recalculate() {}
+    fun onRemove() {}
 }

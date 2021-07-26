@@ -37,7 +37,7 @@ abstract class AbstractAuraNodeBlock(settings: Settings) : Block(settings), Aura
             world as ServerWorld
             val storage = StorageUtils.getServerAuraNetStorage(world)
             // putting on the server also syncs to all clients in range
-            storage.put(createAuraNode(state, world, pos))
+            storage.put(createAuraNode(state, world, storage, pos))
         }
     }
 }

@@ -1,4 +1,7 @@
 {
+  "block.hotm.basic_siphon_aura_node": "Basic Siphon Aura Node",
+  "block.hotm.basic_source_aura_node": "Basic Source Aura Node",
+  "block.hotm.collector_distributor_aura_node": "Collector Distributor Aura Node",
   "block.hotm.cyan_crystal": "Cyan Crystal",
   "block.hotm.cyan_crystal_lamp": "Cyan Crystal Lamp",
   "block.hotm.cyan_machine_casing_lamp": "Cyan Machine Casing Lamp",
@@ -58,9 +61,18 @@
   "command.hotm.retrogen_nectere_portal.found": "Found an existing Nectere portal at %s (%s blocks away)",
   "command.hotm.retrogen_nectere_portal.generated": "Generated a new Nectere portal at %s (%s blocks away)",
   "command.hotm.base_aura": "Base Aura: %s",
+  "item.hotm.aura_tuner": "Aura Tuner",
   "item.hotm.cyan_crystal_shard": "Cyan Crystal Shard",
   "item.hotm.magenta_crystal_shard": "Magenta Crystal Shard",
   "item.hotm.plassein_fuel_chunk": "Plassein Fuel Chunk",
   "itemGroup.hotm.building": "Heart of the Machine Building",
-  "itemGroup.hotm.materials": "Heart of the Machine Materials"
+  "itemGroup.hotm.materials": "Heart of the Machine Materials",
+  "message.hotm.aura_tuner.parent_not_dependable": "The selected parent aura node cannot have children.",
+  "message.hotm.aura_tuner.no_parent": "No parent aura node selected.",
+  "message.hotm.aura_tuner.parent_selected": "Parent selected: %s",
+  "message.hotm.aura_tuner.success": "Connection created.",
+  "message.hotm.aura_tuner.wrong_dimension": "The selected parent aura node is in the wrong dimension.",
+  "message.hotm.aura_tuner.rejected_child": "The selected parent aura node cannot connect to this aura node.",
+  "message.hotm.aura_tuner.rejected_parent": "This aura node cannot connect to the selected parent aura node.",
+  "message.hotm.aura_tuner.dependency_loop": "These nodes cannot be connected because they would cause a loop."
 }

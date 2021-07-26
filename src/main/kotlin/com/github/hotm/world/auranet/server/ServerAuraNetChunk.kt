@@ -4,6 +4,7 @@ import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.config.HotMConfig
+import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNode
 import com.github.hotm.world.auranet.SiphonAuraNode
@@ -13,7 +14,6 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap
-import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Util
@@ -30,7 +30,7 @@ import java.util.stream.Stream
  * Represents a 16x16x16 area containing nodes and a base aura.
  */
 class ServerAuraNetChunk(
-    private val updateListener: Runnable,
+    val updateListener: Runnable,
     private var base: Int,
     initialNodes: List<AuraNode>
 ) {
@@ -74,19 +74,23 @@ class ServerAuraNetChunk(
                 // base aura
                 buf.writeVarUnsignedInt(chunk.base)
 
-                val nodes = chunk.nodesByPos.values.toTypedArray()
                 // node count
-                buf.writeVarUnsignedInt(nodes.size)
+                val nodes = chunk.nodesByPos.values.toTypedArray()
+                val nodesCount = nodes.size
+                buf.writeVarUnsignedInt(nodesCount)
 
-                val nodesBuf = NetByteBuf.buffer()
-                for (node in nodes) {
-                    AuraNode.toPacket(node, nodesBuf, ctx)
+                if (nodesCount > 0) {
+                    val nodesBuf = NetByteBuf.buffer()
+                    for (node in nodes) {
+                        AuraNode.toPacket(node, nodesBuf, ctx)
+                    }
+
+                    // nodes buf size
+                    val readableBytes = nodesBuf.readableBytes()
+                    buf.writeVarUnsignedInt(readableBytes)
+                    // nodes buf
+                    buf.writeBytes(nodesBuf)
                 }
-
-                // nodes buf size
-                buf.writeVarUnsignedInt(nodesBuf.writerIndex())
-                // nodes buf
-                buf.writeByteArray(nodesBuf.array())
             }
         }
     }
@@ -114,23 +118,26 @@ class ServerAuraNetChunk(
     }
 
     fun put(auraNode: AuraNode) {
-        if (putImpl(auraNode)) {
-            updateListener.run()
+        val prevNode = putImpl(auraNode)
+        updateListener.run()
+
+        prevNode?.onRemove()
+
+        if (prevNode is SourceAuraNode || prevNode is SiphonAuraNode
+            || auraNode is SourceAuraNode || auraNode is SiphonAuraNode
+        ) {
+            recalculateSiphons()
         }
     }
 
-    private fun putImpl(node: AuraNode): Boolean {
+    private fun putImpl(node: AuraNode): AuraNode? {
         val pos = node.pos
         val index = ChunkSectionPos.packLocal(pos)
         val curNode = nodesByPos[index]
-        return if (curNode != null && node.storageEquals(curNode)) {
-            false
-        } else {
-            nodesByPos[index] = node
+        nodesByPos[index] = node
 
-            LOGGER.debug("Set Aura Net node at $pos")
-            true
-        }
+        LOGGER.debug("Set Aura Net node at $pos")
+        return curNode
     }
 
     operator fun get(pos: BlockPos): AuraNode? {
@@ -138,12 +145,19 @@ class ServerAuraNetChunk(
     }
 
     fun remove(pos: BlockPos) {
-        val container = nodesByPos.remove(ChunkSectionPos.packLocal(pos))
-        if (container == null) {
+        val node = nodesByPos.remove(ChunkSectionPos.packLocal(pos))
+        if (node == null) {
             LOGGER.error("Aura Net Node data mismatch: never registered at $pos")
         } else {
-            LOGGER.debug("Removed Aura Net Node at ${container.pos}")
+            node.onRemove()
+
+            if (node is SourceAuraNode || node is SiphonAuraNode) {
+                recalculateSiphons()
+            }
+
             updateListener.run()
+
+            LOGGER.debug("Removed Aura Net Node at ${node.pos}")
         }
     }
 
@@ -151,21 +165,31 @@ class ServerAuraNetChunk(
         return nodesByPos.values.stream().filter(filter)
     }
 
-    private fun recalculateSiphons() {
-        for (siphon in nodesByPos.values.stream().filter { it is SiphonAuraNode }) {
-            siphon.recalculate()
+    fun getTotalAura(): Int {
+        return base + nodesByPos.values.stream().filter { it is SourceAuraNode }
+            .mapToInt { (it as SourceAuraNode).getSourceAura() }.sum()
+    }
+
+    fun recalculateSiphons() {
+        recalculateSiphons(hashSetOf())
+    }
+
+    fun recalculateSiphons(visitedNodes: MutableSet<DimBlockPos>) {
+        val totalAura = getTotalAura()
+        val siphons = nodesByPos.values.stream().filter { it is SiphonAuraNode }.toList()
+        for (siphon in siphons) {
+            (siphon as SiphonAuraNode).recalculateSiphonValue(totalAura, siphons.size, visitedNodes)
         }
     }
 
     fun updateAuraNodes(
-        world: ServerWorld,
+        world: ServerWorld, storage: ServerAuraNetStorage,
         updater: ((BlockState, AuraNodeBlock, BlockPos) -> Unit) -> Unit
     ) {
-        // TODO: Fix recalculation function
         val removed = Short2ObjectOpenHashMap(nodesByPos)
-        val updateeBlocks = Short2ObjectOpenHashMap<Block>()
-        var updateSiphons = false
         nodesByPos.clear()
+        var updateSiphons = false
+        var updateSave = false
         updater { state, block, pos ->
             val type = block.auraNodeType
             val index = ChunkSectionPos.packLocal(pos)
@@ -178,51 +202,49 @@ class ServerAuraNetChunk(
                     removed.remove(index)
                 } else {
                     // the node's block has changed since we last loaded
-                    val newNode = block.createAuraNode(state, world, pos)
+                    val newNode = block.createAuraNode(state, world, storage, pos)
                     nodesByPos[index] = newNode
 
                     // oldNode is Siphon/Source checks are performed on the removed map instead of here
                     if (newNode is SiphonAuraNode || newNode is SourceAuraNode) {
                         updateSiphons = true
                     }
+
+                    // Stuff has changed, might as well save the changes
+                    updateSave = true
                 }
             } else {
                 // there didn't used to be a node block here
-                val newNode = block.createAuraNode(state, world, pos)
+                val newNode = block.createAuraNode(state, world, storage, pos)
                 nodesByPos[index] = newNode
 
                 if (newNode is SiphonAuraNode || newNode is SourceAuraNode) {
                     updateSiphons = true
                 }
+
+                // Stuff has changed, might as well save the changes
+                updateSave = true
             }
         }
 
-//        for (node in removed.values) {
-//            val server = world.server
-//            if (node is DependableAuraNode) {
-//                for (dependant in node.getDependants()) {
-//                    dependant.getAuraNode(server)?.recalculate()
-//                }
-//            }
-//
-//            if (node is SiphonAuraNode || node is SourceAuraNode) {
-//                updateSiphons = true
-//            }
-//        }
-//
-//        if (updateSiphons) {
-//            val tickScheduler = world.blockTickScheduler
-//
-//            for (siphon in nodesByPos.values.stream().filter { it.node.block is SiphonAuraNodeBlock }) {
-//                val pos = siphon.pos
-//                val index = ChunkSectionPos.packLocal(pos)
-//
-//                updateeBlocks[index]?.let { block ->
-//                    signalExecutor.execute {
-//                        tickScheduler.schedule(pos, block, 0)
-//                    }
-//                }
-//            }
-//        }
+        if (removed.isNotEmpty()) {
+            updateSave = true
+        }
+
+        for (node in removed.values) {
+            node.onRemove()
+
+            if (node is SiphonAuraNode || node is SourceAuraNode) {
+                updateSiphons = true
+            }
+        }
+
+        if (updateSiphons) {
+            recalculateSiphons()
+        }
+
+        if (updateSave) {
+            updateListener.run()
+        }
     }
 }

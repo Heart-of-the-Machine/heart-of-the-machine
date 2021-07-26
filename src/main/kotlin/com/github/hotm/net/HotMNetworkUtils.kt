@@ -4,6 +4,7 @@ import alexiil.mc.lib.net.NetByteBuf
 import alexiil.mc.lib.net.NetIdDataK
 import alexiil.mc.lib.net.impl.CoreMinecraftNetUtil
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
 
 fun <T> NetIdDataK<T>.s2cReadWrite(receiver: T.(NetByteBuf) -> Unit, writer: T.(NetByteBuf) -> Unit): NetIdDataK<T> {
@@ -18,7 +19,11 @@ fun <T> NetIdDataK<T>.s2cReadWrite(receiver: T.(NetByteBuf) -> Unit, writer: T.(
 }
 
 fun <T> NetIdDataK<T>.sendToClients(world: World, pos: BlockPos, obj: T) {
-    for (connection in CoreMinecraftNetUtil.getPlayersWatching(world, pos)) {
-        send(connection, obj)
+    val chunkPos = ChunkPos(pos)
+
+    if (world.chunkManager.isChunkLoaded(chunkPos.x, chunkPos.z)) {
+        for (connection in CoreMinecraftNetUtil.getPlayersWatching(world, pos)) {
+            send(connection, obj)
+        }
     }
 }

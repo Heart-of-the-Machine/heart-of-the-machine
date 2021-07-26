@@ -88,3 +88,26 @@ Implementation Concerns:
      be too much of a concern. Though this is something to keep in the back of my mind.
    - As far as lag is concerned, reducing this update lag is one of the big purposes of storing aura nodes separately
      from the rest of the world data.
+
+Implementation Details:
+
+Interfaces:
+ * DependableAuraNode represents a node that has dependencies that must be notified when the node is removed. Should
+   this be handled by the node itself? An onRemove(...) method?
+   - Pros:
+     + Dependency notification logic is all in one place (in the ServerAuraNetChunk) instead of scattered around to
+       different nodes.
+   - Cons:
+     + Further complicates the ServerAuraNetChunk logic.
+     + Forces all dependency notification logic to act the same or forces ServerAuraNetChunk to account for all possible
+       notification situations.
+ * DependableAuraNode v2 represents a node that can have "children" dependants added to it or removed from it. When it
+   recalculates its aura value, its contract is to notify its children with the aura value it's sending to them so they
+   can recalculate as well.
+ * SiphonAuraNode represents a node that must be notified when a chunk's aura value is modified, either through
+   base-aura modification or through SourceAuraNodes.
+ * SourceAuraNode represents a node that contributes to a chunk's aura value.
+ * DependencyAuraNode? represents a node that is dependant and who's parents must be notified when it's removed. Again,
+   should this be handled by the node itself? Through the same onRemove(...) method?
+ * DependencyAuraNode v2 represents a node that can have "parents" dependencies added to it or removed from it. When it
+   gets removed, it notifies its parents so that they can redistribute their aura.

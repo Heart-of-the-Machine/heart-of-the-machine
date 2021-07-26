@@ -6,7 +6,9 @@ import net.minecraft.util.registry.Registry
 
 object AuraNodes {
     fun register() {
-        register("basic", BasicAuraNode.Type)
+        register("basic_siphon", BasicSiphonAuraNode.Type)
+        register("basic_source", BasicSourceAuraNode.Type)
+        register("collector_distributor", CollectorDistributorAuraNode.Type)
     }
 
     fun register(id: String, codec: AuraNodeType<out AuraNode>) {

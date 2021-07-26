@@ -4,10 +4,10 @@ import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.net.HotMNetwork
+import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.auranet.AuraNetAccess
 import com.github.hotm.world.auranet.AuraNode
 import com.github.hotm.world.auranet.SiphonAuraNode
-import com.github.hotm.world.auranet.SourceAuraNode
 import com.github.hotm.world.storage.CustomSerializingRegionBasedStorage
 import com.mojang.datafixers.DataFixer
 import com.mojang.serialization.Codec
@@ -44,6 +44,9 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
     /*
      * AuraNodeAccess functions.
      */
+    override fun getUpdateListener(pos: ChunkSectionPos): Runnable {
+        return getOrCreate(pos.asLong()).updateListener
+    }
 
     override fun getBaseAura(pos: ChunkSectionPos): Int {
         return getOrCreate(pos.asLong()).getBaseAura()
@@ -60,6 +63,10 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
 
     override fun getAllBy(pos: ChunkSectionPos, filter: Predicate<AuraNode>): Stream<AuraNode> {
         return getOrCreate(pos.asLong()).getAllBy(filter)
+    }
+
+    override fun recalculateSiphons(pos: ChunkSectionPos, visitedNodes: MutableSet<DimBlockPos>) {
+        getOrCreate(pos.asLong()).recalculateSiphons(visitedNodes)
     }
 
     /*
@@ -123,16 +130,14 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
      * TODO: Figure out what to do with these.
      */
 
-    fun calculateSectionAura(pos: ChunkSectionPos): Int {
-        val data = getOrCreate(pos.asLong())
-        return data.getBaseAura() + data.getAllBy { it is SourceAuraNode }.mapToInt {
-            (it as SourceAuraNode).getSource()
-        }.sum()
+    fun getSectionAura(pos: ChunkSectionPos): Int {
+        return get(pos.asLong()).map { it.getTotalAura() }
+            .orElseGet { ServerAuraNetChunk.getBaseAura(world.registryKey) }
     }
 
     fun calculateSiphonValue(pos: BlockPos, initDenom: Int, finalDenom: Int): Int {
         val sectionPos = ChunkSectionPos.from(pos)
-        val baseAura = calculateSectionAura(sectionPos)
+        val baseAura = getSectionAura(sectionPos)
         val siphonCount =
             getOrCreate(sectionPos.asLong()).getAllBy { it is SiphonAuraNode }.count().toInt()
 
@@ -146,14 +151,14 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
     fun initForPalette(chunkPos: ChunkPos, section: ChunkSection) {
         val sectionPos = ChunkSectionPos.from(chunkPos, section.yOffset shr 4)
         Util.ifPresentOrElse(get(sectionPos.asLong()), { data ->
-            data.updateAuraNodes(world) { callback ->
+            data.updateAuraNodes(world, this) { callback ->
                 if (shouldScan(section)) {
                     scanAndPopulate(sectionPos, section, callback)
                 }
             }
         }, {
             if (shouldScan(section)) {
-                getOrCreate(sectionPos.asLong()).updateAuraNodes(world) { callback ->
+                getOrCreate(sectionPos.asLong()).updateAuraNodes(world, this) { callback ->
                     scanAndPopulate(sectionPos, section, callback)
                 }
             }

@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hotm:basic_aura_node"
+          "name": "hotm:collector_distributor_aura_node"
         }
       ],
       "conditions": [

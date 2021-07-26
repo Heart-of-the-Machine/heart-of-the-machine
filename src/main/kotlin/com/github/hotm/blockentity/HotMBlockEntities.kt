@@ -11,14 +11,23 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
 
 object HotMBlockEntities {
-    lateinit var NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY: BlockEntityType<NecterePortalSpawnerBlockEntity>
+    lateinit var BASIC_SIPHON_AURA_NODE: BlockEntityType<BasicSiphonAuraNodeBlockEntity>
+        private set
+    lateinit var COLLECTOR_DISTRIBUTOR_AURA_NODE: BlockEntityType<CollectorDistributorAuraNodeBlockEntity>
+        private set
+    lateinit var NECTERE_PORTAL_SPAWNER: BlockEntityType<NecterePortalSpawnerBlockEntity>
         private set
 
     fun register() {
-        NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY =
+        BASIC_SIPHON_AURA_NODE = newBlockEntityType(::BasicSiphonAuraNodeBlockEntity, HotMBlocks.BASIC_SIPHON_AURA_NODE)
+        COLLECTOR_DISTRIBUTOR_AURA_NODE =
+            newBlockEntityType(::CollectorDistributorAuraNodeBlockEntity, HotMBlocks.COLLECTOR_DISTRIBUTOR_AURA_NODE)
+        NECTERE_PORTAL_SPAWNER =
             newBlockEntityType(::NecterePortalSpawnerBlockEntity, HotMBlocks.NECTERE_PORTAL_SPAWNER)
 
-        register(NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY, "nectere_portal_spawner")
+        register(BASIC_SIPHON_AURA_NODE, "basic_siphon_aura_node")
+        register(COLLECTOR_DISTRIBUTOR_AURA_NODE, "collector_distributor_aura_node")
+        register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner")
     }
 
     private fun register(type: BlockEntityType<*>, name: String) {
