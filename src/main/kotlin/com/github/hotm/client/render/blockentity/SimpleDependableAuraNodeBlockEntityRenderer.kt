@@ -1,5 +1,6 @@
 package com.github.hotm.client.render.blockentity
 
+import com.github.hotm.misc.HotMLog
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.world.auranet.RenderedDependableAuraNode
 import net.minecraft.block.entity.BlockEntity
@@ -29,8 +30,12 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T : BlockEntity>(protecte
         val world = entity.world ?: return
         val pos = entity.pos
         val access = StorageUtils.getAuraNetAccess(world)
+
+        // This is null when a node is placed but before the client has received the node data
         val node = access[pos] as? RenderedDependableAuraNode ?: return
         val children = node.getChildrenForRender()
+
+        node.updateRenderValues(world.time, tickDelta)
 
         for (childPos in children) {
             val offset = childPos.subtract(pos)
@@ -40,7 +45,7 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T : BlockEntity>(protecte
             }
 
             val energy = node.getSuppliedAuraForRender(childPos)
-            val roll = node.getCrownRoll(world.time, tickDelta, childPos)
+            val roll = node.getCrownRoll(childPos)
 
             matrices.push()
 

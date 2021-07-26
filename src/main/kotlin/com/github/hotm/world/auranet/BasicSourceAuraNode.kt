@@ -99,12 +99,12 @@ class BasicSourceAuraNode(
     }
 
     override fun addParent(node: DependableAuraNode) {
-        parents.add(node.pos)
+        parents.add(node.pos.toImmutable())
         updateParents()
     }
 
     override fun removeParent(pos: BlockPos) {
-        parents.remove(pos)
+        parents.remove(pos.toImmutable())
         updateParents()
     }
 

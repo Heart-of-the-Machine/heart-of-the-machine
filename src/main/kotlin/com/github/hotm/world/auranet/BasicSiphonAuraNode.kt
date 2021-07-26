@@ -108,7 +108,7 @@ class BasicSiphonAuraNode(
         // remove previous child
         DependencyAuraNodeUtils.parentDisconnect(childPos, access, this)
 
-        updateChildPos(node.pos)
+        updateChildPos(node.pos.toImmutable())
     }
 
     override fun removeChild(pos: BlockPos) {
@@ -129,15 +129,18 @@ class BasicSiphonAuraNode(
         return value
     }
 
-    override fun getCrownRoll(worldTime: Long, tickDelta: Float, pos: BlockPos): Float {
+    override fun updateRenderValues(worldTime: Long, tickDelta: Float) {
         val dwt = worldTime - lastRenderWorldTime
         val dtd = tickDelta - lastRenderTickDelta
         lastRenderWorldTime = worldTime
         lastRenderTickDelta = tickDelta
 
         val diff = dwt.toFloat() + dtd
-        crownRoll += diff * value.toFloat() * 3f
 
+        crownRoll += diff * value.toFloat() * 3f
+    }
+
+    override fun getCrownRoll(pos: BlockPos): Float {
         return crownRoll
     }
 

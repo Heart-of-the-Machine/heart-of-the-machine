@@ -9,5 +9,9 @@ object HotMBlockEntityRenderers {
             HotMBlockEntities.BASIC_SIPHON_AURA_NODE,
             ::SimpleDependableAuraNodeBlockEntityRenderer
         )
+        BlockEntityRendererRegistry.INSTANCE.register(
+            HotMBlockEntities.COLLECTOR_DISTRIBUTOR_AURA_NODE,
+            ::SimpleDependableAuraNodeBlockEntityRenderer
+        )
     }
 }

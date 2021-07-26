@@ -227,6 +227,7 @@ object HotMBlocks {
      */
     val BASIC_SIPHON_AURA_NODE by lazy { BasicSiphonAuraNodeBlock(AURA_NODE_SETTINGS) }
     val BASIC_SOURCE_AURA_NODE by lazy { BasicSourceAuraNodeBlock(AURA_NODE_SETTINGS) }
+    val COLLECTOR_DISTRIBUTOR_AURA_NODE by lazy { CollectorDistributorAuraNodeBlock(AURA_NODE_SETTINGS) }
 
     /**
      * Register all Heart of the Machine blocks...
@@ -234,6 +235,7 @@ object HotMBlocks {
     fun register() {
         register(BASIC_SIPHON_AURA_NODE, "basic_siphon_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
         register(BASIC_SOURCE_AURA_NODE, "basic_source_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
+        register(COLLECTOR_DISTRIBUTOR_AURA_NODE, "collector_distributor_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
         register(CYAN_CRYSTAL, "cyan_crystal", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_CRYSTAL_LAMP, "cyan_crystal_lamp", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_MACHINE_CASING_LAMP, "cyan_machine_casing_lamp", HOTM_BUILDING_ITEM_SETTINGS)

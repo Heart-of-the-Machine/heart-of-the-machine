@@ -8,6 +8,7 @@ object AuraNodes {
     fun register() {
         register("basic_siphon", BasicSiphonAuraNode.Type)
         register("basic_source", BasicSourceAuraNode.Type)
+        register("collector_distributor", CollectorDistributorAuraNode.Type)
     }
 
     fun register(id: String, codec: AuraNodeType<out AuraNode>) {

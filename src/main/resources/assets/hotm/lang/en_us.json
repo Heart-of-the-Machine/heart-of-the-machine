@@ -1,6 +1,7 @@
 {
   "block.hotm.basic_siphon_aura_node": "Basic Siphon Aura Node",
   "block.hotm.basic_source_aura_node": "Basic Source Aura Node",
+  "block.hotm.collector_distributor_aura_node": "Collector Distributor Aura Node",
   "block.hotm.cyan_crystal": "Cyan Crystal",
   "block.hotm.cyan_crystal_lamp": "Cyan Crystal Lamp",
   "block.hotm.cyan_machine_casing_lamp": "Cyan Machine Casing Lamp",
