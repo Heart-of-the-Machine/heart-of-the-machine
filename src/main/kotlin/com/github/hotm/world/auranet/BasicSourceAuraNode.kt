@@ -137,6 +137,26 @@ class BasicSourceAuraNode(
         }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        if (!super.equals(other)) return false
+
+        other as BasicSourceAuraNode
+
+        if (value != other.value) return false
+        if (parents != other.parents) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + value
+        result = 31 * result + parents.hashCode()
+        return result
+    }
+
     object Type : AuraNodeType<BasicSourceAuraNode> {
         override fun createCodec(
             access: AuraNetAccess,

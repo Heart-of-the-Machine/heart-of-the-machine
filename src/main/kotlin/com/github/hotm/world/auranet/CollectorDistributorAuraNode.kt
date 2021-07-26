@@ -203,6 +203,28 @@ class CollectorDistributorAuraNode(
         }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        if (!super.equals(other)) return false
+
+        other as CollectorDistributorAuraNode
+
+        if (value != other.value) return false
+        if (parents != other.parents) return false
+        if (children != other.children) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + value
+        result = 31 * result + parents.hashCode()
+        result = 31 * result + children.hashCode()
+        return result
+    }
+
     object Type : AuraNodeType<CollectorDistributorAuraNode> {
         override fun createCodec(
             access: AuraNetAccess,
