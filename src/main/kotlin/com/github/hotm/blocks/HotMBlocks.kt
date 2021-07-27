@@ -229,6 +229,15 @@ object HotMBlocks {
     val BASIC_SOURCE_AURA_NODE by lazy { BasicSourceAuraNodeBlock(AURA_NODE_SETTINGS) }
     val COLLECTOR_DISTRIBUTOR_AURA_NODE by lazy { CollectorDistributorAuraNodeBlock(AURA_NODE_SETTINGS) }
 
+    /*
+     * Debug Blocks.
+     */
+    val DEBUG_TICKING by lazy {
+        DebugTickingBlock(
+            FabricBlockSettings.of(Material.STONE, MapColor.DARK_AQUA).strength(-1.0f)
+        )
+    }
+
     /**
      * Register all Heart of the Machine blocks...
      */
@@ -240,6 +249,7 @@ object HotMBlocks {
         register(CYAN_CRYSTAL_LAMP, "cyan_crystal_lamp", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_MACHINE_CASING_LAMP, "cyan_machine_casing_lamp", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_THINKING_STONE_LAMP, "cyan_thinking_stone_lamp", HOTM_BUILDING_ITEM_SETTINGS)
+        register(DEBUG_TICKING, "debug_ticking", Item.Settings())
         register(GLOWY_OBELISK_PART, "glowy_obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
         register(MACHINE_CASING, "machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(MACHINE_CASING_SLAB, "machine_casing_slab", HOTM_BUILDING_ITEM_SETTINGS)

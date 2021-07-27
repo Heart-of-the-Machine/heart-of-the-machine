@@ -15,6 +15,8 @@ object HotMBlockEntities {
         private set
     lateinit var COLLECTOR_DISTRIBUTOR_AURA_NODE: BlockEntityType<CollectorDistributorAuraNodeBlockEntity>
         private set
+    lateinit var DEBUG_TICKING: BlockEntityType<DebugTickingBlockEntity>
+        private set
     lateinit var NECTERE_PORTAL_SPAWNER: BlockEntityType<NecterePortalSpawnerBlockEntity>
         private set
 
@@ -22,11 +24,13 @@ object HotMBlockEntities {
         BASIC_SIPHON_AURA_NODE = newBlockEntityType(::BasicSiphonAuraNodeBlockEntity, HotMBlocks.BASIC_SIPHON_AURA_NODE)
         COLLECTOR_DISTRIBUTOR_AURA_NODE =
             newBlockEntityType(::CollectorDistributorAuraNodeBlockEntity, HotMBlocks.COLLECTOR_DISTRIBUTOR_AURA_NODE)
+        DEBUG_TICKING = newBlockEntityType(::DebugTickingBlockEntity, HotMBlocks.DEBUG_TICKING)
         NECTERE_PORTAL_SPAWNER =
             newBlockEntityType(::NecterePortalSpawnerBlockEntity, HotMBlocks.NECTERE_PORTAL_SPAWNER)
 
         register(BASIC_SIPHON_AURA_NODE, "basic_siphon_aura_node")
         register(COLLECTOR_DISTRIBUTOR_AURA_NODE, "collector_distributor_aura_node")
+        register(DEBUG_TICKING, "debug_ticking")
         register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner")
     }
 
