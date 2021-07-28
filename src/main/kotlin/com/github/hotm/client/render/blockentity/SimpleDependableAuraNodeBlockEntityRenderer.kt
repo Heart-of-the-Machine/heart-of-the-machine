@@ -29,6 +29,11 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T>(protected val ctx: Blo
     ) {
         val world = entity.world ?: return
         val pos = entity.pos
+
+        if (entity.isRemoved) {
+            return
+        }
+
         val access = StorageUtils.getAuraNetAccess(world)
 
         // This is null when a node is placed but before the client has received the node data
@@ -38,11 +43,11 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T>(protected val ctx: Blo
         entity.updateRenderValues(world.time, tickDelta)
 
         for (childPos in children) {
-            val offset = childPos.subtract(pos)
-
-            if (offset == pos) {
+            if (childPos == pos) {
                 return
             }
+
+            val offset = childPos.subtract(pos)
 
             val energy = node.getSuppliedAuraForRender(childPos)
             val rollSpeed = node.getCrownRollSpeed(childPos)

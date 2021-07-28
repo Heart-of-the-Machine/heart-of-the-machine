@@ -75,6 +75,7 @@ class ClientAuraNetStorage(override val world: ClientWorld, private val radius: 
             set(chunkX, chunkZ, newPillar)
         } else {
             LOGGER.warn("Ignoring chunk since it's not in the view range: {}, {}", chunkX, chunkZ)
+            ctx.drop()
         }
     }
 
