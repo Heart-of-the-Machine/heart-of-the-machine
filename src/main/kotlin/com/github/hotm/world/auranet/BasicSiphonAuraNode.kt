@@ -48,6 +48,8 @@ class BasicSiphonAuraNode(
 
     override val maxDistance = 32.0
 
+    override val blockable = true
+
     fun updateValue(value: Int, visitedNodes: MutableSet<DimBlockPos>) {
         this.value = value
         markDirty()
@@ -113,6 +115,10 @@ class BasicSiphonAuraNode(
 
     override fun getSuppliedAura(child: DependantAuraNode): Int {
         return value
+    }
+
+    override fun getChildren(): Stream<BlockPos> {
+        return StreamUtils.ofNullable(childPos)
     }
 
     override fun getChildrenForRender(): Stream<BlockPos> {

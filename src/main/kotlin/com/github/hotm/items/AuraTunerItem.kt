@@ -69,13 +69,14 @@ class AuraTunerItem(settings: Settings) : Item(settings), InteractionCanceler {
                         val parentNode = parentPos.getAuraNode(world.server)
 
                         if (parentNode is DependableAuraNode) {
-                            val str = when (DependencyAuraNodeUtils.connect(parentNode, node)) {
+                            val str = when (DependencyAuraNodeUtils.connect(world, parentNode, node)) {
                                 DependencyAuraNodeUtils.ConnectionError.NONE -> {
                                     player.sendMessage(message("aura_tuner.success"), false)
                                     return ActionResult.CONSUME
                                 }
                                 DependencyAuraNodeUtils.ConnectionError.WRONG_DIMENSION -> "wrong_dimension"
                                 DependencyAuraNodeUtils.ConnectionError.TOO_FAR -> "too_far"
+                                DependencyAuraNodeUtils.ConnectionError.BLOCKED -> "blocked"
                                 DependencyAuraNodeUtils.ConnectionError.REJECTED_CHILD -> "rejected_child"
                                 DependencyAuraNodeUtils.ConnectionError.REJECTED_PARENT -> "rejected_parent"
                                 DependencyAuraNodeUtils.ConnectionError.DEPENDENCY_LOOP -> "dependency_loop"

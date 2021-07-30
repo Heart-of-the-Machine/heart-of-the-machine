@@ -1,6 +1,8 @@
 package com.github.hotm.blocks
 
+import com.github.hotm.blockentity.AbstractDependableAuraNodeBlockEntity
 import com.github.hotm.blockentity.BasicSiphonAuraNodeBlockEntity
+import com.github.hotm.blockentity.HotMBlockEntities
 import com.github.hotm.world.auranet.AuraNode
 import com.github.hotm.world.auranet.AuraNodeType
 import com.github.hotm.world.auranet.BasicSiphonAuraNode
@@ -9,11 +11,14 @@ import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.world.BlockView
+import net.minecraft.world.World
 
 class BasicSiphonAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEntity(settings) {
     companion object {
@@ -47,5 +52,17 @@ class BasicSiphonAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEn
         context: ShapeContext
     ): VoxelShape {
         return SHAPE
+    }
+
+    override fun <T : BlockEntity?> getTicker(
+        world: World,
+        state: BlockState,
+        type: BlockEntityType<T>
+    ): BlockEntityTicker<T>? {
+        return checkType(
+            type,
+            HotMBlockEntities.BASIC_SIPHON_AURA_NODE,
+            if (world.isClient) null else AbstractDependableAuraNodeBlockEntity.Companion::tickServer
+        )
     }
 }
