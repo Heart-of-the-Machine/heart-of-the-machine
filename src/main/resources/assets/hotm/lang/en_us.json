@@ -63,6 +63,7 @@
   "command.hotm.retrogen_nectere_portal.generated": "Generated a new Nectere portal at %s (%s blocks away)",
   "command.hotm.base_aura": "Base Aura: %s",
   "item.hotm.aura_tuner": "Aura Tuner",
+  "item.hotm.aurameter": "Aurameter",
   "item.hotm.cyan_crystal_shard": "Cyan Crystal Shard",
   "item.hotm.magenta_crystal_shard": "Magenta Crystal Shard",
   "item.hotm.plassein_fuel_chunk": "Plassein Fuel Chunk",
@@ -76,5 +77,7 @@
   "message.hotm.aura_tuner.rejected_child": "The selected parent aura node cannot connect to this aura node.",
   "message.hotm.aura_tuner.rejected_parent": "This aura node cannot connect to the selected parent aura node.",
   "message.hotm.aura_tuner.success": "Connection created.",
-  "message.hotm.aura_tuner.wrong_dimension": "The selected parent aura node is in the wrong dimension."
+  "message.hotm.aura_tuner.wrong_dimension": "The selected parent aura node is in the wrong dimension.",
+  "message.hotm.aurameter.chunk": "Base chunk aura: %s, total chunk aura: %s.",
+  "message.hotm.aurameter.node": "Aura node aura: %s"
 }

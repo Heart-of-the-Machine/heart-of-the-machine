@@ -17,7 +17,7 @@ class CollectorDistributorAuraNode(
     access: AuraNetAccess,
     updateListener: Runnable?,
     pos: BlockPos,
-    value: Int,
+    private var value: Int,
     parents: Collection<BlockPos>,
     children: Collection<BlockPos>
 ) : AbstractAuraNode(Type, access, updateListener, pos), DependantAuraNode, RenderedDependableAuraNode {
@@ -62,8 +62,6 @@ class CollectorDistributorAuraNode(
         )
     }
 
-    var value = value
-        private set
     private val parents = parents.toMutableSet()
     private val children = children.toMutableSet()
 
@@ -185,6 +183,8 @@ class CollectorDistributorAuraNode(
     override fun getCrownRollSpeed(pos: BlockPos): Float {
         return 3f * (value / children.size).toFloat()
     }
+
+    override fun getValue(): Int = value
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
         buf.writeVarUnsignedInt(value)

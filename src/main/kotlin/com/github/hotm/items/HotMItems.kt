@@ -24,9 +24,11 @@ object HotMItems {
     val PLASSEIN_FUEL_CHUNK by lazy { Item(HOTM_MATERIAL_ITEM_SETTINGS) }
 
     val AURA_TUNER by lazy { AuraTunerItem(HOTM_MACHINE_ITEM_SETTINGS) }
+    val AURAMETER by lazy { AurameterItem(HOTM_MACHINE_ITEM_SETTINGS) }
 
     fun register() {
         register(AURA_TUNER, "aura_tuner")
+        register(AURAMETER, "aurameter")
         register(CYAN_CRYSTAL_SHARD, "cyan_crystal_shard")
         register(MAGENTA_CRYSTAL_SHARD, "magenta_crystal_shard")
         register(PLASSEIN_FUEL_CHUNK, "plassein_fuel_chunk")

@@ -49,7 +49,8 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
     }
 
     override fun getBaseAura(pos: ChunkSectionPos): Int {
-        return getOrCreate(pos.asLong()).getBaseAura()
+        return get(pos.asLong()).map { it.getBaseAura() }
+            .orElseGet { ServerAuraNetChunk.getBaseAura(world.registryKey) }
     }
 
     override operator fun get(pos: BlockPos): AuraNode? {

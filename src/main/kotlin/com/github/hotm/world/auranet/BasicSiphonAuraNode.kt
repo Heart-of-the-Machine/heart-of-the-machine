@@ -18,7 +18,7 @@ class BasicSiphonAuraNode(
     access: AuraNetAccess,
     updateListener: Runnable?,
     pos: BlockPos,
-    value: Int,
+    private var value: Int,
     childPos: BlockPos?
 ) : AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, RenderedDependableAuraNode {
 
@@ -39,9 +39,6 @@ class BasicSiphonAuraNode(
                     childPos?.let { pos -> it.writeBlockPos(pos) }
                 })
     }
-
-    var value = value
-        private set
 
     var childPos = childPos
         private set
@@ -132,6 +129,8 @@ class BasicSiphonAuraNode(
     override fun getCrownRollSpeed(pos: BlockPos): Float {
         return value.toFloat() * 3f
     }
+
+    override fun getValue(): Int = value
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
         buf.writeVarUnsignedInt(value)

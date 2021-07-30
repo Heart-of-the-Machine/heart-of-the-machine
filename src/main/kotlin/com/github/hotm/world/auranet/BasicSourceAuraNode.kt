@@ -17,7 +17,7 @@ class BasicSourceAuraNode(
     access: AuraNetAccess,
     updateListener: Runnable?,
     pos: BlockPos,
-    value: Int,
+    private var value: Int,
     parents: Collection<BlockPos>
 ) : AbstractAuraNode(Type, access, updateListener, pos), SourceAuraNode, DependantAuraNode {
 
@@ -43,9 +43,6 @@ class BasicSourceAuraNode(
         )
     }
 
-    var value = value
-        private set
-
     private val parents = parents.toMutableSet()
 
     override val maxDistance = 32.0
@@ -65,6 +62,8 @@ class BasicSourceAuraNode(
     override fun getSourceAura(): Int {
         return value
     }
+
+    override fun getValue(): Int = value
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
         buf.writeVarUnsignedInt(value)
