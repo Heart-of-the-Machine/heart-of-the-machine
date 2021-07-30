@@ -83,11 +83,19 @@ class CollectorDistributorAuraNode(
     private fun updateParents() {
         markDirty()
         ID_PARENTS_CHANGE.sendToClients(world, pos, this)
+
+        // Any time our parents are updated, our recalculateDescendants() is called by the thing updating our parents.
     }
 
     private fun updateChildren() {
         markDirty()
         ID_CHILDREN_CHANGE.sendToClients(world, pos, this)
+
+        val visitedNodes = hashSetOf<DimBlockPos>()
+        visitedNodes.add(dimPos)
+        for (child in children) {
+            AuraNodeUtils.nodeAt<DependantAuraNode>(child, access)?.recalculateDescendants(visitedNodes)
+        }
     }
 
     override fun isChildValid(node: DependantAuraNode): Boolean {
