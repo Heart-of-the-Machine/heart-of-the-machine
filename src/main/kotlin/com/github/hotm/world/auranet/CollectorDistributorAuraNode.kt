@@ -10,7 +10,6 @@ import com.github.hotm.util.DimBlockPos
 import com.github.hotm.util.StreamUtils
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap
 import net.minecraft.util.math.BlockPos
 import java.util.stream.Stream
 
@@ -70,6 +69,8 @@ class CollectorDistributorAuraNode(
 
     override val maxDistance = 32.0
 
+    override val blockable = true
+
     private fun updateValue(value: Int, visitedNodes: MutableSet<DimBlockPos>) {
         this.value = value
         markDirty()
@@ -105,6 +106,10 @@ class CollectorDistributorAuraNode(
 
     override fun getSuppliedAura(child: DependantAuraNode): Int {
         return value / children.size
+    }
+
+    override fun getChildren(): Stream<BlockPos> {
+        return children.stream()
     }
 
     override fun isParentValid(node: DependableAuraNode): Boolean {

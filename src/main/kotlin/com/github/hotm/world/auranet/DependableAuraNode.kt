@@ -1,6 +1,7 @@
 package com.github.hotm.world.auranet
 
 import net.minecraft.util.math.BlockPos
+import java.util.stream.Stream
 
 /**
  * Represents a node that can have "children" dependants added to it or removed from it. When it
@@ -16,6 +17,11 @@ interface DependableAuraNode : AuraNode {
      * obtain the full max distance.
      */
     val maxDistance: Double
+
+    /**
+     * Indicates whether this aura node's connections can be blocked by blocks.
+     */
+    val blockable: Boolean
 
     /**
      * Determines whether a child is a valid connection. This is *not* responsible for checking for recursion loops.
@@ -49,4 +55,9 @@ interface DependableAuraNode : AuraNode {
      * Gets the aura this node supplies to the child aura node.
      */
     fun getSuppliedAura(child: DependantAuraNode): Int
+
+    /**
+     * Gets all the aura nodes that depend on this aura node.
+     */
+    fun getChildren(): Stream<BlockPos>
 }
