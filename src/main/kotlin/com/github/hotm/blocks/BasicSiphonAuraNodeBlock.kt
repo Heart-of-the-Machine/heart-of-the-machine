@@ -14,7 +14,6 @@ import net.minecraft.block.ShapeContext
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
@@ -73,15 +72,15 @@ class BasicSiphonAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEn
         val x = pos.x.toDouble() + 0.45 + random.nextDouble() * 0.1
         val y = pos.y.toDouble() + 0.45 + random.nextDouble() * 0.1
         val z = pos.z.toDouble() + 0.45 + random.nextDouble() * 0.1
-        if (random.nextInt(5) == 0) {
+        if (random.nextInt(3) == 0) {
             world.addParticle(
                 HotMParticles.AURA_SIPHON,
                 x,
                 y,
                 z,
-                random.nextDouble() * 0.005,
-                random.nextDouble() * 0.005,
-                random.nextDouble() * 0.005
+                random.nextDouble() * 0.1 - 0.05,
+                random.nextDouble() * 0.1 - 0.05,
+                random.nextDouble() * 0.1 - 0.05
             )
         }
     }

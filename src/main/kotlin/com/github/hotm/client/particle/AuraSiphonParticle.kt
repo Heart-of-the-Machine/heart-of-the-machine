@@ -7,7 +7,6 @@ import net.minecraft.client.particle.ParticleTextureSheet
 import net.minecraft.client.particle.SpriteBillboardParticle
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.particle.DefaultParticleType
-import net.minecraft.util.math.MathHelper
 import kotlin.math.sqrt
 
 class AuraSiphonParticle(
@@ -45,13 +44,13 @@ class AuraSiphonParticle(
         prevPosY = startY
         prevPosZ = startZ
 
-        this.velocityX = random.nextDouble() * 0.1
-        this.velocityY = random.nextDouble() * 0.1
-        this.velocityZ = random.nextDouble() * 0.1
+        this.velocityX = random.nextDouble() * 0.2
+        this.velocityY = random.nextDouble() * 0.2
+        this.velocityZ = random.nextDouble() * 0.2
 
-        colorRed = 0.9f + random.nextFloat() * 0.1f
-        colorGreen = 0.9f + random.nextFloat() * 0.1f
-        colorBlue = 0.9f + random.nextFloat() * 0.1f
+        colorRed = 0.8f + random.nextFloat() * 0.2f
+        colorGreen = 0.8f + random.nextFloat() * 0.2f
+        colorBlue = 0.8f + random.nextFloat() * 0.2f
 
         setSprite(spriteProvider)
     }
@@ -73,16 +72,7 @@ class AuraSiphonParticle(
 
     override fun getBrightness(tint: Float): Int {
         val brightness = super.getBrightness(tint)
-        var factor = age.toFloat() / maxAge.toFloat()
-        factor *= factor
-        factor *= factor
-        val blockLight = brightness and 255
-        var skyLight = brightness shr 16 and 255
-        skyLight += (factor * 15.0f * 16.0f).toInt()
-        if (skyLight > 240) {
-            skyLight = 240
-        }
-        return blockLight or skyLight shl 16
+        return brightness or 255
     }
 
     override fun tick() {
@@ -97,18 +87,23 @@ class AuraSiphonParticle(
             var ay = endY - y
             var az = endZ - z
 
-            var scale = ax * ax + ay * ay + az * az
-            if (scale > 0.0001) {
+            val distanceSqrd = ax * ax + ay * ay + az * az
+            if (distanceSqrd > 0.01) {
                 move(velocityX, velocityY, velocityZ)
 
-                scale = MathHelper.fastInverseSqrt(scale) / length
-                ax *= scale
-                ay *= scale
-                az *= scale
+                ax /= length * 10
+                ay /= length * 10
+                az /= length * 10
 
                 velocityX += ax
                 velocityY += ay
                 velocityZ += az
+
+                velocityX *= 0.6
+                velocityY *= 0.6
+                velocityZ *= 0.6
+            } else {
+                markDead()
             }
         }
     }
