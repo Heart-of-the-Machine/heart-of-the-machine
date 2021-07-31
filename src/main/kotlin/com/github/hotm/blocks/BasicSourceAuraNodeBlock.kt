@@ -1,5 +1,6 @@
 package com.github.hotm.blocks
 
+import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.particle.HotMParticles
 import com.github.hotm.world.auranet.AuraNode
 import com.github.hotm.world.auranet.AuraNodeType
@@ -42,19 +43,24 @@ class BasicSourceAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlock(setti
     }
 
     override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
-        val x = pos.x.toDouble() + 0.45 + random.nextDouble() * 0.1
-        val y = pos.y.toDouble() + 0.45 + random.nextDouble() * 0.1
-        val z = pos.z.toDouble() + 0.45 + random.nextDouble() * 0.1
-        if (random.nextInt(3) == 0) {
-            world.addParticle(
-                HotMParticles.AURA_SOURCE,
-                x,
-                y,
-                z,
-                random.nextDouble() * 2.0 - 1.0,
-                random.nextDouble() * 2.0 - 1.0,
-                random.nextDouble() * 2.0 - 1.0
-            )
+        val access = StorageUtils.getAuraNetAccess(world)
+        val node = access[pos]
+
+        if (node != null && node.getValue() > 0) {
+            val x = pos.x.toDouble() + 0.45 + random.nextDouble() * 0.1
+            val y = pos.y.toDouble() + 0.45 + random.nextDouble() * 0.1
+            val z = pos.z.toDouble() + 0.45 + random.nextDouble() * 0.1
+            if (random.nextInt(3) == 0) {
+                world.addParticle(
+                    HotMParticles.AURA_SOURCE,
+                    x,
+                    y,
+                    z,
+                    random.nextDouble() * 2.0 - 1.0,
+                    random.nextDouble() * 2.0 - 1.0,
+                    random.nextDouble() * 2.0 - 1.0
+                )
+            }
         }
     }
 }
