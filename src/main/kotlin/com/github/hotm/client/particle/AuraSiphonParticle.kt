@@ -7,7 +7,6 @@ import net.minecraft.client.particle.ParticleTextureSheet
 import net.minecraft.client.particle.SpriteBillboardParticle
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.particle.DefaultParticleType
-import kotlin.math.sqrt
 
 class AuraSiphonParticle(
     world: ClientWorld,
@@ -24,29 +23,17 @@ class AuraSiphonParticle(
     private val endY = y
     private val endZ = z
 
-    private val length: Double
-
     init {
         maxAge = (Math.random() * 10.0).toInt() + 40
+        scale = 0.1f * (random.nextFloat() * 0.2f + 0.5f)
 
-        val startX = x + maxAge * velocityX
-        val startY = y + maxAge * velocityY
-        val startZ = z + maxAge * velocityZ
+        this.x = x
+        this.y = y
+        this.z = z
 
-        val dx = endX - startX
-        val dy = endY - startY
-        val dz = endZ - startZ
-
-        length = sqrt(dx * dx + dy * dy + dz * dz)
-
-        setPos(startX, startY, startZ)
-        prevPosX = startX
-        prevPosY = startY
-        prevPosZ = startZ
-
-        this.velocityX = random.nextDouble() * 0.2
-        this.velocityY = random.nextDouble() * 0.2
-        this.velocityZ = random.nextDouble() * 0.2
+        this.velocityX = velocityX
+        this.velocityY = velocityY
+        this.velocityZ = velocityZ
 
         colorRed = 0.8f + random.nextFloat() * 0.2f
         colorGreen = 0.8f + random.nextFloat() * 0.2f
@@ -83,28 +70,13 @@ class AuraSiphonParticle(
         if (age++ >= maxAge) {
             markDead()
         } else {
-            var ax = endX - x
-            var ay = endY - y
-            var az = endZ - z
-
-            val distanceSqrd = ax * ax + ay * ay + az * az
-            if (distanceSqrd > 0.01) {
-                move(velocityX, velocityY, velocityZ)
-
-                ax /= length * 10
-                ay /= length * 10
-                az /= length * 10
-
-                velocityX += ax
-                velocityY += ay
-                velocityZ += az
-
-                velocityX *= 0.6
-                velocityY *= 0.6
-                velocityZ *= 0.6
-            } else {
-                markDead()
-            }
+            var factor = age.toFloat() / maxAge.toFloat()
+            val yFactor = factor
+            factor = -factor + factor * factor * 2.0f
+            factor = 1.0f - factor
+            x = endX + velocityX * factor.toDouble()
+            y = endY + velocityY * factor.toDouble() + (1.0f - yFactor).toDouble()
+            z = endZ + velocityZ * factor.toDouble()
         }
     }
 
