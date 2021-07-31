@@ -1,6 +1,7 @@
 package com.github.hotm.client
 
 import com.github.hotm.client.blockmodel.HotMBlockModels
+import com.github.hotm.client.particle.HotMParticlesClient
 import com.github.hotm.client.render.HotMRenderMaterials
 import com.github.hotm.client.render.blockentity.HotMBlockEntityRenderers
 
@@ -15,4 +16,5 @@ fun init() {
     HotMBlockModels.register()
     HotMColorProviders.register()
     HotMBlockEntityRenderers.register()
+    HotMParticlesClient.register()
 }
