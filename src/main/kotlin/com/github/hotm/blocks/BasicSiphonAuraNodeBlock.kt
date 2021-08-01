@@ -3,6 +3,8 @@ package com.github.hotm.blocks
 import com.github.hotm.blockentity.AbstractDependableAuraNodeBlockEntity
 import com.github.hotm.blockentity.BasicSiphonAuraNodeBlockEntity
 import com.github.hotm.blockentity.HotMBlockEntities
+import com.github.hotm.mixinapi.StorageUtils
+import com.github.hotm.particle.HotMParticles
 import com.github.hotm.world.auranet.AuraNode
 import com.github.hotm.world.auranet.AuraNodeType
 import com.github.hotm.world.auranet.BasicSiphonAuraNode
@@ -19,6 +21,7 @@ import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
+import java.util.*
 
 class BasicSiphonAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEntity(settings) {
     companion object {
@@ -64,5 +67,27 @@ class BasicSiphonAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEn
             HotMBlockEntities.BASIC_SIPHON_AURA_NODE,
             if (world.isClient) null else AbstractDependableAuraNodeBlockEntity.Companion::tickServer
         )
+    }
+
+    override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
+        val access = StorageUtils.getAuraNetAccess(world)
+        val node = access[pos]
+
+        if (node != null && node.getValue() > 0) {
+            val x = pos.x.toDouble() + 0.45 + random.nextDouble() * 0.1
+            val y = pos.y.toDouble() + 0.45 + random.nextDouble() * 0.1
+            val z = pos.z.toDouble() + 0.45 + random.nextDouble() * 0.1
+            if (random.nextInt(3) == 0) {
+                world.addParticle(
+                    HotMParticles.AURA_SIPHON,
+                    x,
+                    y,
+                    z,
+                    random.nextDouble() * 2.0 - 1.0,
+                    random.nextDouble() * 2.0 - 1.0,
+                    random.nextDouble() * 2.0 - 1.0
+                )
+            }
+        }
     }
 }

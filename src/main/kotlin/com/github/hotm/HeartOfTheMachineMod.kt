@@ -7,6 +7,7 @@ import com.github.hotm.items.HotMItems
 import com.github.hotm.misc.HotMBlockTags
 import com.github.hotm.misc.HotMFuels
 import com.github.hotm.misc.HotMRegistries
+import com.github.hotm.particle.HotMParticles
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNodes
 import com.github.hotm.world.HotMTeleporters
@@ -29,6 +30,7 @@ fun init() {
     HotMBiomes.register()
     HotMDimensions.register()
     AuraNodes.register()
+    HotMParticles.register()
     HotMTeleporters.register()
     HotMCommands.register()
     HotMFuels.register()
