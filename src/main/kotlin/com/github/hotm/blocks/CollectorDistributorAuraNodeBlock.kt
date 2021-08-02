@@ -42,7 +42,7 @@ class CollectorDistributorAuraNodeBlock(settings: Settings) : AbstractAuraNodeBl
             storage,
             storage.getUpdateListener(ChunkSectionPos.from(pos)),
             pos,
-            0,
+            0f,
             listOf(),
             listOf()
         )

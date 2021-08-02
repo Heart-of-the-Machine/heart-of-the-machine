@@ -6,6 +6,7 @@ import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.HotMConstants.str
 import com.github.hotm.net.s2cReadWrite
 import com.github.hotm.net.sendToClients
+import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.util.StreamUtils
 import com.mojang.serialization.Codec
@@ -17,7 +18,7 @@ class BasicSourceAuraNode(
     access: AuraNetAccess,
     updateListener: Runnable?,
     pos: BlockPos,
-    private var value: Int,
+    private var value: Float,
     parents: Collection<BlockPos>
 ) : AbstractAuraNode(Type, access, updateListener, pos), SourceAuraNode, DependantAuraNode {
 
@@ -25,7 +26,7 @@ class BasicSourceAuraNode(
         private val NET_PARENT = AuraNode.NET_ID.subType(BasicSourceAuraNode::class.java, str("basic_source_aura_node"))
 
         private val ID_VALUE_CHANGE = NET_PARENT.idData("VALUE_CHANGE")
-            .s2cReadWrite({ value = it.readVarUnsignedInt() }, { it.writeVarUnsignedInt(value) })
+            .s2cReadWrite({ value = it.readFloat() }, { it.writeFloat(value) })
         private val ID_PARENTS_CHANGE = NET_PARENT.idData("PARENTS_CHANGE").s2cReadWrite(
             {
                 parents.clear()
@@ -47,7 +48,7 @@ class BasicSourceAuraNode(
 
     override val maxDistance = 32.0
 
-    fun updateValue(value: Int, visitedNodes: MutableSet<DimBlockPos>) {
+    fun updateValue(value: Float, visitedNodes: MutableSet<DimBlockPos>) {
         this.value = value
         markDirty()
         ID_VALUE_CHANGE.sendToClients(world, pos, this)
@@ -59,14 +60,14 @@ class BasicSourceAuraNode(
         ID_PARENTS_CHANGE.sendToClients(world, pos, this)
     }
 
-    override fun getSourceAura(): Int {
+    override fun getSourceAura(): Float {
         return value
     }
 
-    override fun getValue(): Int = value
+    override fun getValue(): Float = value
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
-        buf.writeVarUnsignedInt(value)
+        buf.writeFloat(value)
         buf.writeVarUnsignedInt(parents.size)
         for (parent in parents) {
             buf.writeBlockPos(parent)
@@ -123,7 +124,7 @@ class BasicSourceAuraNode(
 
         updateValue(
             parents.stream().flatMap { StreamUtils.ofNullable(AuraNodeUtils.nodeAt<DependableAuraNode>(it, access)) }
-                .mapToInt { it.getSuppliedAura(this) }.sum(), visitedNodes
+                .mapToDouble { it.getSuppliedAura(this).toDouble() }.sum().toFloat(), visitedNodes
         )
 
         visitedNodes.remove(dimPos)
@@ -151,7 +152,7 @@ class BasicSourceAuraNode(
 
     override fun hashCode(): Int {
         var result = super.hashCode()
-        result = 31 * result + value
+        result = 31 * result + value.hashCode()
         result = 31 * result + parents.hashCode()
         return result
     }
@@ -167,7 +168,7 @@ class BasicSourceAuraNode(
                     RecordCodecBuilder.point(access),
                     RecordCodecBuilder.point(updateListener),
                     RecordCodecBuilder.point(pos),
-                    Codec.INT.fieldOf("value").forGetter(BasicSourceAuraNode::value),
+                    CodecUtils.PREFER_FLOAT_OR_INT.fieldOf("value").forGetter(BasicSourceAuraNode::value),
                     BlockPos.CODEC.listOf().fieldOf("parents").forGetter { it.parents.toList() }
                 ).apply(instance, ::BasicSourceAuraNode)
             }
@@ -179,7 +180,7 @@ class BasicSourceAuraNode(
             buf: NetByteBuf,
             ctx: IMsgReadCtx
         ): BasicSourceAuraNode {
-            val value = buf.readVarUnsignedInt()
+            val value = buf.readFloat()
             val parentCount = buf.readVarUnsignedInt()
             val parents = mutableSetOf<BlockPos>()
 

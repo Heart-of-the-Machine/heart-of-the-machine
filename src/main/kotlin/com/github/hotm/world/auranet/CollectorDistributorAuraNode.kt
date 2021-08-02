@@ -6,6 +6,7 @@ import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.HotMConstants.str
 import com.github.hotm.net.s2cReadWrite
 import com.github.hotm.net.sendToClients
+import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.util.StreamUtils
 import com.mojang.serialization.Codec
@@ -17,7 +18,7 @@ class CollectorDistributorAuraNode(
     access: AuraNetAccess,
     updateListener: Runnable?,
     pos: BlockPos,
-    private var value: Int,
+    private var value: Float,
     parents: Collection<BlockPos>,
     children: Collection<BlockPos>
 ) : AbstractAuraNode(Type, access, updateListener, pos), DependantAuraNode, RenderedDependableAuraNode {
@@ -29,7 +30,7 @@ class CollectorDistributorAuraNode(
         )
 
         private val ID_VALUE_CHANGE = NET_PARENT.idData("VALUE_CHANGE")
-            .s2cReadWrite({ value = it.readVarUnsignedInt() }, { it.writeVarUnsignedInt(value) })
+            .s2cReadWrite({ value = it.readFloat() }, { it.writeFloat(value) })
         private val ID_PARENTS_CHANGE = NET_PARENT.idData("PARENTS_CHANGE").s2cReadWrite(
             {
                 parents.clear()
@@ -69,7 +70,7 @@ class CollectorDistributorAuraNode(
 
     override val blockable = true
 
-    private fun updateValue(value: Int, visitedNodes: MutableSet<DimBlockPos>) {
+    private fun updateValue(value: Float, visitedNodes: MutableSet<DimBlockPos>) {
         this.value = value
         markDirty()
         ID_VALUE_CHANGE.sendToClients(world, pos, this)
@@ -110,8 +111,8 @@ class CollectorDistributorAuraNode(
         updateChildren()
     }
 
-    override fun getSuppliedAura(child: DependantAuraNode): Int {
-        return value / children.size
+    override fun getSuppliedAura(child: DependantAuraNode): Float {
+        return value / children.size.toFloat()
     }
 
     override fun getChildren(): Stream<BlockPos> {
@@ -166,7 +167,7 @@ class CollectorDistributorAuraNode(
 
         updateValue(
             parents.stream().flatMap { StreamUtils.ofNullable(AuraNodeUtils.nodeAt<DependableAuraNode>(it, access)) }
-                .mapToInt { it.getSuppliedAura(this) }.sum(), visitedNodes
+                .mapToDouble { it.getSuppliedAura(this).toDouble() }.sum().toFloat(), visitedNodes
         )
 
         visitedNodes.remove(dimPos)
@@ -176,18 +177,18 @@ class CollectorDistributorAuraNode(
         return children.stream()
     }
 
-    override fun getSuppliedAuraForRender(pos: BlockPos): Int {
-        return value / children.size
+    override fun getSuppliedAuraForRender(pos: BlockPos): Float {
+        return value / children.size.toFloat()
     }
 
     override fun getCrownRollSpeed(pos: BlockPos): Float {
-        return 3f * (value / children.size).toFloat()
+        return 3f * (value / children.size)
     }
 
-    override fun getValue(): Int = value
+    override fun getValue(): Float = value
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
-        buf.writeVarUnsignedInt(value)
+        buf.writeFloat(value)
 
         buf.writeVarUnsignedInt(parents.size)
         for (parent in parents) {
@@ -232,7 +233,7 @@ class CollectorDistributorAuraNode(
 
     override fun hashCode(): Int {
         var result = super.hashCode()
-        result = 31 * result + value
+        result = 31 * result + value.hashCode()
         result = 31 * result + parents.hashCode()
         result = 31 * result + children.hashCode()
         return result
@@ -249,7 +250,7 @@ class CollectorDistributorAuraNode(
                     RecordCodecBuilder.point(access),
                     RecordCodecBuilder.point(updateListener),
                     RecordCodecBuilder.point(pos),
-                    Codec.INT.fieldOf("value").forGetter(CollectorDistributorAuraNode::value),
+                    CodecUtils.PREFER_FLOAT_OR_INT.fieldOf("value").forGetter(CollectorDistributorAuraNode::value),
                     BlockPos.CODEC.listOf().fieldOf("parents").forGetter { it.parents.toList() },
                     BlockPos.CODEC.listOf().fieldOf("children").forGetter { it.children.toList() }
                 ).apply(instance, ::CollectorDistributorAuraNode)
@@ -262,7 +263,7 @@ class CollectorDistributorAuraNode(
             buf: NetByteBuf,
             ctx: IMsgReadCtx
         ): CollectorDistributorAuraNode {
-            val value = buf.readVarUnsignedInt()
+            val value = buf.readFloat()
 
             val parentCount = buf.readVarUnsignedInt()
             val parents = mutableSetOf<BlockPos>()

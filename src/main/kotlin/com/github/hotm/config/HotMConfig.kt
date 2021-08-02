@@ -15,9 +15,9 @@ class HotMConfig {
 
     var generateMissingPortals = true
 
-    var nectereAuraBaseValue: Int = 64
+    var nectereAuraBaseValue: Float = 64f
 
-    var nonNectereAuraBaseValue: Int = 0
+    var nonNectereAuraBaseValue: Float = 0f
 
     companion object {
         private val FABRIC = FabricLoader.getInstance()

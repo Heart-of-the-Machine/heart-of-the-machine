@@ -28,7 +28,7 @@ object AuraNodeRendererUtils {
         tickDelta: Float,
         overlay: Int,
         offset: Vec3i,
-        energy: Int,
+        energy: Float,
         crownRoll: Float
     ) {
         renderBeam(
@@ -50,8 +50,8 @@ object AuraNodeRendererUtils {
         )
     }
 
-    private fun display(energy: Int, min: Float, max: Float, rate: Float): Float {
-        return logistic((max - min) * 2f, rate, 0f, energy.toFloat()) - max + 2f * min
+    private fun display(energy: Float, min: Float, max: Float, rate: Float): Float {
+        return logistic((max - min) * 2f, rate, 0f, energy) - max + 2f * min
     }
 
     private fun logistic(max: Float, rate: Float, mid: Float, x: Float): Float {

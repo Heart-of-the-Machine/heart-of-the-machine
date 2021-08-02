@@ -13,13 +13,13 @@ import java.util.function.Predicate
 import java.util.stream.Stream
 
 class ClientAuraNetChunk private constructor(
-    var baseAura: Int, private val nodesByPos: Short2ObjectMap<AuraNode>
+    var baseAura: Float, private val nodesByPos: Short2ObjectMap<AuraNode>
 ) {
     companion object {
         fun fromPacket(
             access: AuraNetAccess, pos: ChunkSectionPos, buf: NetByteBuf, ctx: IMsgReadCtx
         ): ClientAuraNetChunk {
-            val baseAura = buf.readVarUnsignedInt()
+            val baseAura = buf.readFloat()
 
             val nodesByPos = Short2ObjectOpenHashMap<AuraNode>()
             val nodeCount = buf.readVarUnsignedInt()

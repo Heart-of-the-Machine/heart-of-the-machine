@@ -30,7 +30,7 @@ interface AuraNetAccess {
      *
      * This is the aura value without any source or siphon calculations.
      */
-    fun getBaseAura(pos: ChunkSectionPos): Int
+    fun getBaseAura(pos: ChunkSectionPos): Float
 
     /**
      * Gets the aura node at a particular block position if it exists.

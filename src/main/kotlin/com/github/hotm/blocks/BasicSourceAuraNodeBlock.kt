@@ -30,7 +30,7 @@ class BasicSourceAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlock(setti
         storage: ServerAuraNetStorage,
         pos: BlockPos
     ): AuraNode {
-        return BasicSourceAuraNode(storage, storage.getUpdateListener(ChunkSectionPos.from(pos)), pos, 0, listOf())
+        return BasicSourceAuraNode(storage, storage.getUpdateListener(ChunkSectionPos.from(pos)), pos, 0f, listOf())
     }
 
     override fun getOutlineShape(

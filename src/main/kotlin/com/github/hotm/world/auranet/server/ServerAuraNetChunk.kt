@@ -4,6 +4,7 @@ import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.config.HotMConfig
+import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNode
@@ -31,7 +32,7 @@ import java.util.stream.Stream
  */
 class ServerAuraNetChunk(
     val updateListener: Runnable,
-    private var base: Int,
+    private var base: Float,
     initialNodes: List<AuraNode>
 ) {
     companion object {
@@ -43,7 +44,7 @@ class ServerAuraNetChunk(
             return RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<ServerAuraNetChunk> ->
                 instance.group(
                     RecordCodecBuilder.point(updateListener),
-                    Codec.INT.fieldOf("base").forGetter(ServerAuraNetChunk::base),
+                    CodecUtils.PREFER_FLOAT_OR_INT.fieldOf("base").forGetter(ServerAuraNetChunk::base),
                     AuraNode.createCodec(storage, updateListener).listOf().fieldOf("nodes")
                         .forGetter { ImmutableList.copyOf(it.nodesByPos.values) }
                 ).apply(instance, ::ServerAuraNetChunk)
@@ -52,7 +53,7 @@ class ServerAuraNetChunk(
             }
         }
 
-        fun getBaseAura(dim: RegistryKey<World>): Int {
+        fun getBaseAura(dim: RegistryKey<World>): Float {
             return if (dim == HotMDimensions.NECTERE_KEY) {
                 HotMConfig.CONFIG.nectereAuraBaseValue
             } else {
@@ -65,14 +66,14 @@ class ServerAuraNetChunk(
         ) {
             if (!chunkOptional.isPresent) {
                 // base aura
-                buf.writeVarUnsignedInt(getBaseAura(dim))
+                buf.writeFloat(getBaseAura(dim))
                 // no nodes
                 buf.writeVarUnsignedInt(0)
             } else {
                 val chunk = chunkOptional.get()
 
                 // base aura
-                buf.writeVarUnsignedInt(chunk.base)
+                buf.writeFloat(chunk.base)
 
                 // node count
                 val nodes = chunk.nodesByPos.values.toTypedArray()
@@ -107,11 +108,11 @@ class ServerAuraNetChunk(
         ImmutableList.of()
     )
 
-    fun getBaseAura(): Int {
+    fun getBaseAura(): Float {
         return base
     }
 
-    fun setBaseAura(baseValue: Int) {
+    fun setBaseAura(baseValue: Float) {
         base = baseValue
         recalculateSiphons()
         updateListener.run()
@@ -165,9 +166,9 @@ class ServerAuraNetChunk(
         return nodesByPos.values.stream().filter(filter)
     }
 
-    fun getTotalAura(): Int {
+    fun getTotalAura(): Float {
         return base + nodesByPos.values.stream().filter { it is SourceAuraNode }
-            .mapToInt { (it as SourceAuraNode).getSourceAura() }.sum()
+            .mapToDouble { (it as SourceAuraNode).getSourceAura().toDouble() }.sum().toFloat()
     }
 
     fun recalculateSiphons() {

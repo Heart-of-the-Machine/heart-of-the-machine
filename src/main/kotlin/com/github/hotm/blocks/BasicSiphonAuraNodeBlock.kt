@@ -37,7 +37,7 @@ class BasicSiphonAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEn
         storage: ServerAuraNetStorage,
         pos: BlockPos
     ): AuraNode {
-        return BasicSiphonAuraNode(storage, storage.getUpdateListener(ChunkSectionPos.from(pos)), pos, 0, null)
+        return BasicSiphonAuraNode(storage, storage.getUpdateListener(ChunkSectionPos.from(pos)), pos, 0f, null)
     }
 
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {

@@ -19,12 +19,12 @@ class ServerAuraNetChunkTests : FunSpec({
         isolationMode = IsolationMode.InstancePerTest
 
         context("Context: Basic ServerAuraNetChunk") {
-            val chunk = ServerAuraNetChunk({}, 64, listOf())
+            val chunk = ServerAuraNetChunk({}, 64f, listOf())
 
             test("Gives base aura") {
                 chunk.getBaseAura() shouldBe 64
 
-                chunk.setBaseAura(32)
+                chunk.setBaseAura(32f)
                 chunk.getBaseAura() shouldBe 32
             }
         }
@@ -45,10 +45,10 @@ class ServerAuraNetChunkTests : FunSpec({
 
             val storage = mockk<ServerAuraNetStorage>()
 
-            val chunk = ServerAuraNetChunk(updateListener, 64, listOf())
+            val chunk = ServerAuraNetChunk(updateListener, 64f, listOf())
 
             test("Calls updateListener on baseAura change") {
-                chunk.setBaseAura(32)
+                chunk.setBaseAura(32f)
 
                 verify { updateListener.run() }
             }
@@ -83,7 +83,7 @@ class ServerAuraNetChunkTests : FunSpec({
 
             val storage = mockk<ServerAuraNetStorage>()
 
-            val chunk = ServerAuraNetChunk({}, 64, listOf(node))
+            val chunk = ServerAuraNetChunk({}, 64f, listOf(node))
 
             test("Calls onRemove on a node being removed") {
                 chunk.remove(BlockPos(0, 0, 0))
@@ -130,7 +130,7 @@ class ServerAuraNetChunkTests : FunSpec({
 
             val storage = mockk<ServerAuraNetStorage>()
 
-            val chunk = ServerAuraNetChunk(updateListener, 64, listOf(node))
+            val chunk = ServerAuraNetChunk(updateListener, 64f, listOf(node))
 
             test("Calls updateListener on node remove") {
                 chunk.remove(BlockPos(0, 0, 0))
@@ -157,12 +157,12 @@ class ServerAuraNetChunkTests : FunSpec({
         context("Context: With a basic SourceAuraNode") {
             val source = mockk<SourceAuraNode>()
             every { source.pos } returns BlockPos(0, 0, 0)
-            every { source.getSourceAura() } returns 1
+            every { source.getSourceAura() } returns 1f
 
-            val chunk = ServerAuraNetChunk({}, 64, listOf(source))
+            val chunk = ServerAuraNetChunk({}, 64f, listOf(source))
 
             test("Gives total aura") {
-                chunk.getTotalAura() shouldBe 65
+                chunk.getTotalAura() shouldBe 65f
 
                 verify { source.getSourceAura() }
             }
@@ -178,7 +178,7 @@ class ServerAuraNetChunkTests : FunSpec({
             val sourceType = mockk<AuraNodeType<*>>()
             val source = mockk<SourceAuraNode>()
             every { source.pos } returns BlockPos(1, 0, 0)
-            every { source.getSourceAura() } returns 1
+            every { source.getSourceAura() } returns 1f
             every { source.type } returns sourceType
 
             val world = mockk<ServerWorld>()
@@ -193,18 +193,18 @@ class ServerAuraNetChunkTests : FunSpec({
 
             val storage = mockk<ServerAuraNetStorage>()
 
-            val chunk = ServerAuraNetChunk({}, 64, listOf(siphon))
+            val chunk = ServerAuraNetChunk({}, 64f, listOf(siphon))
 
             test("Recalculates siphon values on base aura change") {
-                chunk.setBaseAura(32)
+                chunk.setBaseAura(32f)
 
-                verify { siphon.recalculateSiphonValue(32, 1, any()) }
+                verify { siphon.recalculateSiphonValue(32f, 1, any()) }
             }
 
             test("Recalculates siphon values when a source is added") {
                 chunk.put(source)
 
-                verify { siphon.recalculateSiphonValue(65, 1, any()) }
+                verify { siphon.recalculateSiphonValue(65f, 1, any()) }
             }
 
             test("Recalculates siphon values when a source is added during chunk scan") {
@@ -213,7 +213,7 @@ class ServerAuraNetChunkTests : FunSpec({
                     callback(sourceBlockState, sourceBlock, BlockPos(1, 0, 0))
                 }
 
-                verify { siphon.recalculateSiphonValue(65, 1, any()) }
+                verify { siphon.recalculateSiphonValue(65f, 1, any()) }
             }
         }
 
@@ -227,7 +227,7 @@ class ServerAuraNetChunkTests : FunSpec({
             val sourceType = mockk<AuraNodeType<*>>()
             val source = mockk<SourceAuraNode>()
             every { source.pos } returns BlockPos(1, 0, 0)
-            every { source.getSourceAura() } returns 1
+            every { source.getSourceAura() } returns 1f
             every { source.onRemove() } just Runs
             every { source.type } returns sourceType
 
@@ -243,12 +243,12 @@ class ServerAuraNetChunkTests : FunSpec({
 
             val storage = mockk<ServerAuraNetStorage>()
 
-            val chunk = ServerAuraNetChunk({}, 64, listOf(source, siphon))
+            val chunk = ServerAuraNetChunk({}, 64f, listOf(source, siphon))
 
             test("Recalculates siphon values when a source is removed") {
                 chunk.remove(BlockPos(1, 0, 0))
 
-                verify { siphon.recalculateSiphonValue(64, 1, any()) }
+                verify { siphon.recalculateSiphonValue(64f, 1, any()) }
             }
 
             test("Recalculates siphon values when a source is removed during chunk scan") {
@@ -256,7 +256,7 @@ class ServerAuraNetChunkTests : FunSpec({
                     callback(siphonBlockState, siphonBlock, BlockPos(0, 0, 0))
                 }
 
-                verify { siphon.recalculateSiphonValue(64, 1, any()) }
+                verify { siphon.recalculateSiphonValue(64f, 1, any()) }
             }
 
             test("Does not recalculate siphon values when no sources are removed during chunk scan") {
