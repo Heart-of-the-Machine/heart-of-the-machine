@@ -54,7 +54,7 @@ interface DependableAuraNode : AuraNode {
     /**
      * Gets the aura this node supplies to the child aura node.
      */
-    fun getSuppliedAura(child: DependantAuraNode): Int
+    fun getSuppliedAura(child: DependantAuraNode): Float
 
     /**
      * Gets all the aura nodes that depend on this aura node.

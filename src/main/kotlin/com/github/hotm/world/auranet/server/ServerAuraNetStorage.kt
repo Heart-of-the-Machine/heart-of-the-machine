@@ -48,7 +48,7 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
         return getOrCreate(pos.asLong()).updateListener
     }
 
-    override fun getBaseAura(pos: ChunkSectionPos): Int {
+    override fun getBaseAura(pos: ChunkSectionPos): Float {
         return get(pos.asLong()).map { it.getBaseAura() }
             .orElseGet { ServerAuraNetChunk.getBaseAura(world.registryKey) }
     }
@@ -74,7 +74,7 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
      * Primary mutator functions.
      */
 
-    fun setBaseAura(pos: ChunkSectionPos, baseAura: Int) {
+    fun setBaseAura(pos: ChunkSectionPos, baseAura: Float) {
         getOrCreate(pos.asLong()).setBaseAura(baseAura)
         sendBaseAuraUpdate(pos, baseAura)
     }
@@ -116,33 +116,22 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
         }
     }
 
-    private fun sendBaseAuraUpdate(pos: ChunkSectionPos, baseAura: Int) {
+    private fun sendBaseAuraUpdate(pos: ChunkSectionPos, baseAura: Float) {
         HotMNetwork.sendBaseAuraUpdate(world, pos) { buf, _ ->
             buf.writeVarUnsignedInt(pos.x)
             buf.writeVarUnsignedInt(pos.y)
             buf.writeVarUnsignedInt(pos.z)
-            buf.writeVarUnsignedInt(baseAura)
+            buf.writeFloat(baseAura)
         }
     }
 
     /*
      * Calculation functions.
-     *
-     * TODO: Figure out what to do with these.
      */
 
-    fun getSectionAura(pos: ChunkSectionPos): Int {
+    fun getSectionAura(pos: ChunkSectionPos): Float {
         return get(pos.asLong()).map { it.getTotalAura() }
             .orElseGet { ServerAuraNetChunk.getBaseAura(world.registryKey) }
-    }
-
-    fun calculateSiphonValue(pos: BlockPos, initDenom: Int, finalDenom: Int): Int {
-        val sectionPos = ChunkSectionPos.from(pos)
-        val baseAura = getSectionAura(sectionPos)
-        val siphonCount =
-            getOrCreate(sectionPos.asLong()).getAllBy { it is SiphonAuraNode }.count().toInt()
-
-        return baseAura / (finalDenom * siphonCount + initDenom - finalDenom)
     }
 
     /*

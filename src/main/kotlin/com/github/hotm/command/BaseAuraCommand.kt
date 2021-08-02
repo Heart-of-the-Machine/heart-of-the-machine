@@ -3,6 +3,7 @@ package com.github.hotm.command
 import com.github.hotm.HotMConstants
 import com.github.hotm.mixinapi.StorageUtils
 import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.arguments.FloatArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.server.command.CommandManager
@@ -23,7 +24,7 @@ object BaseAuraCommand {
         val getCommand = baseCommand.then(CommandManager.literal(GET_SUBCOMMAND).requires { it.hasPermissionLevel(2) }
             .executes(::executeGet))
         val setCommand = baseCommand.then(CommandManager.literal(SET_SUBCOMMAND).requires { it.hasPermissionLevel(2) }
-            .then(CommandManager.argument("value", IntegerArgumentType.integer(0, 256)).executes(::executeSet)))
+            .then(CommandManager.argument("value", FloatArgumentType.floatArg(0f)).executes(::executeSet)))
 
         dispatcher.register(getCommand)
         dispatcher.register(setCommand)
@@ -36,17 +37,17 @@ object BaseAuraCommand {
         val value = storage.getBaseAura(ChunkSectionPos.from(BlockPos(context.source.position)))
         context.source.sendFeedback(HotMConstants.commandText(COMMAND_NAME, value), false)
 
-        return MathHelper.clamp(value, 0, 15)
+        return MathHelper.clamp(value.toInt(), 0, 15)
     }
 
     private fun executeSet(context: CommandContext<ServerCommandSource>): Int {
         val sourceWorld = context.source.world
         val storage = StorageUtils.getServerAuraNetStorage(sourceWorld)
-        val value = IntegerArgumentType.getInteger(context, "value")
+        val value = FloatArgumentType.getFloat(context, "value")
 
         storage.setBaseAura(ChunkSectionPos.from(BlockPos(context.source.position)), value)
         context.source.sendFeedback(HotMConstants.commandText(COMMAND_NAME, value), false)
 
-        return MathHelper.clamp(value, 0, 15)
+        return MathHelper.clamp(value.toInt(), 0, 15)
     }
 }

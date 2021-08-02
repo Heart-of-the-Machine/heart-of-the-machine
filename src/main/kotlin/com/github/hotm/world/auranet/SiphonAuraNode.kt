@@ -20,5 +20,5 @@ interface SiphonAuraNode : AuraNode {
     /**
      * Asks this siphon to recalculate its value, usually due to a change in chunk aura.
      */
-    fun recalculateSiphonValue(chunkAura: Int, siphonCount: Int, visitedNodes: MutableSet<DimBlockPos>)
+    fun recalculateSiphonValue(chunkAura: Float, siphonCount: Int, visitedNodes: MutableSet<DimBlockPos>)
 }

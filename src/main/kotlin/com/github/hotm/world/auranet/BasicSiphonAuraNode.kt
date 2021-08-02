@@ -18,7 +18,7 @@ class BasicSiphonAuraNode(
     access: AuraNetAccess,
     updateListener: Runnable?,
     pos: BlockPos,
-    private var value: Int,
+    private var value: Float,
     childPos: BlockPos?
 ) : AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, RenderedDependableAuraNode {
 
@@ -29,7 +29,7 @@ class BasicSiphonAuraNode(
         )
 
         private val ID_VALUE_CHANGE = NET_PARENT.idData("VALUE_CHANGE")
-            .s2cReadWrite({ value = it.readVarUnsignedInt() }, { it.writeVarUnsignedInt(value) })
+            .s2cReadWrite({ value = it.readFloat() }, { it.writeFloat(value) })
         private val ID_CHILD_POS_CHANGE = NET_PARENT.idData("CHILD_POS_CHANGE")
             .s2cReadWrite(
                 { childPos = if (it.readBoolean()) it.readBlockPos() else null },
@@ -47,7 +47,7 @@ class BasicSiphonAuraNode(
 
     override val blockable = true
 
-    fun updateValue(value: Int, visitedNodes: MutableSet<DimBlockPos>) {
+    fun updateValue(value: Float, visitedNodes: MutableSet<DimBlockPos>) {
         this.value = value
         markDirty()
         ID_VALUE_CHANGE.sendToClients(world, pos, this)
@@ -78,7 +78,7 @@ class BasicSiphonAuraNode(
         }
     }
 
-    override fun recalculateSiphonValue(chunkAura: Int, siphonCount: Int, visitedNodes: MutableSet<DimBlockPos>) {
+    override fun recalculateSiphonValue(chunkAura: Float, siphonCount: Int, visitedNodes: MutableSet<DimBlockPos>) {
         if (visitedNodes.contains(dimPos)) {
             // Dependency loop detected, disconnect the child because that's the only place the loop could be coming
             // from.
@@ -110,7 +110,7 @@ class BasicSiphonAuraNode(
         updateChildPos(null)
     }
 
-    override fun getSuppliedAura(child: DependantAuraNode): Int {
+    override fun getSuppliedAura(child: DependantAuraNode): Float {
         return value
     }
 
@@ -122,18 +122,18 @@ class BasicSiphonAuraNode(
         return StreamUtils.ofNullable(childPos)
     }
 
-    override fun getSuppliedAuraForRender(pos: BlockPos): Int {
+    override fun getSuppliedAuraForRender(pos: BlockPos): Float {
         return value
     }
 
     override fun getCrownRollSpeed(pos: BlockPos): Float {
-        return value.toFloat() * 3f
+        return value * 3f
     }
 
-    override fun getValue(): Int = value
+    override fun getValue(): Float = value
 
     override fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx) {
-        buf.writeVarUnsignedInt(value)
+        buf.writeFloat(value)
 
         val childPos = childPos
         if (childPos != null) {
@@ -164,7 +164,7 @@ class BasicSiphonAuraNode(
 
     override fun hashCode(): Int {
         var result = super.hashCode()
-        result = 31 * result + value
+        result = 31 * result + value.hashCode()
         result = 31 * result + (childPos?.hashCode() ?: 0)
         return result
     }
@@ -180,7 +180,7 @@ class BasicSiphonAuraNode(
                     RecordCodecBuilder.point(access),
                     RecordCodecBuilder.point(updateListener),
                     RecordCodecBuilder.point(pos),
-                    Codec.INT.fieldOf("value").forGetter(BasicSiphonAuraNode::value),
+                    Codec.FLOAT.fieldOf("value").forGetter(BasicSiphonAuraNode::value),
                     BlockPos.CODEC.optionalFieldOf("child_pos").forGetter { Optional.ofNullable(it.childPos) }
                 ).apply(instance) { access, updateListener, pos, value, childPos ->
                     BasicSiphonAuraNode(access, updateListener, pos, value, childPos.orElse(null))
@@ -191,7 +191,7 @@ class BasicSiphonAuraNode(
         override fun fromPacket(
             access: AuraNetAccess, pos: BlockPos, buf: NetByteBuf, ctx: IMsgReadCtx
         ): BasicSiphonAuraNode {
-            val value = buf.readVarUnsignedInt()
+            val value = buf.readFloat()
             val childPos = if (buf.readBoolean()) buf.readBlockPos() else null
             return BasicSiphonAuraNode(access, null, pos, value, childPos)
         }

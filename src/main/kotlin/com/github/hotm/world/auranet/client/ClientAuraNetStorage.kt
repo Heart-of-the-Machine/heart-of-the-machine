@@ -49,8 +49,8 @@ class ClientAuraNetStorage(override val world: ClientWorld, private val radius: 
         return null
     }
 
-    override fun getBaseAura(pos: ChunkSectionPos): Int {
-        return getChunk(pos)?.baseAura ?: 0
+    override fun getBaseAura(pos: ChunkSectionPos): Float {
+        return getChunk(pos)?.baseAura ?: 0f
     }
 
     override fun get(pos: BlockPos): AuraNode? {
@@ -94,7 +94,7 @@ class ClientAuraNetStorage(override val world: ClientWorld, private val radius: 
     fun receiveBaseAuraUpdate(buf: NetByteBuf, ctx: IMsgReadCtx) {
         val sectionPos = ChunkSectionPos.from(buf.readVarInt(), buf.readVarInt(), buf.readVarInt())
         getChunk(sectionPos)?.let { chunk ->
-            val baseAura = buf.readVarUnsignedInt()
+            val baseAura = buf.readFloat()
             chunk.baseAura = baseAura
         }
     }
