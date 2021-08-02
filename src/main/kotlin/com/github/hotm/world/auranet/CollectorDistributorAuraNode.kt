@@ -6,6 +6,7 @@ import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.HotMConstants.str
 import com.github.hotm.net.s2cReadWrite
 import com.github.hotm.net.sendToClients
+import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.util.StreamUtils
 import com.mojang.serialization.Codec
@@ -249,7 +250,7 @@ class CollectorDistributorAuraNode(
                     RecordCodecBuilder.point(access),
                     RecordCodecBuilder.point(updateListener),
                     RecordCodecBuilder.point(pos),
-                    Codec.FLOAT.fieldOf("value").forGetter(CollectorDistributorAuraNode::value),
+                    CodecUtils.PREFER_FLOAT_OR_INT.fieldOf("value").forGetter(CollectorDistributorAuraNode::value),
                     BlockPos.CODEC.listOf().fieldOf("parents").forGetter { it.parents.toList() },
                     BlockPos.CODEC.listOf().fieldOf("children").forGetter { it.children.toList() }
                 ).apply(instance, ::CollectorDistributorAuraNode)

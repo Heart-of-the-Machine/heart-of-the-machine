@@ -6,6 +6,7 @@ import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.HotMConstants.str
 import com.github.hotm.net.s2cReadWrite
 import com.github.hotm.net.sendToClients
+import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.util.StreamUtils
 import com.mojang.serialization.Codec
@@ -180,7 +181,7 @@ class BasicSiphonAuraNode(
                     RecordCodecBuilder.point(access),
                     RecordCodecBuilder.point(updateListener),
                     RecordCodecBuilder.point(pos),
-                    Codec.FLOAT.fieldOf("value").forGetter(BasicSiphonAuraNode::value),
+                    CodecUtils.PREFER_FLOAT_OR_INT.fieldOf("value").forGetter(BasicSiphonAuraNode::value),
                     BlockPos.CODEC.optionalFieldOf("child_pos").forGetter { Optional.ofNullable(it.childPos) }
                 ).apply(instance) { access, updateListener, pos, value, childPos ->
                     BasicSiphonAuraNode(access, updateListener, pos, value, childPos.orElse(null))

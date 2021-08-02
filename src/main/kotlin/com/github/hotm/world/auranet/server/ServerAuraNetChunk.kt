@@ -4,6 +4,7 @@ import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.config.HotMConfig
+import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNode
@@ -43,7 +44,7 @@ class ServerAuraNetChunk(
             return RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<ServerAuraNetChunk> ->
                 instance.group(
                     RecordCodecBuilder.point(updateListener),
-                    Codec.FLOAT.fieldOf("base").forGetter(ServerAuraNetChunk::base),
+                    CodecUtils.PREFER_FLOAT_OR_INT.fieldOf("base").forGetter(ServerAuraNetChunk::base),
                     AuraNode.createCodec(storage, updateListener).listOf().fieldOf("nodes")
                         .forGetter { ImmutableList.copyOf(it.nodesByPos.values) }
                 ).apply(instance, ::ServerAuraNetChunk)
