@@ -68,6 +68,7 @@
   "item.hotm.magenta_crystal_shard": "Magenta Crystal Shard",
   "item.hotm.plassein_fuel_chunk": "Plassein Fuel Chunk",
   "itemGroup.hotm.building": "Heart of the Machine Building",
+  "itemGroup.hotm.machines": "Heart of the Machine Machines",
   "itemGroup.hotm.materials": "Heart of the Machine Materials",
   "message.hotm.aura_tuner.blocked": "There is something blocking the path between these nodes.",
   "message.hotm.aura_tuner.dependency_loop": "These nodes cannot be connected because they would cause a loop.",
@@ -77,6 +78,7 @@
   "message.hotm.aura_tuner.rejected_child": "The selected parent aura node cannot connect to this aura node.",
   "message.hotm.aura_tuner.rejected_parent": "This aura node cannot connect to the selected parent aura node.",
   "message.hotm.aura_tuner.success": "Connection created.",
+  "message.hotm.aura_tuner.too_far": "The aura nodes are too far apart.",
   "message.hotm.aura_tuner.wrong_dimension": "The selected parent aura node is in the wrong dimension.",
   "message.hotm.aurameter.chunk": "Base chunk aura: %s, total chunk aura: %s.",
   "message.hotm.aurameter.node": "Aura node aura: %s"
