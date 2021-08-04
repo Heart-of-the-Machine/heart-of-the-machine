@@ -2,22 +2,25 @@ package com.github.hotm.world.auranet.client
 
 import alexiil.mc.lib.net.IMsgReadCtx
 import alexiil.mc.lib.net.NetByteBuf
+import com.github.hotm.net.sync.ClientSync2ClientData
+import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNetAccess
 import com.github.hotm.world.auranet.AuraNode
-import io.netty.buffer.Unpooled
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
+import net.minecraft.util.registry.RegistryKey
+import net.minecraft.world.World
 import java.util.function.Predicate
 import java.util.stream.Stream
 
 class ClientAuraNetChunk private constructor(
-    var baseAura: Float, private val nodesByPos: Short2ObjectMap<AuraNode>
+    var baseAura: () -> Float, private val nodesByPos: Short2ObjectMap<AuraNode>
 ) {
     companion object {
         fun fromPacket(
-            access: AuraNetAccess, pos: ChunkSectionPos, buf: NetByteBuf, ctx: IMsgReadCtx
+            access: AuraNetAccess, buf: NetByteBuf, ctx: IMsgReadCtx
         ): ClientAuraNetChunk {
             val baseAura = buf.readFloat()
 
@@ -34,7 +37,19 @@ class ClientAuraNetChunk private constructor(
                 }
             }
 
-            return ClientAuraNetChunk(baseAura, nodesByPos)
+            return ClientAuraNetChunk({ baseAura }, nodesByPos)
+        }
+
+        fun createEmpty(access: AuraNetAccess): ClientAuraNetChunk {
+            return ClientAuraNetChunk(getBaseAura(access.world.registryKey), Short2ObjectOpenHashMap())
+        }
+
+        private fun getBaseAura(dim: RegistryKey<World>): () -> Float {
+            return if (dim == HotMDimensions.NECTERE_KEY) {
+                { ClientSync2ClientData.DATA.nectereAuraBaseValue }
+            } else {
+                { ClientSync2ClientData.DATA.nectereAuraBaseValue }
+            }
         }
     }
 

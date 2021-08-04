@@ -7,7 +7,6 @@ import com.github.hotm.net.HotMNetwork
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.auranet.AuraNetAccess
 import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.SiphonAuraNode
 import com.github.hotm.world.storage.CustomSerializingRegionBasedStorage
 import com.mojang.datafixers.DataFixer
 import com.mojang.serialization.Codec
@@ -19,6 +18,7 @@ import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.world.chunk.ChunkSection
 import java.io.File
+import java.util.*
 import java.util.function.Predicate
 import java.util.stream.Stream
 
@@ -97,10 +97,21 @@ class ServerAuraNetStorage(override val world: ServerWorld, file: File, dataFixe
         buf.writeInt(pos.x)
         buf.writeInt(pos.z)
 
+        val bitset = BitSet()
+        val bytes = NetByteBuf.buffer()
         for (y in world.bottomSectionCoord until world.topSectionCoord) {
-            val sectionPos = ChunkSectionPos.from(pos, y)
-            ServerAuraNetChunk.toPacket(buf, ctx, get(sectionPos.asLong()), world.registryKey)
+            val sectionPos = ChunkSectionPos.asLong(pos.x, y, pos.z)
+            val optionalSection = get(sectionPos)
+
+            if (optionalSection.isPresent) {
+                val section = optionalSection.get()
+                ServerAuraNetChunk.toPacket(bytes, ctx, section)
+                bitset.set(y - world.bottomSectionCoord)
+            }
         }
+
+        buf.writeBitSet(bitset)
+        buf.writeBytes(bytes)
     }
 
     private fun sendAuraNodePut(node: AuraNode) {

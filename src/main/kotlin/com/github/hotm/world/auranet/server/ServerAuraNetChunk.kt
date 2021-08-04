@@ -23,7 +23,6 @@ import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World
 import org.apache.logging.log4j.LogManager
-import java.util.*
 import java.util.function.Predicate
 import java.util.stream.Stream
 
@@ -61,37 +60,26 @@ class ServerAuraNetChunk(
             }
         }
 
-        fun toPacket(
-            buf: NetByteBuf, ctx: IMsgWriteCtx, chunkOptional: Optional<ServerAuraNetChunk>, dim: RegistryKey<World>
-        ) {
-            if (!chunkOptional.isPresent) {
-                // base aura
-                buf.writeFloat(getBaseAura(dim))
-                // no nodes
-                buf.writeVarUnsignedInt(0)
-            } else {
-                val chunk = chunkOptional.get()
+        fun toPacket(buf: NetByteBuf, ctx: IMsgWriteCtx, chunk: ServerAuraNetChunk) {
+            // base aura
+            buf.writeFloat(chunk.base)
 
-                // base aura
-                buf.writeFloat(chunk.base)
+            // node count
+            val nodes = chunk.nodesByPos.values.toTypedArray()
+            val nodesCount = nodes.size
+            buf.writeVarUnsignedInt(nodesCount)
 
-                // node count
-                val nodes = chunk.nodesByPos.values.toTypedArray()
-                val nodesCount = nodes.size
-                buf.writeVarUnsignedInt(nodesCount)
-
-                if (nodesCount > 0) {
-                    val nodesBuf = NetByteBuf.buffer()
-                    for (node in nodes) {
-                        AuraNode.toPacket(node, nodesBuf, ctx)
-                    }
-
-                    // nodes buf size
-                    val readableBytes = nodesBuf.readableBytes()
-                    buf.writeVarUnsignedInt(readableBytes)
-                    // nodes buf
-                    buf.writeBytes(nodesBuf)
+            if (nodesCount > 0) {
+                val nodesBuf = NetByteBuf.buffer()
+                for (node in nodes) {
+                    AuraNode.toPacket(node, nodesBuf, ctx)
                 }
+
+                // nodes buf size
+                val readableBytes = nodesBuf.readableBytes()
+                buf.writeVarUnsignedInt(readableBytes)
+                // nodes buf
+                buf.writeBytes(nodesBuf)
             }
         }
     }
