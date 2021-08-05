@@ -258,7 +258,8 @@
         "layers": [
           {
             "emissive": true,
-            "ambient_occlusion": false
+            "ambient_occlusion": false,
+            "layer": "translucent"
           }
         ]
       }

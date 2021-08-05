@@ -228,7 +228,7 @@ object HotMBlocks {
     val BASIC_SIPHON_AURA_NODE by lazy { BasicSiphonAuraNodeBlock(AURA_NODE_SETTINGS) }
     val BASIC_SOURCE_AURA_NODE by lazy { BasicSourceAuraNodeBlock(AURA_NODE_SETTINGS) }
     val COLLECTOR_DISTRIBUTOR_AURA_NODE by lazy { CollectorDistributorAuraNodeBlock(AURA_NODE_SETTINGS) }
-    val PORTAL_TRANSMITTER_AURA_NODE by lazy { Block(AURA_NODE_SETTINGS) }
+    val PORTAL_TRANSMITTER_AURA_NODE by lazy { PortalTransmitterAuraNode(AURA_NODE_SETTINGS) }
 
     /*
      * Debug Blocks.
