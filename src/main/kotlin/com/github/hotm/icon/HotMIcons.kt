@@ -4,4 +4,5 @@ import com.github.hotm.HotMConstants.identifier
 
 object HotMIcons {
     val AURA_NODE_BEAM = identifier("textures/entity/aura_node_beam.png")
+    val AURA_NODE_BEAM_END = identifier("textures/entity/aura_node_beam_end.png")
 }

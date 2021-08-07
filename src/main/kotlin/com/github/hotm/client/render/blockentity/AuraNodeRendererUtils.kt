@@ -104,21 +104,44 @@ object AuraNodeRendererUtils {
             len * (0.5f / innerRadius) + v2,
             v2
         )
+        renderBeamEnds(
+            matrices,
+            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM_END, false),
+            1f,
+            len,
+            innerRadius,
+            0.0f,
+            1.0f,
+            0.0f,
+            1.0f
+        )
         matrices.pop()
 
         if (HotMRenderMaterials.shouldRenderOuterAuraNodeBeam()) {
             matrices.push()
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-rollShift))
+            matrices.translate(0.0, -1.0 / 16.0, 0.0)
             renderBeamSquare(
                 matrices,
                 HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM, true),
                 0.125f,
-                len,
+                len + 2f / 16f,
                 outerRadius,
                 0.0f,
                 1.0f,
                 len * (0.5f / outerRadius) + v2,
                 v2
+            )
+            renderBeamEnds(
+                matrices,
+                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM_END, true),
+                0.125f,
+                len + 2f / 16f,
+                innerRadius,
+                0.0f,
+                1.0f,
+                0.0f,
+                1.0f
             )
             matrices.pop()
         }
@@ -171,6 +194,24 @@ object AuraNodeRendererUtils {
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, -radius, 0f, 0f, radius, u1, u2, v1, v2)
     }
 
+    fun renderBeamEnds(
+        matrices: MatrixStack,
+        vertices: VertexConsumer,
+        alpha: Float,
+        height: Float,
+        radius: Float,
+        u1: Float,
+        u2: Float,
+        v1: Float,
+        v2: Float
+    ) {
+        val entry = matrices.peek()
+        val modelMat = entry.model
+        val normalMat = entry.normal
+        renderBeamEnd(modelMat, normalMat, vertices, alpha, height, radius, u1, u2, v1, v2, true)
+        renderBeamEnd(modelMat, normalMat, vertices, alpha, 0f, radius, u1, u2, v1, v2, false)
+    }
+
     private fun renderBeamFace(
         modelMatrix: Matrix4f,
         normalMatrix: Matrix3f,
@@ -190,6 +231,26 @@ object AuraNodeRendererUtils {
         renderBeamVertex(modelMatrix, normalMatrix, vertices, alpha, 0f, x1, z1, u2, v2)
         renderBeamVertex(modelMatrix, normalMatrix, vertices, alpha, 0f, x2, z2, u1, v2)
         renderBeamVertex(modelMatrix, normalMatrix, vertices, alpha, height, x2, z2, u1, v1)
+    }
+
+    private fun renderBeamEnd(
+        modelMatrix: Matrix4f,
+        normalMatrix: Matrix3f,
+        vertices: VertexConsumer,
+        alpha: Float,
+        y: Float,
+        radius: Float,
+        u1: Float,
+        u2: Float,
+        v1: Float,
+        v2: Float,
+        top: Boolean
+    ) {
+        val zRadius = if (top) radius else -radius
+        renderBeamVertex(modelMatrix, normalMatrix, vertices, alpha, y, 0f, zRadius, u2, v1)
+        renderBeamVertex(modelMatrix, normalMatrix, vertices, alpha, y, radius, 0f, u1, v1)
+        renderBeamVertex(modelMatrix, normalMatrix, vertices, alpha, y, 0f, -zRadius, u1, v2)
+        renderBeamVertex(modelMatrix, normalMatrix, vertices, alpha, y, -radius, 0f, u2, v2)
     }
 
     private fun renderBeamVertex(
