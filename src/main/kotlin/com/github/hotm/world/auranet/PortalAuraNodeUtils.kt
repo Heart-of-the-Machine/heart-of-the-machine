@@ -1,13 +1,18 @@
 package com.github.hotm.world.auranet
 
-import com.github.hotm.poi.HotMPointsOfInterest
+import com.github.hotm.blocks.HotMBlocks
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 
 object PortalAuraNodeUtils {
-    fun isStructureValid(pos: BlockPos, world: ServerWorld): Boolean {
-        val storage = world.pointOfInterestStorage
-        val portal = storage.getType(pos.down(2)).orElse(null)
-        return portal == HotMPointsOfInterest.NECTERE_PORTAL
+
+    /**
+     * Checks to see if the aura node's portal structure is valid.
+     *
+     * Notice: **This function causes chunk loading.** Use carefully.
+     */
+    fun isPortalStructureValid(pos: BlockPos, world: ServerWorld): Boolean {
+        val portal = world.getBlockState(pos.down(2))
+        return portal.block == HotMBlocks.NECTERE_PORTAL
     }
 }

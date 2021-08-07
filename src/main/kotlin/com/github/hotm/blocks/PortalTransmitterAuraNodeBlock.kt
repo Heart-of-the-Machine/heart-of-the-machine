@@ -39,7 +39,7 @@ class PortalTransmitterAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlock
             pos,
             0f,
             listOf(),
-            PortalAuraNodeUtils.isStructureValid(pos, world)
+            PortalAuraNodeUtils.isPortalStructureValid(pos, world)
         )
     }
 

@@ -44,7 +44,7 @@ class PortalReceiverAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWit
             pos,
             0f,
             null,
-            PortalAuraNodeUtils.isStructureValid(pos, world)
+            PortalAuraNodeUtils.isPortalStructureValid(pos, world)
         )
     }
 

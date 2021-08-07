@@ -107,7 +107,7 @@ class PortalReceiverAuraNode(
         val world = world
         if (!isClient) {
             val prevValid = valid
-            valid = PortalAuraNodeUtils.isStructureValid(pos, world as ServerWorld)
+            valid = PortalAuraNodeUtils.isPortalStructureValid(pos, world as ServerWorld)
 
             if (prevValid != valid) {
                 markDirty()
