@@ -13,5 +13,9 @@ object HotMBlockEntityRenderers {
             HotMBlockEntities.COLLECTOR_DISTRIBUTOR_AURA_NODE,
             ::SimpleDependableAuraNodeBlockEntityRenderer
         )
+        BlockEntityRendererRegistry.INSTANCE.register(
+            HotMBlockEntities.PORTAL_RECEIVER_AURA_NODE,
+            ::SimpleDependableAuraNodeBlockEntityRenderer
+        )
     }
 }

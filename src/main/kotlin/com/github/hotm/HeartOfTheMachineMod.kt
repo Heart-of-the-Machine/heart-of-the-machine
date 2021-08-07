@@ -9,6 +9,7 @@ import com.github.hotm.misc.HotMFuels
 import com.github.hotm.misc.HotMRegistries
 import com.github.hotm.net.sync.ServerSync2ClientData
 import com.github.hotm.particle.HotMParticles
+import com.github.hotm.poi.HotMPointsOfInterest
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNodes
 import com.github.hotm.world.HotMTeleporters
@@ -23,6 +24,7 @@ import com.github.hotm.world.gen.surfacebuilder.HotMSurfaceBuilders
 fun init() {
     HotMRegistries.register()
     HotMBlocks.register()
+    HotMPointsOfInterest.register()
     HotMBlockTags.register()
     HotMItems.register()
     HotMBlockEntities.register()

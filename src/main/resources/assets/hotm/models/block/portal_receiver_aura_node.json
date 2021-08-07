@@ -1,0 +1,268 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "hotm:block/portal_aura_node_plate",
+    "plate": "hotm:block/portal_aura_node_plate",
+    "base_side": "hotm:block/portal_aura_node_base_side",
+    "base_end": "hotm:block/portal_aura_node_base_end",
+    "core": "hotm:block/portal_receiver_aura_node_core"
+  },
+  "elements": [
+    {
+      "from": [ 2, 0, 2 ],
+      "to": [ 14, 1, 14 ],
+      "faces": {
+        "north": {
+          "uv": [ 2, 15, 14, 16 ],
+          "texture": "#plate"
+        },
+        "east": {
+          "uv": [ 2, 15, 14, 16 ],
+          "texture": "#plate"
+        },
+        "south": {
+          "uv": [ 2, 15, 14, 16 ],
+          "texture": "#plate"
+        },
+        "west": {
+          "uv": [ 2, 15, 14, 16 ],
+          "texture": "#plate"
+        },
+        "up": {
+          "uv": [ 2, 2, 14, 14 ],
+          "texture": "#plate"
+        },
+        "down": {
+          "uv": [ 2, 2, 14, 14 ],
+          "texture": "#plate"
+        }
+      }
+    },
+    {
+      "from": [ 3, 1, 3 ],
+      "to": [ 13, 4, 13 ],
+      "faces": {
+        "north": {
+          "uv": [ 3, 12, 13, 15 ],
+          "texture": "#base_side"
+        },
+        "east": {
+          "uv": [ 3, 12, 13, 15 ],
+          "texture": "#base_side"
+        },
+        "south": {
+          "uv": [ 3, 12, 13, 15 ],
+          "texture": "#base_side"
+        },
+        "west": {
+          "uv": [ 3, 12, 13, 15 ],
+          "texture": "#base_side"
+        },
+        "up": {
+          "uv": [ 3, 3, 13, 13 ],
+          "texture": "#base_end"
+        }
+      }
+    },
+    {
+      "from": [ 4, 4, 4 ],
+      "to": [ 12, 5, 12 ],
+      "faces": {
+        "north": {
+          "uv": [ 4, 11, 12, 12 ],
+          "texture": "#base_side"
+        },
+        "east": {
+          "uv": [ 4, 11, 12, 12 ],
+          "texture": "#base_side"
+        },
+        "south": {
+          "uv": [ 4, 11, 12, 12 ],
+          "texture": "#base_side"
+        },
+        "west": {
+          "uv": [ 4, 11, 12, 12 ],
+          "texture": "#base_side"
+        },
+        "up": {
+          "uv": [ 4, 4, 12, 12 ],
+          "texture": "#base_end"
+        }
+      }
+    },
+    {
+      "from": [ 6, 5, 6 ],
+      "to": [ 10, 6, 10 ],
+      "faces": {
+        "north": {
+          "uv": [ 6, 10, 10, 11 ],
+          "texture": "#base_side"
+        },
+        "east": {
+          "uv": [ 6, 10, 10, 11 ],
+          "texture": "#base_side"
+        },
+        "south": {
+          "uv": [ 6, 10, 10, 11 ],
+          "texture": "#base_side"
+        },
+        "west": {
+          "uv": [ 6, 10, 10, 11 ],
+          "texture": "#base_side"
+        },
+        "up": {
+          "uv": [ 6, 6, 10, 10 ],
+          "texture": "#base_end"
+        }
+      }
+    },
+    {
+      "from": [ 7, 6, 7 ],
+      "to": [ 9, 10, 9 ],
+      "faces": {
+        "north": {
+          "uv": [ 7, 6, 9, 10 ],
+          "texture": "#core",
+          "jmx_material": "#core"
+        },
+        "east": {
+          "uv": [ 7, 6, 9, 10 ],
+          "texture": "#core",
+          "jmx_material": "#core"
+        },
+        "south": {
+          "uv": [ 7, 6, 9, 10 ],
+          "texture": "#core",
+          "jmx_material": "#core"
+        },
+        "west": {
+          "uv": [ 7, 6, 9, 10 ],
+          "texture": "#core",
+          "jmx_material": "#core"
+        }
+      }
+    },
+    {
+      "from": [ 6, 10, 6 ],
+      "to": [ 10, 11, 10 ],
+      "faces": {
+        "north": {
+          "uv": [ 6, 5, 10, 6 ],
+          "texture": "#base_side"
+        },
+        "east": {
+          "uv": [ 6, 5, 10, 6 ],
+          "texture": "#base_side"
+        },
+        "south": {
+          "uv": [ 6, 5, 10, 6 ],
+          "texture": "#base_side"
+        },
+        "west": {
+          "uv": [ 6, 5, 10, 6 ],
+          "texture": "#base_side"
+        },
+        "down": {
+          "uv": [ 6, 6, 10, 10 ],
+          "texture": "#base_end"
+        }
+      }
+    },
+    {
+      "from": [ 4, 11, 4 ],
+      "to": [ 12, 12, 12 ],
+      "faces": {
+        "north": {
+          "uv": [ 4, 4, 12, 5 ],
+          "texture": "#base_side"
+        },
+        "east": {
+          "uv": [ 4, 4, 12, 5 ],
+          "texture": "#base_side"
+        },
+        "south": {
+          "uv": [ 4, 4, 12, 5 ],
+          "texture": "#base_side"
+        },
+        "west": {
+          "uv": [ 4, 4, 12, 5 ],
+          "texture": "#base_side"
+        },
+        "down": {
+          "uv": [ 4, 4, 12, 12 ],
+          "texture": "#base_end"
+        }
+      }
+    },
+    {
+      "from": [ 3, 12, 3 ],
+      "to": [ 13, 15, 13 ],
+      "faces": {
+        "north": {
+          "uv": [ 3, 1, 13, 4 ],
+          "texture": "#base_side"
+        },
+        "east": {
+          "uv": [ 3, 1, 13, 4 ],
+          "texture": "#base_side"
+        },
+        "south": {
+          "uv": [ 3, 1, 13, 4 ],
+          "texture": "#base_side"
+        },
+        "west": {
+          "uv": [ 3, 1, 13, 4 ],
+          "texture": "#base_side"
+        },
+        "down": {
+          "uv": [ 3, 3, 13, 13 ],
+          "texture": "#base_end"
+        }
+      }
+    },
+    {
+      "from": [ 2, 15, 2 ],
+      "to": [ 14, 16, 14 ],
+      "faces": {
+        "north": {
+          "uv": [ 2, 0, 14, 1 ],
+          "texture": "#plate"
+        },
+        "east": {
+          "uv": [ 2, 0, 14, 1 ],
+          "texture": "#plate"
+        },
+        "south": {
+          "uv": [ 2, 0, 14, 1 ],
+          "texture": "#plate"
+        },
+        "west": {
+          "uv": [ 2, 0, 14, 1 ],
+          "texture": "#plate"
+        },
+        "up": {
+          "uv": [ 2, 2, 14, 14 ],
+          "texture": "#plate"
+        },
+        "down": {
+          "uv": [ 2, 2, 14, 14 ],
+          "texture": "#plate"
+        }
+      }
+    }
+  ],
+  "jmx": {
+    "materials": {
+      "core": {
+        "layers": [
+          {
+            "emissive": true,
+            "ambient_occlusion": false,
+            "layer": "translucent"
+          }
+        ]
+      }
+    }
+  }
+}

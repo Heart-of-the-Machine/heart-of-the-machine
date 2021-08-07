@@ -79,11 +79,31 @@ object DependencyAuraNodeUtils {
     }
 
     /**
+     * Disconnects a parent and all children in the collection. This is useful for parent aura nodes.
+     */
+    fun parentDisconnectAll(children: Collection<BlockPos>, access: AuraNetAccess, parent: DependableAuraNode) {
+        val childrenCopy = children.toList()
+        for (child in childrenCopy) {
+            parentDisconnect(child, access, parent)
+        }
+    }
+
+    /**
      * Disconnects a parent and child aura node. This is useful for child aura nodes.
      */
     fun childDisconnect(parentPos: BlockPos?, access: AuraNetAccess, child: DependantAuraNode) {
         AuraNodeUtils.nodeAt<DependableAuraNode>(parentPos, access)?.let { parent ->
             disconnect(parent, child)
+        }
+    }
+
+    /**
+     * Disconnects a child aura node from all parents in the collection. This is useful for child aura nodes.
+     */
+    fun childDisconnectAll(parents: Collection<BlockPos>, access: AuraNetAccess, child: DependantAuraNode) {
+        val parentsCopy = parents.toList()
+        for (parent in parentsCopy) {
+            childDisconnect(parent, access, child)
         }
     }
 
@@ -121,7 +141,10 @@ object DependencyAuraNodeUtils {
         }
 
         val res =
-            WorldUtils.loadedRaycast(world, BlockStateRaycastContext(Vec3d.ofCenter(start), Vec3d.ofCenter(end), BlockState::isOpaque))
+            WorldUtils.loadedRaycast(
+                world,
+                BlockStateRaycastContext(Vec3d.ofCenter(start), Vec3d.ofCenter(end), BlockState::isOpaque)
+            )
 
         return res.type == HitResult.Type.BLOCK && res.blockPos != start && res.blockPos != end
     }

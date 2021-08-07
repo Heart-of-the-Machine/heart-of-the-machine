@@ -228,7 +228,8 @@ object HotMBlocks {
     val BASIC_SIPHON_AURA_NODE by lazy { BasicSiphonAuraNodeBlock(AURA_NODE_SETTINGS) }
     val BASIC_SOURCE_AURA_NODE by lazy { BasicSourceAuraNodeBlock(AURA_NODE_SETTINGS) }
     val COLLECTOR_DISTRIBUTOR_AURA_NODE by lazy { CollectorDistributorAuraNodeBlock(AURA_NODE_SETTINGS) }
-    val PORTAL_TRANSMITTER_AURA_NODE by lazy { PortalTransmitterAuraNode(AURA_NODE_SETTINGS) }
+    val PORTAL_RECEIVER_AURA_NODE by lazy { PortalReceiverAuraNodeBlock(AURA_NODE_SETTINGS) }
+    val PORTAL_TRANSMITTER_AURA_NODE by lazy { PortalTransmitterAuraNodeBlock(AURA_NODE_SETTINGS) }
 
     /*
      * Debug Blocks.
@@ -286,6 +287,7 @@ object HotMBlocks {
         )
         register(PLASSEIN_SPORE, "plassein_spore", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PORTAL_RECEIVER_AURA_NODE, "portal_receiver_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
         register(PORTAL_TRANSMITTER_AURA_NODE, "portal_transmitter_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING, "rusted_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING_LEYLINE, "rusted_machine_casing_leyline", HOTM_BUILDING_ITEM_SETTINGS)

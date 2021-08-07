@@ -4,6 +4,7 @@ import alexiil.mc.lib.net.IMsgReadCtx
 import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.HotMConstants.str
+import com.github.hotm.net.s2cCollectionReadWrite
 import com.github.hotm.net.s2cReadWrite
 import com.github.hotm.net.sendToClients
 import com.github.hotm.util.CodecUtils
@@ -27,20 +28,10 @@ class BasicSourceAuraNode(
 
         private val ID_VALUE_CHANGE = NET_PARENT.idData("VALUE_CHANGE")
             .s2cReadWrite({ value = it.readFloat() }, { it.writeFloat(value) })
-        private val ID_PARENTS_CHANGE = NET_PARENT.idData("PARENTS_CHANGE").s2cReadWrite(
-            {
-                parents.clear()
-                val parentCount = it.readVarUnsignedInt()
-                for (i in 0 until parentCount) {
-                    parents.add(it.readBlockPos())
-                }
-            },
-            {
-                it.writeVarUnsignedInt(parents.size)
-                for (parent in parents) {
-                    it.writeBlockPos(parent)
-                }
-            }
+        private val ID_PARENTS_CHANGE = NET_PARENT.idData("PARENTS_CHANGE").s2cCollectionReadWrite(
+            BasicSourceAuraNode::parents,
+            NetByteBuf::readBlockPos,
+            NetByteBuf::writeBlockPos
         )
     }
 
@@ -112,10 +103,7 @@ class BasicSourceAuraNode(
         if (visitedNodes.contains(dimPos)) {
             // Dependency loop detected. Disconnect all parent nodes, as that is the only place the dependency loop
             // could be coming from.
-            val parentsCopy = parents.toList()
-            for (parent in parentsCopy) {
-                DependencyAuraNodeUtils.childDisconnect(parent, access, this)
-            }
+            DependencyAuraNodeUtils.childDisconnectAll(parents, access, this)
 
             return
         }
@@ -131,10 +119,7 @@ class BasicSourceAuraNode(
     }
 
     override fun onRemove() {
-        val parentsCopy = parents.toList()
-        for (parent in parentsCopy) {
-            DependencyAuraNodeUtils.childDisconnect(parent, access, this)
-        }
+        DependencyAuraNodeUtils.childDisconnectAll(parents, access, this)
     }
 
     override fun equals(other: Any?): Boolean {

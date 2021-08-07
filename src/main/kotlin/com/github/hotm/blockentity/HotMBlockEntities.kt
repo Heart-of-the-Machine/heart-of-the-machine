@@ -19,6 +19,10 @@ object HotMBlockEntities {
         private set
     lateinit var NECTERE_PORTAL_SPAWNER: BlockEntityType<NecterePortalSpawnerBlockEntity>
         private set
+    lateinit var PORTAL_RECEIVER_AURA_NODE: BlockEntityType<PortalReceiverAuraNodeBlockEntity>
+        private set
+    lateinit var PORTAL_TRANSMITTER_AURA_NODE: BlockEntityType<PortalTransmitterAuraNodeBlockEntity>
+        private set
 
     fun register() {
         BASIC_SIPHON_AURA_NODE = newBlockEntityType(::BasicSiphonAuraNodeBlockEntity, HotMBlocks.BASIC_SIPHON_AURA_NODE)
@@ -27,11 +31,17 @@ object HotMBlockEntities {
         DEBUG_TICKING = newBlockEntityType(::DebugTickingBlockEntity, HotMBlocks.DEBUG_TICKING)
         NECTERE_PORTAL_SPAWNER =
             newBlockEntityType(::NecterePortalSpawnerBlockEntity, HotMBlocks.NECTERE_PORTAL_SPAWNER)
+        PORTAL_RECEIVER_AURA_NODE =
+            newBlockEntityType(::PortalReceiverAuraNodeBlockEntity, HotMBlocks.PORTAL_RECEIVER_AURA_NODE)
+        PORTAL_TRANSMITTER_AURA_NODE =
+            newBlockEntityType(::PortalTransmitterAuraNodeBlockEntity, HotMBlocks.PORTAL_TRANSMITTER_AURA_NODE)
 
         register(BASIC_SIPHON_AURA_NODE, "basic_siphon_aura_node")
         register(COLLECTOR_DISTRIBUTOR_AURA_NODE, "collector_distributor_aura_node")
         register(DEBUG_TICKING, "debug_ticking")
         register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner")
+        register(PORTAL_RECEIVER_AURA_NODE, "portal_receiver_aura_node")
+        register(PORTAL_TRANSMITTER_AURA_NODE, "portal_transmitter_aura_node")
     }
 
     private fun register(type: BlockEntityType<*>, name: String) {

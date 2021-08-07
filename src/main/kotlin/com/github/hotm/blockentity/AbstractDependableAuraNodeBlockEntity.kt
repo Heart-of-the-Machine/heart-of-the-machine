@@ -15,6 +15,11 @@ abstract class AbstractDependableAuraNodeBlockEntity(type: BlockEntityType<*>, p
     BlockEntity(type, pos, state), RenderedDependableAuraNodeBlockEntity {
 
     companion object {
+        /**
+         * The period of time between dependable aura node connection checks. 20 ticks = 1 second.
+         */
+        private const val CONNECTION_UPDATE_WAIT = 20
+
         fun tickServer(world: World, pos: BlockPos, state: BlockState, entity: AbstractDependableAuraNodeBlockEntity) {
             entity.updateConnections()
         }
@@ -49,6 +54,8 @@ abstract class AbstractDependableAuraNodeBlockEntity(type: BlockEntityType<*>, p
     }
 
     override fun readNbt(nbt: NbtCompound) {
+        super.readNbt(nbt)
+
         lastConnectionUpdate = if (nbt.contains("lastConnectionUpdate")) {
             nbt.getLong("lastConnectionUpdate")
         } else {
@@ -62,11 +69,11 @@ abstract class AbstractDependableAuraNodeBlockEntity(type: BlockEntityType<*>, p
         return new
     }
 
-    fun updateConnections() {
+    open fun updateConnections() {
         val world = world ?: return
         val time = world.time
         // only perform connection updates once a second
-        if (time - lastConnectionUpdate >= 20) {
+        if (time - lastConnectionUpdate >= CONNECTION_UPDATE_WAIT) {
             lastConnectionUpdate = time
             DependencyAuraNodeUtils.updateConnections(world, pos)
         }

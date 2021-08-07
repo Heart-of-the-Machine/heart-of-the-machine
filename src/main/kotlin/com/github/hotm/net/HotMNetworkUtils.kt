@@ -27,3 +27,27 @@ fun <T> NetIdDataK<T>.sendToClients(world: World, pos: BlockPos, obj: T) {
         }
     }
 }
+
+fun <T, V> NetIdDataK<T>.s2cCollectionReadWrite(
+    collectionSupplier: T.() -> MutableCollection<V>,
+    reader: (NetByteBuf) -> V,
+    writer: (NetByteBuf, V) -> Unit
+): NetIdDataK<T> {
+    return s2cReadWrite(
+        { buf ->
+            val c = collectionSupplier()
+            val count = buf.readVarUnsignedInt()
+            c.clear()
+            for (i in 0 until count) {
+                c.add(reader(buf))
+            }
+        },
+        { buf ->
+            val c = collectionSupplier()
+            buf.writeVarUnsignedInt(c.size)
+            for (v in c) {
+                writer(buf, v)
+            }
+        }
+    )
+}

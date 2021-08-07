@@ -19,6 +19,15 @@ interface AuraNetAccess {
     val world: World
 
     /**
+     * Gets the update listener for the chunk section containing this particular block pos.
+     *
+     * This is generally used for aura node creation.
+     */
+    fun getUpdateListener(pos: BlockPos): Runnable? {
+        return getUpdateListener(ChunkSectionPos.from(pos))
+    }
+
+    /**
      * Gets the update listener for a particular chunk section.
      *
      * This is generally used for aura node creation.
