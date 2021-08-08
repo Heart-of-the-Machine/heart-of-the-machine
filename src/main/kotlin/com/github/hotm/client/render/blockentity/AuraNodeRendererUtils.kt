@@ -1,8 +1,8 @@
 package com.github.hotm.client.render.blockentity
 
+import com.github.hotm.client.HotMSprites
 import com.github.hotm.client.blockmodel.HotMBlockModels
 import com.github.hotm.client.render.HotMRenderMaterials
-import com.github.hotm.icon.HotMIcons
 import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
@@ -26,7 +26,6 @@ object AuraNodeRendererUtils {
         matrices: MatrixStack,
         consumers: VertexConsumerProvider,
         tickDelta: Float,
-        overlay: Int,
         offset: Vec3i,
         energy: Float,
         crownRoll: Float
@@ -43,9 +42,8 @@ object AuraNodeRendererUtils {
             world.time,
             tickDelta,
             crownRoll,
-            overlay,
-            display(energy, 0.03125f, 0.24f, 0.01f),
-            display(energy, 0.0625f, 0.25f, 0.01f),
+            display(energy, 0.03125f, 0.25f, 0.01f),
+            display(energy, 0.0625f, 0.28125f, 0.01f),
             display(energy, 0.125f, 0.25f, 0.01f)
         )
     }
@@ -70,7 +68,6 @@ object AuraNodeRendererUtils {
         worldTime: Long,
         tickDelta: Float,
         crownRoll: Float,
-        overlay: Int,
         innerRadius: Float,
         outerRadius: Float,
         crownRadius: Float,
@@ -79,12 +76,9 @@ object AuraNodeRendererUtils {
         val len = MathHelper.sqrt(dx * dx + dy * dy + dz * dz)
 
         val animationAmount = Math.floorMod(worldTime, 40).toFloat() + tickDelta
-        // In this case, negative texture shift gives the appearance of the texture moving upward
-        val textureShift = MathHelper.fractionalPart(-animationAmount * 0.2f)
         val pitchShift = -atan2(xzLen, dy)
         val yawShift = -atan2(dz, dx) - PI.toFloat() / 2f
         val rollShift = animationAmount * 2.25f - 45.0f
-        val v2 = -1f + textureShift
 
         matrices.push()
 
@@ -95,18 +89,18 @@ object AuraNodeRendererUtils {
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rollShift))
         renderBeamSquare(
             matrices,
-            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM, false),
+            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM, false),
             1f,
             len,
             innerRadius,
             0.0f,
             1.0f,
-            len * (0.5f / innerRadius) + v2,
-            v2
+            0.0f,
+            1.0f
         )
         renderBeamEnds(
             matrices,
-            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM_END, false),
+            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM_END, false),
             1f,
             len,
             innerRadius,
@@ -119,25 +113,25 @@ object AuraNodeRendererUtils {
 
         if (HotMRenderMaterials.shouldRenderOuterAuraNodeBeam()) {
             matrices.push()
-            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-rollShift))
-            matrices.translate(0.0, -1.0 / 16.0, 0.0)
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rollShift))
+            matrices.translate(0.0, -1.0 / 32.0, 0.0)
             renderBeamSquare(
                 matrices,
-                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM, true),
+                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM, true),
                 0.125f,
-                len + 2f / 16f,
+                len + 2f / 32f,
                 outerRadius,
                 0.0f,
                 1.0f,
-                len * (0.5f / outerRadius) + v2,
-                v2
+                0.0f,
+                1.0f
             )
             renderBeamEnds(
                 matrices,
-                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMIcons.AURA_NODE_BEAM_END, true),
+                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM_END, true),
                 0.125f,
-                len + 2f / 16f,
-                innerRadius,
+                len + 2f / 32f,
+                outerRadius,
                 0.0f,
                 1.0f,
                 0.0f,
@@ -148,7 +142,7 @@ object AuraNodeRendererUtils {
 
         matrices.push()
         matrices.translate(0.0, 0.35, 0.0)
-        renderCrown(world, state, pos, matrices, consumers, overlay, 4, crownRadius.toDouble(), crownRoll, 0.75f)
+        renderCrown(world, state, pos, matrices, consumers, 4, crownRadius.toDouble(), crownRoll, 0.75f)
         matrices.pop()
 
         matrices.pop()
@@ -264,8 +258,13 @@ object AuraNodeRendererUtils {
         u: Float,
         v: Float
     ) {
-        vertices.vertex(modelMatrix, x, y, z).color(1f, 1f, 1f, alpha).texture(u, v)
-            .overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(normalMatrix, 0.0f, 1.0f, 0.0f).next()
+        vertices.vertex(modelMatrix, x, y, z)
+        vertices.color(1f, 1f, 1f, alpha)
+        vertices.texture(u, v)
+        vertices.overlay(OverlayTexture.DEFAULT_UV)
+        vertices.light(15728880)
+        vertices.normal(normalMatrix, 0.0f, 1.0f, 0.0f)
+        vertices.next()
     }
 
     fun renderCrown(
@@ -274,7 +273,6 @@ object AuraNodeRendererUtils {
         pos: BlockPos,
         matrices: MatrixStack,
         consumers: VertexConsumerProvider,
-        overlay: Int,
         numPieces: Int,
         crownRadius: Double,
         crownRoll: Float,
@@ -286,7 +284,7 @@ object AuraNodeRendererUtils {
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(i.toFloat() * increment + crownRoll))
             matrices.translate(0.0, 0.0, -crownRadius)
             matrices.scale(scale, scale, scale)
-            renderCrownPiece(world, blockstate, pos, matrices, consumers, overlay)
+            renderCrownPiece(world, blockstate, pos, matrices, consumers)
             matrices.pop()
         }
     }
@@ -296,8 +294,7 @@ object AuraNodeRendererUtils {
         blockstate: BlockState,
         pos: BlockPos,
         matrices: MatrixStack,
-        consumers: VertexConsumerProvider,
-        overlay: Int
+        consumers: VertexConsumerProvider
     ) {
         matrices.push()
         val blockRenderManager: BlockRenderManager = MinecraftClient.getInstance().blockRenderManager
@@ -313,7 +310,7 @@ object AuraNodeRendererUtils {
             false,
             Random(42),
             42L,
-            overlay
+            OverlayTexture.DEFAULT_UV
         )
         matrices.pop()
     }

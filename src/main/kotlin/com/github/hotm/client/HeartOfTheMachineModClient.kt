@@ -12,6 +12,7 @@ import com.github.hotm.net.sync.ClientSync2ClientData
 @Suppress("unused")
 fun init() {
     HotMClientRegistries.register()
+    HotMSprites.register()
     HotMRenderMaterials.register()
     HotMBlocksClient.register()
     HotMBlockModels.register()

@@ -63,7 +63,6 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T>(protected val ctx: Blo
                 matrices,
                 vertexConsumers,
                 tickDelta,
-                overlay,
                 offset,
                 energy,
                 roll

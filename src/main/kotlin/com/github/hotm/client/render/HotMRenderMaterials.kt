@@ -7,15 +7,16 @@ import grondag.frex.api.material.FrexVertexConsumerProvider
 import grondag.frex.api.material.RenderMaterial
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
 import net.minecraft.client.render.RenderLayer
+import net.minecraft.client.render.SpriteTexturedVertexConsumer
 import net.minecraft.client.render.VertexConsumer
 import net.minecraft.client.render.VertexConsumerProvider
+import net.minecraft.client.texture.SpriteAtlasTexture
+import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
-import net.minecraft.util.Util
-import java.util.function.Function
 
 object HotMRenderMaterials {
     private lateinit var AURA_NODE_BEAM: (Identifier, Boolean) -> RenderLayer
-    private lateinit var AURA_NODE_BEAM_SOLID_FREX: Function<Identifier, RenderMaterial>
+    private lateinit var AURA_NODE_BEAM_SOLID_FREX: RenderMaterial
 //    private lateinit var AURA_NODE_BEAM_TRANSLUCENT_FREX: Function<Identifier, RenderMaterial>
 
     fun register() {
@@ -26,10 +27,9 @@ object HotMRenderMaterials {
             val finder = renderer.materialFinder()
             finder.clear()
 
-            AURA_NODE_BEAM_SOLID_FREX = Util.memoize { texture ->
-                finder.blendMode(BlendMode.SOLID).disableAo(true).emissive(true).texture(texture).castShadows(false)
+            AURA_NODE_BEAM_SOLID_FREX =
+                finder.blendMode(BlendMode.SOLID).disableAo(true).disableDiffuse(true).emissive(true).castShadows(false)
                     .find()
-            }
             // Doesn't render properly. However, the bloom does what this layer was trying to do.
 //            AURA_NODE_BEAM_TRANSLUCENT_FREX = Util.memoize { texture ->
 //                finder.blendMode(BlendMode.TRANSLUCENT).disableAo(true).emissive(true).texture(texture).find()
@@ -44,17 +44,19 @@ object HotMRenderMaterials {
 
     fun getAuraNodeBeamConsumer(
         consumers: VertexConsumerProvider,
-        texture: Identifier,
+        texture: SpriteIdentifier,
         translucent: Boolean
     ): VertexConsumer {
-        return if (Frex.isAvailable() && consumers is FrexVertexConsumerProvider) {
+        return SpriteTexturedVertexConsumer(
+            if (Frex.isAvailable() && consumers is FrexVertexConsumerProvider) {
 //            if (translucent) {
 //                consumers.getConsumer(AURA_NODE_BEAM_TRANSLUCENT_FREX.apply(texture))
 //            } else {
-            consumers.getConsumer(AURA_NODE_BEAM_SOLID_FREX.apply(texture))
+                consumers.getConsumer(AURA_NODE_BEAM_SOLID_FREX)
 //            }
-        } else {
-            consumers.getBuffer(AURA_NODE_BEAM(texture, translucent))
-        }
+            } else {
+                consumers.getBuffer(AURA_NODE_BEAM(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, translucent))
+            }, texture.sprite
+        )
     }
 }
