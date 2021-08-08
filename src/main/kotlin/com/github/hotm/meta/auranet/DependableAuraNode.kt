@@ -1,6 +1,5 @@
 package com.github.hotm.meta.auranet
 
-import com.github.hotm.meta.MetaBlock
 import net.minecraft.util.math.BlockPos
 import java.util.stream.Stream
 
@@ -12,7 +11,7 @@ import java.util.stream.Stream
  * This interface should only be used server-side. Meaningful modifications here should be synced to clients by nodes
  * themselves.
  */
-interface DependableAuraNode : MetaBlock {
+interface DependableAuraNode : AuraNode {
     /**
      * Provides the maximum distance that this node is able to connect over. This is added to the child's maxDistance to
      * obtain the full max distance.

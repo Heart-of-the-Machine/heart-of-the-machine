@@ -1,6 +1,5 @@
 package com.github.hotm.meta.auranet
 
-import com.github.hotm.meta.MetaBlock
 import com.github.hotm.util.DimBlockPos
 import net.minecraft.util.math.BlockPos
 
@@ -11,7 +10,7 @@ import net.minecraft.util.math.BlockPos
  * This interface should only be used server-side. Meaningful modifications here should be synced to clients by nodes
  * themselves.
  */
-interface DependantAuraNode : MetaBlock {
+interface DependantAuraNode : AuraNode {
     /**
      * Provides the maximum distance that this node is able to connect over. This is added to the child's maxDistance
      * to obtain the full max distance.

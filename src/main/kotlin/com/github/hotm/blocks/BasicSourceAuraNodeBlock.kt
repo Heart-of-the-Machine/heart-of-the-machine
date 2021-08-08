@@ -4,6 +4,7 @@ import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.particle.HotMParticles
 import com.github.hotm.meta.MetaBlock
 import com.github.hotm.meta.MetaBlockType
+import com.github.hotm.meta.auranet.AuraNode
 import com.github.hotm.meta.auranet.BasicSourceAuraNode
 import com.github.hotm.world.meta.server.ServerMetaStorage
 import net.minecraft.block.BlockState
@@ -44,7 +45,7 @@ class BasicSourceAuraNodeBlock(settings: Settings) : AbstractBlockWithMeta(setti
 
     override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
         val access = StorageUtils.getMetaAccess(world)
-        val node = access[pos]
+        val node = access[pos] as? AuraNode
 
         if (node != null && node.getValue() > 0) {
             val x = pos.x.toDouble() + 0.45 + random.nextDouble() * 0.1
