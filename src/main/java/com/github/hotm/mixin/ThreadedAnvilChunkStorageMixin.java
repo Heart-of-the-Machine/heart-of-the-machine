@@ -56,7 +56,7 @@ public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAcces
                           Supplier<PersistentStateManager> persistentStateManagerFactory, int viewDistance,
                           boolean dsync, CallbackInfo ci) {
         hotm_auraNetStorage = new ServerAuraNetStorage(world,
-                StorageUtils.setupExtBEDir(session.getWorldDirectory(world.getRegistryKey())), dataFixer, dsync);
+                StorageUtils.setupMetaDir(session.getWorldDirectory(world.getRegistryKey())), dataFixer, dsync);
     }
 
     @Inject(method = "close",

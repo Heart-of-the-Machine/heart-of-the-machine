@@ -15,19 +15,19 @@ import net.minecraft.world.storage.StorageIoWorker;
 import java.io.File;
 
 public class StorageUtils {
-    private static final String EXT_BE_DIR_NAME = "hotm" + File.separator + "extbe";
+    private static final String META_DIR_NAME = "hotm" + File.separator + "meta";
     private static final ThreadLocal<ServerAuraNetStorage> CURRENT_STORAGE = new ThreadLocal<>();
 
-    public static File setupExtBEDir(File worldDir) {
+    public static File setupMetaDir(File worldDir) {
         File auraNetDir = new File(worldDir, "hotm" + File.separator + "auranet");
-        File extBEDir = new File(worldDir, EXT_BE_DIR_NAME);
+        File metaDir = new File(worldDir, META_DIR_NAME);
 
-        if (auraNetDir.exists() && !auraNetDir.renameTo(extBEDir)) {
+        if (auraNetDir.exists() && !auraNetDir.renameTo(metaDir)) {
             HotMLog.getLog()
-                    .warn("Unable to rename existing aura net directory to extbe. ExtBEs (like aura nodes) will be reset.");
+                    .warn("Unable to rename existing aura net directory to meta. Meta blocks (like aura nodes) will be reset.");
         }
 
-        return extBEDir;
+        return metaDir;
     }
 
     public static void startDeserialize(ServerAuraNetStorage storage) {
