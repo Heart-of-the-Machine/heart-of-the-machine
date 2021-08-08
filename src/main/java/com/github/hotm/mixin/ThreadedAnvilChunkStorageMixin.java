@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
@@ -57,7 +56,7 @@ public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAcces
                           Supplier<PersistentStateManager> persistentStateManagerFactory, int viewDistance,
                           boolean dsync, CallbackInfo ci) {
         hotm_auraNetStorage = new ServerAuraNetStorage(world,
-                new File(session.getWorldDirectory(world.getRegistryKey()), "hotm/auranet"), dataFixer, dsync);
+                StorageUtils.setupExtBEDir(session.getWorldDirectory(world.getRegistryKey())), dataFixer, dsync);
     }
 
     @Inject(method = "close",

@@ -1,5 +1,6 @@
 package com.github.hotm.mixinapi;
 
+import com.github.hotm.misc.HotMLog;
 import com.github.hotm.mixin.StorageIoWorkerInvoker;
 import com.github.hotm.world.auranet.AuraNetAccess;
 import com.github.hotm.world.auranet.client.ClientAuraNetStorage;
@@ -14,7 +15,20 @@ import net.minecraft.world.storage.StorageIoWorker;
 import java.io.File;
 
 public class StorageUtils {
+    private static final String EXT_BE_DIR_NAME = "hotm" + File.separator + "extbe";
     private static final ThreadLocal<ServerAuraNetStorage> CURRENT_STORAGE = new ThreadLocal<>();
+
+    public static File setupExtBEDir(File worldDir) {
+        File auraNetDir = new File(worldDir, "hotm" + File.separator + "auranet");
+        File extBEDir = new File(worldDir, EXT_BE_DIR_NAME);
+
+        if (auraNetDir.exists() && !auraNetDir.renameTo(extBEDir)) {
+            HotMLog.getLog()
+                    .warn("Unable to rename existing aura net directory to extbe. ExtBEs (like aura nodes) will be reset.");
+        }
+
+        return extBEDir;
+    }
 
     public static void startDeserialize(ServerAuraNetStorage storage) {
         CURRENT_STORAGE.set(storage);
