@@ -1,8 +1,8 @@
 package com.github.hotm.blockentity
 
 import com.github.hotm.util.lazyVar
-import com.github.hotm.world.auranet.AuraNodeUtils
-import com.github.hotm.world.auranet.PortalTransmitterAuraNode
+import com.github.hotm.meta.MetaBlockUtils
+import com.github.hotm.meta.auranet.PortalTransmitterAuraNode
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.NbtCompound
@@ -47,7 +47,7 @@ class PortalTransmitterAuraNodeBlockEntity(pos: BlockPos, state: BlockState) :
         if (time - lastPortalConnectionUpdate >= PORTAL_CONNECTION_UPDATE_WAIT) {
             lastPortalConnectionUpdate = time
 
-            AuraNodeUtils.nodeAt<PortalTransmitterAuraNode>(pos, world)?.recalculateValidity()
+            MetaBlockUtils.getAt<PortalTransmitterAuraNode>(pos, world)?.recalculateValidity()
         }
     }
 }

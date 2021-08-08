@@ -3,10 +3,10 @@ package com.github.hotm.blocks
 import com.github.hotm.blockentity.AbstractDependableAuraNodeBlockEntity
 import com.github.hotm.blockentity.CollectorDistributorAuraNodeBlockEntity
 import com.github.hotm.blockentity.HotMBlockEntities
-import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.AuraNodeType
-import com.github.hotm.world.auranet.CollectorDistributorAuraNode
-import com.github.hotm.world.auranet.server.ServerAuraNetStorage
+import com.github.hotm.meta.MetaBlock
+import com.github.hotm.meta.MetaBlockType
+import com.github.hotm.meta.auranet.CollectorDistributorAuraNode
+import com.github.hotm.world.meta.server.ServerMetaStorage
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
@@ -20,7 +20,7 @@ import net.minecraft.util.shape.VoxelShape
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
-class CollectorDistributorAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEntity(settings) {
+class CollectorDistributorAuraNodeBlock(settings: Settings) : AbstractBlockWithMetaAndEntity(settings) {
     companion object {
         private val SHAPE = createCuboidShape(4.0, 4.0, 4.0, 12.0, 12.0, 12.0)
     }
@@ -29,15 +29,15 @@ class CollectorDistributorAuraNodeBlock(settings: Settings) : AbstractAuraNodeBl
         return CollectorDistributorAuraNodeBlockEntity(pos, state)
     }
 
-    override val auraNodeType: AuraNodeType<out AuraNode>
+    override val metaBlockType: MetaBlockType<out MetaBlock>
         get() = CollectorDistributorAuraNode.Type
 
-    override fun createAuraNode(
+    override fun createMetaBlock(
         state: BlockState,
         world: ServerWorld,
-        storage: ServerAuraNetStorage,
+        storage: ServerMetaStorage,
         pos: BlockPos
-    ): AuraNode {
+    ): MetaBlock {
         return CollectorDistributorAuraNode(
             storage,
             storage.getUpdateListener(ChunkSectionPos.from(pos)),

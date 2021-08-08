@@ -2,7 +2,7 @@ package com.github.hotm.util
 
 import com.github.hotm.misc.HotMLog
 import com.github.hotm.mixinapi.StorageUtils
-import com.github.hotm.world.auranet.AuraNode
+import com.github.hotm.meta.MetaBlock
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.block.BlockState
@@ -42,8 +42,8 @@ data class DimBlockPos(val dim: RegistryKey<World>, val pos: BlockPos) {
         return server.getWorld(dim)?.getBlockState(pos)
     }
 
-    fun getAuraNode(server: MinecraftServer): AuraNode? {
-        return server.getWorld(dim)?.let { StorageUtils.getServerAuraNetStorage(it)[pos] }
+    fun getMetaBlock(server: MinecraftServer): MetaBlock? {
+        return server.getWorld(dim)?.let { StorageUtils.getServerMetaStorage(it)[pos] }
     }
 
     fun toNbt(): NbtCompound {

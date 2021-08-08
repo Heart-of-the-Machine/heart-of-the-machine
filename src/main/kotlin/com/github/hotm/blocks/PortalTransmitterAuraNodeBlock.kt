@@ -2,11 +2,11 @@ package com.github.hotm.blocks
 
 import com.github.hotm.blockentity.HotMBlockEntities
 import com.github.hotm.blockentity.PortalTransmitterAuraNodeBlockEntity
-import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.AuraNodeType
-import com.github.hotm.world.auranet.PortalAuraNodeUtils
-import com.github.hotm.world.auranet.PortalTransmitterAuraNode
-import com.github.hotm.world.auranet.server.ServerAuraNetStorage
+import com.github.hotm.meta.MetaBlock
+import com.github.hotm.meta.MetaBlockType
+import com.github.hotm.meta.auranet.PortalAuraNodeUtils
+import com.github.hotm.meta.auranet.PortalTransmitterAuraNode
+import com.github.hotm.world.meta.server.ServerMetaStorage
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
@@ -19,20 +19,20 @@ import net.minecraft.util.shape.VoxelShape
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
-class PortalTransmitterAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEntity(settings) {
+class PortalTransmitterAuraNodeBlock(settings: Settings) : AbstractBlockWithMetaAndEntity(settings) {
     companion object {
         private val SHAPE = createCuboidShape(2.0, 0.0, 2.0, 14.0, 16.0, 14.0)
     }
 
-    override val auraNodeType: AuraNodeType<out AuraNode>
+    override val metaBlockType: MetaBlockType<out MetaBlock>
         get() = PortalTransmitterAuraNode.Type
 
-    override fun createAuraNode(
+    override fun createMetaBlock(
         state: BlockState,
         world: ServerWorld,
-        storage: ServerAuraNetStorage,
+        storage: ServerMetaStorage,
         pos: BlockPos
-    ): AuraNode {
+    ): MetaBlock {
         return PortalTransmitterAuraNode(
             storage,
             storage.getUpdateListener(pos),

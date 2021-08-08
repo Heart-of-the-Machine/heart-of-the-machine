@@ -2,9 +2,9 @@ package com.github.hotm.mixinapi;
 
 import com.github.hotm.misc.HotMLog;
 import com.github.hotm.mixin.StorageIoWorkerInvoker;
-import com.github.hotm.world.auranet.AuraNetAccess;
-import com.github.hotm.world.auranet.client.ClientAuraNetStorage;
-import com.github.hotm.world.auranet.server.ServerAuraNetStorage;
+import com.github.hotm.world.meta.MetaAccess;
+import com.github.hotm.world.meta.client.ClientMetaStorage;
+import com.github.hotm.world.meta.server.ServerMetaStorage;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.ChunkPos;
@@ -16,7 +16,7 @@ import java.io.File;
 
 public class StorageUtils {
     private static final String META_DIR_NAME = "hotm" + File.separator + "meta";
-    private static final ThreadLocal<ServerAuraNetStorage> CURRENT_STORAGE = new ThreadLocal<>();
+    private static final ThreadLocal<ServerMetaStorage> CURRENT_STORAGE = new ThreadLocal<>();
 
     public static File setupMetaDir(File worldDir) {
         File auraNetDir = new File(worldDir, "hotm" + File.separator + "auranet");
@@ -30,12 +30,12 @@ public class StorageUtils {
         return metaDir;
     }
 
-    public static void startDeserialize(ServerAuraNetStorage storage) {
+    public static void startDeserialize(ServerMetaStorage storage) {
         CURRENT_STORAGE.set(storage);
     }
 
     public static void handleDeserialize(ChunkPos pos, ChunkSection section) {
-        ServerAuraNetStorage storage = CURRENT_STORAGE.get();
+        ServerMetaStorage storage = CURRENT_STORAGE.get();
         if (storage != null) {
             storage.initForPalette(pos, section);
         }
@@ -49,20 +49,20 @@ public class StorageUtils {
         return StorageIoWorkerInvoker.create(file, bl, string);
     }
 
-    public static ServerAuraNetStorage getServerAuraNetStorage(ServerWorld world) {
-        return ((ServerAuraNetStorageAccess) world.getChunkManager().threadedAnvilChunkStorage)
-                .hotm_getAuraNetStorage();
+    public static ServerMetaStorage getServerMetaStorage(ServerWorld world) {
+        return ((ServerMetaStorageAccess) world.getChunkManager().threadedAnvilChunkStorage)
+                .hotm_getMetaStorage();
     }
 
-    public static ClientAuraNetStorage getClientAuraNetStorage(ClientWorld world) {
-        return ((ClientAuraNetStorageAccess) world.getChunkManager()).hotm_getAuraNetStorage();
+    public static ClientMetaStorage getClientMetaStorage(ClientWorld world) {
+        return ((ClientMetaStorageAccess) world.getChunkManager()).hotm_getMetaStorage();
     }
 
-    public static AuraNetAccess getAuraNetAccess(World world) {
+    public static MetaAccess getMetaAccess(World world) {
         if (world.isClient) {
-            return getClientAuraNetStorage((ClientWorld) world);
+            return getClientMetaStorage((ClientWorld) world);
         } else {
-            return getServerAuraNetStorage((ServerWorld) world);
+            return getServerMetaStorage((ServerWorld) world);
         }
     }
 }

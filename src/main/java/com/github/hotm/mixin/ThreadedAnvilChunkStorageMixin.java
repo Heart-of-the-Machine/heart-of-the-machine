@@ -1,9 +1,9 @@
 package com.github.hotm.mixin;
 
-import com.github.hotm.mixinapi.ServerAuraNetStorageAccess;
+import com.github.hotm.mixinapi.ServerMetaStorageAccess;
 import com.github.hotm.mixinapi.StorageUtils;
 import com.github.hotm.net.HotMNetwork;
-import com.github.hotm.world.auranet.server.ServerAuraNetStorage;
+import com.github.hotm.world.meta.server.ServerMetaStorage;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.network.Packet;
@@ -36,11 +36,11 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
- * Used to allow the Aura Net to be saved and loaded properly.
+ * Used to allow the meta block to be saved and loaded properly.
  */
 @Mixin(ThreadedAnvilChunkStorage.class)
-public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAccess {
-    private ServerAuraNetStorage hotm_auraNetStorage;
+public class ThreadedAnvilChunkStorageMixin implements ServerMetaStorageAccess {
+    private ServerMetaStorage hotm_metaStorage;
 
     @Shadow
     @Final
@@ -55,7 +55,7 @@ public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAcces
                           ChunkStatusChangeListener chunkStatusChangeListener,
                           Supplier<PersistentStateManager> persistentStateManagerFactory, int viewDistance,
                           boolean dsync, CallbackInfo ci) {
-        hotm_auraNetStorage = new ServerAuraNetStorage(world,
+        hotm_metaStorage = new ServerMetaStorage(world,
                 StorageUtils.setupMetaDir(session.getWorldDirectory(world.getRegistryKey())), dataFixer, dsync);
     }
 
@@ -63,15 +63,15 @@ public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAcces
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/poi/PointOfInterestStorage;close()V",
                     shift = At.Shift.AFTER))
     private void onClose(CallbackInfo ci) throws IOException {
-        hotm_auraNetStorage.close();
+        hotm_metaStorage.close();
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/poi/PointOfInterestStorage;tick(Ljava/util/function/BooleanSupplier;)V",
             shift = At.Shift.AFTER))
     private void onTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-        world.getProfiler().swap("aura_net");
-        hotm_auraNetStorage.tick(shouldKeepTicking);
+        world.getProfiler().swap("meta_storage");
+        hotm_metaStorage.tick(shouldKeepTicking);
     }
 
     /*
@@ -81,7 +81,7 @@ public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAcces
             target = "Lnet/minecraft/world/ChunkSerializer;deserialize(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/structure/StructureManager;Lnet/minecraft/world/poi/PointOfInterestStorage;Lnet/minecraft/util/math/ChunkPos;Lnet/minecraft/nbt/NbtCompound;)Lnet/minecraft/world/chunk/ProtoChunk;"))
     private void onLoadChunkStartDeserialize(ChunkPos pos,
                                              CallbackInfoReturnable<Either<Chunk, ChunkHolder.Unloaded>> cir) {
-        StorageUtils.startDeserialize(hotm_auraNetStorage);
+        StorageUtils.startDeserialize(hotm_metaStorage);
     }
 
     /*
@@ -97,17 +97,17 @@ public class ThreadedAnvilChunkStorageMixin implements ServerAuraNetStorageAcces
 
     @Inject(method = "save(Lnet/minecraft/world/chunk/Chunk;)Z", at = @At("HEAD"))
     private void onSave(Chunk chunk, CallbackInfoReturnable<Boolean> cir) {
-        hotm_auraNetStorage.trySave(chunk.getPos());
+        hotm_metaStorage.trySave(chunk.getPos());
     }
 
     @Inject(method = "sendChunkDataPackets", at = @At("RETURN"))
     private void onSendChunkDataPackets(ServerPlayerEntity player, Packet<?>[] packets, WorldChunk chunk,
                                         CallbackInfo ci) {
-        HotMNetwork.sendAuraNetChunkPillar(hotm_auraNetStorage, player, chunk.getPos());
+        HotMNetwork.sendMetaChunkPillar(hotm_metaStorage, player, chunk.getPos());
     }
 
     @Override
-    public ServerAuraNetStorage hotm_getAuraNetStorage() {
-        return hotm_auraNetStorage;
+    public ServerMetaStorage hotm_getMetaStorage() {
+        return hotm_metaStorage;
     }
 }

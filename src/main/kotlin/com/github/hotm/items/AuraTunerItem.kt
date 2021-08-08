@@ -2,12 +2,12 @@ package com.github.hotm.items
 
 import com.github.hotm.HotMConstants.message
 import com.github.hotm.HotMConstants.str
-import com.github.hotm.blocks.AuraNodeBlock
+import com.github.hotm.blocks.BlockWithMeta
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.util.DimBlockPos
-import com.github.hotm.world.auranet.DependableAuraNode
-import com.github.hotm.world.auranet.DependantAuraNode
-import com.github.hotm.world.auranet.DependencyAuraNodeUtils
+import com.github.hotm.meta.auranet.DependableAuraNode
+import com.github.hotm.meta.auranet.DependantAuraNode
+import com.github.hotm.meta.auranet.DependencyAuraNodeUtils
 import net.minecraft.item.Item
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.nbt.NbtCompound
@@ -30,8 +30,8 @@ class AuraTunerItem(settings: Settings) : Item(settings), InteractionCanceler {
         val block = world.getBlockState(pos).block
         val player = context.player
 
-        if (block is AuraNodeBlock && player != null) {
-            val node = StorageUtils.getAuraNetAccess(world)[pos]
+        if (block is BlockWithMeta && player != null) {
+            val node = StorageUtils.getMetaAccess(world)[pos]
             val stack = context.stack
 
             if (node is DependableAuraNode && player.isSneaking) {
@@ -66,7 +66,7 @@ class AuraTunerItem(settings: Settings) : Item(settings), InteractionCanceler {
                         world as ServerWorld
 
                         val parentPos = DimBlockPos.fromNbt(auraTunerData.getCompound(PARENT_NODE_KEY))
-                        val parentNode = parentPos.getAuraNode(world.server)
+                        val parentNode = parentPos.getMetaBlock(world.server)
 
                         if (parentNode is DependableAuraNode) {
                             val str = when (DependencyAuraNodeUtils.connect(world, parentNode, node)) {

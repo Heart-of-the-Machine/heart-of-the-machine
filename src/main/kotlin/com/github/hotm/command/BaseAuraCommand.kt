@@ -4,7 +4,6 @@ import com.github.hotm.HotMConstants
 import com.github.hotm.mixinapi.StorageUtils
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.FloatArgumentType
-import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
@@ -32,7 +31,7 @@ object BaseAuraCommand {
 
     private fun executeGet(context: CommandContext<ServerCommandSource>): Int {
         val sourceWorld = context.source.world
-        val storage = StorageUtils.getServerAuraNetStorage(sourceWorld)
+        val storage = StorageUtils.getServerMetaStorage(sourceWorld)
 
         val value = storage.getBaseAura(ChunkSectionPos.from(BlockPos(context.source.position)))
         context.source.sendFeedback(HotMConstants.commandText(COMMAND_NAME, value), false)
@@ -42,7 +41,7 @@ object BaseAuraCommand {
 
     private fun executeSet(context: CommandContext<ServerCommandSource>): Int {
         val sourceWorld = context.source.world
-        val storage = StorageUtils.getServerAuraNetStorage(sourceWorld)
+        val storage = StorageUtils.getServerMetaStorage(sourceWorld)
         val value = FloatArgumentType.getFloat(context, "value")
 
         storage.setBaseAura(ChunkSectionPos.from(BlockPos(context.source.position)), value)

@@ -9,8 +9,8 @@ import alexiil.mc.lib.net.impl.McNetworkStack
 import com.github.hotm.HotMConstants.str
 import com.github.hotm.misc.HotMRegistries
 import com.github.hotm.mixinapi.StorageUtils
-import com.github.hotm.world.auranet.client.ClientAuraNetStorage
-import com.github.hotm.world.auranet.server.ServerAuraNetStorage
+import com.github.hotm.world.meta.client.ClientMetaStorage
+import com.github.hotm.world.meta.server.ServerMetaStorage
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup
 import net.minecraft.client.MinecraftClient
 import net.minecraft.server.network.ServerPlayerEntity
@@ -23,23 +23,23 @@ import org.apache.logging.log4j.LogManager
 object HotMNetwork {
     private val LOGGER = LogManager.getLogger()
 
-    private val ID_AURA_NET_TYPE_ID_CACHE = McNetworkStack.ROOT.child(str("AURA_NET_TYPE_ID_CACHE"))
-    val AURA_NET_TYPE_ID_CACHE = NetObjectCache.createMappedIdentifier(ID_AURA_NET_TYPE_ID_CACHE, { type ->
-        HotMRegistries.AURA_NODE_TYPE.getId(type) ?: throw IllegalArgumentException(
-            "Attempting to encode an AuraNodeType that has not been registered! type: $type"
+    private val ID_META_BLOCK_TYPE_ID_CACHE = McNetworkStack.ROOT.child(str("META_BLOCK_TYPE_ID_CACHE"))
+    val META_BLOCK_TYPE_ID_CACHE = NetObjectCache.createMappedIdentifier(ID_META_BLOCK_TYPE_ID_CACHE, { type ->
+        HotMRegistries.META_BLOCK_TYPE.getId(type) ?: throw IllegalArgumentException(
+            "Attempting to encode an MetaBlockType that has not been registered! type: $type"
         )
-    }, HotMRegistries.AURA_NODE_TYPE::get)
+    }, HotMRegistries.META_BLOCK_TYPE::get)
 
-    private val ID_S2C_AURA_NET_CHUNK_PILLAR =
-        McNetworkStack.ROOT.idData(str("AURA_NET_CHUNK_PILLAR")).setReceiver(::receiveAuraNetChunkPillar)
-    private val ID_S2C_AURA_NODE_PUT =
-        McNetworkStack.ROOT.idData(str("AURA_NODE_PUT")).setReceiver(::receiveAuraNodePut)
-    private val ID_S2C_AURA_NODE_REMOVE =
-        McNetworkStack.ROOT.idData(str("AURA_NODE_REMOVE")).setReceiver(::receiveAuraNodeRemove)
+    private val ID_S2C_META_CHUNK_PILLAR =
+        McNetworkStack.ROOT.idData(str("META_CHUNK_PILLAR")).setReceiver(::receiveMetaChunkPillar)
+    private val ID_S2C_META_BLOCK_PUT =
+        McNetworkStack.ROOT.idData(str("META_BLOCK_PUT")).setReceiver(::receiveMetaBlockPut)
+    private val ID_S2C_META_BLOCK_REMOVE =
+        McNetworkStack.ROOT.idData(str("META_BLOCK_REMOVE")).setReceiver(::receiveMetaBlockRemove)
     private val ID_S2C_BASE_AURA_UPDATE =
         McNetworkStack.ROOT.idData(str("BASE_AURA_UPDATE")).setReceiver(::receiveBaseAuraUpdate)
 
-    private fun getClientStorage(ctx: IMsgReadCtx, errorMsg: String): ClientAuraNetStorage? {
+    private fun getClientStorage(ctx: IMsgReadCtx, errorMsg: String): ClientMetaStorage? {
         ctx.assertClientSide()
         val world = MinecraftClient.getInstance().world
 
@@ -48,41 +48,41 @@ object HotMNetwork {
             return null
         }
 
-        return StorageUtils.getClientAuraNetStorage(world)
+        return StorageUtils.getClientMetaStorage(world)
     }
 
-    private fun receiveAuraNetChunkPillar(buf: NetByteBuf, ctx: IMsgReadCtx) {
+    private fun receiveMetaChunkPillar(buf: NetByteBuf, ctx: IMsgReadCtx) {
         val storage = getClientStorage(ctx, "Received chunk pillar update packet while not in a world") ?: return
         storage.receiveChunkPillar(buf, ctx)
     }
 
     @JvmStatic
-    fun sendAuraNetChunkPillar(storage: ServerAuraNetStorage, player: ServerPlayerEntity, pos: ChunkPos) {
+    fun sendMetaChunkPillar(storage: ServerMetaStorage, player: ServerPlayerEntity, pos: ChunkPos) {
         val conn = CoreMinecraftNetUtil.getConnection(player)
-        ID_S2C_AURA_NET_CHUNK_PILLAR.send(conn) { buf, ctx ->
+        ID_S2C_META_CHUNK_PILLAR.send(conn) { buf, ctx ->
             storage.sendChunkPillar(pos, buf, ctx)
         }
     }
 
-    private fun receiveAuraNodePut(buf: NetByteBuf, ctx: IMsgReadCtx) {
-        val storage = getClientStorage(ctx, "Received aura node remove packet while not in a world") ?: return
+    private fun receiveMetaBlockPut(buf: NetByteBuf, ctx: IMsgReadCtx) {
+        val storage = getClientStorage(ctx, "Received meta block remove packet while not in a world") ?: return
         storage.receivePut(buf, ctx)
     }
 
-    fun sendAuraNodePut(world: ServerWorld, pos: BlockPos, writer: NetIdData.IMsgDataWriter) {
+    fun sendMetaBlockPut(world: ServerWorld, pos: BlockPos, writer: NetIdData.IMsgDataWriter) {
         CoreMinecraftNetUtil.getPlayersWatching(world, pos).forEach { conn ->
-            ID_S2C_AURA_NODE_PUT.send(conn, writer)
+            ID_S2C_META_BLOCK_PUT.send(conn, writer)
         }
     }
 
-    private fun receiveAuraNodeRemove(buf: NetByteBuf, ctx: IMsgReadCtx) {
-        val storage = getClientStorage(ctx, "Received aura node remove packet while not in a world") ?: return
+    private fun receiveMetaBlockRemove(buf: NetByteBuf, ctx: IMsgReadCtx) {
+        val storage = getClientStorage(ctx, "Received meta block remove packet while not in a world") ?: return
         storage.receiveRemove(buf, ctx)
     }
 
-    fun sendAuraNodeRemove(world: ServerWorld, pos: BlockPos, writer: NetIdData.IMsgDataWriter) {
+    fun sendMetaBlockRemove(world: ServerWorld, pos: BlockPos, writer: NetIdData.IMsgDataWriter) {
         CoreMinecraftNetUtil.getPlayersWatching(world, pos).forEach { conn ->
-            ID_S2C_AURA_NODE_REMOVE.send(conn, writer)
+            ID_S2C_META_BLOCK_REMOVE.send(conn, writer)
         }
     }
 

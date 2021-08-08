@@ -2,10 +2,10 @@ package com.github.hotm.blocks
 
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.particle.HotMParticles
-import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.AuraNodeType
-import com.github.hotm.world.auranet.BasicSourceAuraNode
-import com.github.hotm.world.auranet.server.ServerAuraNetStorage
+import com.github.hotm.meta.MetaBlock
+import com.github.hotm.meta.MetaBlockType
+import com.github.hotm.meta.auranet.BasicSourceAuraNode
+import com.github.hotm.world.meta.server.ServerMetaStorage
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.server.world.ServerWorld
@@ -16,20 +16,20 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import java.util.*
 
-class BasicSourceAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlock(settings) {
+class BasicSourceAuraNodeBlock(settings: Settings) : AbstractBlockWithMeta(settings) {
     companion object {
         private val SHAPE = createCuboidShape(4.0, 4.0, 4.0, 12.0, 12.0, 12.0)
     }
 
-    override val auraNodeType: AuraNodeType<out AuraNode>
+    override val metaBlockType: MetaBlockType<out MetaBlock>
         get() = BasicSourceAuraNode.Type
 
-    override fun createAuraNode(
+    override fun createMetaBlock(
         state: BlockState,
         world: ServerWorld,
-        storage: ServerAuraNetStorage,
+        storage: ServerMetaStorage,
         pos: BlockPos
-    ): AuraNode {
+    ): MetaBlock {
         return BasicSourceAuraNode(storage, storage.getUpdateListener(ChunkSectionPos.from(pos)), pos, 0f, listOf())
     }
 
@@ -43,7 +43,7 @@ class BasicSourceAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlock(setti
     }
 
     override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
-        val access = StorageUtils.getAuraNetAccess(world)
+        val access = StorageUtils.getMetaAccess(world)
         val node = access[pos]
 
         if (node != null && node.getValue() > 0) {

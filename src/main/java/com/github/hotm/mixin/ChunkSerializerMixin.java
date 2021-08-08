@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
- * Used to allow the Aura Net to be able to handle network blocks being added outside of a game.
+ * Used to allow the meta block system to be able to handle network blocks being added outside of a game.
  */
 @Mixin(ChunkSerializer.class)
 public class ChunkSerializerMixin {

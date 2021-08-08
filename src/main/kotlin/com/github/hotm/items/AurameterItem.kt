@@ -33,7 +33,7 @@ class AurameterItem(settings: Settings) : Item(settings), InteractionCanceler {
                 }
             } else {
                 val pos = context.blockPos
-                val access = StorageUtils.getAuraNetAccess(world)
+                val access = StorageUtils.getMetaAccess(world)
                 val node = access[pos]
 
                 if (node == null) {
@@ -64,7 +64,7 @@ class AurameterItem(settings: Settings) : Item(settings), InteractionCanceler {
     }
 
     private fun printChunkAura(world: ServerWorld, player: PlayerEntity) {
-        val storage = StorageUtils.getServerAuraNetStorage(world)
+        val storage = StorageUtils.getServerMetaStorage(world)
         val sectionPos = ChunkSectionPos.from(player.blockPos)
         val base = storage.getBaseAura(sectionPos)
         val total = storage.getSectionAura(sectionPos)

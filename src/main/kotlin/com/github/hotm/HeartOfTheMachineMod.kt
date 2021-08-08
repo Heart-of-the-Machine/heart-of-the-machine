@@ -11,7 +11,7 @@ import com.github.hotm.net.sync.ServerSync2ClientData
 import com.github.hotm.particle.HotMParticles
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.HotMTeleporters
-import com.github.hotm.world.auranet.AuraNodes
+import com.github.hotm.meta.MetaBlocks
 import com.github.hotm.world.biome.HotMBiomes
 import com.github.hotm.world.gen.feature.HotMFeatures
 import com.github.hotm.world.gen.surfacebuilder.HotMSurfaceBuilders
@@ -30,7 +30,7 @@ fun init() {
     HotMSurfaceBuilders.register()
     HotMBiomes.register()
     HotMDimensions.register()
-    AuraNodes.register()
+    MetaBlocks.register()
     HotMParticles.register()
     HotMTeleporters.register()
     HotMCommands.register()

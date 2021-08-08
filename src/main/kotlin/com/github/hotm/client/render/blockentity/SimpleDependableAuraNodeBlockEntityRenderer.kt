@@ -2,7 +2,7 @@ package com.github.hotm.client.render.blockentity
 
 import com.github.hotm.blockentity.RenderedDependableAuraNodeBlockEntity
 import com.github.hotm.mixinapi.StorageUtils
-import com.github.hotm.world.auranet.RenderedDependableAuraNode
+import com.github.hotm.meta.auranet.RenderedDependableAuraNode
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
@@ -34,7 +34,7 @@ open class SimpleDependableAuraNodeBlockEntityRenderer<T>(protected val ctx: Blo
             return
         }
 
-        val access = StorageUtils.getAuraNetAccess(world)
+        val access = StorageUtils.getMetaAccess(world)
 
         // This is null when a node is placed but before the client has received the node data
         val node = access[pos] as? RenderedDependableAuraNode ?: return
