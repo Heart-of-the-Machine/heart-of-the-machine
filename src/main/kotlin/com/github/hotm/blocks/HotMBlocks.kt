@@ -4,6 +4,7 @@ import com.github.hotm.HotMConstants
 import com.github.hotm.blocks.spore.StandardPlasseinSporeGenerator
 import com.github.hotm.items.BracingItem
 import com.github.hotm.items.HotMItems.HOTM_BUILDING_ITEM_SETTINGS
+import com.github.hotm.items.HotMItems.HOTM_MACHINE_ITEM_SETTINGS
 import com.github.hotm.items.HotMItems.HOTM_MATERIAL_ITEM_SETTINGS
 import com.github.hotm.items.ScaffoldingItem
 import com.github.hotm.mixinapi.BlockCreators
@@ -26,6 +27,10 @@ object HotMBlocks {
     /*
      * Block Settings.
      */
+    private val AURA_NODE_SETTINGS by lazy {
+        FabricBlockSettings.of(Material.GLASS, MapColor.WHITE_GRAY).requiresTool().breakByTool(FabricToolTags.PICKAXES)
+            .strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS).luminance(12).nonOpaque()
+    }
     private val BRACING_SETTINGS by lazy {
         FabricBlockSettings.of(Material.METAL, MapColor.GRAY).requiresTool().strength(1.0f, 15.0f)
             .sounds(BlockSoundGroup.METAL).nonOpaque()
@@ -217,14 +222,36 @@ object HotMBlocks {
     }
     val THINKING_GLASS by lazy { GlassBlock(GLASS_SETTINGS) }
 
+    /*
+     * Aura Node blocks.
+     */
+    val BASIC_SIPHON_AURA_NODE by lazy { BasicSiphonAuraNodeBlock(AURA_NODE_SETTINGS) }
+    val BASIC_SOURCE_AURA_NODE by lazy { BasicSourceAuraNodeBlock(AURA_NODE_SETTINGS) }
+    val COLLECTOR_DISTRIBUTOR_AURA_NODE by lazy { CollectorDistributorAuraNodeBlock(AURA_NODE_SETTINGS) }
+    val PORTAL_RECEIVER_AURA_NODE by lazy { PortalReceiverAuraNodeBlock(AURA_NODE_SETTINGS) }
+    val PORTAL_TRANSMITTER_AURA_NODE by lazy { PortalTransmitterAuraNodeBlock(AURA_NODE_SETTINGS) }
+
+    /*
+     * Debug Blocks.
+     */
+    val DEBUG_TICKING by lazy {
+        DebugTickingBlock(
+            FabricBlockSettings.of(Material.STONE, MapColor.DARK_AQUA).strength(-1.0f)
+        )
+    }
+
     /**
      * Register all Heart of the Machine blocks...
      */
     fun register() {
+        register(BASIC_SIPHON_AURA_NODE, "basic_siphon_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
+        register(BASIC_SOURCE_AURA_NODE, "basic_source_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
+        register(COLLECTOR_DISTRIBUTOR_AURA_NODE, "collector_distributor_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
         register(CYAN_CRYSTAL, "cyan_crystal", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_CRYSTAL_LAMP, "cyan_crystal_lamp", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_MACHINE_CASING_LAMP, "cyan_machine_casing_lamp", HOTM_BUILDING_ITEM_SETTINGS)
         register(CYAN_THINKING_STONE_LAMP, "cyan_thinking_stone_lamp", HOTM_BUILDING_ITEM_SETTINGS)
+        register(DEBUG_TICKING, "debug_ticking", Item.Settings())
         register(GLOWY_OBELISK_PART, "glowy_obelisk_part", HOTM_BUILDING_ITEM_SETTINGS)
         register(MACHINE_CASING, "machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(MACHINE_CASING_SLAB, "machine_casing_slab", HOTM_BUILDING_ITEM_SETTINGS)
@@ -260,6 +287,8 @@ object HotMBlocks {
         )
         register(PLASSEIN_SPORE, "plassein_spore", HOTM_BUILDING_ITEM_SETTINGS)
         register(PLASSEIN_STEM, "plassein_stem", HOTM_BUILDING_ITEM_SETTINGS)
+        register(PORTAL_RECEIVER_AURA_NODE, "portal_receiver_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
+        register(PORTAL_TRANSMITTER_AURA_NODE, "portal_transmitter_aura_node", HOTM_MACHINE_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING, "rusted_machine_casing", HOTM_BUILDING_ITEM_SETTINGS)
         register(RUSTED_MACHINE_CASING_LEYLINE, "rusted_machine_casing_leyline", HOTM_BUILDING_ITEM_SETTINGS)
         register(SMOOTH_THINKING_STONE, "smooth_thinking_stone", HOTM_BUILDING_ITEM_SETTINGS)

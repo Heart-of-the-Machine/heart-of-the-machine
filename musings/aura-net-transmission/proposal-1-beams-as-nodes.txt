@@ -1,0 +1,22 @@
+This proposal just has beams be nodes themselves. This feels wasteful to me though.
+
+Questions:
+ * Where are the connections between nodes stored?
+   - Beams are stored as nodes themselves. This means that when checking a chunk for block-changes, beam nodes would
+     need to be ignored unless their node is explicitly replaced by another one.
+ * Aura "beams" should render in the world. How do we do that?
+   - Beams would render in the world just like any other node, using similar mechanisms to BlockEntities.
+ * How do we track updates; make sure no node thinks its transmitting to a node that doesn't exist?
+   - If a beam node is replaced it then terminates there and its parent beam nodes attempt to transmit power to node
+     that replaced it.
+ * How are "beams" synced to the client?
+   - Beam nodes are synced to the client just like any other node, through the node sync packets.
+
+Pros:
+ * Simpler than the straight-beams proposal.
+ * Makes use of existing systems for rendering, syncing, and storing nodes.
+
+Cons:
+ * Having beams be nodes means that shining a beam through a chunks section suddenly means there are a lot of nodes in
+   that chunk section.
+ * Aura value updates require many steps, one step per block.

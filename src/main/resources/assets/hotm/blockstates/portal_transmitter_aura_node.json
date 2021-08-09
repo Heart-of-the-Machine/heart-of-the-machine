@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hotm:block/portal_transmitter_aura_node"
+    }
+  }
+}

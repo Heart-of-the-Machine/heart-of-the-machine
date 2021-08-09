@@ -6,6 +6,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'com.matthewprenger.cursegradle'
     id 'com.modrinth.minotaur'
+    // use allure because the JUnit report writer is broken
+    id 'io.qameta.allure'
     id 'de.undercouch.download'
 }
 
@@ -75,6 +77,24 @@ dependencies {
 
     // Mod dependencies
 
+    // LBA
+    modImplementation("alexiil.mc.lib:libblockattributes-all:${project.lba_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    include "alexiil.mc.lib:libblockattributes-all:${project.lba_version}"
+
+    // LMP
+    modImplementation("alexiil.mc.lib:libmultipart-all:${project.lmp_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    include "alexiil.mc.lib:libmultipart-all:${project.lmp_version}"
+
+    // LNS
+    modImplementation("alexiil.mc.lib:libnetworkstack-base:${project.lns_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    include "alexiil.mc.lib:libnetworkstack-base:${project.lns_version}"
+
     // FREX
     modApi("grondag:frex-${grondag_mc_tag}:${frex_version}") {
         transitive false
@@ -113,6 +133,12 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api"
     }
 
+    // Simple Pipes
+    modRuntime("alexiil.mc.mod:simplepipes-base:${simplepipes_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+        exclude group: "alexiil.mc.lib"
+    }
+
     // Canvas
     modRuntime("grondag:canvas-${grondag_mc_tag}-${canvas_mc_tag}:${canvas_version}") {
         exclude group: "net.fabricmc.fabric-api"
@@ -128,7 +154,17 @@ dependencies {
 
     // Sadly there are no usable minimap mods that work in the dev environment
 
+    // for some annotations that appear in decompiled code
+
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    // testing frameworks
+
+    testImplementation "io.kotest:kotest-runner-junit5:${project.kotest_version}"
+    testImplementation "io.kotest:kotest-assertions-core:${project.kotest_version}"
+    testImplementation "io.kotest.extensions:kotest-extensions-allure:${project.kotest_extensions_allure_version}"
+    testImplementation "io.mockk:mockk:${project.mockk_version}"
+    testImplementation "org.objenesis:objenesis:${project.objenesis_version}"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
@@ -161,6 +197,15 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
     from "LICENSE"
+}
+
+allure {
+    autoconfigure = false
+    version = project.allure_version
+}
+
+test {
+    useJUnitPlatform()
 }
 
 // configure the maven publication
@@ -233,3 +278,4 @@ if (System.getenv("MODRINTH_API_KEY") != null) {
 }
 
 compileKotlin.kotlinOptions.jvmTarget = "16"
+compileTestKotlin.kotlinOptions.jvmTarget = "16"

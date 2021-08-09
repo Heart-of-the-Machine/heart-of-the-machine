@@ -1,0 +1,8 @@
+{
+  "parent": "hotm:block/basic_aura_node",
+  "textures": {
+    "casing": "hotm:block/aura_node_casing",
+    "particle": "hotm:block/basic_source_aura_node_core",
+    "core": "hotm:block/basic_source_aura_node_core"
+  }
+}

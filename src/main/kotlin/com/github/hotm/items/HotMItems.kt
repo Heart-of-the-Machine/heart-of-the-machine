@@ -3,25 +3,37 @@ package com.github.hotm.items
 import com.github.hotm.HotMConstants
 import com.github.hotm.blocks.HotMBlocks
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.item.ItemUsageContext
+import net.minecraft.util.ActionResult
 import net.minecraft.util.registry.Registry
 
 object HotMItems {
     val HOTM_BUILDING_ITEM_GROUP by lazy { FabricItemGroupBuilder.build(HotMConstants.identifier("building"), HotMItems::buildingGroupItem) }
     val HOTM_MATERIAL_ITEM_GROUP by lazy { FabricItemGroupBuilder.build(HotMConstants.identifier("materials"), HotMItems::materialGroupItem) }
+    val HOTM_MACHINES_ITEM_GROUP by lazy { FabricItemGroupBuilder.build(HotMConstants.identifier("machines"), HotMItems::machinesGroupItem) }
 
     val HOTM_BUILDING_ITEM_SETTINGS: Item.Settings by lazy { Item.Settings().group(HOTM_BUILDING_ITEM_GROUP) }
     val HOTM_MATERIAL_ITEM_SETTINGS: Item.Settings by lazy { Item.Settings().group(HOTM_MATERIAL_ITEM_GROUP) }
+    val HOTM_MACHINE_ITEM_SETTINGS: Item.Settings by lazy { Item.Settings().group(HOTM_MACHINES_ITEM_GROUP) }
 
     val CYAN_CRYSTAL_SHARD by lazy { Item(HOTM_MATERIAL_ITEM_SETTINGS) }
     val MAGENTA_CRYSTAL_SHARD by lazy { Item(HOTM_MATERIAL_ITEM_SETTINGS) }
     val PLASSEIN_FUEL_CHUNK by lazy { Item(HOTM_MATERIAL_ITEM_SETTINGS) }
 
+    val AURA_TUNER by lazy { AuraTunerItem(HOTM_MACHINE_ITEM_SETTINGS) }
+    val AURAMETER by lazy { AurameterItem(HOTM_MACHINE_ITEM_SETTINGS) }
+
     fun register() {
+        register(AURA_TUNER, "aura_tuner")
+        register(AURAMETER, "aurameter")
         register(CYAN_CRYSTAL_SHARD, "cyan_crystal_shard")
         register(MAGENTA_CRYSTAL_SHARD, "magenta_crystal_shard")
         register(PLASSEIN_FUEL_CHUNK, "plassein_fuel_chunk")
+
+        InteractionCanceler.register()
     }
 
     private fun register(item: Item, name: String) {
@@ -34,5 +46,9 @@ object HotMItems {
 
     private fun materialGroupItem(): ItemStack {
         return ItemStack(CYAN_CRYSTAL_SHARD)
+    }
+
+    private fun machinesGroupItem(): ItemStack {
+        return ItemStack(AURA_TUNER)
     }
 }

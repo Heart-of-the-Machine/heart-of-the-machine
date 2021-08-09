@@ -3,6 +3,7 @@ package com.github.hotm.world
 import com.github.hotm.blocks.HotMBlocks
 import com.github.hotm.mixin.StructureFeatureAccessor
 import com.github.hotm.util.BiomeUtils
+import com.github.hotm.util.DimBlockPos
 import com.github.hotm.util.StreamUtils
 import com.github.hotm.world.biome.HotMBiomeData
 import com.github.hotm.world.biome.NectereBiomeData
@@ -200,25 +201,64 @@ object HotMPortalFinders {
     }
 
     /**
-     * Attempt to find a Nectere portal among a list of destination positions.
+     * Finds a Nectere portal like object in the world given a list of block positions and a filter predicate.
      */
-    fun findNecterePortal(world: WorldView, newPoses: List<BlockPos>): BlockPos? {
+    fun findNecterePortal(world: WorldView, newPoses: List<BlockPos>, predicate: (BlockPos) -> Boolean): BlockPos? {
         for (offset in 0 until world.height) {
             for (init in newPoses) {
                 val up = init.up(offset)
                 val down = init.down(offset)
 
-                if (!world.isOutOfHeightLimit(up) && world.getBlockState(up).block == HotMBlocks.NECTERE_PORTAL) {
-                    return findPortalBase(world, up)
+                if (!world.isOutOfHeightLimit(up) && predicate(up)) {
+                    return up
                 }
 
-                if (!world.isOutOfHeightLimit(down) && world.getBlockState(down).block == HotMBlocks.NECTERE_PORTAL) {
-                    return findPortalBase(world, down)
+                if (!world.isOutOfHeightLimit(down) && predicate(down)) {
+                    return down
                 }
             }
         }
 
         return null
+    }
+
+    /**
+     * Finds a Nectere portal like object linked to this world and position.
+     */
+    fun findNecterePortal(world: ServerWorld, pos: BlockPos, predicate: (DimBlockPos) -> Boolean): DimBlockPos? {
+        if (world.registryKey == HotMDimensions.NECTERE_KEY) {
+            val otherWorld = HotMLocationConversions.nectere2NonWorld(world, pos)
+            val otherPoses = HotMLocationConversions.nectere2AllNon(world, pos).toList()
+
+            return if (otherWorld != null && otherPoses.isNotEmpty()) {
+                findNecterePortal(otherWorld, otherPoses) {
+                    predicate(DimBlockPos(otherWorld.registryKey, it))
+                }?.let { DimBlockPos(otherWorld.registryKey, it) }
+            } else {
+                null
+            }
+        } else {
+            val nectereWorld = HotMDimensions.getNectereWorld(world.server)
+            val necterePoses = HotMLocationConversions.non2AllNectere(world, pos, nectereWorld).toList()
+
+            return if (necterePoses.isNotEmpty()) {
+                findNecterePortal(nectereWorld, necterePoses) {
+                    predicate(DimBlockPos(HotMDimensions.NECTERE_KEY, it))
+                }?.let { DimBlockPos(HotMDimensions.NECTERE_KEY, it) }
+            } else {
+                null
+            }
+        }
+    }
+
+    /**
+     * Attempt to find a Nectere portal among a list of destination positions.
+     */
+    fun findNecterePortal(world: WorldView, newPoses: List<BlockPos>): BlockPos? {
+        return findNecterePortal(
+            world,
+            newPoses
+        ) { world.getBlockState(it).block == HotMBlocks.NECTERE_PORTAL }?.let { findPortalBase(world, it) }
     }
 
     /**

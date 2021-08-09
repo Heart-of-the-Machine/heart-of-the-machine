@@ -6,6 +6,7 @@
     "BuiltinBiomesAccessor",
     "ChunkGeneratorMixin",
     "ChunkGeneratorSettingsAccessor",
+    "ChunkSerializerMixin",
     "ConfiguredFeaturesDecoratorsAccessor",
     "DecoratorContextAccessor",
     "DimensionOptionsMixin",
@@ -16,11 +17,14 @@
     "MinecraftServerMixin",
     "MultiNoiseBiomeSourceAccessor",
     "StairsBlockAccessor",
+    "StorageIoWorkerInvoker",
     "StructureFeatureAccessor",
     "StructurePieceAccessor",
-    "StructureWeightSamplerAccessor"
+    "StructureWeightSamplerAccessor",
+    "ThreadedAnvilChunkStorageMixin"
   ],
   "client": [
+    "ClientChunkManagerMixin"
   ],
   "server": [
   ],

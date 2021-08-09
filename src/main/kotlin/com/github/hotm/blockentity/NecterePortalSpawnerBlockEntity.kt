@@ -22,7 +22,7 @@ import net.minecraft.world.World
  * sure the portals are placed right.
  */
 class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
-    BlockEntity(HotMBlockEntities.NECTERE_PORTAL_SPAWNER_BLOCK_ENTITY, pos, state) {
+    BlockEntity(HotMBlockEntities.NECTERE_PORTAL_SPAWNER, pos, state) {
     companion object {
         fun tick(world: World, pos: BlockPos, state: BlockState, entity: NecterePortalSpawnerBlockEntity) {
             entity.tick()

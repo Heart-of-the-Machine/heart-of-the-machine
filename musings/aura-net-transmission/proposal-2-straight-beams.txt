@@ -1,0 +1,32 @@
+In this proposal, beams are separate from nodes but are stored in cubic chunks roughly the same way nodes are.
+
+When a transmitting node is placed, it tells the server-side storage to create a beam in a direction. The server-side
+storage then
+
+Questions:
+ * Where are the connections between nodes stored?
+   - Chunk sections would keep track of all the beams originating from within themselves. They would also contain
+     references to all the beams passing through them. These references would be stored on a per BlockPos basis, just
+     like nodes.
+ * Aura "beams" should render in the world. How do we do that?
+   - The world renderer mixin would just need to ask the chunk sections its rendering what beam references are passing
+     through them and render them accordingly. It would likely render beams similarly to BlockEntities.
+ * How do we track updates; make sure no node thinks its transmitting to a node that doesn't exist?
+   - When a node is placed, the storage should check to see if there are any beams occupying that space. If there are,
+     then all beams moving through that space are terminated at that point and possibly connected to the new node that's
+     been placed.
+ * How are "beams" synced to the client?
+   - Beams and beam updates would need to be synced to the client through a separate set of packets specifically
+     intended for beam synchronization.
+
+Pros:
+ * Beams don't pass through nodes. This means that you can just place down a transmitter, point it in the correct
+   direction, and place down the receiver and the transmitter and receiver will automatically connect.
+ * Keeping track of when to render a beam is easy. Just ask the currently-rendering chunk section for all the beams
+   passing through it and render those.
+
+Cons:
+ * Keeping track of when beams are created, removed, and blocked is complicated. This is made even more messy by the
+   fact that not all chunks may be loaded.
+ * Beams and beam references must be saved with the chunk they're in. This just feels messy to me.
+ * Beams must be synced to the client through a separate system of packets.

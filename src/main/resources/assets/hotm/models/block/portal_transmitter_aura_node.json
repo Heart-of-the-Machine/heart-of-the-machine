@@ -1,0 +1,10 @@
+{
+  "parent": "hotm:block/portal_aura_node",
+  "textures": {
+    "particle": "hotm:block/portal_aura_node_plate",
+    "plate": "hotm:block/portal_aura_node_plate",
+    "base_side": "hotm:block/portal_aura_node_base_side",
+    "base_end": "hotm:block/portal_aura_node_base_end",
+    "core": "hotm:block/portal_transmitter_aura_node_core"
+  }
+}
