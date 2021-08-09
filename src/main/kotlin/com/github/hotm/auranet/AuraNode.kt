@@ -152,8 +152,6 @@ interface AuraNode {
 
     val dimPos: DimBlockPos
 
-    fun getValue(): Float
-
     fun writeToPacket(buf: NetByteBuf, ctx: IMsgWriteCtx)
 
     fun onRemove() {}

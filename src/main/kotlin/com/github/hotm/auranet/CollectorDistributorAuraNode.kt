@@ -23,7 +23,7 @@ class CollectorDistributorAuraNode(
     private var value: Float,
     parents: Collection<BlockPos>,
     children: Collection<BlockPos>
-) : AbstractAuraNode(Type, access, updateListener, pos), DependantAuraNode, RenderedDependableAuraNode {
+) : AbstractAuraNode(Type, access, updateListener, pos), DependantAuraNode, RenderedDependableAuraNode, ValuedAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(

@@ -1,6 +1,7 @@
 package com.github.hotm.items
 
 import com.github.hotm.HotMConstants.message
+import com.github.hotm.auranet.ValuedAuraNode
 import com.github.hotm.mixinapi.StorageUtils
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
@@ -34,7 +35,7 @@ class AurameterItem(settings: Settings) : Item(settings), InteractionCanceler {
             } else {
                 val pos = context.blockPos
                 val access = StorageUtils.getAuraNetAccess(world)
-                val node = access[pos]
+                val node = access[pos] as? ValuedAuraNode
 
                 if (node == null) {
                     ActionResult.FAIL

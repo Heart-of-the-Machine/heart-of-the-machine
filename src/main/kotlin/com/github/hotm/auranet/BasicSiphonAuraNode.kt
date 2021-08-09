@@ -22,7 +22,7 @@ class BasicSiphonAuraNode(
     pos: BlockPos,
     private var value: Float,
     childPos: BlockPos?
-) : AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, RenderedDependableAuraNode {
+) : AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, RenderedDependableAuraNode, ValuedAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(

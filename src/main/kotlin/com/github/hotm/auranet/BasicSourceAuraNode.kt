@@ -22,7 +22,7 @@ class BasicSourceAuraNode(
     pos: BlockPos,
     private var value: Float,
     parents: Collection<BlockPos>
-) : AbstractAuraNode(Type, access, updateListener, pos), SourceAuraNode, DependantAuraNode {
+) : AbstractAuraNode(Type, access, updateListener, pos), SourceAuraNode, DependantAuraNode, ValuedAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(BasicSourceAuraNode::class.java, str("basic_source_aura_node"))

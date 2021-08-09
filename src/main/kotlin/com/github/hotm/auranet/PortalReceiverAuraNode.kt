@@ -24,8 +24,7 @@ class PortalReceiverAuraNode(
     private var value: Float,
     private var childPos: BlockPos?,
     private var valid: Boolean
-) : AbstractAuraNode(Type, access, updateListener, pos), RenderedDependableAuraNode,
-    PortalRXAuraNode {
+) : AbstractAuraNode(Type, access, updateListener, pos), RenderedDependableAuraNode, PortalRXAuraNode, ValuedAuraNode {
 
     companion object {
         private val NET_PARENT =
