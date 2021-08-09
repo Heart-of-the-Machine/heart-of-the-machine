@@ -1,4 +1,4 @@
-package com.github.hotm.world.auranet
+package com.github.hotm.auranet
 
 import com.github.hotm.HotMConstants
 import com.github.hotm.misc.HotMRegistries

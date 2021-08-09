@@ -5,9 +5,10 @@ import com.github.hotm.blockentity.BasicSiphonAuraNodeBlockEntity
 import com.github.hotm.blockentity.HotMBlockEntities
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.particle.HotMParticles
-import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.AuraNodeType
-import com.github.hotm.world.auranet.BasicSiphonAuraNode
+import com.github.hotm.auranet.AuraNode
+import com.github.hotm.auranet.AuraNodeType
+import com.github.hotm.auranet.BasicSiphonAuraNode
+import com.github.hotm.auranet.ValuedAuraNode
 import com.github.hotm.world.auranet.server.ServerAuraNetStorage
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
@@ -71,7 +72,7 @@ class BasicSiphonAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlockWithEn
 
     override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
         val access = StorageUtils.getAuraNetAccess(world)
-        val node = access[pos]
+        val node = access[pos] as? ValuedAuraNode
 
         if (node != null && node.getValue() > 0) {
             val x = pos.x.toDouble() + 0.45 + random.nextDouble() * 0.1

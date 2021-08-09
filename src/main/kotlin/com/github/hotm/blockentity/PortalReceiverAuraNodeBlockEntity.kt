@@ -1,8 +1,8 @@
 package com.github.hotm.blockentity
 
 import com.github.hotm.util.lazyVar
-import com.github.hotm.world.auranet.AuraNodeUtils
-import com.github.hotm.world.auranet.PortalReceiverAuraNode
+import com.github.hotm.auranet.AuraNodeUtils
+import com.github.hotm.auranet.PortalReceiverAuraNode
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos

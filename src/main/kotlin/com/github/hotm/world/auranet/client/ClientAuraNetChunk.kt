@@ -5,7 +5,7 @@ import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.net.sync.ClientSync2ClientData
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.auranet.AuraNetAccess
-import com.github.hotm.world.auranet.AuraNode
+import com.github.hotm.auranet.AuraNode
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap
 import net.minecraft.util.math.BlockPos

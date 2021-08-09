@@ -2,7 +2,7 @@ package com.github.hotm.client.render.blockentity
 
 import com.github.hotm.blockentity.RenderedDependableAuraNodeBlockEntity
 import com.github.hotm.mixinapi.StorageUtils
-import com.github.hotm.world.auranet.RenderedDependableAuraNode
+import com.github.hotm.auranet.RenderedDependableAuraNode
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer

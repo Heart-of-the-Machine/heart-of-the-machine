@@ -3,8 +3,7 @@ package com.github.hotm.blocks
 import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
 import com.github.hotm.mixinapi.StorageUtils
-import com.github.hotm.world.auranet.AttributeProviderAuraNode
-import com.github.hotm.world.auranet.AuraNode
+import com.github.hotm.auranet.AttributeProviderAuraNode
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld

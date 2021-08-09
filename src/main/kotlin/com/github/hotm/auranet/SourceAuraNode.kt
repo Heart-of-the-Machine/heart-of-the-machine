@@ -1,4 +1,4 @@
-package com.github.hotm.world.auranet
+package com.github.hotm.auranet
 
 interface SourceAuraNode : AuraNode {
     fun getSourceAura(): Float

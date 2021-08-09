@@ -1,5 +1,6 @@
 package com.github.hotm.world.auranet
 
+import com.github.hotm.auranet.AuraNode
 import com.github.hotm.util.DimBlockPos
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos

@@ -2,7 +2,7 @@ package com.github.hotm.util
 
 import com.github.hotm.misc.HotMLog
 import com.github.hotm.mixinapi.StorageUtils
-import com.github.hotm.world.auranet.AuraNode
+import com.github.hotm.auranet.AuraNode
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.block.BlockState

@@ -1,4 +1,4 @@
-package com.github.hotm.world.auranet
+package com.github.hotm.auranet
 
 import alexiil.mc.lib.net.IMsgReadCtx
 import alexiil.mc.lib.net.IMsgWriteCtx
@@ -9,6 +9,7 @@ import com.github.hotm.net.sendToClients
 import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.util.StreamUtils
+import com.github.hotm.world.auranet.AuraNetAccess
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.util.math.BlockPos
@@ -21,7 +22,7 @@ class BasicSiphonAuraNode(
     pos: BlockPos,
     private var value: Float,
     childPos: BlockPos?
-) : AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, RenderedDependableAuraNode {
+) : AbstractDependableAuraNode(Type, access, updateListener, pos), SiphonAuraNode, RenderedDependableAuraNode, ValuedAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(
@@ -115,8 +116,8 @@ class BasicSiphonAuraNode(
         return value
     }
 
-    override fun getChildren(): Stream<BlockPos> {
-        return StreamUtils.ofNullable(childPos)
+    override fun getChildren(): Collection<BlockPos> {
+        return setOfNotNull(childPos)
     }
 
     override fun getChildrenForRender(): Stream<BlockPos> {
@@ -143,11 +144,6 @@ class BasicSiphonAuraNode(
         } else {
             buf.writeBoolean(false)
         }
-    }
-
-    override fun onRemove() {
-        // Remove self from the child's parents
-        DependencyAuraNodeUtils.parentDisconnect(childPos, access, this)
     }
 
     override fun equals(other: Any?): Boolean {

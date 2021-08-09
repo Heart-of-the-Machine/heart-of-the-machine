@@ -2,8 +2,8 @@ package com.github.hotm.misc
 
 import com.github.hotm.HotMConstants
 import com.github.hotm.util.CardinalDirection
-import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.AuraNodeType
+import com.github.hotm.auranet.AuraNode
+import com.github.hotm.auranet.AuraNodeType
 import com.github.hotm.world.gen.feature.segment.FeatureSegmentType
 import com.mojang.serialization.Lifecycle
 import net.minecraft.util.registry.Registry

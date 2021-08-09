@@ -1,4 +1,4 @@
-package com.github.hotm.world.auranet
+package com.github.hotm.auranet
 
 import alexiil.mc.lib.net.IMsgReadCtx
 import alexiil.mc.lib.net.IMsgWriteCtx
@@ -9,6 +9,7 @@ import com.github.hotm.net.sendToClients
 import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.HotMPortalFinders
+import com.github.hotm.world.auranet.AuraNetAccess
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.server.world.ServerWorld
@@ -23,8 +24,8 @@ class PortalReceiverAuraNode(
     private var value: Float,
     private var childPos: BlockPos?,
     private var valid: Boolean
-) : AbstractAuraNode(Type, access, updateListener, pos), RenderedDependableAuraNode,
-    PortalRXAuraNode {
+) : AbstractDependableAuraNode(Type, access, updateListener, pos), RenderedDependableAuraNode, PortalRXAuraNode,
+    ValuedAuraNode {
 
     companion object {
         private val NET_PARENT =
@@ -136,7 +137,7 @@ class PortalReceiverAuraNode(
 
     override fun getSuppliedAura(child: DependantAuraNode): Float = value
 
-    override fun getChildren(): Stream<BlockPos> = Stream.ofNullable(childPos)
+    override fun getChildren(): Collection<BlockPos> = setOfNotNull(childPos)
 
     override fun getChildrenForRender(): Stream<BlockPos> = Stream.ofNullable(childPos)
 
@@ -187,10 +188,6 @@ class PortalReceiverAuraNode(
         childPos?.let { buf.writeBlockPos(it) }
 
         buf.writeBoolean(valid)
-    }
-
-    override fun onRemove() {
-        DependencyAuraNodeUtils.parentDisconnect(childPos, access, this)
     }
 
     object Type : AuraNodeType<PortalReceiverAuraNode> {

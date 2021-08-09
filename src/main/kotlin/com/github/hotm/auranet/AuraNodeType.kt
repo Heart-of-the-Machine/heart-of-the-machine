@@ -1,7 +1,8 @@
-package com.github.hotm.world.auranet
+package com.github.hotm.auranet
 
 import alexiil.mc.lib.net.IMsgReadCtx
 import alexiil.mc.lib.net.NetByteBuf
+import com.github.hotm.world.auranet.AuraNetAccess
 import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
 

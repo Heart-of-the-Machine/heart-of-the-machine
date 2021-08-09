@@ -1,4 +1,4 @@
-package com.github.hotm.world.auranet
+package com.github.hotm.auranet
 
 import alexiil.mc.lib.net.IMsgReadCtx
 import alexiil.mc.lib.net.IMsgWriteCtx
@@ -10,6 +10,7 @@ import com.github.hotm.net.sendToClients
 import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.util.StreamUtils
+import com.github.hotm.world.auranet.AuraNetAccess
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.util.math.BlockPos
@@ -22,7 +23,7 @@ class CollectorDistributorAuraNode(
     private var value: Float,
     parents: Collection<BlockPos>,
     children: Collection<BlockPos>
-) : AbstractAuraNode(Type, access, updateListener, pos), DependantAuraNode, RenderedDependableAuraNode {
+) : AbstractDependantDependableAuraNode(Type, access, updateListener, pos), RenderedDependableAuraNode, ValuedAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(
@@ -96,8 +97,8 @@ class CollectorDistributorAuraNode(
         return value / children.size.toFloat()
     }
 
-    override fun getChildren(): Stream<BlockPos> {
-        return children.stream()
+    override fun getChildren(): Collection<BlockPos> {
+        return children
     }
 
     override fun isParentValid(node: DependableAuraNode): Boolean {
@@ -154,6 +155,8 @@ class CollectorDistributorAuraNode(
         visitedNodes.remove(dimPos)
     }
 
+    override fun getParents(): Collection<BlockPos> = parents
+
     override fun getChildrenForRender(): Stream<BlockPos> {
         return children.stream()
     }
@@ -180,15 +183,6 @@ class CollectorDistributorAuraNode(
         for (child in children) {
             buf.writeBlockPos(child)
         }
-    }
-
-    override fun onRemove() {
-        disconnectAll()
-    }
-
-    private fun disconnectAll() {
-        DependencyAuraNodeUtils.childDisconnectAll(parents, access, this)
-        DependencyAuraNodeUtils.parentDisconnectAll(children, access, this)
     }
 
     override fun equals(other: Any?): Boolean {
