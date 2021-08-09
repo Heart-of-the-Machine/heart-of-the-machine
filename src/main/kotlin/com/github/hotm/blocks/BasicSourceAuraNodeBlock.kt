@@ -2,9 +2,9 @@ package com.github.hotm.blocks
 
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.particle.HotMParticles
-import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.AuraNodeType
-import com.github.hotm.world.auranet.BasicSourceAuraNode
+import com.github.hotm.auranet.AuraNode
+import com.github.hotm.auranet.AuraNodeType
+import com.github.hotm.auranet.BasicSourceAuraNode
 import com.github.hotm.world.auranet.server.ServerAuraNetStorage
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext

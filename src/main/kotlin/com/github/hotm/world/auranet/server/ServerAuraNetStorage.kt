@@ -6,7 +6,7 @@ import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.net.HotMNetwork
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.auranet.AuraNetAccess
-import com.github.hotm.world.auranet.AuraNode
+import com.github.hotm.auranet.AuraNode
 import com.github.hotm.world.storage.CustomSerializingRegionBasedStorage
 import com.mojang.datafixers.DataFixer
 import com.mojang.serialization.Codec

@@ -4,7 +4,7 @@ import alexiil.mc.lib.net.IMsgReadCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.auranet.AuraNetAccess
-import com.github.hotm.world.auranet.AuraNode
+import com.github.hotm.auranet.AuraNode
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos

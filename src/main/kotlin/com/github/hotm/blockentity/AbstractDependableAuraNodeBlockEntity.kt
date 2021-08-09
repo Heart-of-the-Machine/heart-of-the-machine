@@ -1,7 +1,7 @@
 package com.github.hotm.blockentity
 
 import com.github.hotm.util.lazyVar
-import com.github.hotm.world.auranet.DependencyAuraNodeUtils
+import com.github.hotm.auranet.DependencyAuraNodeUtils
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import net.minecraft.block.BlockState

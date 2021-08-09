@@ -5,9 +5,9 @@ import com.github.hotm.blockentity.BasicSiphonAuraNodeBlockEntity
 import com.github.hotm.blockentity.HotMBlockEntities
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.particle.HotMParticles
-import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.AuraNodeType
-import com.github.hotm.world.auranet.BasicSiphonAuraNode
+import com.github.hotm.auranet.AuraNode
+import com.github.hotm.auranet.AuraNodeType
+import com.github.hotm.auranet.BasicSiphonAuraNode
 import com.github.hotm.world.auranet.server.ServerAuraNetStorage
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState

@@ -1,4 +1,4 @@
-package com.github.hotm.world.auranet
+package com.github.hotm.auranet
 
 import alexiil.mc.lib.net.IMsgReadCtx
 import alexiil.mc.lib.net.IMsgWriteCtx
@@ -11,6 +11,7 @@ import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.util.StreamUtils
 import com.github.hotm.world.HotMPortalFinders
+import com.github.hotm.world.auranet.AuraNetAccess
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.server.world.ServerWorld

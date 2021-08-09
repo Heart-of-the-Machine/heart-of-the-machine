@@ -1,7 +1,8 @@
-package com.github.hotm.world.auranet
+package com.github.hotm.auranet
 
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.util.WorldUtils
+import com.github.hotm.world.auranet.AuraNetAccess
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.hit.HitResult

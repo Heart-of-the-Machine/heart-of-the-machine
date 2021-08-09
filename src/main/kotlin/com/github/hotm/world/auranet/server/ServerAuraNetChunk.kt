@@ -7,9 +7,9 @@ import com.github.hotm.config.HotMConfig
 import com.github.hotm.util.CodecUtils
 import com.github.hotm.util.DimBlockPos
 import com.github.hotm.world.HotMDimensions
-import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.SiphonAuraNode
-import com.github.hotm.world.auranet.SourceAuraNode
+import com.github.hotm.auranet.AuraNode
+import com.github.hotm.auranet.SiphonAuraNode
+import com.github.hotm.auranet.SourceAuraNode
 import com.google.common.collect.ImmutableList
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder

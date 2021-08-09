@@ -1,6 +1,7 @@
-package com.github.hotm.world.auranet
+package com.github.hotm.auranet
 
 import com.github.hotm.mixinapi.StorageUtils
+import com.github.hotm.world.auranet.AuraNetAccess
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 

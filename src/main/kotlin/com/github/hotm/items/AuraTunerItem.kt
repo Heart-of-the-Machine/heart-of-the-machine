@@ -5,9 +5,9 @@ import com.github.hotm.HotMConstants.str
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.mixinapi.StorageUtils
 import com.github.hotm.util.DimBlockPos
-import com.github.hotm.world.auranet.DependableAuraNode
-import com.github.hotm.world.auranet.DependantAuraNode
-import com.github.hotm.world.auranet.DependencyAuraNodeUtils
+import com.github.hotm.auranet.DependableAuraNode
+import com.github.hotm.auranet.DependantAuraNode
+import com.github.hotm.auranet.DependencyAuraNodeUtils
 import net.minecraft.item.Item
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.nbt.NbtCompound

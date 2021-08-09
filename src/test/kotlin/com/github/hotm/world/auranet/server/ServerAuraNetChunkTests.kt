@@ -2,10 +2,10 @@ package com.github.hotm.world.auranet.server
 
 import com.github.hotm.blocks.AuraNodeBlock
 import com.github.hotm.runInMockCL
-import com.github.hotm.world.auranet.AuraNode
-import com.github.hotm.world.auranet.AuraNodeType
-import com.github.hotm.world.auranet.SiphonAuraNode
-import com.github.hotm.world.auranet.SourceAuraNode
+import com.github.hotm.auranet.AuraNode
+import com.github.hotm.auranet.AuraNodeType
+import com.github.hotm.auranet.SiphonAuraNode
+import com.github.hotm.auranet.SourceAuraNode
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
