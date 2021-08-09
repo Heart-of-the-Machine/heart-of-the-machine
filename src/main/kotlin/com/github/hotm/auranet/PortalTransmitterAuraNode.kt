@@ -186,6 +186,30 @@ class PortalTransmitterAuraNode(
         getReceiver()?.recalculateDescendants(hashSetOf())
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        if (!super.equals(other)) return false
+
+        other as PortalTransmitterAuraNode
+
+        if (value != other.value) return false
+        if (valid != other.valid) return false
+        if (parents != other.parents) return false
+        if (cachedReceiver != other.cachedReceiver) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + value.hashCode()
+        result = 31 * result + valid.hashCode()
+        result = 31 * result + parents.hashCode()
+        result = 31 * result + (cachedReceiver?.hashCode() ?: 0)
+        return result
+    }
+
     object Type : AuraNodeType<PortalTransmitterAuraNode> {
         override fun createCodec(
             access: AuraNetAccess,
