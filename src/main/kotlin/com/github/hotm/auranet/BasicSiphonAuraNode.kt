@@ -22,7 +22,7 @@ class BasicSiphonAuraNode(
     pos: BlockPos,
     private var value: Float,
     childPos: BlockPos?
-) : AbstractAuraNode(Type, access, updateListener, pos), SiphonAuraNode, RenderedDependableAuraNode, ValuedAuraNode {
+) : AbstractDependableAuraNode(Type, access, updateListener, pos), SiphonAuraNode, RenderedDependableAuraNode, ValuedAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(
@@ -116,8 +116,8 @@ class BasicSiphonAuraNode(
         return value
     }
 
-    override fun getChildren(): Stream<BlockPos> {
-        return StreamUtils.ofNullable(childPos)
+    override fun getChildren(): Collection<BlockPos> {
+        return setOfNotNull(childPos)
     }
 
     override fun getChildrenForRender(): Stream<BlockPos> {
@@ -144,11 +144,6 @@ class BasicSiphonAuraNode(
         } else {
             buf.writeBoolean(false)
         }
-    }
-
-    override fun onRemove() {
-        // Remove self from the child's parents
-        DependencyAuraNodeUtils.parentDisconnect(childPos, access, this)
     }
 
     override fun equals(other: Any?): Boolean {

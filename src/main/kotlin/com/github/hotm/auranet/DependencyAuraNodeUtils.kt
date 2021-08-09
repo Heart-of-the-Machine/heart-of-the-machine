@@ -83,6 +83,15 @@ object DependencyAuraNodeUtils {
      * Disconnects a parent and all children in the collection. This is useful for parent aura nodes.
      */
     fun parentDisconnectAll(children: Collection<BlockPos>, access: AuraNetAccess, parent: DependableAuraNode) {
+        // Handle common cases
+        if (children.isEmpty()) {
+            return
+        }
+        if (children.size == 1) {
+            parentDisconnect(children.first(), access, parent)
+            return
+        }
+
         val childrenCopy = children.toList()
         for (child in childrenCopy) {
             parentDisconnect(child, access, parent)
@@ -102,6 +111,15 @@ object DependencyAuraNodeUtils {
      * Disconnects a child aura node from all parents in the collection. This is useful for child aura nodes.
      */
     fun childDisconnectAll(parents: Collection<BlockPos>, access: AuraNetAccess, child: DependantAuraNode) {
+        // Handle common cases
+        if (parents.isEmpty()) {
+            return
+        }
+        if (parents.size == 1) {
+            childDisconnect(parents.first(), access, child)
+            return
+        }
+
         val parentsCopy = parents.toList()
         for (parent in parentsCopy) {
             childDisconnect(parent, access, child)

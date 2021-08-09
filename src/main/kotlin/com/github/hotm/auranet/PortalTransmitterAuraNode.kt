@@ -25,7 +25,7 @@ class PortalTransmitterAuraNode(
     private var value: Float,
     parents: Collection<BlockPos>,
     private var valid: Boolean,
-) : AbstractAuraNode(Type, access, updateListener, pos), DependantAuraNode, PortalTXAuraNode, ValuedAuraNode {
+) : AbstractDependantAuraNode(Type, access, updateListener, pos), DependantAuraNode, PortalTXAuraNode, ValuedAuraNode {
 
     companion object {
         private val NET_PARENT =
@@ -179,8 +179,10 @@ class PortalTransmitterAuraNode(
         buf.writeBoolean(valid)
     }
 
+    override fun getParents(): Collection<BlockPos> = parents
+
     override fun onRemove() {
-        DependencyAuraNodeUtils.childDisconnectAll(parents, access, this)
+        super<AbstractDependantAuraNode>.onRemove()
         getReceiver()?.recalculateDescendants(hashSetOf())
     }
 

@@ -59,5 +59,5 @@ interface DependableAuraNode : AuraNode {
     /**
      * Gets all the aura nodes that depend on this aura node.
      */
-    fun getChildren(): Stream<BlockPos>
+    fun getChildren(): Collection<BlockPos>
 }

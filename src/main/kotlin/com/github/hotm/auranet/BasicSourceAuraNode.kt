@@ -22,7 +22,7 @@ class BasicSourceAuraNode(
     pos: BlockPos,
     private var value: Float,
     parents: Collection<BlockPos>
-) : AbstractAuraNode(Type, access, updateListener, pos), SourceAuraNode, DependantAuraNode, ValuedAuraNode {
+) : AbstractDependantAuraNode(Type, access, updateListener, pos), SourceAuraNode, ValuedAuraNode {
 
     companion object {
         private val NET_PARENT = AuraNode.NET_ID.subType(BasicSourceAuraNode::class.java, str("basic_source_aura_node"))
@@ -119,9 +119,7 @@ class BasicSourceAuraNode(
         visitedNodes.remove(dimPos)
     }
 
-    override fun onRemove() {
-        DependencyAuraNodeUtils.childDisconnectAll(parents, access, this)
-    }
+    override fun getParents(): Collection<BlockPos> = parents
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

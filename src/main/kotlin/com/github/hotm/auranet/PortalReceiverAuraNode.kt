@@ -24,7 +24,8 @@ class PortalReceiverAuraNode(
     private var value: Float,
     private var childPos: BlockPos?,
     private var valid: Boolean
-) : AbstractAuraNode(Type, access, updateListener, pos), RenderedDependableAuraNode, PortalRXAuraNode, ValuedAuraNode {
+) : AbstractDependableAuraNode(Type, access, updateListener, pos), RenderedDependableAuraNode, PortalRXAuraNode,
+    ValuedAuraNode {
 
     companion object {
         private val NET_PARENT =
@@ -136,7 +137,7 @@ class PortalReceiverAuraNode(
 
     override fun getSuppliedAura(child: DependantAuraNode): Float = value
 
-    override fun getChildren(): Stream<BlockPos> = Stream.ofNullable(childPos)
+    override fun getChildren(): Collection<BlockPos> = setOfNotNull(childPos)
 
     override fun getChildrenForRender(): Stream<BlockPos> = Stream.ofNullable(childPos)
 
@@ -187,10 +188,6 @@ class PortalReceiverAuraNode(
         childPos?.let { buf.writeBlockPos(it) }
 
         buf.writeBoolean(valid)
-    }
-
-    override fun onRemove() {
-        DependencyAuraNodeUtils.parentDisconnect(childPos, access, this)
     }
 
     object Type : AuraNodeType<PortalReceiverAuraNode> {
