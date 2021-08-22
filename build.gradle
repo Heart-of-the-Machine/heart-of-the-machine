@@ -62,6 +62,11 @@ repositories {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven"
     }
+    maven {
+        // For Sodium, Sodium Extras, and Indium
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
 }
 
 dependencies {
@@ -139,17 +144,26 @@ dependencies {
         exclude group: "alexiil.mc.lib"
     }
 
-    // Canvas
-    modRuntime("grondag:canvas-${grondag_mc_tag}-${canvas_mc_tag}:${canvas_version}") {
-        exclude group: "net.fabricmc.fabric-api"
-    }
-    modRuntime("grondag:bitraster:${bitraster_version}") {
-        exclude group: "net.fabricmc.fabric-api"
-    }
+    // Select a renderer
+    String renderer = System.getProperty("com.github.hotm.renderer", "canvas")
+    switch (renderer) {
+        case "canvas":
+            // Canvas
+            modRuntime("grondag:canvas-${grondag_mc_tag}-${canvas_mc_tag}:${canvas_version}") {
+                exclude group: "net.fabricmc.fabric-api"
+            }
+            modRuntime("grondag:bitraster:${bitraster_version}") {
+                exclude group: "net.fabricmc.fabric-api"
+            }
 
-    // Exotic Blocks
-    modRuntime("grondag:exotic-blocks-${grondag_mc_tag}:${xb_version}") {
-        exclude group: "net.fabricmc.fabric-api"
+            // Exotic Blocks
+            modRuntime("grondag:exotic-blocks-${grondag_mc_tag}:${xb_version}") {
+                exclude group: "net.fabricmc.fabric-api"
+            }
+            break
+        case "sodium":
+            // Sodium
+            break
     }
 
     // Sadly there are no usable minimap mods that work in the dev environment
@@ -197,6 +211,12 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
     from "LICENSE"
+}
+
+afterEvaluate {
+    runClient {
+        args("--width", "1280", "--height", "720")
+    }
 }
 
 allure {
