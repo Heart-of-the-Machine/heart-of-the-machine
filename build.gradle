@@ -251,6 +251,7 @@ jar {
 
 afterEvaluate {
     runClient {
+        jvmArgs("-Dmixin.debug=true")
         args("--width", "1280", "--height", "720")
     }
 }
