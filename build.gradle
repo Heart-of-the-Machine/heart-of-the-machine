@@ -125,6 +125,8 @@ dependencies {
 
     // Runtime Dependencies
 
+    Directory modsDir = layout.projectDirectory.dir("run/mods")
+
     // Mod Menu
     modRuntime("com.terraformersmc:modmenu:${modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api"
@@ -146,24 +148,58 @@ dependencies {
 
     // Select a renderer
     String renderer = System.getProperty("com.github.hotm.renderer", "canvas")
-    switch (renderer) {
-        case "canvas":
-            // Canvas
-            modRuntime("grondag:canvas-${grondag_mc_tag}-${canvas_mc_tag}:${canvas_version}") {
-                exclude group: "net.fabricmc.fabric-api"
-            }
-            modRuntime("grondag:bitraster:${bitraster_version}") {
-                exclude group: "net.fabricmc.fabric-api"
-            }
 
-            // Exotic Blocks
-            modRuntime("grondag:exotic-blocks-${grondag_mc_tag}:${xb_version}") {
-                exclude group: "net.fabricmc.fabric-api"
-            }
-            break
-        case "sodium":
-            // Sodium
-            break
+    // Canvas renderer
+    if (renderer == "canvas") {
+        println("Using 'Canvas' renderer.")
+
+        // Canvas
+        modRuntime("grondag:canvas-${grondag_mc_tag}-${canvas_mc_tag}:${canvas_version}") {
+            exclude group: "net.fabricmc.fabric-api"
+        }
+        modRuntime("grondag:bitraster:${bitraster_version}") {
+            exclude group: "net.fabricmc.fabric-api"
+        }
+
+        // Exotic Blocks
+        modRuntime("grondag:exotic-blocks-${grondag_mc_tag}:${xb_version}") {
+            exclude group: "net.fabricmc.fabric-api"
+        }
+    }
+
+    // Sodium Renderer
+    if (renderer == "sodium") {
+        println("Using 'Sodium+Indium' renderer.")
+
+        modRuntime("maven.modrinth:sodium:${sodium_version}")
+        modRuntime("maven.modrinth:sodium-extra:${sodium_extra_version}")
+        modRuntime("maven.modrinth:indium:${indium_version}")
+    }
+
+    if (renderer == "indigo") {
+        println("Using 'Indigo' renderer.")
+    }
+
+    // Select a lighting-engine
+    String lightingEngine = System.getProperty("com.github.hotm.lighting", "vanilla")
+
+    RegularFile starlightFile = modsDir.file("starlight-${starlight_version}+${starlight_mc_tag}.jar")
+    if (lightingEngine == "starlight") {
+        println("Using 'Starlight' lighting engine.")
+
+        starlightFile.asFile.parentFile.mkdirs()
+
+        download {
+            src "https://github.com/PaperMC/Starlight/releases/download/${starlight_version}/starlight-${starlight_version}+${starlight_mc_tag}.jar"
+            dest starlightFile
+            overwrite false
+        }
+    } else {
+        starlightFile.asFile.delete()
+    }
+
+    if (lightingEngine == "vanilla") {
+        println("Using 'vanilla' lighting engine.")
     }
 
     // Sadly there are no usable minimap mods that work in the dev environment
