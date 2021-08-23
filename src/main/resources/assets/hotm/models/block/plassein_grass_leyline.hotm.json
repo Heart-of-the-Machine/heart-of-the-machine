@@ -29,6 +29,8 @@
       "corner": "hotm:block/leyline_corner",
       "material": {
         "blend_mode": "cutout",
+        "enable_diffuse_shading": false,
+        "enable_ambient_occlusion": false,
         "emissive": true
       },
       "depth": -0.001,
