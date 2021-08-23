@@ -1,7 +1,6 @@
 package com.github.hotm.mixinapi;
 
 import com.github.hotm.misc.HotMLog;
-import com.github.hotm.world.HotMDimensions;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
@@ -25,12 +24,20 @@ import java.util.*;
 public class DimensionAdditions {
     private static final List<DimensionAddition> ADDITIONS = new ArrayList<>();
     private static final Map<RegistryKey<DimensionOptions>, DimensionAddition> DIMENSION_KEYS = new HashMap<>();
+    private static final List<MutableRegistry<DimensionType>> REGISTRIES = new ArrayList<>();
     private static final Map<RegistryKey<World>, EntityPlacer> DEFAULT_PLACERS = new HashMap<>();
     private static final ThreadLocal<EntityPlacer> CURRENT_PLACER = new ThreadLocal<>();
 
     public static void addDimension(DimensionAddition addition) {
+        HotMLog.getLog().info("HotM Registering dimension: " + addition.getTypeRegistryKey().getValue());
+
         DIMENSION_KEYS.put(addition.getOptionsRegistryKey(), addition);
         ADDITIONS.add(addition);
+
+        // Add this dimension type to all preexisting DynamicRegistryManagers.
+        for (MutableRegistry<DimensionType> registry : REGISTRIES) {
+            registry.add(addition.getTypeRegistryKey(), addition.getDimensionType(), Lifecycle.stable());
+        }
     }
 
     public static void addDimension(RegistryKey<DimensionOptions> optionsKey, RegistryKey<DimensionType> typeKey,
@@ -46,21 +53,24 @@ public class DimensionAdditions {
             SimpleRegistry<DimensionOptions> optionsRegistry,
             String message) {
 
-        HotMLog.INSTANCE.getLog().info("HotM Adding Dimensions to " + message + ":");
+        HotMLog.getLog().info("HotM Adding dimensions to " + message + ":");
         for (DimensionAddition addition : ADDITIONS) {
             if (!optionsRegistry.getIds().contains(addition.getOptionsRegistryKey().getValue())) {
                 optionsRegistry.add(addition.getOptionsRegistryKey(),
                         new DimensionOptions(() -> dimensionTypes.getOrThrow(addition.getTypeRegistryKey()),
                                 addition.getChunkGeneratorSupplier()
                                         .getChunkGenerator(biomes, generatorSettings, seed)), Lifecycle.stable());
-                HotMLog.INSTANCE.getLog().info("    " + addition.getOptionsRegistryKey());
+                HotMLog.getLog().info("    " + addition.getOptionsRegistryKey());
             } else {
-                HotMLog.INSTANCE.getLog().info("    " + addition.getOptionsRegistryKey() + " : ALREADY REGISTERED");
+                HotMLog.getLog().info("    " + addition.getOptionsRegistryKey() + " : ALREADY REGISTERED");
             }
         }
     }
 
     public static void setupDimensionTypes(MutableRegistry<DimensionType> dimensionTypes) {
+        HotMLog.getLog().info("HotM Performing dimension registration and registry instance capture.");
+
+        REGISTRIES.add(dimensionTypes);
         for (DimensionAddition addition : ADDITIONS) {
             dimensionTypes.add(addition.getTypeRegistryKey(), addition.getDimensionType(), Lifecycle.stable());
         }
@@ -68,6 +78,8 @@ public class DimensionAdditions {
 
     public static boolean checkAndRemoveDimensions(long seed,
                                                    List<Map.Entry<RegistryKey<DimensionOptions>, DimensionOptions>> list) {
+        HotMLog.getLog().info("HotM Validating dimension options...");
+
         Iterator<Map.Entry<RegistryKey<DimensionOptions>, DimensionOptions>> it = list.iterator();
 
         while (it.hasNext()) {
@@ -80,6 +92,7 @@ public class DimensionAdditions {
 
                 // do some basic checks to make sure the dimension hasn't been customized
                 if (options.getDimensionType() != addition.getDimensionType()) {
+                    HotMLog.getLog().info("    Modified: " + addition.getTypeRegistryKey().getValue());
                     return false;
                 }
 
@@ -87,6 +100,8 @@ public class DimensionAdditions {
                 // TODO: Add more rigorous checking
 
                 it.remove();
+
+                HotMLog.getLog().info("    " + addition.getTypeRegistryKey().getValue() + " Validated.");
             }
         }
 
