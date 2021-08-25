@@ -4,7 +4,8 @@
   "layers": [
     {
       "type": "hotm:static_all",
-      "all": "hotm:block/surface_machine_casing"
+      "all": "hotm:block/surface_machine_casing",
+      "quarter_faces": true
     },
     {
       "type": "hotm:static_bottom_top",
@@ -19,7 +20,8 @@
       "bottom": "hotm:block/plassein_machine_casing",
       "material": {
         "blend_mode": "cutout"
-      }
+      },
+      "quarter_faces": true
     },
     {
       "type": "hotm:quarter_connected_texture",
@@ -33,7 +35,6 @@
         "enable_ambient_occlusion": false,
         "emissive": true
       },
-      "depth": -0.001,
       "interior_border": false,
       "connector": "hotm:leyline",
       "tintindex": 0

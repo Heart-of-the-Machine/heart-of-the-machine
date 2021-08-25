@@ -4,7 +4,8 @@
   "layers": [
     {
       "type": "hotm:static_all",
-      "all": "hotm:block/thinking_stone"
+      "all": "hotm:block/thinking_stone",
+      "quarter_faces": true
     },
     {
       "type": "hotm:quarter_connected_texture",
@@ -18,7 +19,6 @@
         "enable_ambient_occlusion": false,
         "emissive": true
       },
-      "depth": -0.001,
       "interior_border": false,
       "connector": "hotm:leyline",
       "tintindex": 0
