@@ -21,16 +21,6 @@ import java.util.function.Supplier
 
 class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
     companion object {
-        init {
-            println("### PLEASE REMOVE THE COMMENTED OUT PARTS OF StaticModelLayer ###")
-        }
-//        private val SPRITE_UV = arrayOf(
-//            Vec2f(0f, 0f),
-//            Vec2f(0f, 1f),
-//            Vec2f(1f, 1f),
-//            Vec2f(1f, 0f)
-//        )
-
         fun createBlock(
             rotationContainer: ModelBakeSettings,
             renderMaterial: RenderMaterial,
@@ -164,10 +154,6 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
         ) {
             emitter.spriteColor(0, -1, -1, -1, -1)
             emitter.material(renderMaterial)
-//            emitter.sprite(0, 0, SPRITE_UV[0].x, SPRITE_UV[0].y)
-//            emitter.sprite(1, 0, SPRITE_UV[1].x, SPRITE_UV[1].y)
-//            emitter.sprite(2, 0, SPRITE_UV[2].x, SPRITE_UV[2].y)
-//            emitter.sprite(3, 0, SPRITE_UV[3].x, SPRITE_UV[3].y)
 
             emitter.colorIndex(tintIndex)
 
