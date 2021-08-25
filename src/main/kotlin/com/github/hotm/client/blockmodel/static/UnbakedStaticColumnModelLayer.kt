@@ -24,7 +24,8 @@ class UnbakedStaticColumnModelLayer(
     private val material: JsonMaterial,
     private val depth: Float,
     private val cullFaces: Boolean,
-    private val rotate: Boolean
+    private val rotate: Boolean,
+    private val quarterFaces: Boolean,
 ) : UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedStaticColumnModelLayer> =
@@ -35,15 +36,17 @@ class UnbakedStaticColumnModelLayer(
                     JsonMaterial.CODEC.optionalFieldOf("material").forGetter { Optional.of(it.material) },
                     Codec.FLOAT.optionalFieldOf("depth").forGetter { Optional.of(it.depth) },
                     Codec.BOOL.optionalFieldOf("cull_faces").forGetter { Optional.of(it.cullFaces) },
-                    Codec.BOOL.optionalFieldOf("rotate").forGetter { Optional.of(it.rotate) }
-                ).apply(instance) { side, end, material, depth, cullFaces, rotate ->
+                    Codec.BOOL.optionalFieldOf("rotate").forGetter { Optional.of(it.rotate) },
+                    Codec.BOOL.optionalFieldOf("quarter_faces").forGetter { Optional.of(it.quarterFaces) }
+                ).apply(instance) { side, end, material, depth, cullFaces, rotate, quarterFaces ->
                     UnbakedStaticColumnModelLayer(
                         side,
                         end,
                         material.orElse(JsonMaterial.DEFAULT),
                         depth.orElse(0.0f),
                         cullFaces.orElse(true),
-                        rotate.orElse(true)
+                        rotate.orElse(true),
+                        quarterFaces.orElse(false)
                     )
                 }
             }
@@ -83,6 +86,7 @@ class UnbakedStaticColumnModelLayer(
             cullFaces,
             depthClamped,
             depthMaxed,
+            quarterFaces,
             endSprite,
             end.tintIndex,
             endSprite,

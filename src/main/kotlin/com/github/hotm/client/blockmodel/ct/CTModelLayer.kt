@@ -2,13 +2,13 @@ package com.github.hotm.client.blockmodel.ct
 
 import com.github.hotm.client.blockmodel.BakedModelLayer
 import com.github.hotm.client.blockmodel.connector.ModelConnector
+import com.github.hotm.client.blockmodel.util.QuadPos
 import com.github.hotm.util.DirectionUtils.texDown
 import com.github.hotm.util.DirectionUtils.texLeft
 import com.github.hotm.util.DirectionUtils.texRight
 import com.github.hotm.util.DirectionUtils.texUp
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
 import net.minecraft.client.texture.Sprite
@@ -29,11 +29,6 @@ class CTModelLayer(
     private val connector: ModelConnector,
     private val tintIndex: Int
 ) : BakedModelLayer {
-    private data class QuadPos(val left: Float, val bottom: Float, val right: Float, val top: Float, val depth: Float) {
-        fun emit(emitter: QuadEmitter, face: Direction) {
-            emitter.square(face, left, bottom, right, top, depth)
-        }
-    }
 
     private val depthClamped = clamp(depth, 0.0f, 0.5f)
     private val depthMaxed = depth.coerceAtMost(0.5f)
@@ -60,7 +55,7 @@ class CTModelLayer(
             val indices = getIndices(blockView, pos, normal)
 
             for (corner in 0 until 4) {
-                corners[corner].emit(emitter, normal)
+                corners[corner].emit(emitter, normal, null)
                 emitter.spriteBake(
                     0,
                     sprites[(indices shr (corner * 3)) and 0x7],
