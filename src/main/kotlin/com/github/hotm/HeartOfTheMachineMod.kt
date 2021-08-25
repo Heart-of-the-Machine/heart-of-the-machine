@@ -12,6 +12,7 @@ import com.github.hotm.particle.HotMParticles
 import com.github.hotm.world.HotMDimensions
 import com.github.hotm.world.HotMTeleporters
 import com.github.hotm.auranet.AuraNodes
+import com.github.hotm.misc.HotMPointsOfInterest
 import com.github.hotm.world.biome.HotMBiomes
 import com.github.hotm.world.gen.feature.HotMFeatures
 import com.github.hotm.world.gen.surfacebuilder.HotMSurfaceBuilders
@@ -24,6 +25,7 @@ fun init() {
     HotMRegistries.register()
     HotMBlocks.register()
     HotMBlockTags.register()
+    HotMPointsOfInterest.register()
     HotMItems.register()
     HotMBlockEntities.register()
     HotMFeatures.register()
