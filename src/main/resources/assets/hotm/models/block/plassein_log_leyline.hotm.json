@@ -5,7 +5,8 @@
     {
       "type": "hotm:static_column",
       "side": "hotm:block/plassein_log",
-      "end": "hotm:block/plassein_log_top"
+      "end": "hotm:block/plassein_log_top",
+      "quarter_faces": true
     },
     {
       "type": "hotm:quarter_connected_texture",
@@ -19,7 +20,6 @@
         "enable_ambient_occlusion": false,
         "emissive": true
       },
-      "depth": -0.001,
       "interior_border": false,
       "connector": "hotm:leyline",
       "tintindex": 0
