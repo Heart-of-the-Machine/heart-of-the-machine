@@ -122,7 +122,7 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
             val corners = getCorners(sideDepth, faceDepth)
             for (corner in corners) {
                 corner.emit(emitter, normal, if (rotate) rotationContainer else null)
-                putQuadSettings(emitter, renderMaterial, tintIndex, sprite, cullFaces, rotationContainer, normal)
+                putQuadSettings(emitter, renderMaterial, tintIndex, sprite, cullFaces)
             }
         }
 
@@ -140,7 +140,7 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
         ) {
             QuadPos(0.0f + sideDepth, 0.0f + sideDepth, 1.0f - sideDepth, 1.0f - sideDepth, faceDepth)
                 .emit(emitter, normal, if (rotate) rotationContainer else null)
-            putQuadSettings(emitter, renderMaterial, tintIndex, sprite, cullFaces, rotationContainer, normal)
+            putQuadSettings(emitter, renderMaterial, tintIndex, sprite, cullFaces)
         }
 
         private fun putQuadSettings(
@@ -148,9 +148,7 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
             renderMaterial: RenderMaterial,
             tintIndex: Int,
             sprite: Sprite,
-            cullFaces: Boolean,
-            rotationContainer: ModelBakeSettings,
-            normal: Direction
+            cullFaces: Boolean
         ) {
             emitter.spriteColor(0, -1, -1, -1, -1)
             emitter.material(renderMaterial)
@@ -159,13 +157,9 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
 
             emitter.spriteBake(0, sprite, MutableQuadView.BAKE_NORMALIZED)
 
-            emitter.cullFace(
-                if (cullFaces) {
-                    Direction.transform(rotationContainer.rotation.matrix, normal)
-                } else {
-                    null
-                }
-            )
+            if (!cullFaces) {
+                emitter.cullFace(null)
+            }
 
             emitter.emit()
         }

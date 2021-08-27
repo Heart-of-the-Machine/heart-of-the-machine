@@ -59,19 +59,15 @@ class CTModelLayer(
                 emitter.spriteBake(
                     0,
                     sprites[(indices shr (corner * 3)) and 0x7],
-                    MutableQuadView.BAKE_LOCK_UV
+                    MutableQuadView.BAKE_NORMALIZED
                 )
                 emitter.colorIndex(tintIndex)
                 emitter.spriteColor(0, -1, -1, -1, -1)
                 emitter.material(material)
 
-                emitter.cullFace(
-                    if (cullFaces) {
-                        normal
-                    } else {
-                        null
-                    }
-                )
+                if (!cullFaces) {
+                    emitter.cullFace(null)
+                }
 
                 emitter.emit()
             }
