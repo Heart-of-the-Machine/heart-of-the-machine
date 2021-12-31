@@ -18,7 +18,7 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-minecraft {
+loom {
 }
 
 repositories {
@@ -38,9 +38,9 @@ repositories {
         }
     }
     maven {
-        // For Shapes
-        name "Terraformers MC Archive"
-        url "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases/"
+        // For Mod Menu & Shapes
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/releases/"
     }
     maven {
         // For REI
@@ -48,9 +48,9 @@ repositories {
         url "https://maven.shedaniel.me/"
     }
     maven {
-        // For Canvas
-        name = "dblsaiko"
-        url = "https://maven.dblsaiko.net/"
+        // For Canvas and dependencies
+        name = "vram-group"
+        url = "https://maven.vram.io/"
     }
     maven {
         // For Cotton-Config for Canvas
@@ -101,16 +101,16 @@ dependencies {
     include "alexiil.mc.lib:libnetworkstack-base:${project.lns_version}"
 
     // FREX
-    modApi("grondag:frex-${grondag_mc_tag}:${frex_version}") {
+    modApi("io.vram:frex-fabric-${grondag_mc_tag}:${frex_version}") {
         transitive false
     }
-    include "grondag:frex-${grondag_mc_tag}:${frex_version}"
+    include "io.vram:frex-fabric-${grondag_mc_tag}:${frex_version}"
 
     // JMX
-    modImplementation("grondag:jmx-${grondag_mc_tag}:${jmx_version}") {
+    modImplementation("io.vram:jmx-fabric-${grondag_mc_tag}:${jmx_version}") {
         transitive false
     }
-    include "grondag:jmx-${grondag_mc_tag}:${jmx_version}"
+    include "io.vram:jmx-fabric-${grondag_mc_tag}:${jmx_version}"
 
     // Shapes
     modImplementation("com.terraformersmc.terraform-api:terraform-shapes-api-v1:${shapes_version}") {
@@ -128,20 +128,20 @@ dependencies {
     Directory modsDir = layout.projectDirectory.dir("run/mods")
 
     // Mod Menu
-    modRuntime("com.terraformersmc:modmenu:${modmenu_version}") {
+    modRuntimeOnly("com.terraformersmc:modmenu:${modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api"
     }
 
     // REI
-    modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}") {
+    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}") {
         exclude group: "net.fabricmc.fabric-api"
     }
-    modRuntime("dev.architectury:architectury-fabric:${architectury_version}") {
+    modRuntimeOnly("dev.architectury:architectury-fabric:${architectury_version}") {
         exclude group: "net.fabricmc.fabric-api"
     }
 
     // Simple Pipes
-    modRuntime("alexiil.mc.mod:simplepipes-base:${simplepipes_version}") {
+    modRuntimeOnly("alexiil.mc.mod:simplepipes-base:${simplepipes_version}") {
         exclude group: "net.fabricmc.fabric-api"
         exclude group: "alexiil.mc.lib"
     }
@@ -154,15 +154,7 @@ dependencies {
         println("Using 'Canvas' renderer.")
 
         // Canvas
-        modRuntime("grondag:canvas-${grondag_mc_tag}-${canvas_mc_tag}:${canvas_version}") {
-            exclude group: "net.fabricmc.fabric-api"
-        }
-        modRuntime("grondag:bitraster:${bitraster_version}") {
-            exclude group: "net.fabricmc.fabric-api"
-        }
-
-        // Exotic Blocks
-        modRuntime("grondag:exotic-blocks-${grondag_mc_tag}:${xb_version}") {
+        modRuntimeOnly("io.vram:canvas-fabric-${grondag_mc_tag}:${canvas_version}") {
             exclude group: "net.fabricmc.fabric-api"
         }
     }
@@ -171,9 +163,9 @@ dependencies {
     if (renderer == "sodium") {
         println("Using 'Sodium+Indium' renderer.")
 
-        modRuntime("maven.modrinth:sodium:${sodium_version}")
-        modRuntime("maven.modrinth:sodium-extra:${sodium_extra_version}")
-        modRuntime("maven.modrinth:indium:${indium_version}")
+        modRuntimeOnly("maven.modrinth:sodium:${sodium_version}")
+        modRuntimeOnly("maven.modrinth:sodium-extra:${sodium_extra_version}")
+        modRuntimeOnly("maven.modrinth:indium:${indium_version}")
     }
 
     if (renderer == "indigo") {
@@ -269,13 +261,7 @@ test {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
+            from components.java
         }
     }
 
