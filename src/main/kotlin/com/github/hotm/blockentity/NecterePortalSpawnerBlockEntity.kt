@@ -53,11 +53,11 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
         }
     }
 
-    override fun writeNbt(tag: NbtCompound): NbtCompound {
-        val newTag = super.writeNbt(tag)
+    override fun writeNbt(tag: NbtCompound) {
+        super.writeNbt(tag)
 
         BlockState.CODEC.encodeStart(NbtOps.INSTANCE, originalBlock).result().ifPresent { encoded ->
-            newTag.put("original", encoded)
+            tag.put("original", encoded)
         }
 
         val structureCtx = structureCtx
@@ -72,8 +72,6 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
             struct.putByte("mirror", structureCtx.mirror.ordinal.toByte())
             struct.putByte("rotation", structureCtx.rotation.ordinal.toByte())
         }
-
-        return newTag
     }
 
     fun tick() {
@@ -88,7 +86,9 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
         if (world != null && world is ServerWorld) {
             // This is an awful hack to get minecraft to stop complaining about these BlockEntities being removed but
             // still pending.
-            world.getChunk(pos).addPendingBlockEntityNbt(writeNbt(NbtCompound()))
+            val tag = NbtCompound()
+            writeNbt(tag)
+            world.getChunk(pos).addPendingBlockEntityNbt(tag)
 
             world.removeBlockEntity(pos)
 
@@ -119,7 +119,6 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
                         // structure start.
                         world.structureAccessor.getStructureAt(
                             structureCtx.boundingBox.center,
-                            false,
                             HotMStructureFeatures.NECTERE_PORTAL
                         ).clearChildren()
                     }

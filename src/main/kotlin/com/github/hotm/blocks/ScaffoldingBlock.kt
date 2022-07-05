@@ -14,13 +14,13 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.random.Random
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.WorldView
-import java.util.*
 import kotlin.math.min
 
 class ScaffoldingBlock(settings: Settings) : Block(settings), Waterloggable {
@@ -125,7 +125,7 @@ class ScaffoldingBlock(settings: Settings) : Block(settings), Waterloggable {
         notify: Boolean
     ) {
         if (!world.isClient) {
-            world.blockTickScheduler.schedule(pos, this, 1)
+            world.createAndScheduleBlockTick(pos, this, 1)
         }
     }
 
@@ -138,10 +138,10 @@ class ScaffoldingBlock(settings: Settings) : Block(settings), Waterloggable {
         posFrom: BlockPos
     ): BlockState {
         if (state.get(WATERLOGGED)) {
-            world.fluidTickScheduler.schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world))
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world))
         }
         if (!world.isClient) {
-            world.blockTickScheduler.schedule(pos, this, 1)
+            world.createAndScheduleBlockTick(pos, this, 1)
         }
         return state
     }
@@ -154,15 +154,7 @@ class ScaffoldingBlock(settings: Settings) : Block(settings), Waterloggable {
         )
         if (blockState.get(DISTANCE) == 7) {
             if (state.get(DISTANCE) == 7) {
-                world.spawnEntity(
-                    FallingBlockEntity(
-                        world,
-                        pos.x.toDouble() + 0.5,
-                        pos.y.toDouble(),
-                        pos.z.toDouble() + 0.5,
-                        blockState.with(WATERLOGGED, false)
-                    )
-                )
+                FallingBlockEntity.spawnFromBlock(world, pos, blockState)
             } else {
                 world.breakBlock(pos, true)
             }

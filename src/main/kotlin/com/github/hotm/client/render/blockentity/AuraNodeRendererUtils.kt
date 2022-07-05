@@ -12,9 +12,9 @@ import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.BlockRenderManager
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.*
+import net.minecraft.util.math.random.Random
 import net.minecraft.world.BlockRenderView
 import net.minecraft.world.World
-import java.util.*
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.exp
@@ -160,8 +160,8 @@ object AuraNodeRendererUtils {
         v2: Float
     ) {
         val entry = matrices.peek()
-        val modelMat = entry.model
-        val normalMat = entry.normal
+        val modelMat = entry.positionMatrix
+        val normalMat = entry.normalMatrix
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, 0f, radius, 0f, -radius, u1, u2, v1, v2)
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, 0f, -radius, 0f, radius, u1, u2, v1, v2)
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, radius, 0f, -radius, 0f, u1, u2, v1, v2)
@@ -180,8 +180,8 @@ object AuraNodeRendererUtils {
         v2: Float
     ) {
         val entry = matrices.peek()
-        val modelMat = entry.model
-        val normalMat = entry.normal
+        val modelMat = entry.positionMatrix
+        val normalMat = entry.normalMatrix
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, 0f, radius, radius, 0f, u1, u2, v1, v2)
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, 0f, -radius, -radius, 0f, u1, u2, v1, v2)
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, radius, 0f, 0f, -radius, u1, u2, v1, v2)
@@ -200,8 +200,8 @@ object AuraNodeRendererUtils {
         v2: Float
     ) {
         val entry = matrices.peek()
-        val modelMat = entry.model
-        val normalMat = entry.normal
+        val modelMat = entry.positionMatrix
+        val normalMat = entry.normalMatrix
         renderBeamEnd(modelMat, normalMat, vertices, alpha, height, radius, u1, u2, v1, v2, true)
         renderBeamEnd(modelMat, normalMat, vertices, alpha, 0f, radius, u1, u2, v1, v2, false)
     }
@@ -308,7 +308,7 @@ object AuraNodeRendererUtils {
             matrices,
             consumers.getBuffer(TexturedRenderLayers.getEntitySolid()),
             false,
-            Random(42),
+            Random.create(42),
             42L,
             OverlayTexture.DEFAULT_UV
         )

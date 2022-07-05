@@ -2,12 +2,12 @@ package com.github.hotm.items
 
 import com.github.hotm.HotMConstants.message
 import com.github.hotm.HotMConstants.str
-import com.github.hotm.blocks.AuraNodeBlock
-import com.github.hotm.mixinapi.StorageUtils
-import com.github.hotm.util.DimBlockPos
 import com.github.hotm.auranet.DependableAuraNode
 import com.github.hotm.auranet.DependantAuraNode
 import com.github.hotm.auranet.DependencyAuraNodeUtils
+import com.github.hotm.blocks.AuraNodeBlock
+import com.github.hotm.mixinapi.StorageUtils
+import com.github.hotm.util.DimBlockPos
 import net.minecraft.item.Item
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.nbt.NbtCompound
@@ -49,11 +49,11 @@ class AuraTunerItem(settings: Settings) : Item(settings), InteractionCanceler {
                 }
 
                 compound.put(PARENT_NODE_KEY, parentPos.toNbt())
-                stack.putSubTag(AURA_TUNER_KEY, compound)
+                stack.setSubNbt(AURA_TUNER_KEY, compound)
 
                 return if (world.isClient) ActionResult.SUCCESS else ActionResult.CONSUME
             } else if (node is DependantAuraNode && !player.isSneaking) {
-                val auraTunerData = stack.getSubTag(AURA_TUNER_KEY)
+                val auraTunerData = stack.getSubNbt(AURA_TUNER_KEY)
                 if (auraTunerData == null) {
                     if (!world.isClient) {
                         player.sendMessage(message("aura_tuner.no_parent"), false)

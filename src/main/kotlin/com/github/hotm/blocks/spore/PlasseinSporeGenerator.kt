@@ -6,10 +6,10 @@ import net.minecraft.block.Blocks
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.random.Random
 import net.minecraft.world.BlockView
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.ConfiguredFeature
-import java.util.*
 
 abstract class PlasseinSporeGenerator {
     protected abstract fun createGrowthFeature(random: Random, leyline: Boolean): ConfiguredFeature<*, *>?
@@ -70,7 +70,9 @@ abstract class PlasseinSporeGenerator {
         return false
     }
 
-    open fun canGenerateLargeGrowth(state: BlockState, world: BlockView, pos: BlockPos, offsetX: Int, offsetZ: Int): Boolean {
+    open fun canGenerateLargeGrowth(
+        state: BlockState, world: BlockView, pos: BlockPos, offsetX: Int, offsetZ: Int
+    ): Boolean {
         val block = state.block
         return block === world.getBlockState(pos.add(offsetX, 0, offsetZ)).block
                 && block === world.getBlockState(pos.add(offsetX + 1, 0, offsetZ)).block
@@ -129,7 +131,9 @@ abstract class PlasseinSporeGenerator {
         return false
     }
 
-    open fun canGenerateCrossGrowth(state: BlockState, world: BlockView, pos: BlockPos, offsetX: Int, offsetZ: Int): Boolean {
+    open fun canGenerateCrossGrowth(
+        state: BlockState, world: BlockView, pos: BlockPos, offsetX: Int, offsetZ: Int
+    ): Boolean {
         val block = state.block
         return block === world.getBlockState(pos.add(offsetX, 0, offsetZ)).block
                 && block === world.getBlockState(pos.add(offsetX - 1, 0, offsetZ)).block
@@ -147,7 +151,8 @@ abstract class PlasseinSporeGenerator {
         offsetX: Int,
         offsetZ: Int
     ): Boolean {
-        val configuredFeature = createCrossGrowthFeature(random, shouldGenerateLeyline(world, growthPos, offsetX, offsetZ))
+        val configuredFeature =
+            createCrossGrowthFeature(random, shouldGenerateLeyline(world, growthPos, offsetX, offsetZ))
         return if (configuredFeature == null) {
             false
         } else {

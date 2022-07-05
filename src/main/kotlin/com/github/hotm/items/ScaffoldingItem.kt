@@ -4,14 +4,11 @@ import com.github.hotm.blocks.ScaffoldingBlock
 import net.minecraft.block.Block
 import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemPlacementContext
-import net.minecraft.network.MessageType
-import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket
+import net.minecraft.network.message.MessageType
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.TranslatableText
+import net.minecraft.text.Text
 import net.minecraft.util.Formatting
-import net.minecraft.util.Util
 import net.minecraft.util.math.Direction
-import net.minecraft.world.World
 
 class ScaffoldingItem(block: Block, settings: Settings) : BlockItem(block, settings) {
     override fun getPlacementContext(context: ItemPlacementContext): ItemPlacementContext? {
@@ -36,12 +33,9 @@ class ScaffoldingItem(block: Block, settings: Settings) : BlockItem(block, setti
                     val playerEntity = context.player
                     val j = world.height
                     if (playerEntity is ServerPlayerEntity && mutable.y >= j) {
-                        val gameMessageS2CPacket = GameMessageS2CPacket(
-                            TranslatableText("build.tooHigh", j).formatted(
-                                Formatting.RED
-                            ), MessageType.GAME_INFO, Util.NIL_UUID
+                        playerEntity.sendMessage(
+                            Text.translatable("build.tooHigh", j - 1).formatted(Formatting.RED), MessageType.GAME_INFO
                         )
-                        playerEntity.networkHandler.sendPacket(gameMessageS2CPacket)
                     }
                     break
                 }

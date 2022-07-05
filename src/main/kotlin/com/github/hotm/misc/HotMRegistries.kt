@@ -1,9 +1,9 @@
 package com.github.hotm.misc
 
 import com.github.hotm.HotMConstants
-import com.github.hotm.util.CardinalDirection
 import com.github.hotm.auranet.AuraNode
 import com.github.hotm.auranet.AuraNodeType
+import com.github.hotm.util.CardinalDirection
 import com.github.hotm.world.gen.feature.segment.FeatureSegmentType
 import com.mojang.serialization.Lifecycle
 import net.minecraft.util.registry.Registry
@@ -42,17 +42,17 @@ object HotMRegistries {
         UNIT_FEATURE_SEGMENT_TYPE = Registry.register(
             Registry.REGISTRIES as Registry<in Registry<*>>,
             UNIT_FEATURE_SEGMENT_TYPE_IDENTIFIER,
-            SimpleRegistry(UNIT_FEATURE_SEGMENT_TYPE_KEY, Lifecycle.experimental())
+            SimpleRegistry(UNIT_FEATURE_SEGMENT_TYPE_KEY, Lifecycle.experimental(), null)
         )
         CARDINAL_FEATURE_SEGMENT_TYPE = Registry.register(
             Registry.REGISTRIES as Registry<Registry<*>>,
             CARDINAL_FEATURE_SEGMENT_TYPE_IDENTIFIER,
-            SimpleRegistry(CARDINAL_FEATURE_SEGMENT_TYPE_KEY, Lifecycle.experimental())
+            SimpleRegistry(CARDINAL_FEATURE_SEGMENT_TYPE_KEY, Lifecycle.experimental(), null)
         )
         AURA_NODE_TYPE = Registry.register(
             Registry.REGISTRIES as Registry<Registry<*>>,
             AURA_NODE_TYPE_IDENTIFIER,
-            SimpleRegistry(AURA_NODE_TYPE_KEY, Lifecycle.experimental())
+            SimpleRegistry(AURA_NODE_TYPE_KEY, Lifecycle.experimental(), null)
         )
     }
 }

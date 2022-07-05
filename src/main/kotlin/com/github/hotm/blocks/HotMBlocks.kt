@@ -9,7 +9,6 @@ import com.github.hotm.items.HotMItems.HOTM_MATERIAL_ITEM_SETTINGS
 import com.github.hotm.items.ScaffoldingItem
 import com.github.hotm.mixinapi.BlockCreators
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.*
 import net.minecraft.entity.EntityType
 import net.minecraft.item.BlockItem
@@ -28,16 +27,16 @@ object HotMBlocks {
      * Block Settings.
      */
     private val AURA_NODE_SETTINGS by lazy {
-        FabricBlockSettings.of(Material.GLASS, MapColor.WHITE_GRAY).requiresTool().breakByTool(FabricToolTags.PICKAXES)
-            .strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS).luminance(12).nonOpaque()
+        FabricBlockSettings.of(Material.GLASS, MapColor.WHITE_GRAY).requiresTool().strength(2.0f, 5.0f)
+            .sounds(BlockSoundGroup.GLASS).luminance(12).nonOpaque()
     }
     private val BRACING_SETTINGS by lazy {
         FabricBlockSettings.of(Material.METAL, MapColor.GRAY).requiresTool().strength(1.0f, 15.0f)
             .sounds(BlockSoundGroup.METAL).nonOpaque()
     }
     private val CYAN_CRYSTAL_BLOCK_SETTINGS by lazy {
-        FabricBlockSettings.of(Material.GLASS, MapColor.CYAN).requiresTool().breakByTool(FabricToolTags.PICKAXES)
-            .strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS).luminance(15)
+        FabricBlockSettings.of(Material.GLASS, MapColor.CYAN).requiresTool().strength(2.0f, 5.0f)
+            .sounds(BlockSoundGroup.GLASS).luminance(15)
     }
     private val CYAN_LAMP_BLOCK_SETTINGS by lazy {
         FabricBlockSettings.of(Material.STONE, MapColor.CYAN).requiresTool().strength(2.0f, 5.0f)
@@ -52,8 +51,8 @@ object HotMBlocks {
             .sounds(BlockSoundGroup.METAL)
     }
     private val MAGENTA_CRYSTAL_BLOCK_SETTINGS by lazy {
-        FabricBlockSettings.of(Material.GLASS, MapColor.MAGENTA).requiresTool().breakByTool(FabricToolTags.PICKAXES)
-            .strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS).luminance(15)
+        FabricBlockSettings.of(Material.GLASS, MapColor.MAGENTA).requiresTool().strength(2.0f, 5.0f)
+            .sounds(BlockSoundGroup.GLASS).luminance(15)
     }
     private val MAGENTA_LAMP_BLOCK_SETTINGS by lazy {
         FabricBlockSettings.of(Material.STONE, MapColor.MAGENTA).requiresTool().strength(2.0f, 5.0f)
@@ -68,8 +67,7 @@ object HotMBlocks {
             .sounds(BlockSoundGroup.STONE)
     }
     private val PLASSEIN_LOG_SETTINGS by lazy {
-        FabricBlockSettings.of(Material.WOOD, MapColor.BLUE).breakByTool(FabricToolTags.AXES).strength(1.0f, 10.0f)
-            .sounds(BlockSoundGroup.WOOD)
+        FabricBlockSettings.of(Material.WOOD, MapColor.BLUE).strength(1.0f, 10.0f).sounds(BlockSoundGroup.WOOD)
     }
     private val THINKING_STONE_SETTINGS by lazy {
         FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().strength(3.0f, 10.0f)

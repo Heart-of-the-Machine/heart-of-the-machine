@@ -13,15 +13,17 @@ import net.minecraft.block.Blocks
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.tag.BlockTags
+import net.minecraft.util.math.intprovider.UniformIntProvider
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource
 import net.minecraft.world.dimension.DimensionOptions
 import net.minecraft.world.dimension.DimensionType
+import net.minecraft.world.dimension.DimensionType.MonsterSettings
+import net.minecraft.world.dimension.DimensionTypes
 import net.minecraft.world.gen.chunk.*
 import java.util.*
 import java.util.function.Supplier
@@ -81,7 +83,7 @@ object HotMDimensions {
      * Registers the world generator for the Nectere dimension.
      */
     fun register() {
-        NECTERE_TYPE = DimensionType.create(
+        NECTERE_TYPE = DimensionType(
             OptionalLong.empty(),
             true,
             false,
@@ -90,16 +92,13 @@ object HotMDimensions {
             1.0,
             false,
             false,
-            false,
-            false,
-            false,
             0,
             256,
             256,
-            HorizontalVoronoiBiomeAccessType.INSTANCE,
-            BlockTags.INFINIBURN_OVERWORLD.id,
-            DimensionType.OVERWORLD_ID,
-            0.1f
+            BlockTags.INFINIBURN_OVERWORLD,
+            DimensionTypes.OVERWORLD_ID,
+            0.1f,
+            MonsterSettings(false, false, UniformIntProvider.create(0, 7), 0)
         )
 
         NECTERE_CHUNK_GENERATOR_SETTINGS_BUILTIN = Registry.register(

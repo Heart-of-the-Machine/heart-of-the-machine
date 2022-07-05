@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "hotm:basic_siphon_aura_node",
+    "hotm:basic_source_aura_node",
+    "hotm:collector_distributor_aura_node",
+    "hotm:cyan_crystal",
+    "hotm:magenta_crystal",
+    "hotm:portal_receiver_aura_node",
+    "hotm:portal_transmitter_aura_node"
+  ]
+}

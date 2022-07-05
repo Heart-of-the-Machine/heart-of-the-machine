@@ -14,7 +14,7 @@ import java.util.function.Function
 interface UnbakedModelLayer {
     companion object {
         val CODEC: Codec<UnbakedModelLayer> =
-            HotMClientRegistries.BLOCK_MODEL_LAYER.dispatch(UnbakedModelLayer::codec, Function.identity())
+            HotMClientRegistries.BLOCK_MODEL_LAYER.codec.dispatch(UnbakedModelLayer::codec, Function.identity())
     }
 
     val codec: Codec<out UnbakedModelLayer>

@@ -2,8 +2,6 @@ package com.github.hotm.config
 
 import com.github.hotm.misc.HotMLog
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.util.registry.BuiltinRegistries
-import net.minecraft.world.biome.Biome
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.introspector.PropertyUtils
@@ -47,17 +45,7 @@ class HotMBiomesConfig {
             }
 
             if (config.necterePortalDenyBiomes == null) {
-                val biomeRegistry = BuiltinRegistries.BIOME
-                val biomes = mutableListOf<String>()
-
-                for (biomeId in biomeRegistry.ids) {
-                    val biome = biomeRegistry[biomeId]!!
-                    if (biome.category == Biome.Category.OCEAN || biome.category == Biome.Category.RIVER) {
-                        biomes += biomeId.toString()
-                    }
-                }
-
-                config.necterePortalDenyBiomes = biomes
+                config.necterePortalDenyBiomes = mutableListOf()
             }
 
             try {

@@ -1,8 +1,8 @@
 package com.github.hotm.util
 
+import com.github.hotm.auranet.AuraNode
 import com.github.hotm.misc.HotMLog
 import com.github.hotm.mixinapi.StorageUtils
-import com.github.hotm.auranet.AuraNode
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.block.BlockState
@@ -20,10 +20,7 @@ data class DimBlockPos(val dim: RegistryKey<World>, val pos: BlockPos) {
         val CODEC: Codec<DimBlockPos> =
             RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<DimBlockPos> ->
                 instance.group(
-                    Identifier.CODEC.xmap(
-                        RegistryKey.createKeyFactory(Registry.WORLD_KEY),
-                        RegistryKey<World>::getValue
-                    ).fieldOf("dim").forGetter(DimBlockPos::dim),
+                    RegistryKey.createCodec(Registry.WORLD_KEY).fieldOf("dim").forGetter(DimBlockPos::dim),
                     BlockPos.CODEC.fieldOf("pos").forGetter(DimBlockPos::pos)
                 ).apply(instance, ::DimBlockPos)
             }

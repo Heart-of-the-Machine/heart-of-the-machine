@@ -4,6 +4,7 @@ plugins {
     id 'fabric-loom'
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm'
+    id 'io.github.juuxel.loom-quiltflower'
     id 'com.matthewprenger.cursegradle'
     id 'com.modrinth.minotaur'
     // use allure because the JUnit report writer is broken
@@ -18,15 +19,14 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-loom {
-}
+loom {}
 
 repositories {
     maven { url = "https://maven.fabricmc.net/" }
     maven {
         // For LBA, LMP, and LNS
-        name "BuildCraft"
-        url "https://mod-buildcraft.com/maven"
+        name "AlexIIL"
+        url "https://alexiil.uk/maven/"
     }
     maven {
         // For AE2
@@ -108,7 +108,7 @@ dependencies {
 
     // Non-mod dependencies
 
-    modImplementation "org.yaml:snakeyaml:${yaml_version}"
+    implementation "org.yaml:snakeyaml:${yaml_version}"
     include "org.yaml:snakeyaml:${yaml_version}"
 
     // Runtime Dependencies
@@ -162,13 +162,7 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
-}
+java.withSourcesJar()
 
 jar {
     from "LICENSE"

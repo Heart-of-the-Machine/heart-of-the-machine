@@ -1,7 +1,7 @@
 package com.github.hotm.blockentity
 
-import com.github.hotm.util.lazyVar
 import com.github.hotm.auranet.DependencyAuraNodeUtils
+import com.github.hotm.util.lazyVar
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import net.minecraft.block.BlockState
@@ -63,10 +63,9 @@ abstract class AbstractDependableAuraNodeBlockEntity(type: BlockEntityType<*>, p
         }
     }
 
-    override fun writeNbt(nbt: NbtCompound): NbtCompound {
-        val new = super.writeNbt(nbt)
-        new.putLong("lastConnectionUpdate", lastConnectionUpdate)
-        return new
+    override fun writeNbt(nbt: NbtCompound) {
+        super.writeNbt(nbt)
+        nbt.putLong("lastConnectionUpdate", lastConnectionUpdate)
     }
 
     open fun updateConnections() {

@@ -58,7 +58,7 @@ object RetrogenPortalCommand {
     ) {
         val i = MathHelper.floor(getDistance(sourcePos, structurePos))
         val text: Text =
-            Texts.bracketed(TranslatableText("chat.coordinates", structurePos.x, structurePos.y, structurePos.z))
+            Texts.bracketed(Text.translatable("chat.coordinates", structurePos.x, structurePos.y, structurePos.z))
                 .styled { style: Style ->
                     style.withColor(Formatting.GREEN).withClickEvent(
                         ClickEvent(
@@ -68,7 +68,7 @@ object RetrogenPortalCommand {
                     ).withHoverEvent(
                         HoverEvent(
                             HoverEvent.Action.SHOW_TEXT,
-                            TranslatableText("chat.coordinates.tooltip")
+                            Text.translatable("chat.coordinates.tooltip")
                         )
                     )
                 }

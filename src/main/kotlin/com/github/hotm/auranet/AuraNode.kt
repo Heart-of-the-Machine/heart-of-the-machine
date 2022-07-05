@@ -42,7 +42,7 @@ interface AuraNode {
         private fun createDispatchCodec(
             access: AuraNetAccess, updateListener: Runnable, pos: BlockPos
         ): Codec<AuraNode> {
-            return HotMRegistries.AURA_NODE_TYPE.dispatch(AuraNode::type) { type ->
+            return HotMRegistries.AURA_NODE_TYPE.codec.dispatch(AuraNode::type) { type ->
                 type.createCodec(access, updateListener, pos)
             }
         }

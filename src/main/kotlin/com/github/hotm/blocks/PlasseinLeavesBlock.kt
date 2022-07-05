@@ -13,12 +13,12 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.random.Random
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import java.util.*
 
 class PlasseinLeavesBlock(settings: Settings) : Block(settings) {
     companion object {
@@ -64,7 +64,7 @@ class PlasseinLeavesBlock(settings: Settings) : Block(settings) {
     ): BlockState {
         val i = getDistanceFromLog(newState) + 1
         if (i != 1 || state.get(DISTANCE) != i) {
-            world.blockTickScheduler.schedule(pos, this, 1)
+            world.createAndScheduleBlockTick(pos, this, 1)
         }
         return state
     }

@@ -1,8 +1,8 @@
 package com.github.hotm.blockentity
 
-import com.github.hotm.util.lazyVar
 import com.github.hotm.auranet.AuraNodeUtils
 import com.github.hotm.auranet.PortalReceiverAuraNode
+import com.github.hotm.util.lazyVar
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
@@ -29,10 +29,9 @@ class PortalReceiverAuraNodeBlockEntity(pos: BlockPos, state: BlockState) :
         }
     }
 
-    override fun writeNbt(nbt: NbtCompound): NbtCompound {
-        val new = super.writeNbt(nbt)
-        new.putLong("lastPortalConnectionUpdate", lastPortalConnectionUpdate)
-        return new
+    override fun writeNbt(nbt: NbtCompound) {
+        super.writeNbt(nbt)
+        nbt.putLong("lastPortalConnectionUpdate", lastPortalConnectionUpdate)
     }
 
     override fun updateConnections() {

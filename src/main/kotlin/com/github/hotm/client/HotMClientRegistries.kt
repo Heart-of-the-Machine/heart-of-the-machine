@@ -40,17 +40,17 @@ object HotMClientRegistries {
         BLOCK_MODEL = Registry.register(
             Registry.REGISTRIES as Registry<in Registry<*>>,
             BLOCK_MODEL_IDENTIFIER,
-            SimpleRegistry(BLOCK_MODEL_KEY, Lifecycle.experimental())
+            SimpleRegistry(BLOCK_MODEL_KEY, Lifecycle.experimental(), null)
         )
         BLOCK_MODEL_LAYER = Registry.register(
             Registry.REGISTRIES as Registry<in Registry<*>>,
             BLOCK_MODEL_LAYER_IDENTIFIER,
-            SimpleRegistry(BLOCK_MODEL_LAYER_KEY, Lifecycle.experimental())
+            SimpleRegistry(BLOCK_MODEL_LAYER_KEY, Lifecycle.experimental(), null)
         )
         BLOCK_MODEL_CONNECTOR = Registry.register(
             Registry.REGISTRIES as Registry<in Registry<*>>,
             BLOCK_MODEL_CONNECTOR_IDENTIFIER,
-            SimpleRegistry(BLOCK_MODEL_CONNECTOR_KEY, Lifecycle.experimental())
+            SimpleRegistry(BLOCK_MODEL_CONNECTOR_KEY, Lifecycle.experimental(), null)
         )
     }
 }

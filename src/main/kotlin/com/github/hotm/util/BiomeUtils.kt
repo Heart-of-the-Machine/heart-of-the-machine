@@ -1,7 +1,6 @@
 package com.github.hotm.util
 
 import com.github.hotm.config.HotMBiomesConfig
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.RegistryWorldView
 
@@ -32,7 +31,7 @@ object BiomeUtils {
      * @return true if portal generation is allowed.
      */
     fun checkNonNectereBiome(nonNectereWorld: RegistryWorldView, nonNecterePos: BlockPos): Boolean {
-        val biomeId = nonNectereWorld.getBiomeKey(nonNecterePos).orElse(null)?.value
+        val biomeId = nonNectereWorld.getBiome(nonNecterePos).key.orElse(null)?.value
 
         return biomeId != null && !HotMBiomesConfig.CONFIG.necterePortalDenyBiomes!!.contains(
             biomeId.toString()

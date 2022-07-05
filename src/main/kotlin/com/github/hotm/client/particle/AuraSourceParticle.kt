@@ -35,9 +35,9 @@ class AuraSourceParticle(
         this.velocityY = velocityY
         this.velocityZ = velocityZ
 
-        colorRed = 0.8f + random.nextFloat() * 0.2f
-        colorGreen = 0.8f + random.nextFloat() * 0.2f
-        colorBlue = 0.8f + random.nextFloat() * 0.2f
+        red = 0.8f + random.nextFloat() * 0.2f
+        green = 0.8f + random.nextFloat() * 0.2f
+        blue = 0.8f + random.nextFloat() * 0.2f
 
         setSprite(spriteProvider)
     }
@@ -79,7 +79,8 @@ class AuraSourceParticle(
             z = endZ + velocityZ * factor.toDouble()
         }
     }
-    class Factory(private val spriteProvider: FabricSpriteProvider): ParticleFactory<DefaultParticleType> {
+
+    class Factory(private val spriteProvider: FabricSpriteProvider) : ParticleFactory<DefaultParticleType> {
         override fun createParticle(
             parameters: DefaultParticleType,
             world: ClientWorld,

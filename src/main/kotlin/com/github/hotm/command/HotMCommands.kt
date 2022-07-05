@@ -1,12 +1,10 @@
 package com.github.hotm.command
 
-import com.github.hotm.command.BaseAuraCommand
-import com.github.hotm.command.RetrogenPortalCommand
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 
 object HotMCommands {
     fun register() {
-        CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _ ->
+        CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback { dispatcher, _, _ ->
             RetrogenPortalCommand.register(dispatcher)
             BaseAuraCommand.register(dispatcher)
         })
