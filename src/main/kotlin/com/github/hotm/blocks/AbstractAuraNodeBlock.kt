@@ -1,20 +1,17 @@
 package com.github.hotm.blocks
 
-import alexiil.mc.lib.attributes.AttributeList
-import alexiil.mc.lib.attributes.AttributeProvider
 import com.github.hotm.mixinapi.StorageUtils
-import com.github.hotm.auranet.AttributeProviderAuraNode
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-abstract class AbstractAuraNodeBlock(settings: Settings) : Block(settings), AuraNodeBlock, AttributeProvider {
-    override fun addAllAttributes(world: World, pos: BlockPos, state: BlockState, to: AttributeList<*>) {
-        val access = StorageUtils.getAuraNetAccess(world)
-        (access[pos] as? AttributeProviderAuraNode)?.addAllAttributes(to)
-    }
+abstract class AbstractAuraNodeBlock(settings: Settings) : Block(settings), AuraNodeBlock {
+//    override fun addAllAttributes(world: World, pos: BlockPos, state: BlockState, to: AttributeList<*>) {
+//        val access = StorageUtils.getAuraNetAccess(world)
+//        (access[pos] as? AttributeProviderAuraNode)?.addAllAttributes(to)
+//    }
 
     override fun onStateReplaced(
         state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean
