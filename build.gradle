@@ -226,7 +226,7 @@ def commaRegex = "\\s*,\\s*"
 //        project {
 //            id = '391897'
 //            changelogType = 'markdown'
-//            changelog = file("changelogs/changelog-${project.mod_version}.md")
+//            changelog = file("changelogs/changelog-${project.version}.md")
 //            releaseType = project.mod_release_type
 //            project.publish_minecraft_versions.split(commaRegex).toList().forEach {
 //                addGameVersion it
@@ -253,9 +253,9 @@ if (System.getenv("MODRINTH_API_KEY") != null) {
     modrinth {
         token = System.getenv("MODRINTH_API_KEY")
         projectId = '7vleuAJ9'
-        versionNumber = project.mod_version
+        versionNumber = project.version
         versionType = project.mod_release_type
-        def changelogFile = rootProject.file("changelogs/changelog-v${project.mod_version}.md")
+        def changelogFile = rootProject.file("changelogs/changelog-v${project.version}.md")
         if (changelogFile.exists()) {
             changelog = changelogFile.text
         }
