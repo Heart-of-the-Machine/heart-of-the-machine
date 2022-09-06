@@ -3,32 +3,114 @@ name: release
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      # matches things like v0.1.2+1.18.2
+      - 'v[0-9]+.[0-9]+.[0-9]+\+[0-9]+.[0-9]+.[0-9]+'
+      # matches things like v0.3.0+1.19
+      - 'v[0-9]+.[0-9]+.[0-9]+\+[0-9]+.[0-9]+'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Get Tag Version
+        uses: dawidd6/action-get-tag@v1
+        id: tag_version
+      - name: Get Project Version
+        # script to remove the 'v' from the beginning of the tag version
+        uses: actions/github-script@v6
+        id: project_version
+        env:
+          TAG_VERSION: ${{ steps.tag_version.outputs.tag }}
+        with:
+          script: return process.env.TAG_VERSION.substring(1)
+          result-encoding: string
+      - name: Checkout
         uses: actions/checkout@v2
       - name: validate gradle wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: setup jdk 17
+      - name: Setup JDK 17
         uses: actions/setup-java@v1
         with:
-          java-version: 17 # Use the minimum supported java version for releases
-      - name: make gradle wrapper executable
+          java-version: 17
+      - name: Make Gradle Wrapper Executable
         run: chmod +x ./gradlew
-      - name: build
+      - name: Build
         run: ./gradlew build
-      - name: gh release
+        env:
+          RELEASE_TAG: ${{ steps.tag_version.outputs.tag }}
+      - name: Github Release
         uses: softprops/action-gh-release@v1
         with:
+          body_path: changelogs/changelog-${{ steps.tag_version.outputs.tag }}.md
           files: build/libs/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: modrinth release
-        run: ./gradlew publishModrinth modrinthSyncBody
+          GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+      - name: Modrinth Release
+        run: ./gradlew modrinth modrinthSyncBody
         env:
-          CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
-          MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          RELEASE_TAG: ${{ steps.tag_version.outputs.tag }}
+      # Next is the rather cursed maven and javadoc deployment mechanism
+      - name: Checkout Deployment Repository
+        uses: actions/checkout@v2
+        with:
+          repository: Kneelawk/kneelawk.github.io
+          ref: src
+          path: deploy
+          persist-credentials: false
+      - name: Publish To Deployment Repository Maven
+        run: ./gradlew publishAllPublicationsToPublishRepoRepository
+        env:
+          RELEASE_TAG: ${{ steps.tag_version.outputs.tag }}
+          PUBLISH_REPO: deploy/src/maven/
+      - name: Commit Deployment Repository Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m 'Publish Heart of the Machine ${{ steps.tag_version.outputs.tag }}'
+        working-directory: deploy
+      - name: Push Deployment Repository
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
+          branch: src
+          directory: deploy
+          repository: Kneelawk/kneelawk.github.io
+      # This is the mess that publishes discord notifications
+      - name: Read Changelog File
+        uses: juliangruber/read-file-action@v1
+        id: changelog
+        with:
+          path: changelogs/changelog-${{ steps.tag_version.outputs.tag }}.md
+      - name: Process Changelog for Announcement
+        uses: actions/github-script@v6
+        id: announcement_text
+        env:
+          CHANGELOG: ${{ steps.changelog.outputs.content }}
+          TAG_VERSION: ${{ steps.tag_version.outputs.tag }}
+        with:
+          script: |
+            let fullVersion = process.env.TAG_VERSION;
+            let versions = fullVersion.split('+');
+            let modVersion = fullVersion.substring(1);
+            let lines = process.env.CHANGELOG.split('\n');
+            let changesStart = lines.findIndex(line => line.startsWith('*'));
+            lines.splice(0, changesStart);
+            lines.unshift(`**Heart of the Machine ${versions[0]} has been released for Minecraft ${versions[1]}!**`, '', '__Changes:__');
+            lines.push(`Available on Modrinth: https://modrinth.com/mod/heart-of-the-machine/version/${modVersion}`);
+            lines.push("Available on Kneelawk's maven: https://kneelawk.com/maven/", `With the identifier: \`com.github.hotm:heart-of-the-machine:${modVersion}\``);
+            return lines.join('\n');
+          result-encoding: string
+      - name: Make Release Announcement to HotM Discord
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_HOTM_WEBHOOK }}
+        with:
+          args: ${{ steps.announcement_text.outputs.result }}
+      - name: Make Release Announcement to Main Discord
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_MAIN_WEBHOOK }}
+        with:
+          args: ${{ steps.announcement_text.outputs.result }}
