@@ -2,24 +2,23 @@ pluginManagement {
     repositories {
         mavenCentral()
         maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
+            name = 'Quilt'
+            url = 'https://maven.quiltmc.org/repository/release'
         }
         maven {
-            name = 'Cotton'
-            url = 'https://server.bbkr.space/artifactory/libs-release/'
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
         }
         gradlePluginPortal()
     }
 
     plugins {
-        id 'fabric-loom' version loom_version
+        id 'org.quiltmc.loom' version loom_version
         id 'org.jetbrains.kotlin.jvm' version kotlin_version
-        id 'com.matthewprenger.cursegradle' version cursegradle_version
+//        id 'com.matthewprenger.cursegradle' version cursegradle_version
         id 'com.modrinth.minotaur' version minotaur_version
         id 'io.qameta.allure' version allure_plugin_version
         id 'de.undercouch.download' version download_version
-        id 'io.github.juuxel.loom-quiltflower' version loom_quiltflower_version
     }
 
 }
