@@ -13,6 +13,7 @@ jobs:
         # Use these Java versions
         java: [
           17,  # Minimum supported by Minecraft
+          18
         ]
         # and run on both Linux and Windows
         os: [
@@ -29,7 +30,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/libs.versions.toml') }}
+            .gradle/loom-quiltflower-cache
+            .gradle/quilt-loom-cache
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/libs.versions.toml', '.github/workflows/build.yml') }}
           restore-keys: ${{ runner.os }}-gradle-
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
