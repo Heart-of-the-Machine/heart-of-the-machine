@@ -13,10 +13,10 @@ jobs:
         uses: actions/checkout@v2
       - name: validate gradle wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: setup jdk 16
+      - name: setup jdk 17
         uses: actions/setup-java@v1
         with:
-          java-version: 16 # Use the minimum supported java version for releases
+          java-version: 17 # Use the minimum supported java version for releases
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: build
@@ -27,8 +27,8 @@ jobs:
           files: build/libs/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: curseforge and modrinth release
-        run: ./gradlew curseforge publishModrinth
+      - name: modrinth release
+        run: ./gradlew publishModrinth modrinthSyncBody
         env:
           CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
           MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
