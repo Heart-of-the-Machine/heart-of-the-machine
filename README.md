@@ -2,7 +2,7 @@
 
 # Heart of the Machine
 
-[![Website Icon]][Website] [![Github Icon]][Github] [![Trello Icon]][Trello] [![Discord Status]][Discord]
+[![Website Icon]][Website] [![Github Icon]][Github] [![Trello Icon]][Trello] [![Modrinth Icon]][Modrinth] [![Discord Status]][Discord]
 
 Heart of the Machine is a ModFest 1.16 entry.
 
@@ -15,6 +15,8 @@ this dimension and make use of them somehow.
 [Github]: https://github.com/Heart-of-the-Machine/heart-of-the-machine
 [Trello Icon]: https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/trello-mark-blue-28px.png
 [Trello]: https://trello.com/b/LM2DHkuS
+[Modrinth Icon]: https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/modrinth-mark-28px.png
+[Modrinth]: https://modrinth.com/mod/heart-of-the-machine
 [Discord Status]: https://img.shields.io/discord/720635296131055697?logo=discord&logoColor=white&style=for-the-badge
 [Discord]: https://discord.gg/hU4us4D
 
