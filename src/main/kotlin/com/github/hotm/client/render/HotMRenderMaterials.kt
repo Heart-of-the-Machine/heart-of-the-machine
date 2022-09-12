@@ -1,12 +1,13 @@
 package com.github.hotm.client.render
 
+import com.mojang.blaze3d.vertex.VertexConsumer
+import io.vram.frex.api.buffer.VertexEmitter
 import io.vram.frex.api.config.FrexFeature
 import io.vram.frex.api.material.MaterialConstants
 import io.vram.frex.api.material.MaterialFinder
 import io.vram.frex.api.material.RenderMaterial
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.SpriteTexturedVertexConsumer
-import net.minecraft.client.render.VertexConsumer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.texture.SpriteAtlasTexture
 import net.minecraft.client.util.SpriteIdentifier
@@ -15,7 +16,7 @@ import net.minecraft.util.Identifier
 object HotMRenderMaterials {
     private lateinit var AURA_NODE_BEAM: (Identifier, Boolean) -> RenderLayer
     private lateinit var AURA_NODE_BEAM_SOLID_FREX: RenderMaterial
-//    private lateinit var AURA_NODE_BEAM_TRANSLUCENT_FREX: Function<Identifier, RenderMaterial>
+    private lateinit var AURA_NODE_BEAM_TRANSLUCENT_FREX: RenderMaterial
 
     fun register() {
         val finder = MaterialFinder.threadLocal()
@@ -24,10 +25,10 @@ object HotMRenderMaterials {
         AURA_NODE_BEAM_SOLID_FREX =
             finder.preset(MaterialConstants.PRESET_SOLID).disableAo(true).disableDiffuse(true).emissive(true)
                 .castShadows(false).find()
-        // Doesn't render properly. However, the bloom does what this layer was trying to do.
-//            AURA_NODE_BEAM_TRANSLUCENT_FREX = Util.memoize { texture ->
-//                finder.blendMode(BlendMode.TRANSLUCENT).disableAo(true).emissive(true).texture(texture).find()
-//            }
+        // TODO: check if this actually renders properly on Pastel
+        AURA_NODE_BEAM_TRANSLUCENT_FREX =
+            finder.preset(MaterialConstants.PRESET_TRANSLUCENT).disableAo(true).disableDiffuse(true).emissive(true)
+                .castShadows(false).find()
 
         AURA_NODE_BEAM = RenderLayer::getBeaconBeam
     }
@@ -40,16 +41,16 @@ object HotMRenderMaterials {
         texture: SpriteIdentifier,
         translucent: Boolean
     ): VertexConsumer {
-        return SpriteTexturedVertexConsumer(
-            if (consumers is FrexVertexConsumerProvider) {
-//            if (translucent) {
-//                consumers.getConsumer(AURA_NODE_BEAM_TRANSLUCENT_FREX.apply(texture))
-//            } else {
-                consumers.getConsumer(AURA_NODE_BEAM_SOLID_FREX)
-//            }
+        val consumer = consumers.getBuffer(AURA_NODE_BEAM(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, translucent))
+
+        if (consumer is VertexEmitter) {
+            if (translucent) {
+                consumer.material(AURA_NODE_BEAM_TRANSLUCENT_FREX)
             } else {
-                consumers.getBuffer(AURA_NODE_BEAM(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, translucent))
-            }, texture.sprite
-        )
+                consumer.material(AURA_NODE_BEAM_SOLID_FREX)
+            }
+        }
+
+        return SpriteTexturedVertexConsumer(consumer, texture.sprite)
     }
 }

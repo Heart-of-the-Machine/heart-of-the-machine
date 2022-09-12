@@ -13,7 +13,7 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.random.Random
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
@@ -39,14 +39,14 @@ class PlasseinLeavesBlock(settings: Settings) : Block(settings) {
         return state.get(DISTANCE) == MAX_DISTANCE && !state.get(PERSISTENT)
     }
 
-    override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
+    override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: RandomGenerator) {
         if (!state.get(PERSISTENT) && state.get(DISTANCE) == MAX_DISTANCE) {
             dropStacks(state, world, pos)
             world.removeBlock(pos, false)
         }
     }
 
-    override fun scheduledTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
+    override fun scheduledTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: RandomGenerator) {
         world.setBlockState(pos, updateDistanceFromLogs(state, world, pos), 3)
     }
 
@@ -64,7 +64,7 @@ class PlasseinLeavesBlock(settings: Settings) : Block(settings) {
     ): BlockState {
         val i = getDistanceFromLog(newState) + 1
         if (i != 1 || state.get(DISTANCE) != i) {
-            world.createAndScheduleBlockTick(pos, this, 1)
+            world.scheduleBlockTick(pos, this, 1)
         }
         return state
     }
@@ -83,7 +83,7 @@ class PlasseinLeavesBlock(settings: Settings) : Block(settings) {
     }
 
     private fun getDistanceFromLog(state: BlockState): Int {
-        return if (HotMBlockTags.PLASSEIN_SOURCE.contains(state.block)) {
+        return if (state.isIn(HotMBlockTags.PLASSEIN_SOURCE)) {
             0
         } else {
             if (state.block is PlasseinLeavesBlock) state.get(DISTANCE) else MAX_DISTANCE
@@ -91,7 +91,7 @@ class PlasseinLeavesBlock(settings: Settings) : Block(settings) {
     }
 
     @Environment(EnvType.CLIENT)
-    override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
+    override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: RandomGenerator) {
         if (world.hasRain(pos.up())) {
             if (random.nextInt(15) == 1) {
                 val blockPos = pos.down()

@@ -9,7 +9,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.random.Random
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
@@ -34,13 +34,13 @@ class PlasseinSporeBlock(private val generator: PlasseinSporeGenerator, settings
         return SHAPE
     }
 
-    override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
+    override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: RandomGenerator) {
         if (world.getLightLevel(pos.up()) >= 9 && random.nextInt(7) == 0) {
             generate(world, pos, state, random)
         }
     }
 
-    fun generate(serverWorld: ServerWorld, blockPos: BlockPos, blockState: BlockState, random: Random) {
+    fun generate(serverWorld: ServerWorld, blockPos: BlockPos, blockState: BlockState, random: RandomGenerator) {
         if (blockState.get(STAGE) == 0) {
             serverWorld.setBlockState(blockPos, blockState.cycle(STAGE), 4)
         } else {
@@ -55,11 +55,11 @@ class PlasseinSporeBlock(private val generator: PlasseinSporeGenerator, settings
         return true
     }
 
-    override fun canGrow(world: World, random: Random, pos: BlockPos, state: BlockState): Boolean {
+    override fun canGrow(world: World, random: RandomGenerator, pos: BlockPos, state: BlockState): Boolean {
         return world.random.nextFloat() < 0.45
     }
 
-    override fun grow(world: ServerWorld, random: Random, pos: BlockPos, state: BlockState) {
+    override fun grow(world: ServerWorld, random: RandomGenerator, pos: BlockPos, state: BlockState) {
         generate(world, pos, state, random)
     }
 

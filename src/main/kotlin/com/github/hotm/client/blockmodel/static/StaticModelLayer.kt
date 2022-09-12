@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper
-import net.minecraft.util.math.random.Random
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.world.BlockRenderView
 import java.util.function.Supplier
 
@@ -175,13 +175,13 @@ class StaticModelLayer(private val mesh: Mesh) : BakedModelLayer {
         blockView: BlockRenderView,
         state: BlockState,
         pos: BlockPos,
-        randomSupplier: Supplier<Random>,
+        randomSupplier: Supplier<RandomGenerator>,
         context: RenderContext
     ) {
         context.meshConsumer().accept(mesh)
     }
 
-    override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<Random>, context: RenderContext) {
+    override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<RandomGenerator>, context: RenderContext) {
         context.meshConsumer().accept(mesh)
     }
 }

@@ -86,9 +86,10 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
         if (world != null && world is ServerWorld) {
             // This is an awful hack to get minecraft to stop complaining about these BlockEntities being removed but
             // still pending.
-            val tag = NbtCompound()
-            writeNbt(tag)
-            world.getChunk(pos).addPendingBlockEntityNbt(tag)
+            // TODO: see if this still needs to be fixed
+//            val tag = NbtCompound()
+//            writeNbt(tag)
+//            world.getChunk(pos).addPendingBlockEntityNbt(tag)
 
             world.removeBlockEntity(pos)
 
@@ -96,7 +97,7 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
                 world.setBlockState(pos, originalBlock)
             }
 
-            if (world.structureAccessor.shouldGenerateStructures()) {
+            if (world.structureManager.shouldGenerate()) {
                 val structureCtx = structureCtx
                 if (structureCtx == null) {
                     // We're generating as a feature, so we just check if there are any portals connected and generate
@@ -115,12 +116,12 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
                             structureCtx.rotation
                         )
                     ) {
-                        // The portal structure couldn't be generated here so we'll remove the structure piece from the
+                        // The portal structure couldn't be generated here, so we'll remove the structure piece from the
                         // structure start.
-                        world.structureAccessor.getStructureAt(
+                        world.structureManager.getStructureStartAt(
                             structureCtx.boundingBox.center,
                             HotMStructureFeatures.NECTERE_PORTAL
-                        ).clearChildren()
+                        ).children.clear()
                     }
                 }
             }

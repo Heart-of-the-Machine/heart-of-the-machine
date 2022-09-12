@@ -33,7 +33,7 @@ import java.util.*
  * Structure Feature for the Nectere Portal.
  */
 class NecterePortalStructureFeature(config: Codec<DefaultFeatureConfig>) :
-    StructureFeature<DefaultFeatureConfig>(config) {
+    StructureFeature(config) {
 
     override fun getStructureStartFactory(): StructureStartFactory<DefaultFeatureConfig> {
         return StructureStartFactory { feature, pos, references, seed ->

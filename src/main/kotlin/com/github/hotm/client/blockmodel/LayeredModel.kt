@@ -11,7 +11,7 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.random.Random
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.world.BlockRenderView
 import java.util.function.Supplier
 
@@ -20,7 +20,7 @@ class LayeredModel(
     private val particle: Sprite,
     private val layers: Array<BakedModelLayer>
 ) : BakedModel, FabricBakedModel {
-    override fun getQuads(state: BlockState?, face: Direction?, random: Random): List<BakedQuad> {
+    override fun getQuads(state: BlockState?, face: Direction?, random: RandomGenerator): List<BakedQuad> {
         return listOf()
     }
 
@@ -61,7 +61,7 @@ class LayeredModel(
         blockView: BlockRenderView,
         state: BlockState,
         pos: BlockPos,
-        randomSupplier: Supplier<Random>,
+        randomSupplier: Supplier<RandomGenerator>,
         context: RenderContext
     ) {
         for (layer in layers) {
@@ -69,7 +69,7 @@ class LayeredModel(
         }
     }
 
-    override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<Random>, context: RenderContext) {
+    override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<RandomGenerator>, context: RenderContext) {
         for (layer in layers) {
             layer.emitItemQuads(stack, randomSupplier, context)
         }

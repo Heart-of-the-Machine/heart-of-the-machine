@@ -3,16 +3,16 @@ package com.github.hotm.client.render.blockentity
 import com.github.hotm.client.HotMSprites
 import com.github.hotm.client.blockmodel.HotMBlockModels
 import com.github.hotm.client.render.HotMRenderMaterials
+import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.TexturedRenderLayers
-import net.minecraft.client.render.VertexConsumer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.BlockRenderManager
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.*
-import net.minecraft.util.math.random.Random
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.world.BlockRenderView
 import net.minecraft.world.World
 import kotlin.math.PI
@@ -86,38 +86,44 @@ object AuraNodeRendererUtils {
         matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(pitchShift))
 
         matrices.push()
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rollShift))
-        renderBeamSquare(
-            matrices,
-            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM, false),
-            1f,
-            len,
-            innerRadius,
-            0.0f,
-            1.0f,
-            0.0f,
-            1.0f
-        )
-        renderBeamEnds(
-            matrices,
-            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM_END, false),
-            1f,
-            len,
-            innerRadius,
-            0.0f,
-            1.0f,
-            0.0f,
-            1.0f
-        )
+        run {
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rollShift))
+
+            val consumer = HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM, false)
+            renderBeamSquare(
+                matrices,
+                consumer,
+                1f,
+                len,
+                innerRadius,
+                0.0f,
+                1.0f,
+                0.0f,
+                1.0f
+            )
+            renderBeamEnds(
+                matrices,
+                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM_END, false),
+                1f,
+                len,
+                innerRadius,
+                0.0f,
+                1.0f,
+                0.0f,
+                1.0f
+            )
+        }
         matrices.pop()
 
         if (HotMRenderMaterials.shouldRenderOuterAuraNodeBeam()) {
             matrices.push()
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rollShift))
             matrices.translate(0.0, -1.0 / 32.0, 0.0)
+
+            val consumer = HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM, true)
             renderBeamSquare(
                 matrices,
-                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM, true),
+                consumer,
                 0.125f,
                 len + 2f / 32f,
                 outerRadius,
@@ -128,7 +134,7 @@ object AuraNodeRendererUtils {
             )
             renderBeamEnds(
                 matrices,
-                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM_END, true),
+                consumer,
                 0.125f,
                 len + 2f / 32f,
                 outerRadius,
@@ -160,8 +166,8 @@ object AuraNodeRendererUtils {
         v2: Float
     ) {
         val entry = matrices.peek()
-        val modelMat = entry.positionMatrix
-        val normalMat = entry.normalMatrix
+        val modelMat = entry.model
+        val normalMat = entry.normal
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, 0f, radius, 0f, -radius, u1, u2, v1, v2)
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, 0f, -radius, 0f, radius, u1, u2, v1, v2)
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, radius, 0f, -radius, 0f, u1, u2, v1, v2)
@@ -180,8 +186,8 @@ object AuraNodeRendererUtils {
         v2: Float
     ) {
         val entry = matrices.peek()
-        val modelMat = entry.positionMatrix
-        val normalMat = entry.normalMatrix
+        val modelMat = entry.model
+        val normalMat = entry.normal
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, 0f, radius, radius, 0f, u1, u2, v1, v2)
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, 0f, -radius, -radius, 0f, u1, u2, v1, v2)
         renderBeamFace(modelMat, normalMat, vertices, alpha, height, radius, 0f, 0f, -radius, u1, u2, v1, v2)
@@ -200,8 +206,8 @@ object AuraNodeRendererUtils {
         v2: Float
     ) {
         val entry = matrices.peek()
-        val modelMat = entry.positionMatrix
-        val normalMat = entry.normalMatrix
+        val modelMat = entry.model
+        val normalMat = entry.normal
         renderBeamEnd(modelMat, normalMat, vertices, alpha, height, radius, u1, u2, v1, v2, true)
         renderBeamEnd(modelMat, normalMat, vertices, alpha, 0f, radius, u1, u2, v1, v2, false)
     }
@@ -260,7 +266,7 @@ object AuraNodeRendererUtils {
     ) {
         vertices.vertex(modelMatrix, x, y, z)
         vertices.color(1f, 1f, 1f, alpha)
-        vertices.texture(u, v)
+        vertices.uv(u, v)
         vertices.overlay(OverlayTexture.DEFAULT_UV)
         vertices.light(15728880)
         vertices.normal(normalMatrix, 0.0f, 1.0f, 0.0f)
@@ -308,7 +314,7 @@ object AuraNodeRendererUtils {
             matrices,
             consumers.getBuffer(TexturedRenderLayers.getEntitySolid()),
             false,
-            Random.create(42),
+            RandomGenerator.createLegacy(42),
             42L,
             OverlayTexture.DEFAULT_UV
         )

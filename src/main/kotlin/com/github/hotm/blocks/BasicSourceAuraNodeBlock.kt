@@ -12,7 +12,7 @@ import net.minecraft.block.ShapeContext
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
-import net.minecraft.util.math.random.Random
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
@@ -43,7 +43,7 @@ class BasicSourceAuraNodeBlock(settings: Settings) : AbstractAuraNodeBlock(setti
         return SHAPE
     }
 
-    override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
+    override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: RandomGenerator) {
         val access = StorageUtils.getAuraNetAccess(world)
         val node = access[pos] as? ValuedAuraNode
 

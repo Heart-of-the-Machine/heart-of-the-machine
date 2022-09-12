@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper.clamp
-import net.minecraft.util.math.random.Random
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.world.BlockRenderView
 import java.util.function.Supplier
 
@@ -46,7 +46,7 @@ class CTModelLayer(
         blockView: BlockRenderView,
         state: BlockState,
         pos: BlockPos,
-        randomSupplier: Supplier<Random>,
+        randomSupplier: Supplier<RandomGenerator>,
         context: RenderContext
     ) {
         val emitter = context.emitter
@@ -78,7 +78,7 @@ class CTModelLayer(
         }
     }
 
-    override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<Random>, context: RenderContext) {
+    override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<RandomGenerator>, context: RenderContext) {
         // This layer doesn't render items
     }
 

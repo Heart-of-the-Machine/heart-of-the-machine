@@ -14,7 +14,7 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.random.Random
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
@@ -59,7 +59,7 @@ class ScaffoldingBlock(settings: Settings) : Block(settings), Waterloggable {
             val blockState = world.getBlockState(mutable)
             var i = 7
 
-            if (HotMBlockTags.SCAFFOLDING.contains(blockState.block)) {
+            if (blockState.isIn(HotMBlockTags.SCAFFOLDING)) {
                 i = blockState.get(DISTANCE)
             } else if (blockState.isSideSolidFullSquare(world, mutable, Direction.UP)) {
                 return 0
@@ -67,7 +67,7 @@ class ScaffoldingBlock(settings: Settings) : Block(settings), Waterloggable {
 
             for (direction in Direction.Type.HORIZONTAL) {
                 val blockState2 = world.getBlockState(mutable.set(pos, direction))
-                if (HotMBlockTags.SCAFFOLDING.contains(blockState2.block)) {
+                if (blockState2.isIn(HotMBlockTags.SCAFFOLDING)) {
                     i = min(i, blockState2.get(DISTANCE) + 1)
                     if (i == 1) {
                         break
@@ -125,7 +125,7 @@ class ScaffoldingBlock(settings: Settings) : Block(settings), Waterloggable {
         notify: Boolean
     ) {
         if (!world.isClient) {
-            world.createAndScheduleBlockTick(pos, this, 1)
+            world.scheduleBlockTick(pos, this, 1)
         }
     }
 
@@ -138,15 +138,15 @@ class ScaffoldingBlock(settings: Settings) : Block(settings), Waterloggable {
         posFrom: BlockPos
     ): BlockState {
         if (state.get(WATERLOGGED)) {
-            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world))
+            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world))
         }
         if (!world.isClient) {
-            world.createAndScheduleBlockTick(pos, this, 1)
+            world.scheduleBlockTick(pos, this, 1)
         }
         return state
     }
 
-    override fun scheduledTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
+    override fun scheduledTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: RandomGenerator) {
         val i = calculateDistance(world, pos)
         val blockState = (state.with(DISTANCE, i)).with(
             BOTTOM,
@@ -154,7 +154,7 @@ class ScaffoldingBlock(settings: Settings) : Block(settings), Waterloggable {
         )
         if (blockState.get(DISTANCE) == 7) {
             if (state.get(DISTANCE) == 7) {
-                FallingBlockEntity.spawnFromBlock(world, pos, blockState)
+                FallingBlockEntity.fall(world, pos, blockState)
             } else {
                 world.breakBlock(pos, true)
             }

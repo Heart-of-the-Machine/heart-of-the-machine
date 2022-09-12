@@ -6,22 +6,22 @@ import net.minecraft.block.Blocks
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.random.Random
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.world.BlockView
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.ConfiguredFeature
 
 abstract class PlasseinSporeGenerator {
-    protected abstract fun createGrowthFeature(random: Random, leyline: Boolean): ConfiguredFeature<*, *>?
-    protected abstract fun createLargeGrowthFeature(random: Random): ConfiguredFeature<*, *>?
-    protected abstract fun createCrossGrowthFeature(random: Random, leyline: Boolean): ConfiguredFeature<*, *>?
+    protected abstract fun createGrowthFeature(random: RandomGenerator, leyline: Boolean): ConfiguredFeature<*, *>?
+    protected abstract fun createLargeGrowthFeature(random: RandomGenerator): ConfiguredFeature<*, *>?
+    protected abstract fun createCrossGrowthFeature(random: RandomGenerator, leyline: Boolean): ConfiguredFeature<*, *>?
 
     open fun generate(
         world: ServerWorld,
         generator: ChunkGenerator,
         growthPos: BlockPos,
         growthState: BlockState,
-        random: Random
+        random: RandomGenerator
     ): Boolean {
         return when {
             findCrossGrowthPos(world, generator, growthPos, growthState, random) -> true
@@ -36,7 +36,7 @@ abstract class PlasseinSporeGenerator {
         generator: ChunkGenerator,
         growthPos: BlockPos,
         growthState: BlockState,
-        random: Random
+        random: RandomGenerator
     ): Boolean {
         val configuredFeature = createGrowthFeature(random, shouldGenerateLeyline(world, growthPos, 0, 0))
         return if (configuredFeature == null) {
@@ -57,7 +57,7 @@ abstract class PlasseinSporeGenerator {
         generator: ChunkGenerator,
         growthPos: BlockPos,
         growthState: BlockState,
-        random: Random
+        random: RandomGenerator
     ): Boolean {
         for (x in 0 downTo -1) {
             for (z in 0 downTo -1) {
@@ -85,7 +85,7 @@ abstract class PlasseinSporeGenerator {
         generator: ChunkGenerator,
         growthPos: BlockPos,
         growthState: BlockState,
-        random: Random,
+        random: RandomGenerator,
         offsetX: Int,
         offsetZ: Int
     ): Boolean {
@@ -115,7 +115,7 @@ abstract class PlasseinSporeGenerator {
         generator: ChunkGenerator,
         growthPos: BlockPos,
         growthState: BlockState,
-        random: Random
+        random: RandomGenerator
     ): Boolean {
         if (canGenerateCrossGrowth(growthState, world, growthPos, 0, 0)) {
             return generateCrossGrowth(world, generator, growthPos, growthState, random, 0, 0)
@@ -147,7 +147,7 @@ abstract class PlasseinSporeGenerator {
         generator: ChunkGenerator,
         growthPos: BlockPos,
         growthState: BlockState,
-        random: Random,
+        random: RandomGenerator,
         offsetX: Int,
         offsetZ: Int
     ): Boolean {
@@ -176,6 +176,6 @@ abstract class PlasseinSporeGenerator {
     }
 
     open fun shouldGenerateLeyline(world: ServerWorld, growthPos: BlockPos, offsetX: Int, offsetZ: Int): Boolean {
-        return HotMBlockTags.LEYLINES.contains(world.getBlockState(growthPos.add(offsetX, -1, offsetZ)).block)
+        return world.getBlockState(growthPos.add(offsetX, -1, offsetZ)).isIn(HotMBlockTags.LEYLINES)
     }
 }

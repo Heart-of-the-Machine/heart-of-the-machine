@@ -35,9 +35,9 @@ class AuraSourceParticle(
         this.velocityY = velocityY
         this.velocityZ = velocityZ
 
-        red = 0.8f + random.nextFloat() * 0.2f
-        green = 0.8f + random.nextFloat() * 0.2f
-        blue = 0.8f + random.nextFloat() * 0.2f
+        colorRed = 0.8f + random.nextFloat() * 0.2f
+        colorGreen = 0.8f + random.nextFloat() * 0.2f
+        colorBlue = 0.8f + random.nextFloat() * 0.2f
 
         setSprite(spriteProvider)
     }

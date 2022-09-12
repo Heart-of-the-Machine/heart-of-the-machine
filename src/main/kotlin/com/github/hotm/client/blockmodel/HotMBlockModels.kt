@@ -71,13 +71,16 @@ object HotMBlockModels {
     private fun getResourceProvider(rm: ResourceManager): ModelResourceProvider {
         return ModelResourceProvider { model, ctx ->
             val modelResource = Identifier(model.namespace, "models/${model.path}.hotm.json")
-            if (rm.containsResource(modelResource)) {
+            val resource = rm.getResource(modelResource)
+            if (resource.isPresent) {
                 try {
-                    val jsonObject =
-                        JsonHelper.deserialize(InputStreamReader(rm.getResource(modelResource).inputStream))
+                    resource.get().open().use { stream ->
+                        val jsonObject =
+                            JsonHelper.deserialize(InputStreamReader(stream))
 
-                    UnbakedModel.CODEC.parse(JsonOps.INSTANCE, jsonObject).resultOrPartial(HotMLog.log::warn)
-                        .orElse(null)
+                        UnbakedModel.CODEC.parse(JsonOps.INSTANCE, jsonObject).resultOrPartial(HotMLog.log::warn)
+                            .orElse(null)
+                    }
                 } catch (e: JsonParseException) {
                     HotMLog.log.warn("Trouble parsing model: $modelResource", e)
                     null
