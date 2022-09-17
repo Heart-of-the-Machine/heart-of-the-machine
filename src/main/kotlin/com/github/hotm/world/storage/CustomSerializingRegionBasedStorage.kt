@@ -24,6 +24,8 @@ import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CompletionException
 import java.util.function.BooleanSupplier
 
 abstract class CustomSerializingRegionBasedStorage<R : Any>(
@@ -92,15 +94,17 @@ abstract class CustomSerializingRegionBasedStorage<R : Any>(
     }
 
     private fun loadDataAt(chunkPos: ChunkPos) {
-        update(chunkPos, NbtOps.INSTANCE, loadNbt(chunkPos))
+        update(chunkPos, NbtOps.INSTANCE, loadNbt(chunkPos).join().orElse(null))
     }
 
-    private fun loadNbt(pos: ChunkPos): NbtCompound? {
-        return try {
-            worker.getNbt(pos)
-        } catch (var3: IOException) {
-            LOGGER.error("Error reading chunk {} data from disk", pos, var3)
-            null
+    private fun loadNbt(pos: ChunkPos): CompletableFuture<Optional<NbtCompound>> {
+        return worker.readChunkData(pos).exceptionally {
+            if (it is IOException) {
+                LOGGER.warn("Error reading chunk {} data from disk", pos, it)
+                Optional.empty()
+            } else {
+                throw CompletionException(it)
+            }
         }
     }
 

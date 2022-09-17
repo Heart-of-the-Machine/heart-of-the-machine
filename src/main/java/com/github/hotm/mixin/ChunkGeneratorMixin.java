@@ -4,6 +4,7 @@ import com.github.hotm.world.HotMDimensions;
 import com.github.hotm.world.HotMPortalFinders;
 import com.github.hotm.world.gen.feature.HotMStructureFeatures;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.HolderSet;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.StructureFeature;
@@ -18,8 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @SuppressWarnings("unused")
 @Mixin(ChunkGenerator.class)
 public class ChunkGeneratorMixin {
-    @Inject(method = "locateStructure", at = @At("HEAD"), cancellable = true)
-    private void onLocateStructure(ServerWorld world, StructureFeature<?> feature, BlockPos center, int radius,
+    @Inject(method = "findFirst", at = @At("HEAD"), cancellable = true)
+    private void onLocateStructure(ServerWorld world, HolderSet<StructureFeature> featureSet, BlockPos center,
+                                   int radius,
                                    boolean skipExistingChunks, CallbackInfoReturnable<BlockPos> cir) {
         if (!world.getRegistryKey().equals(HotMDimensions.INSTANCE.getNECTERE_KEY()) &&
                 feature == HotMStructureFeatures.INSTANCE.getNECTERE_PORTAL()) {

@@ -3,7 +3,6 @@ package com.github.hotm.items
 import net.minecraft.block.Block
 import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemPlacementContext
-import net.minecraft.network.message.MessageType
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
@@ -34,7 +33,8 @@ class BracingItem(block: Block, settings: Settings) : BlockItem(block, settings)
                     val j = world.height
                     if (playerEntity is ServerPlayerEntity && mutable.y >= j) {
                         playerEntity.sendMessage(
-                            Text.translatable("build.tooHigh", j - 1).formatted(Formatting.RED), MessageType.GAME_INFO
+                            Text.translatable("build.tooHigh", j - 1).formatted(Formatting.RED),
+                            true
                         )
                     }
                     break

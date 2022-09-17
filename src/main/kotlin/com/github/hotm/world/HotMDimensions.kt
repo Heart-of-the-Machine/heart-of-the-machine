@@ -83,6 +83,7 @@ object HotMDimensions {
      * Registers the world generator for the Nectere dimension.
      */
     fun register() {
+        // FIXME: half this stuff can be JSON now
         NECTERE_TYPE = DimensionType(
             OptionalLong.empty(),
             true,

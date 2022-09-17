@@ -20,7 +20,7 @@ data class DimBlockPos(val dim: RegistryKey<World>, val pos: BlockPos) {
         val CODEC: Codec<DimBlockPos> =
             RecordCodecBuilder.create { instance: RecordCodecBuilder.Instance<DimBlockPos> ->
                 instance.group(
-                    RegistryKey.createCodec(Registry.WORLD_KEY).fieldOf("dim").forGetter(DimBlockPos::dim),
+                    RegistryKey.codec(Registry.WORLD_KEY).fieldOf("dim").forGetter(DimBlockPos::dim),
                     BlockPos.CODEC.fieldOf("pos").forGetter(DimBlockPos::pos)
                 ).apply(instance, ::DimBlockPos)
             }

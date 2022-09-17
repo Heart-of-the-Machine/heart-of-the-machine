@@ -98,7 +98,7 @@ object HotMPortalGen {
                 HotMPortalGenPositions.findValidNonNecterePortalPos(world, portalXZ.x, portalXZ.z)
                     ?.let { portalPos ->
                         // Make sure the portal is in an enabled biome and not in a Nectere biome.
-                        val biome = world.getBiomeKey(portalPos).orElse(null)
+                        val biome = world.getBiome(portalPos).key.orElse(null)
 
                         if (biome != null
                             && !HotMBiomeData.getDataById().containsKey(biome)
@@ -184,7 +184,7 @@ object HotMPortalGen {
                 world.setBlockState(blockPos, blockMut, 2)
                 val fluidState = world.getFluidState(blockPos)
                 if (!fluidState.isEmpty) {
-                    world.fluidTickScheduler.schedule(blockPos, fluidState.fluid, 0)
+                    world.scheduleFluidTick(blockPos, fluidState.fluid, 0)
                 }
                 if (StructurePieceAccessor.getBlocksNeedingPostProcessing().contains(blockMut.block)) {
                     world.getChunk(blockPos).markBlockForPostProcessing(blockPos)
