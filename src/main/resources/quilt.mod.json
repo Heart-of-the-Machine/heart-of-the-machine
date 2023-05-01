@@ -28,6 +28,10 @@
       "client_init": {
         "adapter": "kotlin",
         "value": "com.github.hotm.mod.client.HeartOfTheMachineModClient"
+      },
+      "fabric-datagen": {
+        "adapter": "kotlin",
+        "value": "com.github.hotm.mod.datagen.HotMModDataGen"
       }
 		},
 		"depends": [

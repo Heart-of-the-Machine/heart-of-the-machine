@@ -11,18 +11,42 @@ plugins {
 	alias(libs.plugins.quilt.loom)
 }
 
+val modid: String by project
+
 val archives_base_name: String by project
 base.archivesName.set(archives_base_name)
 
 val javaVersion = 17
 
+val genResDir = file("src/main/resources-generated")
+
+sourceSets {
+    main {
+        resources {
+            srcDirs.add(genResDir)
+        }
+    }
+}
+
 loom {
     splitEnvironmentSourceSets()
 
     mods {
-        create("hotm") {
+        create(modid) {
             sourceSet(sourceSets.getByName("main"))
             sourceSet(sourceSets.getByName("client"))
+        }
+    }
+
+    runs {
+        create("datagenClient") {
+            inherit(getByName("client"))
+            name("Data Generation")
+            vmArg("-Dfabric-api.datagen")
+            vmArg("-Dfabric-api.datagen.output-dir=${genResDir}")
+            vmArg("-Dfabric-api.datagen.modid=${modid}")
+
+            runDir("build/datagen")
         }
     }
 }
