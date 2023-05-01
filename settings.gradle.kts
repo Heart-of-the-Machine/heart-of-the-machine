@@ -15,4 +15,4 @@ pluginManagement {
 	}
 }
 
-rootProject.name = "quilt-kotlin-template-mod"
+rootProject.name = "heart-of-the-machine"
