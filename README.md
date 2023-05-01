@@ -1,24 +1,21 @@
-![Heart of the Machine Logo](https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/Plassein-Machine-Casing-tbg-C4096-256x256.png)
-
-# Heart of the Machine
-
-[![Website Icon]][Website] [![Github Icon]][Github] [![Trello Icon]][Trello] [![Modrinth Icon]][Modrinth] [![Discord Status]][Discord]
+<center>
+<p align="center"><img src="https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/Plassein-Machine-Casing-tbg-C4096-256x256.png" alt="Logo"></p>
+<h1 align="center">Heart of the Machine</h1>
+<p align="center">
+<a href="https://heart-of-the-machine.github.io/"><img src="https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/Plassein-Machine-Casing-tbg-C4096-28x28.png" alt="Website"></a>
+<a href="https://discord.gg/hU4us4D"><img src="https://img.shields.io/discord/720635296131055697?logo=discord&logoColor=white&style=for-the-badge" alt="Discord"></a>
+<a href="https://modrinth.com/mod/heart-of-the-machine"><img src="https://img.shields.io/modrinth/dt/7vleuAJ9?logo=modrinth&style=for-the-badge" alt="Modrinth"></a>
+<a href="https://www.curseforge.com/minecraft/mc-mods/heart-of-the-machine"><img src="https://cf.way2muchnoise.eu/391897.svg?badge_style=for_the_badge" alt="CurseForge"></a>
+<a href="https://github.com/Heart-of-the-Machine/heart-of-the-machine"><img src="https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/GitHub-Mark-28px.png" alt="GitHub"></a>
+</p>
+</center>
 
 Heart of the Machine is a ModFest 1.16 entry.
 
 Heart of the Machine adds a whole new dimension of abandoned machinery to explore. Maybe you can uncover the secrets of
 this dimension and make use of them somehow.
 
-[Website Icon]: https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/Plassein-Machine-Casing-tbg-C4096-28x28.png
-[Website]: https://heart-of-the-machine.github.io/
-[Github Icon]: https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/GitHub-Mark-28px.png
-[Github]: https://github.com/Heart-of-the-Machine/heart-of-the-machine
-[Trello Icon]: https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/trello-mark-blue-28px.png
-[Trello]: https://trello.com/b/LM2DHkuS
-[Modrinth Icon]: https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/modrinth-mark-28px.png
-[Modrinth]: https://modrinth.com/mod/heart-of-the-machine
-[Discord Status]: https://img.shields.io/discord/720635296131055697?logo=discord&logoColor=white&style=for-the-badge
-[Discord]: https://discord.gg/hU4us4D
+## Dependencies
 
 This mod depends on the [Quilt Standard Libraries][QSL] and [Quilt Kotlin Libraries][QKL].
 
@@ -30,11 +27,12 @@ This mod depends on the [Quilt Standard Libraries][QSL] and [Quilt Kotlin Librar
 [QKL]: https://modrinth.com/mod/qkl
 
 ## Screenshots
-![Heart of the Machine screenshot](https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/screenshots/2020-09-20_12.12.07.png)
+Here is a screenshot of a previous version of Heart of the Machine:
+![Old Heart of the Machine screenshot](https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/screenshots/2020-09-20_12.12.07.png)
 
 ## Getting to the Nectere Dimension
 The Nectere (or Nexus) dimension can be accessed through portals that generate at surface level in the overworld. You
-can locate them using the `/locate nectere_portal` command. Beware, the Nectere dimension has some pretty wacky terrain
+can locate them using the `/locate nectere_portal` command. Beware, the Nectere dimension has some pretty wacky terrain,
 and you may want to bring some building blocks just in case you end up spawning in a cliff or on a floating island.
 
 ## What is still subject to change?
@@ -70,16 +68,8 @@ We have other plans for Heart of the Machine, but those plans are less concrete.
 ## Known Issues
 There are some known issues with the mod. Some are being fixed and some are outside the scope of this mod.
 
-- ~~Some mods will generate structures in the Nectere dimension when they shouldn't.~~ (Fixed in 0.1.7)
-- ~~Having AE2 installed will cause meteorites to spawn in the Nectere dimension, crashing the server (same as
-  previous issue).~~ (Fixed in 0.1.7)
-- Some textures are broken when using Sodium. This is caused by Sodium not supporting custom block renderers that
-  HotM uses.
-- Updating a world from one Minecraft version to another (e.g. 1.16.3 -&gt; 1.16.4) will cause the world to lose its
-  Nether and End dimensions. This is fixed by the
-  [Dimension Update Fixer mod](https://www.curseforge.com/minecraft/mc-mods/dimension-update-fixer).
-  This issue is caused by weirdness with minecraft disliking custom chunk-generators, meaning that some data-fixers
-  will throw up on them.
+- Some textures are broken when using Sodium without Indium. This is caused by Sodium not supporting custom block
+  renderers that HotM uses. To fix this issue, please install Indium alongside Sodium.
 
 ## License
 Heart of the Machine is licensed under the MIT license.
