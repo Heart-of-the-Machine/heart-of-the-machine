@@ -56,7 +56,9 @@ loom {
 }
 
 repositories {
+    maven("https://kneelawk.com/maven/") { name = "Kneelawk" }
     maven("https://maven.terraformersmc.com/releases/") { name = "TerraformersMC" }
+    maven("https://maven.cafeteria.dev/releases/") { name = "Cafeteria" }
 }
 
 dependencies {
@@ -68,11 +70,11 @@ dependencies {
     modLocalRuntime(libs.quilt.loader)
 
 	// Quilted Fabric API will automatically pull in the correct QSL version.
-	modCompileOnly(libs.bundles.qfapi)
-    modLocalRuntime(libs.bundles.qfapi)
+	modCompileOnly(libs.bundles.libs.base)
+    modLocalRuntime(libs.bundles.libs.base)
 
-	modCompileOnly(libs.qkl)
-    modLocalRuntime(libs.qkl)
+    modImplementation(libs.bundles.libs.impl)
+    include(libs.bundles.libs.impl)
 
     modLocalRuntime(libs.bundles.runtime.local) {
         exclude(group = "net.fabricmc")

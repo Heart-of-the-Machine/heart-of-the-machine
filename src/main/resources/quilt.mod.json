@@ -50,7 +50,11 @@
 			{
 				"id": "minecraft",
 				"versions": "~1.19.4"
-			}
+			},
+      {
+        "id": "kmodlib-render",
+        "versions": "~0.1.0"
+      }
 		]
 	}
 }

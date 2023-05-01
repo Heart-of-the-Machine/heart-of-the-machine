@@ -12,6 +12,9 @@ loader = "0.18.10"
 qfapi = "6.0.0-beta.6+0.79.0-1.19.4"
 qkl = "2.0.2+kt.1.8.20+flk.1.9.3"
 
+# Implementation Libraries
+kmodlib_render = "0.1.0+1.19.4"
+
 # Local Runtime
 mod_menu = "6.2.2"
 
@@ -26,11 +29,15 @@ qfapi = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api", version.
 #qfapi_deprecated = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated", version.ref = "qfapi" }
 qkl = { module = "org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries", version.ref = "qkl" }
 
+# Implementation Libraries
+kmodlib_render = { module = "com.kneelawk:kmodlib-render", version.ref = "kmodlib_render" }
+
 # Local Runtime
 mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "mod_menu" }
 
 [bundles]
-qfapi = ["qfapi"]
+libs_base = ["qfapi", "qkl"]
+libs_impl = ["kmodlib_render"]
 runtime_local = ["mod_menu"]
 
 [plugins]
