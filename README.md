@@ -15,19 +15,18 @@ Heart of the Machine is a ModFest 1.16 entry.
 Heart of the Machine adds a whole new dimension of abandoned machinery to explore. Maybe you can uncover the secrets of
 this dimension and make use of them somehow.
 
-## Dependencies
-
-This mod depends on the [Quilt Standard Libraries][QSL] and [Quilt Kotlin Libraries][QKL].
-
-[![QSL Icon]][QSL] [![QKL Icon]][QKL]
-
-[QSL Icon]: https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/qsl-icon-rounded-64x64.png
-[QSL]: https://modrinth.com/mod/qsl
-[QKL Icon]: https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/qkl-icon-rounded-64x64.png
-[QKL]: https://modrinth.com/mod/qkl
+<center>
+<h3>This mod depends on the <a href="https://modrinth.com/mod/qsl">Quilt Standard Libraries</a> and <a href="https://modrinth.com/mod/qkl">Quilt Kotlin Libraries</a>.</h3>
+<p align="center">
+<a href="https://modrinth.com/mod/qsl"><img src="https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/qsl-icon-rounded-64x64.png" alt="Quilt Standard Libraries"></a>
+<a href="https://modrinth.com/mod/qkl"><img src="https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/qkl-icon-rounded-64x64.png" alt="Quilt Kotlin Libraries"></a>
+</p>
+</center>
 
 ## Screenshots
+
 Here is a screenshot of a previous version of Heart of the Machine:
+
 ![Old Heart of the Machine screenshot](https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/screenshots/2020-09-20_12.12.07.png)
 
 ## Getting to the Nectere Dimension
