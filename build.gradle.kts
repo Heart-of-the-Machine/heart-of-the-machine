@@ -39,6 +39,10 @@ loom {
     }
 
     runs {
+        getByName("client") {
+            programArgs("--width", "1920", "--height", "1080")
+        }
+
         create("datagenClient") {
             inherit(getByName("client"))
             name("Data Generation")
