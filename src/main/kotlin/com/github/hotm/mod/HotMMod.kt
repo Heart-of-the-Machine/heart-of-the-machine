@@ -3,7 +3,7 @@ package com.github.hotm.mod
 import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer
 
-object HeartOfTheMachineMod : ModInitializer {
+object HotMMod : ModInitializer {
     override fun onInitialize(mod: ModContainer?) {
         Log.LOG.info("[HotM] Initializing Heart of the Machine v${Constants.MOD_VERSION}...")
 

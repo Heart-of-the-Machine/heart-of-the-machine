@@ -23,11 +23,11 @@
 		"entrypoints": {
 			"init": {
 				"adapter": "kotlin",
-				"value": "com.github.hotm.mod.HeartOfTheMachineMod"
+				"value": "com.github.hotm.mod.HotMMod"
 			},
       "client_init": {
         "adapter": "kotlin",
-        "value": "com.github.hotm.mod.client.HeartOfTheMachineModClient"
+        "value": "com.github.hotm.mod.client.HotMModClient"
       },
       "fabric-datagen": {
         "adapter": "kotlin",

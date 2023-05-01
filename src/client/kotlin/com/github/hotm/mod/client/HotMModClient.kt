@@ -5,7 +5,7 @@ import net.minecraft.client.MinecraftClient
 import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer
 
-object HeartOfTheMachineModClient : ClientModInitializer {
+object HotMModClient : ClientModInitializer {
     override fun onInitializeClient(mod: ModContainer?) {
         Log.LOG.info("[HotM] Initializing Heart of the Machine Client...")
 
