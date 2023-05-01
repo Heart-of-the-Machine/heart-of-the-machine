@@ -1,25 +1,37 @@
 [versions]
+# Plugins
+loom = "1.+"
 kotlin = "1.8.20"
 
+# Frameworks
 minecraft = "1.19.4"
+mappings = "1.19.4+build.10"
+loader = "0.18.10"
+
+# Base Libraries
 qfapi = "6.0.0-beta.6+0.79.0-1.19.4"
 qkl = "2.0.2+kt.1.8.20+flk.1.9.3"
-loader = "0.18.10"
-mappings = "1.19.4+build.10"
-loom = "1.+"
+
+# Local Runtime
+mod_menu = "6.2.2"
 
 [libraries]
+# Frameworks
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 quilt_mappings = { module = "org.quiltmc:quilt-mappings", version.ref = "mappings" }
 quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "loader" }
 
+# Base Libraries
 qfapi = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api", version.ref = "qfapi" }
 #qfapi_deprecated = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated", version.ref = "qfapi" }
-
 qkl = { module = "org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries", version.ref = "qkl" }
 
+# Local Runtime
+mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "mod_menu" }
+
 [bundles]
-quilted_fabric_api = ["qfapi"]
+qfapi = ["qfapi"]
+runtime_local = ["mod_menu"]
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

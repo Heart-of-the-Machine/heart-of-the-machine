@@ -17,42 +17,28 @@ base.archivesName.set(archives_base_name)
 val javaVersion = 17
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
+    maven("https://maven.terraformersmc.com/releases/") { name = "TerraformersMC" }
 }
 
-// All the dependencies are declared at gradle/libs.version.toml and referenced with "libs.<id>"
-// See https://docs.gradle.org/current/userguide/platforms.html for information on how version catalogs work.
 dependencies {
 	minecraft(libs.minecraft)
-	mappings(
-		variantOf(libs.quilt.mappings) {
-			classifier("intermediary-v2")
-		}
-	)
+	mappings(variantOf(libs.quilt.mappings) { classifier("intermediary-v2") })
 
-	// Replace the above line with the block below if you want to use Mojang mappings as your primary mappings, falling back on QM for parameters and Javadocs
-	/*
-	mappings(
-		loom.layered {
-			mappings(variantOf(libs.quilt.mappings) { classifier("intermediary-v2") })
-			officialMojangMappings()
-		}
-	)
-	*/
+    // Prevent this dependency from being commuted to our dependants, because it can cause version conflicts
+	modCompileOnly(libs.quilt.loader)
+    modLocalRuntime(libs.quilt.loader)
 
-	modImplementation(libs.quilt.loader)
-
-
-	// QSL is not a complete API; You will need Quilted Fabric API to fill in the gaps.
 	// Quilted Fabric API will automatically pull in the correct QSL version.
-	modImplementation(libs.qfapi)
-	// modImplementation(libs.bundles.qfapi) // If you wish to use the deprecated Fabric API modules
+	modCompileOnly(libs.bundles.qfapi)
+    modLocalRuntime(libs.bundles.qfapi)
 
-	modImplementation(libs.qkl)
+	modCompileOnly(libs.qkl)
+    modLocalRuntime(libs.qkl)
+
+    modLocalRuntime(libs.bundles.runtime.local) {
+        exclude(group = "net.fabricmc")
+        exclude(group = "net.fabricmc.fabric-api")
+    }
 }
 
 tasks {
@@ -110,13 +96,7 @@ if (JavaVersion.current() < targetJavaVersion) {
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task if it is present.
-	// If you remove this line, sources will not be generated.
 	withSourcesJar()
-
-	// If this mod is going to be a library, then it should also generate Javadocs in order to aid with development.
-	// Uncomment this line to generate them.
-	// withJavadocJar()
 
 	// Still required by IDEs such as Eclipse and VSC
 	sourceCompatibility = targetJavaVersion
@@ -133,9 +113,5 @@ publishing {
 
 	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
 	}
 }

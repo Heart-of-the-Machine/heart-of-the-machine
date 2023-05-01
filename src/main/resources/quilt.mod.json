@@ -1,27 +1,29 @@
 {
 	"schema_version": 1,
 	"quilt_loader": {
-		"group": "com.example",
-		"id": "example_mod",
+		"group": "com.github.hotm",
+		"id": "hotm",
 		"version": "${version}",
 		"metadata": {
-			"name": "Mod Name",
-			"description": "A short description of your mod.",
+			"name": "Heart of the Machine",
+			"description": "Heart of the Machine adds a whole new dimension of abandoned machinery to explore. Maybe you can uncover the secrets of this dimension and make use of them somehow.",
 			"contributors": {
-				"Your name here": "Owner"
+				"Kneelawk": "Co-Owner",
+        "Meelock": "Co-Owner"
 			},
 			"contact": {
-				"homepage": "https://example.com/",
-				"issues": "https://github.com/QuiltMC/quilt-kotlin-template-mod/issues",
-				"sources": "https://github.com/QuiltMC/quilt-kotlin-template-mod"
+				"homepage": "https://heart-of-the-machine.github.io/",
+				"issues": "https://github.com/Heart-of-the-Machine/heart-of-the-machine/issues",
+				"sources": "https://github.com/Heart-of-the-Machine/heart-of-the-machine"
 			},
-			"icon": "assets/example_mod/icon.png"
+			"icon": "assets/hotm/icon.png",
+      "license": "MIT"
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
 			"init": {
 				"adapter": "kotlin",
-				"value": "com.example.example_mod.ExampleMod"
+				"value": "com.github.hotm.mod.HeartOfTheMachineMod"
 			}
 		},
 		"depends": [
@@ -31,17 +33,16 @@
 			},
 			{
 				"id": "quilted_fabric_api",
-				"versions": ">=4.0.0-"
+				"versions": ">=5.0.0-"
 			},
 			{
 				"id": "qkl",
-				"versions": ">=0.1.4-"
+				"versions": ">=2.0.2"
 			},
 			{
 				"id": "minecraft",
-				"versions": ">=1.19.2"
+				"versions": "~1.19.4"
 			}
 		]
-	},
-	"mixin": "example_mod.mixins.json"
+	}
 }
