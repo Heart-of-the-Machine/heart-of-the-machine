@@ -16,6 +16,17 @@ base.archivesName.set(archives_base_name)
 
 val javaVersion = 17
 
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        create("hotm") {
+            sourceSet(sourceSets.getByName("main"))
+            sourceSet(sourceSets.getByName("client"))
+        }
+    }
+}
+
 repositories {
     maven("https://maven.terraformersmc.com/releases/") { name = "TerraformersMC" }
 }

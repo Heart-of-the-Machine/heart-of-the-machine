@@ -24,7 +24,11 @@
 			"init": {
 				"adapter": "kotlin",
 				"value": "com.github.hotm.mod.HeartOfTheMachineMod"
-			}
+			},
+      "client_init": {
+        "adapter": "kotlin",
+        "value": "com.github.hotm.mod.client.HeartOfTheMachineModClient"
+      }
 		},
 		"depends": [
 			{
