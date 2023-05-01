@@ -16,7 +16,7 @@ Heart of the Machine adds a whole new dimension of abandoned machinery to explor
 this dimension and make use of them somehow.
 
 <center>
-<h3>This mod depends on the <a href="https://modrinth.com/mod/qsl">Quilt Standard Libraries</a> and <a href="https://modrinth.com/mod/qkl">Quilt Kotlin Libraries</a>.</h3>
+<h3 align="center">This mod depends on the <a href="https://modrinth.com/mod/qsl">Quilt Standard Libraries</a> and <a href="https://modrinth.com/mod/qkl">Quilt Kotlin Libraries</a>.</h3>
 <p align="center">
 <a href="https://modrinth.com/mod/qsl"><img src="https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/qsl-icon-rounded-64x64.png" alt="Quilt Standard Libraries"></a>
 <a href="https://modrinth.com/mod/qkl"><img src="https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/icons/qkl-icon-rounded-64x64.png" alt="Quilt Kotlin Libraries"></a>
