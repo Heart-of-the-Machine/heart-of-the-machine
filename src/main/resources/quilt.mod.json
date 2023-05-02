@@ -1,30 +1,30 @@
 {
-	"schema_version": 1,
-	"quilt_loader": {
-		"group": "com.github.hotm",
-		"id": "hotm",
-		"version": "${version}",
-		"metadata": {
-			"name": "Heart of the Machine",
-			"description": "Heart of the Machine adds a whole new dimension of abandoned machinery to explore. Maybe you can uncover the secrets of this dimension and make use of them somehow.",
-			"contributors": {
-				"Kneelawk": "Co-Owner",
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "com.github.hotm",
+    "id": "hotm",
+    "version": "${version}",
+    "metadata": {
+      "name": "Heart of the Machine",
+      "description": "Heart of the Machine adds a whole new dimension of abandoned machinery to explore. Maybe you can uncover the secrets of this dimension and make use of them somehow.",
+      "contributors": {
+        "Kneelawk": "Co-Owner",
         "Meelock": "Co-Owner"
-			},
-			"contact": {
-				"homepage": "https://heart-of-the-machine.github.io/",
-				"issues": "https://github.com/Heart-of-the-Machine/heart-of-the-machine/issues",
-				"sources": "https://github.com/Heart-of-the-Machine/heart-of-the-machine"
-			},
-			"icon": "assets/hotm/icon.png",
+      },
+      "contact": {
+        "homepage": "https://heart-of-the-machine.github.io/",
+        "issues": "https://github.com/Heart-of-the-Machine/heart-of-the-machine/issues",
+        "sources": "https://github.com/Heart-of-the-Machine/heart-of-the-machine"
+      },
+      "icon": "assets/hotm/icon.png",
       "license": "MIT"
-		},
-		"intermediate_mappings": "net.fabricmc:intermediary",
-		"entrypoints": {
-			"init": {
-				"adapter": "kotlin",
-				"value": "com.github.hotm.mod.HotMMod"
-			},
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": {
+        "adapter": "kotlin",
+        "value": "com.github.hotm.mod.HotMMod"
+      },
       "client_init": {
         "adapter": "kotlin",
         "value": "com.github.hotm.mod.client.HotMModClient"
@@ -33,28 +33,28 @@
         "adapter": "kotlin",
         "value": "com.github.hotm.mod.datagen.HotMModDataGen"
       }
-		},
-		"depends": [
-			{
-				"id": "quilt_loader",
-				"versions": ">=0.17.0-"
-			},
-			{
-				"id": "quilted_fabric_api",
-				"versions": ">=5.0.0-"
-			},
-			{
-				"id": "qkl",
-				"versions": ">=2.0.2"
-			},
-			{
-				"id": "minecraft",
-				"versions": "~1.19.4"
-			},
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.17.0-"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=5.0.0-"
+      },
+      {
+        "id": "qkl",
+        "versions": ">=2.0.2"
+      },
+      {
+        "id": "minecraft",
+        "versions": "~1.19.4"
+      },
       {
         "id": "kmodlib-render",
         "versions": "~0.1.0"
       }
-		]
-	}
+    ]
+  }
 }

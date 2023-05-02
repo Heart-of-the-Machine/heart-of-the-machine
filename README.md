@@ -30,11 +30,13 @@ Here is a screenshot of a previous version of Heart of the Machine:
 ![Old Heart of the Machine screenshot](https://raw.githubusercontent.com/Heart-of-the-Machine/Heart-of-the-Machine.github.io/master/screenshots/2020-09-20_12.12.07.png)
 
 ## Getting to the Nectere Dimension
+
 The Nectere (or Nexus) dimension can be accessed through portals that generate at surface level in the overworld. You
 can locate them using the `/locate nectere_portal` command. Beware, the Nectere dimension has some pretty wacky terrain,
 and you may want to bring some building blocks just in case you end up spawning in a cliff or on a floating island.
 
 ## What is still subject to change?
+
 This mod is still under development. We still have plans for adding a lot more content to Heart of the Machine, but some
 existing content will also be changing as well.
 
@@ -50,6 +52,7 @@ Existing content that will likely be changing in the future is:
 - Some block textures will change. Many of Heart of the Machine's textures are sill WIP.
 
 ## Goals for Heart of the Machine
+
 Heart of the Machine is an ancient-technology themed mod with a progression and functionality much like some magic mods.
 After we have gotten most of the Nectere world-generation and portal systems finalized, we are planning to move on to
 the technology aspects of the mod.
@@ -65,10 +68,12 @@ Some concrete goals we have for Heart of the Machine are:
 We have other plans for Heart of the Machine, but those plans are less concrete.
 
 ## Known Issues
+
 There are some known issues with the mod. Some are being fixed and some are outside the scope of this mod.
 
 - Some textures are broken when using Sodium without Indium. This is caused by Sodium not supporting custom block
   renderers that HotM uses. To fix this issue, please install Indium alongside Sodium.
 
 ## License
+
 Heart of the Machine is licensed under the MIT license.
