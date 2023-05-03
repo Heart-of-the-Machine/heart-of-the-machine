@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:noise",
+  "noise": "hotm:nectere/cave_density",
+  "xz_scale": 0.45,
+  "y_scale": 0.45
+}

@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:noise",
+  "noise": "hotm:nectere/surface_density",
+  "xz_scale": 0.25,
+  "y_scale": 0.45
+}

@@ -1,0 +1,11 @@
+{
+  "type": "hotm:nectere",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "hotm:nectere",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "hotm:thinking_forest"
+    }
+  }
+}
