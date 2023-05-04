@@ -50,12 +50,12 @@ class NoiseSettingsGen(output: FabricDataOutput, private val lookupProvider: Com
             densityFunction.getHolderOrThrow(RegistryKey.of(RegistryKeys.DENSITY_FUNCTION, Identifier("shift_z")))
                 .value()
         val nectereCave3dNoise =
-            densityFunction.getHolderOrThrow(RegistryKey.of(RegistryKeys.DENSITY_FUNCTION, Identifier("overworld/base_3d_noise")))
+            densityFunction.getHolderOrThrow(RegistryKey.of(RegistryKeys.DENSITY_FUNCTION, id("nectere/cave_3d_noise")))
                 .value()
         val nectereSurface3dNoise = densityFunction.getHolderOrThrow(
             RegistryKey.of(
                 RegistryKeys.DENSITY_FUNCTION,
-                Identifier("overworld/base_3d_noise")
+                id("nectere/surface_3d_noise")
             )
         ).value()
 
