@@ -23,6 +23,17 @@ this dimension and make use of them somehow.
 </p>
 </center>
 
+## Rewrite
+
+This mod is being re-written, nearly from scratch, for two main reasons. First, the original version of this mod was my
+first fabric/quilt ecosystem mod, and my first Minecraft mod in several years, meaning that much of the mod's mechanics
+were hacked in, causing issues like deadlocks during world-generation. Second, Minecraft has changed so much since this
+mod was last updated, especially in the areas of world-generation, which is a focus of this mod, meaning that much of
+the mod's original code is just unusable with modern versions of Minecraft.
+
+Huge thanks to [Misode's Datapack Generators](https://misode.github.io/), as they allowed me to recreate the shape of
+Heart of the Machine's caves without having to manually create a new world for every change.
+
 ## Screenshots
 
 Here is a screenshot of a previous version of Heart of the Machine:
