@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "hotm:block/plassein_thinking_scrap"
+      },
+      {
+        "model": "hotm:block/plassein_thinking_scrap",
+        "y": 90
+      },
+      {
+        "model": "hotm:block/plassein_thinking_scrap",
+        "y": 180
+      },
+      {
+        "model": "hotm:block/plassein_thinking_scrap",
+        "y": 270
+      }
+    ]
+  }
+}

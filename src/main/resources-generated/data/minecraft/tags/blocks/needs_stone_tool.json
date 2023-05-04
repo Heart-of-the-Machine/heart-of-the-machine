@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "hotm:thinking_stone",
+    "hotm:thinking_scrap",
+    "hotm:rusted_thinking_scrap",
+    "hotm:plassein_thinking_scrap"
+  ]
+}

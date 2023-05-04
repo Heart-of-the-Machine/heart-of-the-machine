@@ -23,7 +23,7 @@ val genResDir = file("src/main/resources-generated")
 sourceSets {
     main {
         resources {
-            srcDirs.add(genResDir)
+            srcDir(genResDir)
         }
     }
 }
