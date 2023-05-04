@@ -33,7 +33,7 @@ class NoiseSettingsGen(output: FabricDataOutput) : NoiseSettingsProvider(output)
                 mobGenerationDisabled = false,
                 aquifersEnabled = false,
                 oreVeinsEnabled = false,
-                useLegacyRandomGenerator = true,
+                useLegacyRandomGenerator = false,
                 defaultBlock = HotMBlocks.THINKING_STONE.defaultState,
                 generationShapeConfig = GenerationShapeConfig(-64, 448, 1, 2),
                 noiseRouter = noiseRouter(

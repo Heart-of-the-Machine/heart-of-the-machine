@@ -10,7 +10,7 @@
     }
   },
   "disable_mob_generation": false,
-  "legacy_random_source": true,
+  "legacy_random_source": false,
   "noise": {
     "height": 448,
     "min_y": -64,
