@@ -193,7 +193,8 @@
         "if_true": {
           "type": "minecraft:biome",
           "biome_is": [
-            "hotm:thinking_forest"
+            "hotm:thinking_forest",
+            "hotm:meditating_fields"
           ]
         },
         "then_run": {

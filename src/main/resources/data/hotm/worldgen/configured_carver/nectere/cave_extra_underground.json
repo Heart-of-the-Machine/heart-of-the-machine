@@ -1,14 +1,14 @@
 {
   "type": "hotm:air_only_cave",
   "config": {
-    "probability": 0.15,
+    "probability": 0.07,
     "y": {
       "type": "minecraft:uniform",
       "min_inclusive": {
         "above_bottom": 8
       },
       "max_inclusive": {
-        "absolute": 256
+        "absolute": 192
       }
     },
     "yScale": {
@@ -24,7 +24,7 @@
     "replaceable": "#minecraft:overworld_carver_replaceables",
     "debug_settings": {
       "air_state": {
-        "Name": "minecraft:crimson_button",
+        "Name": "minecraft:oak_button",
         "Properties": {
           "face": "wall",
           "facing": "north",
