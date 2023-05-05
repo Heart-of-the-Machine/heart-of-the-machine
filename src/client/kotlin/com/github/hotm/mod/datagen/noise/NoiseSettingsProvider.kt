@@ -18,6 +18,12 @@ abstract class NoiseSettingsProvider(output: FabricDataOutput) : DataProvider {
         toWrite.add(resolver.resolveJsonFile(id) to settings)
     }
 
+    protected fun noiseSettings(id: Identifier, configure: ChunkGeneratorSettingsDsl.Builder.() -> Unit) {
+        val builder = ChunkGeneratorSettingsDsl.builder()
+        builder.configure()
+        toWrite.add(resolver.resolveJsonFile(id) to builder.build())
+    }
+
     abstract fun generate()
 
     override fun run(writer: DataWriter): CompletableFuture<*> {

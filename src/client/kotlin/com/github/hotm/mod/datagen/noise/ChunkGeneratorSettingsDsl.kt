@@ -9,23 +9,23 @@ import net.minecraft.world.gen.chunk.GenerationShapeConfig
 import net.minecraft.world.gen.surfacebuilder.SurfaceRules
 
 data class ChunkGeneratorSettingsDsl(
-    val generationShapeConfig: GenerationShapeConfig,
+    val noise: GenerationShapeConfig,
     val defaultBlock: BlockState,
     val defaultFluid: BlockState,
     val noiseRouter: NoiseRouterDsl,
     val surfaceRule: SurfaceRules.MaterialRule,
     val spawnTarget: List<MultiNoiseUtil.NoiseHypercube>,
     val seaLevel: Int,
-    val mobGenerationDisabled: Boolean,
+    val disableMobGeneration: Boolean,
     val aquifersEnabled: Boolean,
     val oreVeinsEnabled: Boolean,
-    val useLegacyRandomGenerator: Boolean
+    val legacyRandomSource: Boolean
 ) {
     companion object {
         val CODEC: Codec<ChunkGeneratorSettingsDsl> = RecordCodecBuilder.create { instance ->
             instance.group(
                 GenerationShapeConfig.CODEC.fieldOf("noise")
-                    .forGetter(ChunkGeneratorSettingsDsl::generationShapeConfig),
+                    .forGetter(ChunkGeneratorSettingsDsl::noise),
                 BlockState.CODEC.fieldOf("default_block").forGetter(ChunkGeneratorSettingsDsl::defaultBlock),
                 BlockState.CODEC.fieldOf("default_fluid").forGetter(ChunkGeneratorSettingsDsl::defaultFluid),
                 NoiseRouterDsl.CODEC.fieldOf("noise_router").forGetter(ChunkGeneratorSettingsDsl::noiseRouter),
@@ -35,38 +35,122 @@ data class ChunkGeneratorSettingsDsl(
                     .forGetter(ChunkGeneratorSettingsDsl::spawnTarget),
                 Codec.INT.fieldOf("sea_level").forGetter(ChunkGeneratorSettingsDsl::seaLevel),
                 Codec.BOOL.fieldOf("disable_mob_generation")
-                    .forGetter(ChunkGeneratorSettingsDsl::mobGenerationDisabled),
+                    .forGetter(ChunkGeneratorSettingsDsl::disableMobGeneration),
                 Codec.BOOL.fieldOf("aquifers_enabled").forGetter(ChunkGeneratorSettingsDsl::aquifersEnabled),
                 Codec.BOOL.fieldOf("ore_veins_enabled").forGetter(ChunkGeneratorSettingsDsl::oreVeinsEnabled),
                 Codec.BOOL.fieldOf("legacy_random_source")
-                    .forGetter(ChunkGeneratorSettingsDsl::useLegacyRandomGenerator)
+                    .forGetter(ChunkGeneratorSettingsDsl::legacyRandomSource)
             ).apply(instance, ::ChunkGeneratorSettingsDsl)
+        }
+
+        fun builder() = Builder()
+    }
+
+    class Builder(
+        var noise: GenerationShapeConfig = GenerationShapeConfig(-64, 384, 1, 2),
+        var defaultBlock: BlockState = Blocks.STONE.defaultState,
+        var defaultFluid: BlockState = Blocks.WATER.defaultState,
+        var noiseRouter: NoiseRouterDsl = noiseRouter(),
+        var surfaceRule: SurfaceRules.MaterialRule = SurfaceRules.block(Blocks.STONE.defaultState),
+        var spawnTarget: List<MultiNoiseUtil.NoiseHypercube> = listOf(),
+        var seaLevel: Int = 64,
+        var disableMobGeneration: Boolean = false,
+        var aquifersEnabled: Boolean = true,
+        var oreVeinsEnabled: Boolean = true,
+        var legacyRandomSource: Boolean = false
+    ) {
+        fun build() = ChunkGeneratorSettingsDsl(
+            noise,
+            defaultBlock,
+            defaultFluid,
+            noiseRouter,
+            surfaceRule,
+            spawnTarget,
+            seaLevel,
+            disableMobGeneration,
+            aquifersEnabled,
+            oreVeinsEnabled,
+            legacyRandomSource
+        )
+
+        fun noise(noise: GenerationShapeConfig) {
+            this.noise = noise
+        }
+
+        fun noise(minY: Int, height: Int, noiseSizeHorizontal: Int, noiseSizeVertical: Int) {
+            noise = GenerationShapeConfig(minY, height, noiseSizeHorizontal, noiseSizeVertical)
+        }
+
+        fun defaultBlock(state: BlockState) {
+            defaultBlock = state
+        }
+
+        fun defaultFluid(state: BlockState) {
+            defaultFluid = state
+        }
+
+        fun noiseRouter(prop: NoiseRouterDsl) {
+            noiseRouter = prop
+        }
+
+        fun noiseRouter(configure: NoiseRouterDsl.Builder.() -> Unit) {
+            val builder = NoiseRouterDsl.builder()
+            builder.configure()
+            noiseRouter = builder.build()
+        }
+
+        fun surfaceRule(prop: SurfaceRules.MaterialRule) {
+            surfaceRule = prop
+        }
+
+        fun spawnTargets(prop: List<MultiNoiseUtil.NoiseHypercube>) {
+            spawnTarget = prop
+        }
+
+        fun seaLevel(prop: Int) {
+            seaLevel = prop
+        }
+
+        fun disableMobGeneration(prop: Boolean) {
+            disableMobGeneration = prop
+        }
+
+        fun aquifersEnabled(prop: Boolean) {
+            aquifersEnabled = prop
+        }
+
+        fun oreVeinsEnabled(prop: Boolean) {
+            oreVeinsEnabled = prop
+        }
+
+        fun legacyRandomSource(prop: Boolean) {
+            legacyRandomSource = prop
         }
     }
 }
 
 fun chunkGeneratorSettings(
-    generationShapeConfig: GenerationShapeConfig = GenerationShapeConfig(-64, 384, 1, 2),
+    noise: GenerationShapeConfig = GenerationShapeConfig(-64, 384, 1, 2),
     defaultBlock: BlockState = Blocks.STONE.defaultState,
     defaultFluid: BlockState = Blocks.WATER.defaultState,
     noiseRouter: NoiseRouterDsl = noiseRouter(),
     surfaceRule: SurfaceRules.MaterialRule = SurfaceRules.sequence(),
     spawnTarget: List<MultiNoiseUtil.NoiseHypercube> = listOf(),
     seaLevel: Int = 64,
-    mobGenerationDisabled: Boolean = false,
+    disableMobGeneration: Boolean = false,
     aquifersEnabled: Boolean = true,
     oreVeinsEnabled: Boolean = true,
-    useLegacyRandomGenerator: Boolean = false
+    legacyRandomSource: Boolean = false
 ) = ChunkGeneratorSettingsDsl(
-    generationShapeConfig,
+    noise,
     defaultBlock,
     defaultFluid,
     noiseRouter,
     surfaceRule,
     spawnTarget,
     seaLevel,
-    mobGenerationDisabled,
+    disableMobGeneration,
     aquifersEnabled,
     oreVeinsEnabled,
-    useLegacyRandomGenerator
+    legacyRandomSource
 )

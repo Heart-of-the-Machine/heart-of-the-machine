@@ -26,32 +26,36 @@ class NoiseSettingsGen(output: FabricDataOutput) : NoiseSettingsProvider(output)
             ((yGradient(160, 224, 1.0, 0.0) * caves + yGradient(160, 224, 0.0, 1.0) * surface).blendDensity()
                 .interpolated() * 0.64.df).squeeze()
 
-        noiseSettings(
-            id("nectere"),
-            chunkGeneratorSettings(
-                seaLevel = 0,
-                mobGenerationDisabled = false,
-                aquifersEnabled = false,
-                oreVeinsEnabled = false,
-                useLegacyRandomGenerator = false,
-                defaultBlock = HotMBlocks.THINKING_STONE.defaultState,
-                generationShapeConfig = GenerationShapeConfig(-64, 448, 1, 2),
-                noiseRouter = noiseRouter(
-                    temperature = shiftedNoise(
-                        noise = Identifier("minecraft:temperature"),
-                        xzScale = 0.25,
-                        shiftX = "minecraft:shift_x".df,
-                        shiftZ = "minecraft:shift_z".df
-                    ),
-                    vegetation = shiftedNoise(
-                        noise = Identifier("minecraft:vegetation"),
-                        xzScale = 0.25,
-                        shiftX = "minecraft:shift_x".df,
-                        shiftZ = "minecraft:shift_z".df
-                    ),
-                    fullNoise = finalDensity
-                ),
-                surfaceRule = sequence(
+        noiseSettings(id("nectere")) {
+            seaLevel(0)
+            disableMobGeneration(false)
+            aquifersEnabled(false)
+            oreVeinsEnabled(false)
+            legacyRandomSource(false)
+
+            defaultBlock(HotMBlocks.THINKING_STONE.defaultState)
+
+            noise(-64, 448, 1, 2)
+
+            noiseRouter {
+                temperature = shiftedNoise(
+                    noise = Identifier("minecraft:temperature"),
+                    xzScale = 0.25,
+                    shiftX = "minecraft:shift_x".df,
+                    shiftZ = "minecraft:shift_z".df
+                )
+                vegetation = shiftedNoise(
+                    noise = Identifier("minecraft:vegetation"),
+                    xzScale = 0.25,
+                    shiftX = "minecraft:shift_x".df,
+                    shiftZ = "minecraft:shift_z".df
+                )
+
+                finalDensity(finalDensity)
+            }
+
+            surfaceRule(
+                sequence(
                     condition(
                         verticalGradient("minecraft:bedrock_floor", YOffset.aboveBottom(0), YOffset.aboveBottom(5)),
                         block(Blocks.BEDROCK.defaultState)
@@ -85,6 +89,6 @@ class NoiseSettingsGen(output: FabricDataOutput) : NoiseSettingsProvider(output)
                     )
                 )
             )
-        )
+        }
     }
 }
