@@ -14,6 +14,8 @@ object HotMModDataGen : DataGeneratorEntrypoint {
         pack.addProvider(::BlockTagGen)
         pack.addProvider(::BlockLootGen)
 
+        pack.addProvider(::NoiseSettingsGen)
+
         Log.LOG.info("[HotM] DataGen complete.")
     }
 }

@@ -1,10 +1,10 @@
-// 1.19.4	2023-05-04T03:01:48.075898114	Heart of the Machine/Model Definitions
+// 1.19.4	2023-05-05T19:49:14.753455468	Heart of the Machine/Model Definitions
 28de17605c33e10394f3c47907c9f5e83626ca58 assets/hotm/blockstates/rusted_thinking_scrap.json
 0c233054f1b33d0373bee946ac380babf02c6b4e assets/hotm/models/block/thinking_stone.json
 cf9da18c0048ed649f68f39e9eb88fc4cac4df05 assets/hotm/models/item/thinking_stone.json
-cac6ed5072f66b088ce2aa6e623ce801c5716c55 assets/hotm/blockstates/thinking_stone.json
 9be67b887a6d4fe9d0086ec94ef4d8edab16acce assets/hotm/blockstates/thinking_scrap.json
 52f949e769b12415b004a8d783522671163e09a5 assets/hotm/models/item/rusted_thinking_scrap.json
+cac6ed5072f66b088ce2aa6e623ce801c5716c55 assets/hotm/blockstates/thinking_stone.json
 4052e75de9ef7b7b5464f6e3c5a914c058576c02 assets/hotm/blockstates/plassein_thinking_scrap.json
 cbfafc9aed18939a713dd4b0598a3a9da2076e30 assets/hotm/models/item/thinking_scrap.json
 27dd103162476b90ab77b8a85775d071ea168441 assets/hotm/models/block/rusted_thinking_scrap.json
