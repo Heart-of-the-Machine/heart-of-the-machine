@@ -94,13 +94,15 @@ data class ChunkGeneratorSettingsDsl(
         }
 
         fun noiseRouter(configure: NoiseRouterDsl.Builder.() -> Unit) {
-            val builder = NoiseRouterDsl.builder()
-            builder.configure()
-            noiseRouter = builder.build()
+            noiseRouter = NoiseRouterDsl.builder().apply(configure).build()
         }
 
         fun surfaceRule(prop: SurfaceRules.MaterialRule) {
             surfaceRule = prop
+        }
+
+        fun surfaceRule(configure: SequenceBuilder.() -> Unit) {
+            surfaceRule = SequenceBuilder().apply(configure).build()
         }
 
         fun spawnTargets(prop: List<MultiNoiseUtil.NoiseHypercube>) {

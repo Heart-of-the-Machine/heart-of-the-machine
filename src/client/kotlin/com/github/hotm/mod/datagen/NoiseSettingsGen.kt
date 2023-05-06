@@ -6,13 +6,10 @@ import com.github.hotm.mod.datagen.noise.NoiseSettingsProvider
 import com.github.hotm.mod.datagen.noise.df
 import com.github.hotm.mod.datagen.noise.shiftedNoise
 import com.github.hotm.mod.datagen.noise.yGradient
-import com.github.hotm.mod.util.asBiomeKey
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.minecraft.block.Blocks
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.VerticalSurfaceType
 import net.minecraft.world.gen.YOffset
-import net.minecraft.world.gen.surfacebuilder.SurfaceRules.*
 
 class NoiseSettingsGen(output: FabricDataOutput) : NoiseSettingsProvider(output) {
     override fun generate() {
@@ -53,41 +50,30 @@ class NoiseSettingsGen(output: FabricDataOutput) : NoiseSettingsProvider(output)
                         .interpolated() * 0.64.df).squeeze()
             }
 
-            surfaceRule(
-                sequence(
-                    condition(
-                        verticalGradient("minecraft:bedrock_floor", YOffset.aboveBottom(0), YOffset.aboveBottom(5)),
-                        block(Blocks.BEDROCK.defaultState)
-                    ),
-                    condition(
-                        biome(
-                            id("thinking_forest").asBiomeKey(),
-                            id("meditating_fields").asBiomeKey()
-                        ),
-                        condition(
-                            water(1, 0),
-                            sequence(
-                                condition(
-                                    stoneDepth(0, false, VerticalSurfaceType.FLOOR),
-                                    block(HotMBlocks.PLASSEIN_THINKING_SCRAP.defaultState)
-                                ),
-                                condition(
-                                    stoneDepth(1, false, VerticalSurfaceType.FLOOR),
-                                    block(HotMBlocks.THINKING_SCRAP.defaultState)
-                                ),
-                                condition(
-                                    stoneDepth(2, false, VerticalSurfaceType.FLOOR),
-                                    block(HotMBlocks.THINKING_SCRAP.defaultState)
-                                ),
-                                condition(
-                                    stoneDepth(3, false, VerticalSurfaceType.FLOOR),
-                                    block(HotMBlocks.THINKING_SCRAP.defaultState)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+            surfaceRule {
+                conditional {
+                    verticalGradient("minecraft:bedrock_floor", YOffset.aboveBottom(0), YOffset.aboveBottom(5))
+                    block(Blocks.BEDROCK)
+                }
+
+                conditional {
+                    biome {
+                        add(id("thinking_forest"))
+                        add(id("meditating_fields"))
+                    }
+
+                    conditional {
+                        water(1)
+
+                        sequence {
+                            stoneDepthBlock(offset = 0, block = HotMBlocks.PLASSEIN_THINKING_SCRAP)
+                            stoneDepthBlock(offset = 1, block = HotMBlocks.THINKING_SCRAP)
+                            stoneDepthBlock(offset = 2, block = HotMBlocks.THINKING_SCRAP)
+                            stoneDepthBlock(offset = 3, block = HotMBlocks.THINKING_SCRAP)
+                        }
+                    }
+                }
+            }
         }
     }
 }
