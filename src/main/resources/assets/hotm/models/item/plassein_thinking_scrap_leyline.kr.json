@@ -1,0 +1,35 @@
+{
+  "type": "kmodlib-render:layered",
+  "layers": [
+    {
+      "type": "kmodlib-render:cube_bottom_top",
+      "bottom": "hotm:block/thinking_scrap",
+      "top": {
+        "texture": "hotm:block/plassein_thinking_scrap_top",
+        "tintindex": 0
+      },
+      "side": "hotm:block/rusted_thinking_scrap_side"
+    },
+    {
+      "type": "kmodlib-render:cube_column",
+      "side": {
+        "texture": "hotm:block/plassein_thinking_scrap_side_overlay",
+        "tintindex": 0
+      }
+    },
+    {
+      "type": "kmodlib-render:cube_all",
+      "all": {
+        "texture": "hotm:block/leyline_exterior_corners",
+        "tintindex": 0
+      },
+      "material": {
+        "ambient_occlusion": false,
+        "blend_mode": "cutout",
+        "diffuse_shading": false,
+        "emissive": true
+      }
+    }
+  ],
+  "particle": "hotm:block/thinking_scrap"
+}

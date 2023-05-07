@@ -1,0 +1,25 @@
+{
+  "type": "kmodlib-render:layered",
+  "layers": [
+    {
+      "type": "kmodlib-render:cube_all",
+      "all": "hotm:block/thinking_scrap",
+      "quarter_faces": true
+    },
+    {
+      "type": "kmodlib-render:cube_all",
+      "all": {
+        "texture": "hotm:block/leyline_exterior_corners",
+        "tintindex": 0
+      },
+      "material": {
+        "ambient_occlusion": false,
+        "blend_mode": "cutout",
+        "diffuse_shading": false,
+        "emissive": true
+      },
+      "quarter_faces": true
+    }
+  ],
+  "particle": "hotm:block/thinking_scrap"
+}

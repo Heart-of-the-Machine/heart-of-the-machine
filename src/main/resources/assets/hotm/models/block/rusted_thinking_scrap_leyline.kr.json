@@ -1,0 +1,28 @@
+{
+  "type": "kmodlib-render:layered",
+  "layers": [
+    {
+      "type": "kmodlib-render:cube_bottom_top",
+      "bottom": "hotm:block/thinking_scrap",
+      "top": "hotm:block/rusted_thinking_scrap_top",
+      "side": "hotm:block/rusted_thinking_scrap_side",
+      "quarter_faces": true
+    },
+    {
+      "type": "kmodlib-render:quarter_connected_texture",
+      "exterior_corners": "hotm:block/leyline_exterior_corners",
+      "horizontal_edges": "hotm:block/leyline_horizontal_edges",
+      "interior_border": false,
+      "interior_corners": "hotm:block/leyline_interior_corners",
+      "material": {
+        "ambient_occlusion": false,
+        "blend_mode": "cutout",
+        "diffuse_shading": false,
+        "emissive": true
+      },
+      "tint_index": 0,
+      "vertical_edges": "hotm:block/leyline_vertical_edges"
+    }
+  ],
+  "particle": "hotm:block/thinking_scrap"
+}

@@ -3,6 +3,10 @@
   "block.hotm.thinking_scrap": "Thinking Scrap",
   "block.hotm.rusted_thinking_scrap": "Rusted Thinking Scrap",
   "block.hotm.plassein_thinking_scrap": "Plassein Thinking Scrap",
+  "block.hotm.thinking_stone_leyline": "Thinking Stone Leyline",
+  "block.hotm.thinking_scrap_leyline": "Thinking Scrap Leyline",
+  "block.hotm.rusted_thinking_scrap_leyline": "Rusted Thinking Scrap Leyline",
+  "block.hotm.plassein_thinking_scrap_leyline": "Plassein Thinking Scrap Leyline",
 
   "itemGroup.hotm.main": "Heart of the Machine"
 }

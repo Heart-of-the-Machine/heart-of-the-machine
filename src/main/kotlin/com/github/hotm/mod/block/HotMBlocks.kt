@@ -29,11 +29,23 @@ object HotMBlocks {
     val RUSTED_THINKING_SCRAP by lazy { Block(THINKING_SCRAP_SETTINGS) }
     val PLASSEIN_THINKING_SCRAP by lazy { Block(THINKING_SCRAP_SETTINGS) }
 
+    // Leylines
+
+    val THINKING_STONE_LEYLINE by lazy { Block(STONE_SETTINGS) }
+    val THINKING_SCRAP_LEYLINE by lazy { Block(THINKING_SCRAP_SETTINGS) }
+    val RUSTED_THINKING_SCRAP_LEYLINE by lazy { Block(THINKING_SCRAP_SETTINGS) }
+    val PLASSEIN_THINKING_SCRAP_LEYLINE by lazy { Block(THINKING_SCRAP_SETTINGS) }
+
     fun init() {
         register(THINKING_STONE, "thinking_stone")
         register(THINKING_SCRAP, "thinking_scrap")
         register(RUSTED_THINKING_SCRAP, "rusted_thinking_scrap")
         register(PLASSEIN_THINKING_SCRAP, "plassein_thinking_scrap")
+
+        register(THINKING_STONE_LEYLINE, "thinking_stone_leyline")
+        register(THINKING_SCRAP_LEYLINE, "thinking_scrap_leyline")
+        register(RUSTED_THINKING_SCRAP_LEYLINE, "rusted_thinking_scrap_leyline")
+        register(PLASSEIN_THINKING_SCRAP_LEYLINE, "plassein_thinking_scrap_leyline")
     }
 
     private fun register(block: Block, path: String) {
