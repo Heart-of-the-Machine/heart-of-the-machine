@@ -27,6 +27,7 @@ import net.minecraft.block.Block
 import net.minecraft.data.client.ItemModelGenerator
 import net.minecraft.data.client.model.*
 import net.minecraft.util.Identifier
+import com.kneelawk.kmodlib.render.blockmodel.connector.RenderTagModelConnector
 
 class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     private val LEYLINE_ECTEX = id("block/leyline_exterior_corners")
@@ -86,7 +87,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
             true,
             false,
             0,
-            ModelConnector.DEFAULT
+            RenderTagModelConnector(id("leyline"))
         )
 
         val blockModel = UnbakedLayeredModel(Identifier("block/block"), baseId, listOf(baseLayer, leylineBlockLayer))
