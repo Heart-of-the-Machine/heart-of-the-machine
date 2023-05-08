@@ -2,16 +2,18 @@ package com.github.hotm.mod.datagen
 
 import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.block.HotMBlocks
-import com.github.hotm.mod.datagen.noise.NoiseSettingsProvider
-import com.github.hotm.mod.datagen.noise.df
-import com.github.hotm.mod.datagen.noise.shiftedNoise
-import com.github.hotm.mod.datagen.noise.yGradient
+import com.github.hotm.mod.datagen.noise.*
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.util.Identifier
 import net.minecraft.world.gen.YOffset
 
 class NoiseSettingsGen(output: FabricDataOutput) : NoiseSettingsProvider(output) {
+    companion object {
+        private const val LEYLINE_THICKNESS = 0.01
+    }
+
     override fun generate() {
         noiseSettings(id("nectere")) {
             seaLevel(0)
@@ -57,22 +59,46 @@ class NoiseSettingsGen(output: FabricDataOutput) : NoiseSettingsProvider(output)
                 }
 
                 conditional {
+                    noiseThreshold(id("leyline_0"), -LEYLINE_THICKNESS / 2.0, LEYLINE_THICKNESS / 2.0)
+                    sequence {
+                        surface(
+                            grass = HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE,
+                            dirt = HotMBlocks.THINKING_SCRAP_LEYLINE,
+                            rusted = HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
+                        )
+
+                        block(HotMBlocks.THINKING_STONE_LEYLINE)
+                    }
+                }
+
+                surface(
+                    grass = HotMBlocks.PLASSEIN_THINKING_SCRAP,
+                    dirt = HotMBlocks.THINKING_SCRAP,
+                    rusted = HotMBlocks.RUSTED_THINKING_SCRAP
+                )
+            }
+        }
+    }
+
+    private fun MaterialRuleParentBuilder.surface(grass: Block, dirt: Block, rusted: Block) {
+        conditional {
+            water(1)
+
+            sequence {
+                conditional {
                     biome {
                         add(id("thinking_forest"))
                         add(id("meditating_fields"))
                     }
 
-                    conditional {
-                        water(1)
-
-                        sequence {
-                            stoneDepthBlock(offset = 0, block = HotMBlocks.PLASSEIN_THINKING_SCRAP)
-                            stoneDepthBlock(offset = 1, block = HotMBlocks.THINKING_SCRAP)
-                            stoneDepthBlock(offset = 2, block = HotMBlocks.THINKING_SCRAP)
-                            stoneDepthBlock(offset = 3, block = HotMBlocks.THINKING_SCRAP)
-                        }
-                    }
+                    stoneDepthBlock(offset = 0, block = grass)
                 }
+
+                stoneDepthBlock(offset = 0, block = rusted)
+
+                stoneDepthBlock(offset = 1, block = dirt)
+                stoneDepthBlock(offset = 2, block = dirt)
+                stoneDepthBlock(offset = 3, block = dirt)
             }
         }
     }

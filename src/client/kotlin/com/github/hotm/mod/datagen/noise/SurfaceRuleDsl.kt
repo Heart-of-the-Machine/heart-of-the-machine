@@ -8,6 +8,7 @@ import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.VerticalSurfaceType
+import net.minecraft.util.math.noise.DoublePerlinNoiseSampler.NoiseParameters
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.YOffset
 import net.minecraft.world.gen.surfacebuilder.SurfaceRules
@@ -85,6 +86,14 @@ fun interface ConditionBuilder {
 
     fun biome(configure: BiomeConditionBuilder.() -> Unit) {
         condition(BiomeConditionBuilder().apply(configure).build())
+    }
+
+    fun noiseThreshold(noise: RegistryKey<NoiseParameters>, min: Double, max: Double = Double.MAX_VALUE) {
+        condition(SurfaceRules.noiseThreshold(noise, min, max))
+    }
+
+    fun noiseThreshold(noise: Identifier, min: Double, max: Double = Double.MAX_VALUE) {
+        noiseThreshold(RegistryKey.of(RegistryKeys.NOISE_PARAMETERS, noise), min, max)
     }
 
     fun stoneDepth(
