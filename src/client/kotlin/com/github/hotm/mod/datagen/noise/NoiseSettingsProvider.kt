@@ -8,9 +8,13 @@ import com.mojang.serialization.JsonOps
 import net.minecraft.data.DataPackOutput
 import net.minecraft.data.DataProvider
 import net.minecraft.data.DataWriter
+import net.minecraft.registry.HolderLookup
+import net.minecraft.registry.RegistryOps
 import net.minecraft.util.Identifier
 
-abstract class NoiseSettingsProvider(output: FabricDataOutput) : DataProvider {
+abstract class NoiseSettingsProvider(
+    output: FabricDataOutput, private val providerFuture: CompletableFuture<HolderLookup.Provider>
+) : DataProvider {
     private val resolver = output.createPathResolver(DataPackOutput.Type.DATA_PACK, "worldgen/noise_settings")
     private val toWrite = mutableListOf<Pair<Path, ChunkGeneratorSettingsDsl>>()
 
@@ -27,14 +31,19 @@ abstract class NoiseSettingsProvider(output: FabricDataOutput) : DataProvider {
     abstract fun generate()
 
     override fun run(writer: DataWriter): CompletableFuture<*> {
-        generate()
+        return providerFuture.thenApply { provider ->
+            generate()
+            provider
+        }.thenCompose { provider ->
+            CompletableFuture.allOf(*(toWrite.asSequence().map { (path, settings) ->
+                val ops = RegistryOps.create(JsonOps.INSTANCE, provider)
 
-        return CompletableFuture.allOf(*(toWrite.asSequence().map { (path, settings) ->
-            val element =
-                ChunkGeneratorSettingsDsl.CODEC.encodeStart(JsonOps.INSTANCE, settings)
-                    .getOrThrow(false, Log.LOG::error)
-            DataProvider.writeAsync(writer, element, path)
-        }.toList().toTypedArray()))
+                val element =
+                    ChunkGeneratorSettingsDsl.CODEC.encodeStart(ops, settings)
+                        .getOrThrow(false, Log.LOG::error)
+                DataProvider.writeAsync(writer, element, path)
+            }.toList().toTypedArray()))
+        }
     }
 
     override fun getName(): String = "Noise Settings"

@@ -2,14 +2,18 @@ package com.github.hotm.mod.datagen.noise
 
 import com.github.hotm.mod.util.BlockStateBuilder
 import com.github.hotm.mod.util.blockState
+import com.github.hotm.mod.world.gen.surfacebuilder.DensityThresholdCondition
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.registry.Holder
 import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.VerticalSurfaceType
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler.NoiseParameters
 import net.minecraft.world.biome.Biome
+import net.minecraft.world.gen.DensityFunction
+import net.minecraft.world.gen.DensityFunctions
 import net.minecraft.world.gen.YOffset
 import net.minecraft.world.gen.surfacebuilder.SurfaceRules
 import net.minecraft.world.gen.surfacebuilder.SurfaceRules.MaterialCondition
@@ -94,6 +98,22 @@ fun interface ConditionBuilder {
 
     fun noiseThreshold(noise: Identifier, min: Double, max: Double = Double.MAX_VALUE) {
         noiseThreshold(RegistryKey.of(RegistryKeys.NOISE_PARAMETERS, noise), min, max)
+    }
+
+    fun densityThreshold(df: DensityFunction, min: Double, max: Double = Double.MAX_VALUE) {
+        condition(DensityThresholdCondition(df, min, max))
+    }
+
+    fun densityThreshold(df: Holder<DensityFunction>, min: Double, max: Double = Double.MAX_VALUE) {
+        densityThreshold(DensityFunctions.HolderHolder(df), min, max)
+    }
+
+    fun densityThreshold(df: RegistryKey<DensityFunction>, min: Double, max: Double = Double.MAX_VALUE) {
+        densityThreshold(Holder.Reference.create(KeyHolderOwner.get(RegistryKeys.DENSITY_FUNCTION), df), min, max)
+    }
+
+    fun densityThreshold(df: Identifier, min: Double, max: Double = Double.MAX_VALUE) {
+        densityThreshold(RegistryKey.of(RegistryKeys.DENSITY_FUNCTION, df), min, max)
     }
 
     fun stoneDepth(

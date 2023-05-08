@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:noise",
+  "noise": "hotm:leyline_0",
+  "xz_scale": 0.25,
+  "y_scale": 0.25
+}

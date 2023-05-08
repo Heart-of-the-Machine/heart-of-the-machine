@@ -29,6 +29,8 @@ sourceSets {
 }
 
 loom {
+    accessWidenerPath.set(file("src/main/resources/hotm.accesswidener"))
+
     splitEnvironmentSourceSets()
 
     mods {

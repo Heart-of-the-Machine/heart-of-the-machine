@@ -1,15 +1,22 @@
 package com.github.hotm.mod.datagen
 
+import java.util.concurrent.CompletableFuture
 import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.block.HotMBlocks
-import com.github.hotm.mod.datagen.noise.*
+import com.github.hotm.mod.datagen.noise.MaterialRuleParentBuilder
+import com.github.hotm.mod.datagen.noise.NoiseSettingsProvider
+import com.github.hotm.mod.datagen.noise.df
+import com.github.hotm.mod.datagen.noise.shiftedNoise
+import com.github.hotm.mod.datagen.noise.yGradient
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
+import net.minecraft.registry.HolderLookup
 import net.minecraft.util.Identifier
 import net.minecraft.world.gen.YOffset
 
-class NoiseSettingsGen(output: FabricDataOutput) : NoiseSettingsProvider(output) {
+class NoiseSettingsGen(output: FabricDataOutput, provider: CompletableFuture<HolderLookup.Provider>) :
+    NoiseSettingsProvider(output, provider) {
     companion object {
         private const val LEYLINE_THICKNESS = 0.01
     }
@@ -59,7 +66,7 @@ class NoiseSettingsGen(output: FabricDataOutput) : NoiseSettingsProvider(output)
                 }
 
                 conditional {
-                    noiseThreshold(id("leyline_0"), -LEYLINE_THICKNESS / 2.0, LEYLINE_THICKNESS / 2.0)
+                    densityThreshold(id("leyline_0"), -LEYLINE_THICKNESS / 2.0, LEYLINE_THICKNESS / 2.0)
                     sequence {
                         surface(
                             grass = HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE,
