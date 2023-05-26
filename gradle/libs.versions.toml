@@ -32,7 +32,7 @@ qkl = { module = "org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries", ve
 #flk = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "flk" }
 
 # Implementation Libraries
-kmodlib_blockmodel = { module = "com.kneelawk:kmodlib-blockmodel", version.ref = "kmodlib" }
+kmodlib = { module = "com.kneelawk:kmodlib-all", version.ref = "kmodlib" }
 
 # Local Runtime
 mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "mod_menu" }
@@ -40,7 +40,7 @@ mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "mod_menu" }
 [bundles]
 libs_base = ["qfapi"]
 libs_kotlin = ["qkl"]
-libs_impl = ["kmodlib_blockmodel"]
+libs_impl = ["kmodlib"]
 runtime_local = ["mod_menu"]
 
 [plugins]
