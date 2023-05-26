@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-loom = "1.1.+"
+loom = "1.2.+"
 kotlin = "1.8.21"
 
 # Frameworks
