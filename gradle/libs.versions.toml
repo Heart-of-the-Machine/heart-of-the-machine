@@ -10,7 +10,7 @@ loader = "0.19.0-beta.13"
 
 # Base Libraries
 qfapi = "7.0.0-alpha.1+0.81.3-1.20"
-qkl_core = "2.0.2+kt.1.8.20+flk.1.9.3"
+qkl = "2.0.2+kt.1.8.20+flk.1.9.3"
 #flk = "1.9.4+kotlin.1.8.21"
 
 # Implementation Libraries
@@ -28,7 +28,7 @@ quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "loader" }
 # Base Libraries
 qfapi = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api", version.ref = "qfapi" }
 #qfapi_deprecated = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated", version.ref = "qfapi" }
-qkl_core = { module = "org.quiltmc.quilt-kotlin-libraries:core", version.ref = "qkl_core" }
+qkl = { module = "org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries", version.ref = "qkl" }
 #flk = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "flk" }
 
 # Implementation Libraries
@@ -38,7 +38,8 @@ kmodlib_blockmodel = { module = "com.kneelawk:kmodlib-blockmodel", version.ref =
 mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "mod_menu" }
 
 [bundles]
-libs_base = ["qfapi", "qkl_core"]
+libs_base = ["qfapi"]
+libs_kotlin = ["qkl"]
 libs_impl = ["kmodlib_blockmodel"]
 runtime_local = ["mod_menu"]
 

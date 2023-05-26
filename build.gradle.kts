@@ -80,6 +80,14 @@ dependencies {
     modCompileOnly(libs.bundles.libs.base)
     modLocalRuntime(libs.bundles.libs.base)
 
+    // Exclude QSL from QKL
+    modCompileOnly(libs.bundles.libs.kotlin) {
+        exclude(group = "org.quiltmc.qsl")
+    }
+    modLocalRuntime(libs.bundles.libs.kotlin) {
+        exclude(group = "org.quiltmc.qsl")
+    }
+
     modImplementation(libs.bundles.libs.impl)
     include(libs.bundles.libs.impl)
 
