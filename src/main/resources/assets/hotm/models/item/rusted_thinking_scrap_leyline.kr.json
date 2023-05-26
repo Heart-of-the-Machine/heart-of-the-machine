@@ -1,14 +1,14 @@
 {
-  "type": "kmodlib-render:layered",
+  "type": "kmodlib-blockmodel:layered",
   "layers": [
     {
-      "type": "kmodlib-render:cube_bottom_top",
+      "type": "kmodlib-blockmodel:cube_bottom_top",
       "bottom": "hotm:block/thinking_scrap",
       "top": "hotm:block/rusted_thinking_scrap_top",
       "side": "hotm:block/rusted_thinking_scrap_side"
     },
     {
-      "type": "kmodlib-render:cube_all",
+      "type": "kmodlib-blockmodel:cube_all",
       "all": {
         "texture": "hotm:block/leyline_exterior_corners",
         "tintindex": 0

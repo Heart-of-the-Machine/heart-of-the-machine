@@ -1,26 +1,26 @@
 package com.github.hotm.mod.block
 
 import com.github.hotm.mod.Constants
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings
+import org.quiltmc.qsl.item.setting.api.QuiltItemSettings
 import net.minecraft.block.Block
 import net.minecraft.block.MapColor
-import net.minecraft.block.Material
+import net.minecraft.block.enums.NoteBlockInstrument
 import net.minecraft.item.BlockItem
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.sound.BlockSoundGroup
-import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings
-import org.quiltmc.qsl.item.setting.api.QuiltItemSettings
 
 object HotMBlocks {
     val BLOCK_ITEM_SETTINGS by lazy { QuiltItemSettings() }
 
     val STONE_SETTINGS by lazy {
-        QuiltBlockSettings.of(Material.STONE, MapColor.DEEPSLATE_GRAY).requiresTool().strength(3.0f, 10.0f)
-            .sounds(BlockSoundGroup.STONE)
+        QuiltBlockSettings.create().mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM).requiresTool()
+            .strength(3.0f, 10.0f).sounds(BlockSoundGroup.STONE)
     }
     val THINKING_SCRAP_SETTINGS by lazy {
-        QuiltBlockSettings.of(Material.METAL, MapColor.IRON_GRAY).requiresTool().strength(2.0f, 5.0f)
-            .sounds(BlockSoundGroup.METAL)
+        QuiltBlockSettings.create().mapColor(MapColor.METAL).instrument(NoteBlockInstrument.IRON_XYLOPHONE)
+            .requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.METAL)
     }
 
     val THINKING_STONE by lazy { Block(STONE_SETTINGS) }

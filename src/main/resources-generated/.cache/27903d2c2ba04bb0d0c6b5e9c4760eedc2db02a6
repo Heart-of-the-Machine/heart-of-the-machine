@@ -1,9 +1,9 @@
-// 1.19.4	2023-05-08T16:26:00.278208081	Heart of the Machine/Block Loot Tables
-66b307a0512d90d249aeac28bd8043371ea7bc4d data/hotm/loot_tables/blocks/rusted_thinking_scrap.json
-da7cad114350d138b5ee97f2e97fd2f23801339f data/hotm/loot_tables/blocks/thinking_scrap_leyline.json
-0da40ebf58e243495ac7f01446c2fb586bcb54d8 data/hotm/loot_tables/blocks/rusted_thinking_scrap_leyline.json
-1f24ccf4ae7bb0ceb3bdf2604f25c2e99710478f data/hotm/loot_tables/blocks/plassein_thinking_scrap_leyline.json
-8c7293c30e14bb3c1e971f87b8cee756993e2877 data/hotm/loot_tables/blocks/plassein_thinking_scrap.json
-42b62e2699d1b1e392d05059e73df7f95b4cc5b6 data/hotm/loot_tables/blocks/thinking_stone.json
-c7c9fa8a823b97fdf97a7dd946bc0b6f8590263b data/hotm/loot_tables/blocks/thinking_scrap.json
-cf2872a4d7918c6a128aefa12631f64e86ffece9 data/hotm/loot_tables/blocks/thinking_stone_leyline.json
+// 1.20 Pre-release 5	2023-05-26T01:19:20.365144588	Heart of the Machine/Block Loot Tables
+6726825fa8191f456b6edf8fba7fd7f1064d6599 data/hotm/loot_tables/blocks/rusted_thinking_scrap.json
+bcb4ead2400d6487e05ebbf6f3900ca22da7c700 data/hotm/loot_tables/blocks/thinking_scrap_leyline.json
+480f74b299e4490a91680acc75c82a4263721faa data/hotm/loot_tables/blocks/rusted_thinking_scrap_leyline.json
+9491b0d7c8d5e012cd8751187821439bb3024999 data/hotm/loot_tables/blocks/plassein_thinking_scrap_leyline.json
+1ad64f8b20ee5bb89879aef4386c5ec3be88bb1a data/hotm/loot_tables/blocks/plassein_thinking_scrap.json
+b106aececdd68b421816cb30e5f0fd0ef9b039f2 data/hotm/loot_tables/blocks/thinking_stone.json
+a594c9a38a36393b8499cb3e71bc8cc385473190 data/hotm/loot_tables/blocks/thinking_scrap.json
+a26391c75aebf9a64e4b75d2fba805ce6605b3cb data/hotm/loot_tables/blocks/thinking_stone_leyline.json

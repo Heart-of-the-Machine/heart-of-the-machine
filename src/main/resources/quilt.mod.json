@@ -41,19 +41,19 @@
       },
       {
         "id": "quilted_fabric_api",
-        "versions": ">=5.0.0-"
+        "versions": ">=7.0.0-"
       },
       {
-        "id": "qkl",
+        "id": "qkl_core",
         "versions": ">=2.0.2"
       },
       {
         "id": "minecraft",
-        "versions": "~1.19.4"
+        "versions": "~1.20-"
       },
       {
-        "id": "kmodlib-render",
-        "versions": "~0.1.0"
+        "id": "kmodlib-blockmodel",
+        "versions": "~0.2.0"
       }
     ]
   },

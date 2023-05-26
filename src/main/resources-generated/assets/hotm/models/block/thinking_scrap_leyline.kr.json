@@ -1,15 +1,15 @@
 {
-  "type": "kmodlib-render:layered",
+  "type": "kmodlib-blockmodel:layered",
   "layers": [
     {
-      "type": "kmodlib-render:cube_all",
+      "type": "kmodlib-blockmodel:cube_all",
       "all": "hotm:block/thinking_scrap",
       "quarter_faces": true
     },
     {
-      "type": "kmodlib-render:quarter_connected_texture",
+      "type": "kmodlib-blockmodel:quarter_connected_texture",
       "connector": {
-        "type": "kmodlib-render:render_tag",
+        "type": "kmodlib-blockmodel:render_tag",
         "tag": "hotm:leyline"
       },
       "exterior_corners": "hotm:block/leyline_exterior_corners",

@@ -1,5 +1,6 @@
 package com.github.hotm.mod.misc
 
+import com.github.hotm.mod.Constants
 import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
@@ -15,7 +16,7 @@ import net.minecraft.item.ItemGroup
 
 object HotMCreativeTabs {
     fun init() {
-        FabricItemGroup.builder(id("main")).entries { _, collector ->
+        FabricItemGroup.builder().name(Constants.tt("itemGroup", "main")).entries { _, collector ->
             collector.addItems(
                 THINKING_STONE,
                 THINKING_STONE_LEYLINE,

@@ -10,24 +10,23 @@ import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_LEYLINE
-import com.kneelawk.kmodlib.render.blockmodel.JsonMaterial
-import com.kneelawk.kmodlib.render.blockmodel.JsonTexture
-import com.kneelawk.kmodlib.render.blockmodel.KUnbakedModel
-import com.kneelawk.kmodlib.render.blockmodel.UnbakedLayeredModel
-import com.kneelawk.kmodlib.render.blockmodel.connector.ModelConnector
-import com.kneelawk.kmodlib.render.blockmodel.ct.UnbakedCTLayer
-import com.kneelawk.kmodlib.render.blockmodel.cube.UnbakedCubeAllModelLayer
-import com.kneelawk.kmodlib.render.blockmodel.sprite.UnbakedStaticSpriteSupplier
-import com.mojang.serialization.Codec
-import com.mojang.serialization.JsonOps
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
+import com.mojang.serialization.Codec
+import com.mojang.serialization.JsonOps
 import net.minecraft.block.Block
 import net.minecraft.data.client.ItemModelGenerator
 import net.minecraft.data.client.model.*
 import net.minecraft.util.Identifier
-import com.kneelawk.kmodlib.render.blockmodel.connector.RenderTagModelConnector
+import com.kneelawk.kmodlib.client.blockmodel.JsonMaterial
+import com.kneelawk.kmodlib.client.blockmodel.JsonTexture
+import com.kneelawk.kmodlib.client.blockmodel.KUnbakedModel
+import com.kneelawk.kmodlib.client.blockmodel.UnbakedLayeredModel
+import com.kneelawk.kmodlib.client.blockmodel.connector.RenderTagModelConnector
+import com.kneelawk.kmodlib.client.blockmodel.ct.UnbakedCTLayer
+import com.kneelawk.kmodlib.client.blockmodel.cube.UnbakedCubeAllModelLayer
+import com.kneelawk.kmodlib.client.blockmodel.sprite.UnbakedStaticSpriteSupplier
 
 class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     private val LEYLINE_ECTEX = id("block/leyline_exterior_corners")
@@ -39,7 +38,8 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
         gen.registerSimpleCubeAll(THINKING_STONE)
         gen.registerSimpleCubeAll(THINKING_SCRAP)
 
-        Models.CUBE_BOTTOM_TOP.upload(RUSTED_THINKING_SCRAP,
+        Models.CUBE_BOTTOM_TOP.upload(
+            RUSTED_THINKING_SCRAP,
             Texture.sideTopBottom(RUSTED_THINKING_SCRAP)
                 .put(TextureKey.BOTTOM, ModelIds.getBlockModelId(THINKING_SCRAP)),
             gen.modelCollector
@@ -60,8 +60,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     private fun BlockStateModelGenerator.registerRandomHorizontalRotationsState(block: Block) {
         blockStateCollector.accept(
             VariantsBlockStateSupplier.create(
-                block,
-                *BlockStateModelGenerator.createModelVariantWithRandomHorizontalRotations(
+                block, *BlockStateModelGenerator.createModelVariantWithRandomHorizontalRotations(
                     ModelIds.getBlockModelId(block)
                 )
             )

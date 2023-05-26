@@ -60,7 +60,12 @@ loom {
 repositories {
     maven("https://kneelawk.com/maven/") { name = "Kneelawk" }
     maven("https://maven.terraformersmc.com/releases/") { name = "TerraformersMC" }
-    maven("https://maven.cafeteria.dev/releases/") { name = "Cafeteria" }
+    maven("https://maven.cafeteria.dev/releases/") {
+        name = "Cafeteria"
+        content {
+            includeGroup("me.luligabi")
+        }
+    }
 }
 
 dependencies {

@@ -1,14 +1,14 @@
 {
-  "type": "kmodlib-render:layered",
+  "type": "kmodlib-blockmodel:layered",
   "layers": [
     {
-      "type": "kmodlib-render:cube_bottom_top",
+      "type": "kmodlib-blockmodel:cube_bottom_top",
       "bottom": "hotm:block/thinking_scrap",
       "side": "hotm:block/thinking_scrap",
       "quarter_faces": true
     },
     {
-      "type": "kmodlib-render:cube_bottom_top",
+      "type": "kmodlib-blockmodel:cube_bottom_top",
       "side": {
         "texture": "hotm:block/plassein_thinking_scrap_side_overlay",
         "tintindex": 0
@@ -23,9 +23,9 @@
       "quarter_faces": true
     },
     {
-      "type": "kmodlib-render:quarter_connected_texture",
+      "type": "kmodlib-blockmodel:quarter_connected_texture",
       "connector": {
-        "type": "kmodlib-render:render_tag",
+        "type": "kmodlib-blockmodel:render_tag",
         "tag": "hotm:leyline"
       },
       "exterior_corners": "hotm:block/leyline_exterior_corners",
