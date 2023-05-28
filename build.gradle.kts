@@ -140,6 +140,12 @@ tasks {
             rename { "LICENSE_${archives_base_name}" }
         }
     }
+
+    afterEvaluate {
+        named("genSources") {
+            setDependsOn(listOf("genSourcesWithQuiltflower"))
+        }
+    }
 }
 
 val targetJavaVersion = JavaVersion.toVersion(javaVersion)
