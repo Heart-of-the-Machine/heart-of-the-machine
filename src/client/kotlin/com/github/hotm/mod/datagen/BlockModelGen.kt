@@ -6,6 +6,7 @@ import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
+import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE
@@ -37,6 +38,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     override fun generateBlockStateModels(gen: BlockStateModelGenerator) {
         gen.registerSimpleCubeAll(THINKING_STONE)
         gen.registerSimpleCubeAll(THINKING_SCRAP)
+        gen.registerSimpleCubeAll(THINKING_SAND)
 
         Models.CUBE_BOTTOM_TOP.upload(
             RUSTED_THINKING_SCRAP,
@@ -70,7 +72,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     private fun BlockStateModelGenerator.registerLeyline(block: Block, base: Block) {
         registerSimpleState(block)
 
-        val suffixedModelId = ModelIds.getBlockModelId(block).extendPath(".kr")
+        val suffixedModelId = ModelIds.getBlockModelId(block).extendPath(".kml")
         val baseId = ModelIds.getBlockModelId(base)
 
         val baseLayer = UnbakedCubeAllModelLayer(baseId, JsonMaterial.DEFAULT, 0f, true, true, true)
@@ -102,7 +104,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
         )
 
         val itemModel = UnbakedLayeredModel(Identifier("block/block"), baseId, listOf(baseLayer, leylineItemLayer))
-        registerCustomModel(ModelIds.getItemModelId(block.asItem()).extendPath(".kr"), itemModel, KUnbakedModel.CODEC)
+        registerCustomModel(ModelIds.getItemModelId(block.asItem()).extendPath(".kml"), itemModel, KUnbakedModel.CODEC)
 
         excludeFromSimpleItemModelGeneration(block)
     }

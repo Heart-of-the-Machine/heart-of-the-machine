@@ -14,7 +14,7 @@ qkl = "2.0.2+kt.1.8.20+flk.1.9.3"
 #flk = "1.9.4+kotlin.1.8.21"
 
 # Implementation Libraries
-kmodlib = "0.2.0+1.20"
+kmodlib = "0.2.1+1.20"
 
 # Local Runtime
 mod_menu = "7.0.0-beta.2"
