@@ -92,14 +92,6 @@ fun interface ConditionBuilder {
         condition(BiomeConditionBuilder().apply(configure).build())
     }
 
-    fun noiseThreshold(noise: RegistryKey<NoiseParameters>, min: Double, max: Double = Double.MAX_VALUE) {
-        condition(SurfaceRules.noiseThreshold(noise, min, max))
-    }
-
-    fun noiseThreshold(noise: Identifier, min: Double, max: Double = Double.MAX_VALUE) {
-        noiseThreshold(RegistryKey.of(RegistryKeys.NOISE_PARAMETERS, noise), min, max)
-    }
-
     fun densityThreshold(df: DensityFunction, min: Double, max: Double = Double.MAX_VALUE) {
         condition(DensityThresholdCondition(df, min, max))
     }
@@ -114,6 +106,14 @@ fun interface ConditionBuilder {
 
     fun densityThreshold(df: Identifier, min: Double, max: Double = Double.MAX_VALUE) {
         densityThreshold(RegistryKey.of(RegistryKeys.DENSITY_FUNCTION, df), min, max)
+    }
+
+    fun noiseThreshold(noise: RegistryKey<NoiseParameters>, min: Double, max: Double = Double.MAX_VALUE) {
+        condition(SurfaceRules.noiseThreshold(noise, min, max))
+    }
+
+    fun noiseThreshold(noise: Identifier, min: Double, max: Double = Double.MAX_VALUE) {
+        noiseThreshold(RegistryKey.of(RegistryKeys.NOISE_PARAMETERS, noise), min, max)
     }
 
     fun stoneDepth(
@@ -132,6 +132,14 @@ fun interface ConditionBuilder {
 
     fun water(offset: Int = 0, surfaceDepthMultiplier: Int = 0) {
         condition(SurfaceRules.water(offset, surfaceDepthMultiplier))
+    }
+
+    fun aboveY(anchor: YOffset, surfaceDepthMultiplier: Int) {
+        condition(SurfaceRules.aboveY(anchor, surfaceDepthMultiplier))
+    }
+
+    fun aboveYWithStoneDepth(anchor: YOffset, surfaceDepthMultiplier: Int) {
+        condition(SurfaceRules.aboveYWithStoneDepth(anchor, surfaceDepthMultiplier))
     }
 }
 

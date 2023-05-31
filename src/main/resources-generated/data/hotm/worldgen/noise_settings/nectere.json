@@ -43,7 +43,7 @@
                 },
                 "argument2": {
                   "type": "minecraft:add",
-                  "argument1": 2.35,
+                  "argument1": 0.85,
                   "argument2": {
                     "type": "minecraft:mul",
                     "argument1": {
@@ -51,7 +51,7 @@
                       "from_value": 0.0,
                       "from_y": -72,
                       "to_value": 1.0,
-                      "to_y": -40
+                      "to_y": 0
                     },
                     "argument2": {
                       "type": "minecraft:add",
@@ -74,7 +74,7 @@
                           }
                         }
                       },
-                      "argument2": -2.5
+                      "argument2": -1.0
                     }
                   }
                 }
@@ -187,6 +187,45 @@
       {
         "type": "minecraft:condition",
         "if_true": {
+          "type": "minecraft:not",
+          "invert": {
+            "type": "minecraft:y_above",
+            "add_stone_depth": true,
+            "anchor": {
+              "absolute": 4
+            },
+            "surface_depth_multiplier": 0
+          }
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:stone_depth",
+            "add_surface_depth": false,
+            "offset": 4,
+            "secondary_depth_range": 0,
+            "surface_type": "floor"
+          },
+          "then_run": {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:noise_threshold",
+              "max_threshold": 1.5,
+              "min_threshold": 0.1,
+              "noise": "hotm:thinking_sand"
+            },
+            "then_run": {
+              "type": "minecraft:block",
+              "result_state": {
+                "Name": "hotm:thinking_sand"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
           "type": "hotm:density_threshold",
           "density": "hotm:leyline_0",
           "max_threshold": 0.005,
@@ -245,38 +284,6 @@
                       "type": "minecraft:block",
                       "result_state": {
                         "Name": "hotm:rusted_thinking_scrap_leyline"
-                      }
-                    }
-                  },
-                  {
-                    "type": "minecraft:condition",
-                    "if_true": {
-                      "type": "minecraft:stone_depth",
-                      "add_surface_depth": false,
-                      "offset": 1,
-                      "secondary_depth_range": 0,
-                      "surface_type": "floor"
-                    },
-                    "then_run": {
-                      "type": "minecraft:block",
-                      "result_state": {
-                        "Name": "hotm:thinking_scrap_leyline"
-                      }
-                    }
-                  },
-                  {
-                    "type": "minecraft:condition",
-                    "if_true": {
-                      "type": "minecraft:stone_depth",
-                      "add_surface_depth": false,
-                      "offset": 2,
-                      "secondary_depth_range": 0,
-                      "surface_type": "floor"
-                    },
-                    "then_run": {
-                      "type": "minecraft:block",
-                      "result_state": {
-                        "Name": "hotm:thinking_scrap_leyline"
                       }
                     }
                   },
@@ -358,38 +365,6 @@
                 "type": "minecraft:block",
                 "result_state": {
                   "Name": "hotm:rusted_thinking_scrap"
-                }
-              }
-            },
-            {
-              "type": "minecraft:condition",
-              "if_true": {
-                "type": "minecraft:stone_depth",
-                "add_surface_depth": false,
-                "offset": 1,
-                "secondary_depth_range": 0,
-                "surface_type": "floor"
-              },
-              "then_run": {
-                "type": "minecraft:block",
-                "result_state": {
-                  "Name": "hotm:thinking_scrap"
-                }
-              }
-            },
-            {
-              "type": "minecraft:condition",
-              "if_true": {
-                "type": "minecraft:stone_depth",
-                "add_surface_depth": false,
-                "offset": 2,
-                "secondary_depth_range": 0,
-                "surface_type": "floor"
-              },
-              "then_run": {
-                "type": "minecraft:block",
-                "result_state": {
-                  "Name": "hotm:thinking_scrap"
                 }
               }
             },

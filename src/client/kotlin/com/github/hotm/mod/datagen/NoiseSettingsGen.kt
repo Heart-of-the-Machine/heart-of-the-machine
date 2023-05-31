@@ -49,7 +49,7 @@ class NoiseSettingsGen(output: FabricDataOutput, provider: CompletableFuture<Hol
 
                 val upperBoundedCaves =
                     0.9375.df + yGradient(160, 224, 1.0, 0.85) * (id("nectere/cave_3d_noise").df - 0.9375.df)
-                val caves = 2.5.df - 0.15.df + yGradient(-72, -40, 0.0, 1.0) * (upperBoundedCaves - 2.5.df)
+                val caves = 1.0.df - 0.15.df + yGradient(-72, 0, 0.0, 1.0) * (upperBoundedCaves - 1.0.df)
                 val upperBoundedSurface =
                     yGradient(192, 256, 1.0, 0.0) * (0.9375.df + id("nectere/surface_3d_noise").df) - 0.9375.df
                 val surface = 2.5.df + yGradient(160, 224, 0.65, 1.0) * (upperBoundedSurface - 2.5.df)
@@ -63,6 +63,18 @@ class NoiseSettingsGen(output: FabricDataOutput, provider: CompletableFuture<Hol
                 conditional {
                     verticalGradient("minecraft:bedrock_floor", YOffset.aboveBottom(0), YOffset.aboveBottom(5))
                     block(Blocks.BEDROCK)
+                }
+
+                conditional {
+                    not.aboveYWithStoneDepth(YOffset.fixed(4), 0)
+
+                    conditional {
+                        stoneDepth(4)
+                        conditional {
+                            noiseThreshold(id("thinking_sand"), 0.1, 1.5)
+                            block(HotMBlocks.THINKING_SAND)
+                        }
+                    }
                 }
 
                 conditional {
@@ -102,9 +114,6 @@ class NoiseSettingsGen(output: FabricDataOutput, provider: CompletableFuture<Hol
                 }
 
                 stoneDepthBlock(offset = 0, block = rusted)
-
-                stoneDepthBlock(offset = 1, block = dirt)
-                stoneDepthBlock(offset = 2, block = dirt)
                 stoneDepthBlock(offset = 3, block = dirt)
             }
         }
