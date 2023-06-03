@@ -5,7 +5,7 @@ kotlin = "1.8.21"
 
 # Frameworks
 minecraft = "1.20-rc1"
-mappings = "1.20-rc1+build.3"
+mappings = "1.20-rc1+build.5"
 loader = "0.19.0-beta.13"
 
 # Base Libraries
