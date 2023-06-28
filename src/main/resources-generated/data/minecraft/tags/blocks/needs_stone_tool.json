@@ -8,6 +8,17 @@
     "hotm:thinking_stone_leyline",
     "hotm:thinking_scrap_leyline",
     "hotm:rusted_thinking_scrap_leyline",
-    "hotm:plassein_thinking_scrap_leyline"
+    "hotm:plassein_thinking_scrap_leyline",
+    "hotm:smooth_thinking_stone",
+    "hotm:thinking_stone_bricks",
+    "hotm:thinking_stone_tiles",
+    "hotm:smooth_thinking_stone_stairs",
+    "hotm:thinking_stone_brick_stairs",
+    "hotm:thinking_stone_tile_stairs",
+    "hotm:smooth_thinking_stone_slab",
+    "hotm:thinking_stone_brick_slab",
+    "hotm:thinking_stone_tile_slab",
+    "hotm:obelisk_part",
+    "hotm:glowy_obelisk_part"
   ]
 }

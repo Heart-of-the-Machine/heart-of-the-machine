@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "hotm:block/smooth_thinking_stone",
+    "side": "hotm:block/smooth_thinking_stone",
+    "top": "hotm:block/smooth_thinking_stone"
+  }
+}

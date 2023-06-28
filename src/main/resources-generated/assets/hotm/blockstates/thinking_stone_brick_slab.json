@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hotm:block/thinking_stone_brick_slab"
+    },
+    "type=double": {
+      "model": "hotm:block/thinking_stone_bricks"
+    },
+    "type=top": {
+      "model": "hotm:block/thinking_stone_brick_slab_top"
+    }
+  }
+}

@@ -1,4 +1,5 @@
-// 1.20 Release Candidate 1	2023-06-03T09:15:35.737857424	Heart of the Machine/Tags for minecraft:block
-942d7d31a0624e7684f9da95bc3d2f03ac8a024d data/minecraft/tags/blocks/mineable/pickaxe.json
+// 1.20 Release Candidate 1	2023-06-28T14:49:54.410176768	Heart of the Machine/Tags for minecraft:block
+7509f8536e673d54403f77f7f4a6f0f458507652 data/minecraft/tags/blocks/mineable/pickaxe.json
 f7ece871de4ba7b1575984855ac14267f9acb410 data/hotm/tags/blocks/nectere_carver_replaceables.json
-942d7d31a0624e7684f9da95bc3d2f03ac8a024d data/minecraft/tags/blocks/needs_stone_tool.json
+6a4ca1eae53c1d88c9241adfef4244d7c9d5e7c9 data/minecraft/tags/blocks/mineable/shovel.json
+7509f8536e673d54403f77f7f4a6f0f458507652 data/minecraft/tags/blocks/needs_stone_tool.json

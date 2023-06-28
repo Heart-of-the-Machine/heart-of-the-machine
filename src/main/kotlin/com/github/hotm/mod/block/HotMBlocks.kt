@@ -3,7 +3,13 @@ package com.github.hotm.mod.block
 import com.github.hotm.mod.Constants
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings
-import net.minecraft.block.*
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
+import net.minecraft.block.MapColor
+import net.minecraft.block.PillarBlock
+import net.minecraft.block.SandBlock
+import net.minecraft.block.SlabBlock
+import net.minecraft.block.StairsBlock
 import net.minecraft.block.enums.NoteBlockInstrument
 import net.minecraft.item.BlockItem
 import net.minecraft.registry.Registries
@@ -30,6 +36,19 @@ object HotMBlocks {
     val RUSTED_THINKING_SCRAP by lazy { Block(THINKING_SCRAP_SETTINGS) }
     val PLASSEIN_THINKING_SCRAP by lazy { Block(THINKING_SCRAP_SETTINGS) }
 
+    val SMOOTH_THINKING_STONE by lazy { Block(STONE_SETTINGS) }
+    val THINKING_STONE_BRICKS by lazy { Block(STONE_SETTINGS) }
+    val THINKING_STONE_TILES by lazy { Block(STONE_SETTINGS) }
+    val SMOOTH_THINKING_STONE_STAIRS by lazy { StairsBlock(SMOOTH_THINKING_STONE.defaultState, STONE_SETTINGS) }
+    val THINKING_STONE_BRICK_STAIRS by lazy { StairsBlock(THINKING_STONE_BRICKS.defaultState, STONE_SETTINGS) }
+    val THINKING_STONE_TILE_STAIRS by lazy { StairsBlock(THINKING_STONE_TILES.defaultState, STONE_SETTINGS) }
+    val SMOOTH_THINKING_STONE_SLAB by lazy { SlabBlock(STONE_SETTINGS) }
+    val THINKING_STONE_BRICK_SLAB by lazy { SlabBlock(STONE_SETTINGS) }
+    val THINKING_STONE_TILE_SLAB by lazy { SlabBlock(STONE_SETTINGS) }
+
+    val OBELISK_PART by lazy { PillarBlock(STONE_SETTINGS) }
+    val GLOWY_OBELISK_PART by lazy { PillarBlock(STONE_SETTINGS) }
+
     private val SAND_SETTINGS by lazy {
         QuiltBlockSettings.create().mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.SNARE).strength(0.5f)
             .sounds(BlockSoundGroup.SAND)
@@ -48,6 +67,18 @@ object HotMBlocks {
         register(THINKING_SCRAP, "thinking_scrap")
         register(RUSTED_THINKING_SCRAP, "rusted_thinking_scrap")
         register(PLASSEIN_THINKING_SCRAP, "plassein_thinking_scrap")
+        register(SMOOTH_THINKING_STONE, "smooth_thinking_stone")
+        register(THINKING_STONE_BRICKS, "thinking_stone_bricks")
+        register(THINKING_STONE_TILES, "thinking_stone_tiles")
+        register(SMOOTH_THINKING_STONE_STAIRS, "smooth_thinking_stone_stairs")
+        register(THINKING_STONE_BRICK_STAIRS, "thinking_stone_brick_stairs")
+        register(THINKING_STONE_TILE_STAIRS, "thinking_stone_tile_stairs")
+        register(SMOOTH_THINKING_STONE_SLAB, "smooth_thinking_stone_slab")
+        register(THINKING_STONE_BRICK_SLAB, "thinking_stone_brick_slab")
+        register(THINKING_STONE_TILE_SLAB, "thinking_stone_tile_slab")
+
+        register(OBELISK_PART, "obelisk_part")
+        register(GLOWY_OBELISK_PART, "glowy_obelisk_part")
 
         register(THINKING_SAND, "thinking_sand")
 
@@ -65,6 +96,7 @@ object HotMBlocks {
 
     @Suppress("unused_parameter")
     private fun never(state: BlockState, view: BlockView, pos: BlockPos): Boolean = false
+
     @Suppress("unused_parameter")
     private fun <T> never(state: BlockState, view: BlockView, pos: BlockPos, t: T): Boolean = false
 }

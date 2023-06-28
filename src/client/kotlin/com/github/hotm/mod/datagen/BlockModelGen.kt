@@ -2,15 +2,21 @@ package com.github.hotm.mod.datagen
 
 import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.HotMLog
+import com.github.hotm.mod.block.HotMBlockFamilies
+import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
+import com.github.hotm.mod.block.HotMBlocks.OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
+import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE
+import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_BRICKS
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_LEYLINE
+import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILES
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
@@ -18,7 +24,13 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.JsonOps
 import net.minecraft.block.Block
 import net.minecraft.data.client.ItemModelGenerator
-import net.minecraft.data.client.model.*
+import net.minecraft.data.client.model.BlockStateModelGenerator
+import net.minecraft.data.client.model.ModelIds
+import net.minecraft.data.client.model.Models
+import net.minecraft.data.client.model.Texture
+import net.minecraft.data.client.model.TextureKey
+import net.minecraft.data.client.model.TexturedModel
+import net.minecraft.data.client.model.VariantsBlockStateSupplier
 import net.minecraft.util.Identifier
 import com.kneelawk.kmodlib.client.blockmodel.JsonMaterial
 import com.kneelawk.kmodlib.client.blockmodel.JsonTexture
@@ -30,14 +42,32 @@ import com.kneelawk.kmodlib.client.blockmodel.cube.UnbakedCubeAllModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.sprite.UnbakedStaticSpriteSupplier
 
 class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
-    private val LEYLINE_ECTEX = id("block/leyline_exterior_corners")
-    private val LEYLINE_HETEX = id("block/leyline_horizontal_edges")
-    private val LEYLINE_ICTEX = id("block/leyline_interior_corners")
-    private val LEYLINE_VETEX = id("block/leyline_vertical_edges")
+    companion object {
+        private val LEYLINE_ECTEX = id("block/leyline_exterior_corners")
+        private val LEYLINE_HETEX = id("block/leyline_horizontal_edges")
+        private val LEYLINE_ICTEX = id("block/leyline_interior_corners")
+        private val LEYLINE_VETEX = id("block/leyline_vertical_edges")
+    }
 
     override fun generateBlockStateModels(gen: BlockStateModelGenerator) {
         gen.registerSimpleCubeAll(THINKING_STONE)
         gen.registerSimpleCubeAll(THINKING_SCRAP)
+
+        gen.registerCubeAllModelTexturePool(SMOOTH_THINKING_STONE).family(HotMBlockFamilies.SMOOTH_THINKING_STONE)
+        gen.registerCubeAllModelTexturePool(THINKING_STONE_BRICKS).family(HotMBlockFamilies.THINKING_STONE_BRICKS)
+        gen.registerCubeAllModelTexturePool(THINKING_STONE_TILES).family(HotMBlockFamilies.THINKING_STONE_TILES)
+
+        gen.registerAxisRotated(
+            OBELISK_PART,
+            TexturedModel.END_FOR_TOP_CUBE_COLUMN,
+            TexturedModel.END_FOR_TOP_CUBE_COLUMN_HORIZONTAL
+        )
+        gen.registerAxisRotated(
+            GLOWY_OBELISK_PART,
+            TexturedModel.END_FOR_TOP_CUBE_COLUMN,
+            TexturedModel.END_FOR_TOP_CUBE_COLUMN_HORIZONTAL
+        )
+
         gen.registerSimpleCubeAll(THINKING_SAND)
 
         Models.CUBE_BOTTOM_TOP.upload(

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "hotm:block/glowy_obelisk_part_top",
+    "side": "hotm:block/glowy_obelisk_part"
+  }
+}
