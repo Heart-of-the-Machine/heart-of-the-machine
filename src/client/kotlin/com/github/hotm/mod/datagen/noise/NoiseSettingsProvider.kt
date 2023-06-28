@@ -2,7 +2,7 @@ package com.github.hotm.mod.datagen.noise
 
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
-import com.github.hotm.mod.Log
+import com.github.hotm.mod.HotMLog
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import com.mojang.serialization.JsonOps
 import net.minecraft.data.DataPackOutput
@@ -40,7 +40,7 @@ abstract class NoiseSettingsProvider(
 
                 val element =
                     ChunkGeneratorSettingsDsl.CODEC.encodeStart(ops, settings)
-                        .getOrThrow(false, Log.LOG::error)
+                        .getOrThrow(false, HotMLog.LOG::error)
                 DataProvider.writeAsync(writer, element, path)
             }.toList().toTypedArray()))
         }

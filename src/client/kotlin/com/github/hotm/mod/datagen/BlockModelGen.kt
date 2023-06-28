@@ -1,7 +1,7 @@
 package com.github.hotm.mod.datagen
 
 import com.github.hotm.mod.Constants.id
-import com.github.hotm.mod.Log
+import com.github.hotm.mod.HotMLog
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP
@@ -110,7 +110,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     }
 
     private fun <T> BlockStateModelGenerator.registerCustomModel(id: Identifier, model: T, codec: Codec<T>) {
-        val element = codec.encodeStart(JsonOps.INSTANCE, model).getOrThrow(false, Log.LOG::error)
+        val element = codec.encodeStart(JsonOps.INSTANCE, model).getOrThrow(false, HotMLog.LOG::error)
         modelCollector.accept(id) { element }
     }
 
