@@ -1,0 +1,6 @@
+{   "parent": "block/end_rod",
+    "textures": {
+        "end_rod": "hotm:block/nectere_portal",
+        "particle": "hotm:block/nectere_portal"
+    }
+}

@@ -3,14 +3,9 @@ package com.github.hotm.mod.block
 import com.github.hotm.mod.Constants
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings
-import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.block.MapColor
-import net.minecraft.block.PillarBlock
-import net.minecraft.block.SandBlock
-import net.minecraft.block.SlabBlock
-import net.minecraft.block.StairsBlock
+import net.minecraft.block.*
 import net.minecraft.block.enums.NoteBlockInstrument
+import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.item.BlockItem
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
@@ -62,6 +57,15 @@ object HotMBlocks {
     val RUSTED_THINKING_SCRAP_LEYLINE by lazy { Block(THINKING_SCRAP_SETTINGS) }
     val PLASSEIN_THINKING_SCRAP_LEYLINE by lazy { Block(THINKING_SCRAP_SETTINGS) }
 
+    // Portal
+
+    val NECTERE_PORTAL by lazy {
+        NecterePortalBlock(
+            QuiltBlockSettings.create().mapColor(MapColor.CYAN).noCollision().strength(-1.0f)
+                .sounds(BlockSoundGroup.GLASS).nonOpaque().luminance { 12 }.pistonBehavior(PistonBehavior.BLOCK)
+        )
+    }
+
     fun init() {
         register(THINKING_STONE, "thinking_stone")
         register(THINKING_SCRAP, "thinking_scrap")
@@ -86,6 +90,8 @@ object HotMBlocks {
         register(THINKING_SCRAP_LEYLINE, "thinking_scrap_leyline")
         register(RUSTED_THINKING_SCRAP_LEYLINE, "rusted_thinking_scrap_leyline")
         register(PLASSEIN_THINKING_SCRAP_LEYLINE, "plassein_thinking_scrap_leyline")
+
+        register(NECTERE_PORTAL, "nectere_portal")
     }
 
     private fun register(block: Block, path: String) {

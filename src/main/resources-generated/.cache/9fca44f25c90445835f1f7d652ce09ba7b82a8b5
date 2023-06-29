@@ -1,4 +1,4 @@
-// 1.20 Release Candidate 1	2023-06-28T14:49:54.409074891	Heart of the Machine/Model Definitions
+// 1.20 Release Candidate 1	2023-06-29T13:56:04.727513264	Heart of the Machine/Model Definitions
 c1bfd29f058d4cb97bc31632d198ff818fca6d73 assets/hotm/blockstates/thinking_stone_tiles.json
 21ba24cf1da2ccd7f782dcdba9157ece72171f94 assets/hotm/models/block/obelisk_part_horizontal.json
 0c233054f1b33d0373bee946ac380babf02c6b4e assets/hotm/models/block/thinking_stone.json
@@ -21,12 +21,12 @@ acf6719551ea59f470ac09dc9915043c1dccc54e assets/hotm/blockstates/plassein_thinki
 5b86be1b0c462b1e792726ab811fd00cdf367297 assets/hotm/models/item/thinking_stone_tile_slab.json
 3d9b0bb852ec9150c1d804d94f67ff5a29db537a assets/hotm/models/block/smooth_thinking_stone_stairs_outer.json
 cac6ed5072f66b088ce2aa6e623ce801c5716c55 assets/hotm/blockstates/thinking_stone.json
-21107ee9dba9726f173c113059283b3d43513805 assets/hotm/models/item/obelisk_part.json
 27dd103162476b90ab77b8a85775d071ea168441 assets/hotm/models/block/rusted_thinking_scrap.json
+21107ee9dba9726f173c113059283b3d43513805 assets/hotm/models/item/obelisk_part.json
 ed00e14d326c299528d3a513a0ae88f42c7680ff assets/hotm/models/block/smooth_thinking_stone.json
 2a214fc90d3d44dc167e84b81a1cb4f26a1c52ea assets/hotm/models/item/plassein_thinking_scrap.json
-a3a4d058d6a70edbfe4f49400247c1c78b499f1d assets/hotm/models/block/smooth_thinking_stone_slab.json
 7ffa3e808d7bded20132b38cb1bb16f4b88270e5 assets/hotm/models/block/thinking_scrap_leyline.kml.json
+a3a4d058d6a70edbfe4f49400247c1c78b499f1d assets/hotm/models/block/smooth_thinking_stone_slab.json
 7b1bcbbcd11a08eff579db42b155c3dbb657edd4 assets/hotm/models/block/thinking_stone_brick_stairs_outer.json
 cbfafc9aed18939a713dd4b0598a3a9da2076e30 assets/hotm/models/item/thinking_scrap.json
 499f6d7e23f1aaed815082e84c44548e7072248c assets/hotm/models/block/thinking_stone_brick_slab.json
@@ -58,8 +58,8 @@ cf9da18c0048ed649f68f39e9eb88fc4cac4df05 assets/hotm/models/item/thinking_stone.
 2d8cc73a21b732b8d172852c47b567bd41aa683f assets/hotm/models/item/thinking_stone_brick_slab.json
 b23e4a5c3aa175079c551e95de69a27a3857c7ad assets/hotm/blockstates/obelisk_part.json
 41991bf044828d94ef007502a381658081da3d4c assets/hotm/models/block/glowy_obelisk_part_horizontal.json
-f917e58140287f596861bc612cfa3b86e99c0c7b assets/hotm/blockstates/thinking_stone_brick_stairs.json
 9372c2d760430c4d4dbdae558d36328e89a3e4dd assets/hotm/blockstates/thinking_stone_leyline.json
+f917e58140287f596861bc612cfa3b86e99c0c7b assets/hotm/blockstates/thinking_stone_brick_stairs.json
 a264e1791046f5e0c82a98e014118bd754afacbe assets/hotm/blockstates/thinking_stone_tile_slab.json
 1e988fa731eeeee8152d181b1757b2f7384390c5 assets/hotm/blockstates/thinking_stone_bricks.json
 1824850327757e42b7270cfc8f11639913a1a73b assets/hotm/models/block/thinking_stone_brick_slab_top.json
