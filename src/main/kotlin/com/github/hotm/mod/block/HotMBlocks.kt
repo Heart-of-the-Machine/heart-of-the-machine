@@ -61,7 +61,7 @@ object HotMBlocks {
 
     val NECTERE_PORTAL by lazy {
         NecterePortalBlock(
-            QuiltBlockSettings.create().mapColor(MapColor.CYAN).noCollision().strength(-1.0f)
+            QuiltBlockSettings.create().mapColor(MapColor.CYAN).strength(-1.0f)
                 .sounds(BlockSoundGroup.GLASS).nonOpaque().luminance { 12 }.pistonBehavior(PistonBehavior.BLOCK)
         )
     }

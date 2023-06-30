@@ -1,5 +1,6 @@
 package com.github.hotm.mod.block
 
+import com.github.hotm.mod.world.HotMTeleporters
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.FacingBlock
@@ -8,12 +9,15 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.ai.pathing.NavigationType
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvents
 import net.minecraft.state.StateManager
 import net.minecraft.util.BlockMirror
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
+import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
@@ -34,6 +38,12 @@ class NecterePortalBlock(settings: Settings) : FacingBlock(settings) {
 
     override fun mirror(state: BlockState, mirror: BlockMirror): BlockState {
         return state.with(FACING, mirror.apply(state.get(FACING)))
+    }
+
+    override fun getCollisionShape(
+        state: BlockState?, world: BlockView?, pos: BlockPos?, context: ShapeContext?
+    ): VoxelShape {
+        return VoxelShapes.empty()
     }
 
     override fun getOutlineShape(
@@ -79,16 +89,16 @@ class NecterePortalBlock(settings: Settings) : FacingBlock(settings) {
     override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
         val down = pos.down()
         if (world is ServerWorld && world.getBlockState(down).block != HotMBlocks.NECTERE_PORTAL
-            && world.isTopSolid(down, entity) && entity.canUsePortals() && !entity.hasNetherPortalCooldown()
+            && world.isTopSolid(down, entity) && entity.canUsePortals()
         ) {
-//            if (!HotMTeleporters.attemptNectereTeleportation(entity, world, pos)) {
-//                if (entity.netherPortalCooldown > 0) {
-//                    entity.netherPortalCooldown = entity.defaultNetherPortalCooldown
-//                } else {
-//                    world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f)
-//                    entity.netherPortalCooldown = entity.defaultNetherPortalCooldown
-//                }
-//            }
+            when (HotMTeleporters.attemptNectereTeleportation(entity, world, pos)) {
+                HotMTeleporters.Result.SUCCESS -> {}
+                HotMTeleporters.Result.COOLDOWN -> entity.resetNetherPortalCooldown()
+                HotMTeleporters.Result.FAILURE -> {
+                    world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f)
+                    entity.resetNetherPortalCooldown()
+                }
+            }
         }
     }
 }
