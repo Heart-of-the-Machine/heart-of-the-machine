@@ -7,6 +7,7 @@ import net.minecraft.block.ShapeContext
 import net.minecraft.entity.Entity
 import net.minecraft.entity.ai.pathing.NavigationType
 import net.minecraft.item.ItemPlacementContext
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.util.BlockMirror
 import net.minecraft.util.BlockRotation
@@ -77,7 +78,7 @@ class NecterePortalBlock(settings: Settings) : FacingBlock(settings) {
 
     override fun onEntityCollision(state: BlockState, world: World, pos: BlockPos, entity: Entity) {
         val down = pos.down()
-        if (!world.isClient && world.getBlockState(down).block != HotMBlocks.NECTERE_PORTAL
+        if (world is ServerWorld && world.getBlockState(down).block != HotMBlocks.NECTERE_PORTAL
             && world.isTopSolid(down, entity) && entity.canUsePortals() && !entity.hasNetherPortalCooldown()
         ) {
 //            if (!HotMTeleporters.attemptNectereTeleportation(entity, world, pos)) {
