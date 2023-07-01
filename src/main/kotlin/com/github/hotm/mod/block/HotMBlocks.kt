@@ -3,7 +3,13 @@ package com.github.hotm.mod.block
 import com.github.hotm.mod.Constants
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings
-import net.minecraft.block.*
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
+import net.minecraft.block.MapColor
+import net.minecraft.block.PillarBlock
+import net.minecraft.block.SandBlock
+import net.minecraft.block.SlabBlock
+import net.minecraft.block.StairsBlock
 import net.minecraft.block.enums.NoteBlockInstrument
 import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.item.BlockItem
@@ -65,6 +71,12 @@ object HotMBlocks {
                 .sounds(BlockSoundGroup.GLASS).nonOpaque().luminance { 12 }.pistonBehavior(PistonBehavior.BLOCK)
         )
     }
+    val NECTERE_PORTAL_SPAWNER by lazy {
+        NecterePortalSpawnerBlock(
+            QuiltBlockSettings.create().mapColor(MapColor.CYAN).strength(-1.0f).sounds(BlockSoundGroup.STONE)
+                .pistonBehavior(PistonBehavior.BLOCK)
+        )
+    }
 
     fun init() {
         register(THINKING_STONE, "thinking_stone")
@@ -92,6 +104,7 @@ object HotMBlocks {
         register(PLASSEIN_THINKING_SCRAP_LEYLINE, "plassein_thinking_scrap_leyline")
 
         register(NECTERE_PORTAL, "nectere_portal")
+        register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner")
     }
 
     private fun register(block: Block, path: String) {

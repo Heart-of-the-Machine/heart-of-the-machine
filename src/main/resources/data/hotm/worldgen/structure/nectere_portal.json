@@ -1,0 +1,6 @@
+{
+  "type": "hotm:nectere_portal",
+  "biomes": "#hotm:has_structure/nectere_portal",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

@@ -10,6 +10,10 @@ import net.minecraft.world.poi.PointOfInterestStorage
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.ceil
 import kotlin.streams.asSequence
+import net.minecraft.registry.DynamicRegistryManager
+import net.minecraft.registry.RegistryKey
+import net.minecraft.util.math.ChunkPos
+import net.minecraft.world.World
 
 object HotMPortalFinders {
     fun findOrCreateNonPortal(
@@ -30,19 +34,13 @@ object HotMPortalFinders {
                 { it.key.getOrNull() == HotMPointOfInterestTypes.NECTERE_PORTAL },
                 nonPos, radius, PointOfInterestStorage.OccupationStatus.ANY
             ).asSequence()
-                .map {
-                    println("NECTERE -> NON: POI ${it.pos}")
-                    it
-                }
                 .filter { poi ->
-                    worldBorder.contains(poi.pos).also { println("within world border: $it") }
+                    worldBorder.contains(poi.pos)
                         && destWorld.getBlockState(poi.pos.down()).isOf(HotMBlocks.GLOWY_OBELISK_PART)
-                        .also { println("down is obelisk: $it") }
                 }
                 .minByOrNull { it.pos.getSquaredDistance(nonPos) }
 
             if (poi == null) {
-                println("NECTERE -> NON: poi == null")
                 if (worldBorder.contains(nonPos)) {
                     val outPos = tempFindDepositSpace(destWorld, nonPos, entity) ?: nonPos
                     // TODO: no portal found, we need to create it
@@ -74,15 +72,10 @@ object HotMPortalFinders {
                     { it.key.getOrNull() == HotMPointOfInterestTypes.NECTERE_PORTAL },
                     necterePos, radius, PointOfInterestStorage.OccupationStatus.ANY
                 ).asSequence()
-                    .map {
-                        println("NON -> NECTERE: POI ${it.pos}")
-                        it
-                    }
                     .filter { poi ->
-                        worldborder.contains(poi.pos).also { println("within world border: $it") }
+                        worldborder.contains(poi.pos)
                             && nectereWorld.getBlockState(poi.pos.down()).isOf(HotMBlocks.GLOWY_OBELISK_PART)
-                            .also { println("down is obelisk: $it") }
-                            && (nectereWorld.getBiome(poi.pos).key.getOrNull() == portalHolder.biome).also { println("biome correct: $it") }
+                            && (nectereWorld.getBiome(poi.pos).key.getOrNull() == portalHolder.biome)
                     }
                     .minByOrNull { it.pos.getSquaredDistance(necterePos) }?.let { Found(it.pos, necterePos) }
             }
@@ -91,23 +84,15 @@ object HotMPortalFinders {
         if (found != null) {
             return found.foundPos
         } else {
-            println("NON -> NECTERE: found == null")
             val necterePoses = NecterePortalData.BIOMES_BY_WORLD.get(srcWorld.registryKey).asSequence()
                 .mapNotNull {
                     val necterePos = HotMLocationConversions.non2StartNectere(portalPos, it.data)
-
-                    val actualBiome = nectereWorld.getBiome(necterePos).key.getOrNull()
-                    val wantedBiome = it.biome
-
-                    println("NON -> NECTERE: actual: $actualBiome, wanted: $wantedBiome")
 
                     if (nectereWorld.getBiome(necterePos).key.getOrNull() != it.biome) return@mapNotNull null
 
                     necterePos
                 }
                 .filter { worldborder.contains(it) }.toList()
-
-            println("NON -> NECTERE: selection: $necterePoses")
 
             val necterePos = necterePoses.randomOrNull()
 
@@ -146,4 +131,15 @@ object HotMPortalFinders {
             && !destWorld.getBlockState(testPos.up()).shouldSuffocate(destWorld, testPos.up())
             && destWorld.isTopSolid(testPos.down(), entity)
     }
+
+//    fun getNonNecterePortalCoords(
+//        registryManager: DynamicRegistryManager, currentWorldKey: RegistryKey<World>, chunkPos: ChunkPos,
+//        nectereWorld: ServerWorld
+//    ): Sequence<BlockPos> {
+//        if (currentWorldKey == HotMDimensions.NECTERE_KEY) throw IllegalArgumentException("Cannot get non-Nectere portal gen coords in a Nectere world")
+//
+//        return NecterePortalData.BIOMES_BY_WORLD.get(currentWorldKey).asSequence().mapNotNull { portalHolder ->
+//
+//        }
+//    }
 }

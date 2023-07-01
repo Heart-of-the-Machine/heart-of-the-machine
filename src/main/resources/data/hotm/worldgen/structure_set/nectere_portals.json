@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 5,
+    "separation": 2,
+    "salt": 103873
+  },
+  "structures": [
+    {
+      "structure": "hotm:nectere_portal",
+      "weight": 1
+    }
+  ]
+}

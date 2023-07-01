@@ -4,6 +4,7 @@ import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.HotMLog
 import com.github.hotm.mod.block.HotMBlockFamilies
 import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
+import com.github.hotm.mod.block.HotMBlocks.NECTERE_PORTAL_SPAWNER
 import com.github.hotm.mod.block.HotMBlocks.OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
@@ -52,6 +53,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     override fun generateBlockStateModels(gen: BlockStateModelGenerator) {
         gen.registerSimpleCubeAll(THINKING_STONE)
         gen.registerSimpleCubeAll(THINKING_SCRAP)
+        gen.registerSimpleCubeAll(NECTERE_PORTAL_SPAWNER)
 
         gen.registerCubeAllModelTexturePool(SMOOTH_THINKING_STONE).family(HotMBlockFamilies.SMOOTH_THINKING_STONE)
         gen.registerCubeAllModelTexturePool(THINKING_STONE_BRICKS).family(HotMBlockFamilies.THINKING_STONE_BRICKS)
