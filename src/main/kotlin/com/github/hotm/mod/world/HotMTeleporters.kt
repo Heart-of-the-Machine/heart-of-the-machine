@@ -38,7 +38,7 @@ object HotMTeleporters {
                 return Result.SUCCESS
             } else {
                 val newWorld = HotMDimensions.getNectere(server)
-                val destPos = HotMPortalFinders.findOrCreateNecterePortal(world, portalPos, newWorld, entity)
+                val destPos = HotMPortalFinders.findOrCreateNecterePortal(world, portalPos, newWorld)
                     ?: return Result.FAILURE
 
                 val resEntity = QuiltDimensions.teleport<Entity>(

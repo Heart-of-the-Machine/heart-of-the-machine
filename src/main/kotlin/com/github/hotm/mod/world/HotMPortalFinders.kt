@@ -3,17 +3,15 @@ package com.github.hotm.mod.world
 import com.github.hotm.mod.block.HotMBlocks
 import com.github.hotm.mod.block.HotMPointOfInterestTypes
 import com.github.hotm.mod.world.biome.NecterePortalData
-import net.minecraft.entity.Entity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.poi.PointOfInterestStorage
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.ceil
 import kotlin.streams.asSequence
-import net.minecraft.registry.DynamicRegistryManager
-import net.minecraft.registry.RegistryKey
-import net.minecraft.util.math.ChunkPos
-import net.minecraft.world.World
+import net.minecraft.entity.Entity
+import net.minecraft.server.world.ServerWorld
+import net.minecraft.state.property.Properties
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
+import net.minecraft.world.poi.PointOfInterestStorage
 
 object HotMPortalFinders {
     fun findOrCreateNonPortal(
@@ -42,10 +40,15 @@ object HotMPortalFinders {
 
             if (poi == null) {
                 if (worldBorder.contains(nonPos)) {
-                    val outPos = tempFindDepositSpace(destWorld, nonPos, entity) ?: nonPos
+                    val outPos = tempFindDepositSpace(destWorld, nonPos) ?: nonPos
                     // TODO: no portal found, we need to create it
                     destWorld.setBlockState(outPos, HotMBlocks.NECTERE_PORTAL.defaultState)
+                    destWorld.setBlockState(
+                        outPos.up(),
+                        HotMBlocks.NECTERE_PORTAL.defaultState.with(Properties.FACING, Direction.DOWN)
+                    )
                     destWorld.setBlockState(outPos.down(), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
+                    destWorld.setBlockState(outPos.up(2), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
                     return outPos
                 } else return null
             }
@@ -54,9 +57,7 @@ object HotMPortalFinders {
         }
     }
 
-    fun findOrCreateNecterePortal(
-        srcWorld: ServerWorld, portalPos: BlockPos, nectereWorld: ServerWorld, entity: Entity
-    ): BlockPos? {
+    fun findOrCreateNecterePortal(srcWorld: ServerWorld, portalPos: BlockPos, nectereWorld: ServerWorld): BlockPos? {
         val worldborder = nectereWorld.worldBorder
 
         data class Found(val foundPos: BlockPos, val necterePos: BlockPos)
@@ -97,10 +98,15 @@ object HotMPortalFinders {
             val necterePos = necterePoses.randomOrNull()
 
             if (necterePos != null) {
-                val outPos = tempFindDepositSpace(nectereWorld, necterePos, entity) ?: necterePos
+                val outPos = tempFindDepositSpace(nectereWorld, necterePos) ?: necterePos
                 // TODO: no portal found, we need to create it
                 nectereWorld.setBlockState(outPos, HotMBlocks.NECTERE_PORTAL.defaultState)
+                nectereWorld.setBlockState(
+                    outPos.up(),
+                    HotMBlocks.NECTERE_PORTAL.defaultState.with(Properties.FACING, Direction.DOWN)
+                )
                 nectereWorld.setBlockState(outPos.down(), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
+                nectereWorld.setBlockState(outPos.up(2), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
                 return outPos
             }
 
@@ -108,17 +114,17 @@ object HotMPortalFinders {
         }
     }
 
-    fun tempFindDepositSpace(destWorld: ServerWorld, destPos: BlockPos, entity: Entity): BlockPos? {
+    private fun tempFindDepositSpace(destWorld: ServerWorld, destPos: BlockPos): BlockPos? {
         val mutable = destPos.mutableCopy()
         var radius = 0
         while (radius < destWorld.height) {
             // try up
             mutable.setY(destPos.y + radius)
-            if (tempIsValidDepositSpace(destWorld, mutable, entity)) return mutable.toImmutable()
+            if (tempIsValidDepositSpace(destWorld, mutable)) return mutable.toImmutable()
 
             // try down
             mutable.setY(destPos.y - radius)
-            if (tempIsValidDepositSpace(destWorld, mutable, entity)) return mutable.toImmutable()
+            if (tempIsValidDepositSpace(destWorld, mutable)) return mutable.toImmutable()
 
             radius++
         }
@@ -126,10 +132,9 @@ object HotMPortalFinders {
         return null
     }
 
-    fun tempIsValidDepositSpace(destWorld: ServerWorld, testPos: BlockPos, entity: Entity): Boolean {
-        return !destWorld.getBlockState(testPos).shouldSuffocate(destWorld, testPos)
-            && !destWorld.getBlockState(testPos.up()).shouldSuffocate(destWorld, testPos.up())
-            && destWorld.isTopSolid(testPos.down(), entity)
+    private fun tempIsValidDepositSpace(destWorld: ServerWorld, testPos: BlockPos): Boolean {
+        return destWorld.getBlockState(testPos).isAir && destWorld.getBlockState(testPos.up()).isAir
+            && !destWorld.getBlockState(testPos.down()).isAir
     }
 
 //    fun getNonNecterePortalCoords(
