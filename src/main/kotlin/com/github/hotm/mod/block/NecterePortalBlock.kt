@@ -91,12 +91,14 @@ class NecterePortalBlock(settings: Settings) : FacingBlock(settings) {
         if (world is ServerWorld && world.getBlockState(down).block != HotMBlocks.NECTERE_PORTAL
             && world.isTopSolid(down, entity) && entity.canUsePortals()
         ) {
-            when (HotMTeleporters.attemptNectereTeleportation(entity, world, pos)) {
-                HotMTeleporters.Result.SUCCESS -> {}
-                HotMTeleporters.Result.COOLDOWN -> entity.resetNetherPortalCooldown()
-                HotMTeleporters.Result.FAILURE -> {
-                    world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f)
-                    entity.resetNetherPortalCooldown()
+            HotMTeleporters.attemptNectereTeleportation(entity, world, pos) {
+                when (it) {
+                    HotMTeleporters.Result.SUCCESS -> {}
+                    HotMTeleporters.Result.COOLDOWN -> entity.resetNetherPortalCooldown()
+                    HotMTeleporters.Result.FAILURE -> {
+                        world.playSound(null, pos, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f)
+                        entity.resetNetherPortalCooldown()
+                    }
                 }
             }
         }

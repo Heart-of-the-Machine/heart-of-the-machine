@@ -6,9 +6,13 @@ import com.github.hotm.mod.block.HotMPointOfInterestTypes
 import com.github.hotm.mod.world.biome.NecterePortalData
 import com.github.hotm.mod.world.gen.HotMPortalGen
 import com.github.hotm.mod.world.gen.structure.HotMStructures
+import kotlin.jvm.optionals.getOrNull
+import kotlin.math.ceil
+import kotlin.streams.asSequence
 import net.minecraft.registry.Holder
 import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
+import net.minecraft.server.ServerTask
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.property.Properties
 import net.minecraft.structure.ConcentricRingPlacementCalculator
@@ -20,28 +24,36 @@ import net.minecraft.util.math.MathHelper
 import net.minecraft.world.World
 import net.minecraft.world.chunk.ChunkStatus
 import net.minecraft.world.poi.PointOfInterestStorage
-import kotlin.jvm.optionals.getOrNull
-import kotlin.math.ceil
-import kotlin.streams.asSequence
 
 object HotMPortalFinders {
     /**
      * Finds or creates a non-Nectere-side portal coming from the given position in the nectere.
      */
     fun findOrCreateNonNecterePortal(
-        nectereWorld: ServerWorld, portalPos: BlockPos, destWorld: ServerWorld
-    ): BlockPos? {
-        val biomeKey = nectereWorld.getBiome(portalPos).key
+        nectereWorld: ServerWorld, portalPos: BlockPos, destWorld: ServerWorld, callback: (BlockPos?) -> Unit
+    ) {
+        val biomeKey = nectereWorld.getBiome(portalPos).key.getOrNull()
+        if (biomeKey == null) {
+            callback(null)
+            return
+        }
 
-        return NecterePortalData.ifData(biomeKey) { portalHolder ->
-            // try finding a portal
-            val nonPos = HotMLocationConversions.nectere2StartNon(portalPos, portalHolder.data)
-            val radius = ceil(portalHolder.data.coordinateFactor).toInt().coerceAtLeast(1)
+        val portalHolder = NecterePortalData.BIOMES_BY_ID[biomeKey]
+        if (portalHolder == null) {
+            callback(null)
+            return
+        }
 
-            preloadChunks(destWorld, nonPos, radius)
+        // try finding a portal
+        val nonPos = HotMLocationConversions.nectere2StartNon(portalPos, portalHolder.data)
+        val radius = ceil(portalHolder.data.coordinateFactor).toInt().coerceAtLeast(1)
 
-            HotMPortalGen.pregenPortal(destWorld, ChunkPos(nonPos))
+        preloadChunks(destWorld, nonPos, radius)
 
+        HotMPortalGen.pregenPortal(destWorld, ChunkPos(nonPos))
+
+        val server = destWorld.server
+        server.send(ServerTask(server.ticks) {
             val worldBorder = destWorld.worldBorder
 
             val poi = destWorld.pointOfInterestStorage.getInSquare(
@@ -64,12 +76,14 @@ object HotMPortalFinders {
                     )
                     destWorld.setBlockState(outPos.down(), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
                     destWorld.setBlockState(outPos.up(2), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
-                    return outPos
-                } else return null
+                    callback(outPos)
+                } else {
+                    callback(null)
+                }
+            } else {
+                callback(poi.pos)
             }
-
-            poi.pos
-        }
+        })
     }
 
     /**
@@ -81,7 +95,7 @@ object HotMPortalFinders {
         val radius = ceil(portalHolder.data.coordinateFactor).toInt().coerceAtLeast(1)
         val worldBorder = nonNectereWorld.worldBorder
 
-        preloadChunks(nonNectereWorld, testPos, radius)
+        // preloading *probably* isn't needed here
 
         return nonNectereWorld.pointOfInterestStorage.getInSquare(
             { it.key.getOrNull() == HotMPointOfInterestTypes.NECTERE_PORTAL },
@@ -95,62 +109,72 @@ object HotMPortalFinders {
     /**
      * Finds or creates a Nectere-side portal coming from the given position not in the nectere.
      */
-    fun findOrCreateNecterePortal(srcWorld: ServerWorld, portalPos: BlockPos, nectereWorld: ServerWorld): BlockPos? {
-        val worldborder = nectereWorld.worldBorder
+    fun findOrCreateNecterePortal(
+        srcWorld: ServerWorld, portalPos: BlockPos, nectereWorld: ServerWorld, callback: (BlockPos?) -> Unit
+    ) {
+        for (portalHolder in NecterePortalData.BIOMES_BY_WORLD.get(srcWorld.registryKey)) {
+            val necterePos = HotMLocationConversions.non2StartNectere(portalPos, portalHolder.data)
+            val radius = ceil(1.0 / portalHolder.data.coordinateFactor).toInt().coerceAtLeast(1)
 
-        data class Found(val foundPos: BlockPos, val necterePos: BlockPos)
-
-        val found =
-            NecterePortalData.BIOMES_BY_WORLD.get(srcWorld.registryKey).asSequence().mapNotNull { portalHolder ->
-                val necterePos = HotMLocationConversions.non2StartNectere(portalPos, portalHolder.data)
-                val radius = ceil(1.0 / portalHolder.data.coordinateFactor).toInt().coerceAtLeast(1)
-
-                // make sure structures are generated
-                preloadChunks(nectereWorld, necterePos, radius)
-
-                nectereWorld.pointOfInterestStorage.getInSquare(
-                    { it.key.getOrNull() == HotMPointOfInterestTypes.NECTERE_PORTAL },
-                    necterePos, radius, PointOfInterestStorage.OccupationStatus.ANY
-                ).asSequence()
-                    .filter { poi ->
-                        worldborder.contains(poi.pos)
-                            && isValidPortal(nectereWorld, poi.pos)
-                            && (nectereWorld.getBiome(poi.pos).key.getOrNull() == portalHolder.biome)
-                    }
-                    .minByOrNull { it.pos.getSquaredDistance(necterePos) }?.let { Found(it.pos, necterePos) }
-            }
-                .minByOrNull { it.foundPos.getSquaredDistance(it.necterePos) }
-
-        if (found != null) {
-            return found.foundPos
-        } else {
-            val necterePoses = NecterePortalData.BIOMES_BY_WORLD.get(srcWorld.registryKey).asSequence()
-                .mapNotNull {
-                    val necterePos = HotMLocationConversions.non2StartNectere(portalPos, it.data)
-
-                    if (nectereWorld.getBiome(necterePos).key.getOrNull() != it.biome) return@mapNotNull null
-
-                    necterePos
-                }
-                .filter { worldborder.contains(it) }.toList()
-
-            val necterePos = necterePoses.randomOrNull()
-
-            if (necterePos != null) {
-                val outPos = tempFindDepositSpace(nectereWorld, necterePos) ?: necterePos
-                // TODO: no portal found, we need to create it
-                nectereWorld.setBlockState(outPos, HotMBlocks.NECTERE_PORTAL.defaultState)
-                nectereWorld.setBlockState(
-                    outPos.up(),
-                    HotMBlocks.NECTERE_PORTAL.defaultState.with(Properties.FACING, Direction.DOWN)
-                )
-                nectereWorld.setBlockState(outPos.down(), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
-                nectereWorld.setBlockState(outPos.up(2), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
-                return outPos
-            }
-
-            return null
+            // make sure structures are generated
+            preloadChunks(nectereWorld, necterePos, radius)
         }
+
+        val server = srcWorld.server
+        server.send(ServerTask(server.ticks) {
+            val worldborder = nectereWorld.worldBorder
+
+            data class Found(val foundPos: BlockPos, val necterePos: BlockPos)
+
+            val found =
+                NecterePortalData.BIOMES_BY_WORLD.get(srcWorld.registryKey).asSequence().mapNotNull { portalHolder ->
+                    val necterePos = HotMLocationConversions.non2StartNectere(portalPos, portalHolder.data)
+                    val radius = ceil(1.0 / portalHolder.data.coordinateFactor).toInt().coerceAtLeast(1)
+
+                    nectereWorld.pointOfInterestStorage.getInSquare(
+                        { it.key.getOrNull() == HotMPointOfInterestTypes.NECTERE_PORTAL },
+                        necterePos, radius, PointOfInterestStorage.OccupationStatus.ANY
+                    ).asSequence()
+                        .filter { poi ->
+                            worldborder.contains(poi.pos)
+                                && isValidPortal(nectereWorld, poi.pos)
+                                && (nectereWorld.getBiome(poi.pos).key.getOrNull() == portalHolder.biome)
+                        }
+                        .minByOrNull { it.pos.getSquaredDistance(necterePos) }?.let { Found(it.pos, necterePos) }
+                }
+                    .minByOrNull { it.foundPos.getSquaredDistance(it.necterePos) }
+
+            if (found != null) {
+                callback(found.foundPos)
+            } else {
+                val necterePoses = NecterePortalData.BIOMES_BY_WORLD.get(srcWorld.registryKey).asSequence()
+                    .mapNotNull {
+                        val necterePos = HotMLocationConversions.non2StartNectere(portalPos, it.data)
+
+                        if (nectereWorld.getBiome(necterePos).key.getOrNull() != it.biome) return@mapNotNull null
+
+                        necterePos
+                    }
+                    .filter { worldborder.contains(it) }.toList()
+
+                val necterePos = necterePoses.randomOrNull()
+
+                if (necterePos != null) {
+                    val outPos = tempFindDepositSpace(nectereWorld, necterePos) ?: necterePos
+                    // TODO: no portal found, we need to create it
+                    nectereWorld.setBlockState(outPos, HotMBlocks.NECTERE_PORTAL.defaultState)
+                    nectereWorld.setBlockState(
+                        outPos.up(),
+                        HotMBlocks.NECTERE_PORTAL.defaultState.with(Properties.FACING, Direction.DOWN)
+                    )
+                    nectereWorld.setBlockState(outPos.down(), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
+                    nectereWorld.setBlockState(outPos.up(2), HotMBlocks.GLOWY_OBELISK_PART.defaultState)
+                    callback(outPos)
+                } else {
+                    callback(null)
+                }
+            }
+        })
     }
 
     private fun preloadChunks(world: ServerWorld, pos: BlockPos, radius: Int) {
