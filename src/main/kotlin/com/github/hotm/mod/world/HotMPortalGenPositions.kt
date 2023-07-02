@@ -95,13 +95,6 @@ object HotMPortalGenPositions {
     }
 
     /**
-     * Gets the x position of the chunk that the given portal is in.
-     */
-    fun portal2ChunkX(portalX: Int): Int {
-        return HotMPortalOffsets.portal2StructureX(portalX).shr(4)
-    }
-
-    /**
      * Gets the z position of a portal structure feature from the portal's chunk z.
      */
     fun chunk2StructureZ(chunkZ: Int): Int {
@@ -113,13 +106,6 @@ object HotMPortalGenPositions {
      */
     fun chunk2PortalZ(chunkZ: Int): Int {
         return HotMPortalOffsets.structure2PortalZ(chunk2StructureZ(chunkZ))
-    }
-
-    /**
-     * Gets the z position of the chunk that the given portal is in.
-     */
-    fun portal2ChunkZ(portalZ: Int): Int {
-        return HotMPortalOffsets.portal2StructureZ(portalZ).shr(4)
     }
 
     private data class FindContext(val roof: Int, val surfaces: List<Int>)

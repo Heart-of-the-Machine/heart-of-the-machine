@@ -252,7 +252,6 @@ object HotMPortalFinders {
         necterePos: ChunkPos
     ): BlockPos? {
         val startChunk = placement.getPotentialStartChunk(calculator.worldSeed, necterePos.x, necterePos.z)
-        if (startChunk != necterePos) return null
 
         val necterePortalPos = BlockPos(
             HotMPortalGenPositions.chunk2PortalX(startChunk.x),
@@ -265,9 +264,7 @@ object HotMPortalFinders {
 
         val portalPos = HotMLocationConversions.nectere2StartNon(necterePortalPos, portalHolder.data)
 
-        return if (HotMPortalGenPositions.portal2ChunkX(portalPos.x) == currentPos.x
-            && HotMPortalGenPositions.portal2ChunkZ(portalPos.z) == currentPos.z
-        ) {
+        return if (portalPos.x shr 4 == currentPos.x && portalPos.z shr 4 == currentPos.z) {
             portalPos
         } else null
     }
