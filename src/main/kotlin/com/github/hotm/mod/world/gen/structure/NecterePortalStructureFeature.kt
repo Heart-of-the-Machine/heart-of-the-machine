@@ -49,8 +49,8 @@ class NecterePortalStructureFeature(structureSettings: StructureSettings) : Stru
             world: StructureWorldAccess, structureManager: StructureManager, chunkGenerator: ChunkGenerator,
             random: RandomGenerator, boundingBox: BlockBox, chunkPos: ChunkPos, pos: BlockPos
         ) {
-            // TODO: investigate better ways to set the height
-            if (!adjustToAverageHeight(world, boundingBox, 0)) return
+            if (!adjustToMinHeight(world, 0)) return
+            this.boundingBox.move(0, -1, 0)
 
             HotMPortalGen.generate(
                 world,

@@ -65,7 +65,7 @@ object HotMPortalGenPositions {
         val surfaces = find.surfaces
         val roof = find.roof
 
-        val structureY = when {
+        val portalY = when {
             surfaces.isEmpty() -> random.nextInt(
                 if (roof > MIN_ROOF_HEIGHT) {
                     roof - 8
@@ -77,7 +77,7 @@ object HotMPortalGenPositions {
             else -> world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, portalX, portalZ)
         }
 
-        return BlockPos(portalX, HotMPortalOffsets.structure2PortalY(structureY), portalZ)
+        return BlockPos(portalX, portalY, portalZ)
     }
 
     /**
