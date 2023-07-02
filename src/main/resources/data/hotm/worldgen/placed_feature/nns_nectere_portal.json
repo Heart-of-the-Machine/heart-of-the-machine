@@ -1,0 +1,9 @@
+{
+  "feature": "hotm:nns_nectere_portal",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 1
+    }
+  ]
+}

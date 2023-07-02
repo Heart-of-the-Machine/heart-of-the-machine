@@ -1,21 +1,35 @@
 package com.github.hotm.mod.world
 
+import com.github.hotm.mod.HotMLog
 import com.github.hotm.mod.block.HotMBlocks
 import com.github.hotm.mod.block.HotMPointOfInterestTypes
 import com.github.hotm.mod.world.biome.NecterePortalData
+import com.github.hotm.mod.world.gen.HotMPortalGen
+import com.github.hotm.mod.world.gen.structure.HotMStructures
+import net.minecraft.registry.Holder
+import net.minecraft.registry.RegistryKey
+import net.minecraft.registry.RegistryKeys
+import net.minecraft.server.world.ServerWorld
+import net.minecraft.state.property.Properties
+import net.minecraft.structure.ConcentricRingPlacementCalculator
+import net.minecraft.structure.RandomSpreadStructurePlacement
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.ChunkPos
+import net.minecraft.util.math.Direction
+import net.minecraft.util.math.MathHelper
+import net.minecraft.world.World
+import net.minecraft.world.chunk.ChunkStatus
+import net.minecraft.world.poi.PointOfInterestStorage
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.ceil
 import kotlin.streams.asSequence
-import net.minecraft.entity.Entity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.state.property.Properties
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.world.poi.PointOfInterestStorage
 
 object HotMPortalFinders {
-    fun findOrCreateNonPortal(
-        nectereWorld: ServerWorld, portalPos: BlockPos, destWorld: ServerWorld, entity: Entity
+    /**
+     * Finds or creates a non-Nectere-side portal coming from the given position in the nectere.
+     */
+    fun findOrCreateNonNecterePortal(
+        nectereWorld: ServerWorld, portalPos: BlockPos, destWorld: ServerWorld
     ): BlockPos? {
         val biomeKey = nectereWorld.getBiome(portalPos).key
 
@@ -24,7 +38,9 @@ object HotMPortalFinders {
             val nonPos = HotMLocationConversions.nectere2StartNon(portalPos, portalHolder.data)
             val radius = ceil(portalHolder.data.coordinateFactor).toInt().coerceAtLeast(1)
 
-            // TODO: Pregen portals
+            preloadChunks(destWorld, nonPos, radius)
+
+            HotMPortalGen.pregenPortal(destWorld, ChunkPos(nonPos))
 
             val worldBorder = destWorld.worldBorder
 
@@ -33,8 +49,7 @@ object HotMPortalFinders {
                 nonPos, radius, PointOfInterestStorage.OccupationStatus.ANY
             ).asSequence()
                 .filter { poi ->
-                    worldBorder.contains(poi.pos)
-                        && destWorld.getBlockState(poi.pos.down()).isOf(HotMBlocks.GLOWY_OBELISK_PART)
+                    worldBorder.contains(poi.pos) && isValidPortal(destWorld, poi.pos)
                 }
                 .minByOrNull { it.pos.getSquaredDistance(nonPos) }
 
@@ -57,6 +72,29 @@ object HotMPortalFinders {
         }
     }
 
+    /**
+     * Finds a non-Nectere-side portal, given the Nectere-side biome it's coming from.
+     */
+    fun findNonNecterePortal(
+        nonNectereWorld: ServerWorld, testPos: BlockPos, portalHolder: NecterePortalData.Holder
+    ): BlockPos? {
+        val radius = ceil(portalHolder.data.coordinateFactor).toInt().coerceAtLeast(1)
+        val worldBorder = nonNectereWorld.worldBorder
+
+        preloadChunks(nonNectereWorld, testPos, radius)
+
+        return nonNectereWorld.pointOfInterestStorage.getInSquare(
+            { it.key.getOrNull() == HotMPointOfInterestTypes.NECTERE_PORTAL },
+            testPos, radius, PointOfInterestStorage.OccupationStatus.ANY
+        ).asSequence()
+            .filter { worldBorder.contains(it.pos) && isValidPortal(nonNectereWorld, it.pos) }
+            .minByOrNull { it.pos.getSquaredDistance(testPos) }
+            ?.pos
+    }
+
+    /**
+     * Finds or creates a Nectere-side portal coming from the given position not in the nectere.
+     */
     fun findOrCreateNecterePortal(srcWorld: ServerWorld, portalPos: BlockPos, nectereWorld: ServerWorld): BlockPos? {
         val worldborder = nectereWorld.worldBorder
 
@@ -67,7 +105,8 @@ object HotMPortalFinders {
                 val necterePos = HotMLocationConversions.non2StartNectere(portalPos, portalHolder.data)
                 val radius = ceil(1.0 / portalHolder.data.coordinateFactor).toInt().coerceAtLeast(1)
 
-                // no portal pregenning needed on nectere side
+                // make sure structures are generated
+                preloadChunks(nectereWorld, necterePos, radius)
 
                 nectereWorld.pointOfInterestStorage.getInSquare(
                     { it.key.getOrNull() == HotMPointOfInterestTypes.NECTERE_PORTAL },
@@ -75,7 +114,7 @@ object HotMPortalFinders {
                 ).asSequence()
                     .filter { poi ->
                         worldborder.contains(poi.pos)
-                            && nectereWorld.getBlockState(poi.pos.down()).isOf(HotMBlocks.GLOWY_OBELISK_PART)
+                            && isValidPortal(nectereWorld, poi.pos)
                             && (nectereWorld.getBiome(poi.pos).key.getOrNull() == portalHolder.biome)
                     }
                     .minByOrNull { it.pos.getSquaredDistance(necterePos) }?.let { Found(it.pos, necterePos) }
@@ -114,6 +153,25 @@ object HotMPortalFinders {
         }
     }
 
+    private fun preloadChunks(world: ServerWorld, pos: BlockPos, radius: Int) {
+        // FIXME: doesn't work
+        for (chunkPos in ChunkPos.stream(ChunkPos(pos), MathHelper.floorDiv(radius, 16))) {
+            world.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL)
+        }
+
+        world.pointOfInterestStorage.preloadChunks(world, pos, radius)
+    }
+
+    /**
+     * Checks if the portal found at the given position is valid.
+     */
+    private fun isValidPortal(world: ServerWorld, portalPos: BlockPos): Boolean {
+        return world.getBlockState(portalPos.down()).isOf(HotMBlocks.GLOWY_OBELISK_PART)
+    }
+
+    /**
+     * Finds a place to put a portal if no existing portals were found.
+     */
     private fun tempFindDepositSpace(destWorld: ServerWorld, destPos: BlockPos): BlockPos? {
         val mutable = destPos.mutableCopy()
         var radius = 0
@@ -132,19 +190,90 @@ object HotMPortalFinders {
         return null
     }
 
+    /**
+     * Checks if the given block position is a valid place to put a portal.
+     */
     private fun tempIsValidDepositSpace(destWorld: ServerWorld, testPos: BlockPos): Boolean {
         return destWorld.getBlockState(testPos).isAir && destWorld.getBlockState(testPos.up()).isAir
             && !destWorld.getBlockState(testPos.down()).isAir
     }
 
-//    fun getNonNecterePortalCoords(
-//        registryManager: DynamicRegistryManager, currentWorldKey: RegistryKey<World>, chunkPos: ChunkPos,
-//        nectereWorld: ServerWorld
-//    ): Sequence<BlockPos> {
-//        if (currentWorldKey == HotMDimensions.NECTERE_KEY) throw IllegalArgumentException("Cannot get non-Nectere portal gen coords in a Nectere world")
-//
-//        return NecterePortalData.BIOMES_BY_WORLD.get(currentWorldKey).asSequence().mapNotNull { portalHolder ->
-//
-//        }
-//    }
+    /**
+     * Gets all the places in a non-nectere chunk that portals should be placed at (for non-nectere portal generation).
+     */
+    fun getNonNecterePortalPlacementsForChunk(
+        currentWorldKey: RegistryKey<World>, currentPos: ChunkPos,
+        nectereWorld: ServerWorld
+    ): Sequence<PortalPlacementResult> {
+        if (currentWorldKey == HotMDimensions.NECTERE_KEY) throw IllegalArgumentException("Cannot get non-Nectere portal gen coords in a Nectere world")
+
+        val structure =
+            nectereWorld.registryManager.get(RegistryKeys.STRUCTURE_FEATURE).get(HotMStructures.NECTERE_PORTAL)
+        if (structure == null) {
+            HotMLog.LOG.error("No 'hotm:nectere_portal' structure registered")
+            return emptySequence()
+        }
+
+        val calculator = nectereWorld.chunkManager.method_46642()
+        val placements = calculator.getFeaturePlacements(Holder.createDirect(structure))
+        val placement = placements.asSequence().filterIsInstance<RandomSpreadStructurePlacement>().firstOrNull()
+        if (placement == null) {
+            HotMLog.LOG.error("No random spread structure placements for 'hotm:nectere_portal' registered")
+            return emptySequence()
+        }
+
+        if (placements.size > 1) {
+            HotMLog.LOG.warn("Multiple structure placements for 'hotm:nectere_portal' found, ignoring all but first.")
+        }
+
+        return NecterePortalData.BIOMES_BY_WORLD.get(currentWorldKey).asSequence().flatMap { portalHolder ->
+            HotMLocationConversions.non2AllNectere(currentPos, portalHolder.data).mapNotNull { necterePos ->
+                getNonNecterePortalPlacementForBiome(
+                    placement,
+                    calculator,
+                    currentPos,
+                    nectereWorld,
+                    portalHolder,
+                    necterePos
+                )?.let { PortalPlacementResult(it, portalHolder) }
+            }
+        }
+    }
+
+    /**
+     * Gets the non-nectere portal position for the given nectere chunk and nectere biome.
+     */
+    private fun getNonNecterePortalPlacementForBiome(
+        placement: RandomSpreadStructurePlacement,
+        calculator: ConcentricRingPlacementCalculator,
+        currentPos: ChunkPos,
+        nectereWorld: ServerWorld,
+        portalHolder: NecterePortalData.Holder,
+        necterePos: ChunkPos
+    ): BlockPos? {
+        val startChunk = placement.getPotentialStartChunk(calculator.worldSeed, necterePos.x, necterePos.z)
+        if (startChunk != necterePos) return null
+
+        val necterePortalPos = BlockPos(
+            HotMPortalGenPositions.chunk2PortalX(startChunk.x),
+            64,
+            HotMPortalGenPositions.chunk2PortalZ(startChunk.z)
+        )
+
+        val biomeId = nectereWorld.getBiome(necterePortalPos).key.getOrNull()
+        if (biomeId != portalHolder.biome) return null
+
+        val portalPos = HotMLocationConversions.nectere2StartNon(necterePortalPos, portalHolder.data)
+
+        return if (HotMPortalGenPositions.portal2ChunkX(portalPos.x) == currentPos.x
+            && HotMPortalGenPositions.portal2ChunkZ(portalPos.z) == currentPos.z
+        ) {
+            portalPos
+        } else null
+    }
+
+    /**
+     * The result of looking for a portal placement.
+     */
+    data class PortalPlacementResult(val portalXZ: BlockPos, val portalHolder: NecterePortalData.Holder)
 }

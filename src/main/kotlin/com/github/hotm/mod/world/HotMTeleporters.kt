@@ -25,7 +25,7 @@ object HotMTeleporters {
             if (world.registryKey == HotMDimensions.NECTERE_KEY) {
                 val newWorld = HotMLocationConversions.nectere2NonWorldC(world, portalPos) ?: return Result.FAILURE
                 val destPos =
-                    HotMPortalFinders.findOrCreateNonPortal(world, portalPos, newWorld, entity) ?: return Result.FAILURE
+                    HotMPortalFinders.findOrCreateNonNecterePortal(world, portalPos, newWorld) ?: return Result.FAILURE
 
                 val resEntity = QuiltDimensions.teleport<Entity>(
                     entity,

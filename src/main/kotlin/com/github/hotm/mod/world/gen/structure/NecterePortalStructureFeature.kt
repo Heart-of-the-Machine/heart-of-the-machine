@@ -1,5 +1,8 @@
 package com.github.hotm.mod.world.gen.structure
 
+import java.util.Optional
+import com.github.hotm.mod.world.HotMPortalGenPositions.chunk2StructureX
+import com.github.hotm.mod.world.HotMPortalGenPositions.chunk2StructureZ
 import com.github.hotm.mod.world.gen.HotMPortalGen
 import com.mojang.serialization.Codec
 import net.minecraft.nbt.NbtCompound
@@ -15,7 +18,6 @@ import net.minecraft.util.random.RandomGenerator
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.StructureFeature
-import java.util.Optional
 
 class NecterePortalStructureFeature(structureSettings: StructureSettings) : StructureFeature(structureSettings) {
     companion object {
@@ -24,34 +26,23 @@ class NecterePortalStructureFeature(structureSettings: StructureSettings) : Stru
 
     override fun findGenerationPos(context: GenerationContext): Optional<GenerationStub> =
         Optional.of(GenerationStub(context.chunkPos.startPos) {
-            addStart(
-                it,
-                context
-            )
+            addStart(it, context)
         })
 
     override fun getType(): StructureType<*> = HotMStructures.NECTERE_PORTAL_TYPE
 
     private fun addStart(collector: StructurePiecesCollector, context: GenerationContext) {
         val chunkPos = context.chunkPos
-        collector.addPiece(Piece(chunkPos.startX, 64, chunkPos.startZ))
+        collector.addPiece(Piece(chunk2StructureX(chunkPos.x), 64, chunk2StructureZ(chunkPos.z)))
     }
 
     class Piece : StructurePieceWithDimensions {
         constructor(x: Int, y: Int, z: Int) : super(
-            HotMStructurePieces.NECTERE_PORTAL,
-            x,
-            y,
-            z,
-            5,
-            4,
-            5,
-            Direction.NORTH
+            HotMStructurePieces.NECTERE_PORTAL, x, y, z, 5, 4, 5, Direction.NORTH
         )
 
         constructor(nbtCompound: NbtCompound) : super(
-            HotMStructurePieces.NECTERE_PORTAL,
-            nbtCompound
+            HotMStructurePieces.NECTERE_PORTAL, nbtCompound
         )
 
         override fun generate(

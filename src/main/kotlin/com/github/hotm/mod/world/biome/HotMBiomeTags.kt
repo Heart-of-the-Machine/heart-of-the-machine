@@ -6,5 +6,5 @@ import net.minecraft.registry.tag.TagKey
 import net.minecraft.world.biome.Biome
 
 object HotMBiomeTags {
-    val HAS_NECTERE_PORTAL: TagKey<Biome> = TagKey.of(RegistryKeys.BIOME, id("has_nectere_portal"))
+    val HAS_NECTERE_PORTAL: TagKey<Biome> = TagKey.of(RegistryKeys.BIOME, id("has_structure/nectere_portal"))
 }

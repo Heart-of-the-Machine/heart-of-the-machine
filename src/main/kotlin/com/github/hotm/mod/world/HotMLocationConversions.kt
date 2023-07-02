@@ -4,6 +4,7 @@ import com.github.hotm.mod.HotMLog
 import com.github.hotm.mod.world.biome.NecterePortalData
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.MathHelper
 import net.minecraft.world.WorldAccess
 
@@ -23,6 +24,21 @@ object HotMLocationConversions {
      */
     private fun nectere2Non(i: Int, nectereBiome: NecterePortalData): Int {
         return MathHelper.floor(i.toDouble() * nectereBiome.coordinateFactor)
+    }
+
+    /**
+     * Converts a non-nectere side chunk pos into a stream of nectere side chunk poses for a given biome.
+     */
+    fun non2AllNectere(nonPos: ChunkPos, nectereBiome: NecterePortalData): Sequence<ChunkPos> {
+        return if (nectereBiome.coordinateFactor < 1.0) {
+            (non2Nectere(nonPos.x, nectereBiome) until non2Nectere(nonPos.x + 1, nectereBiome)).asSequence()
+                .flatMap { x ->
+                    (non2Nectere(nonPos.z, nectereBiome) until non2Nectere(nonPos.z + 1, nectereBiome)).asSequence()
+                        .map { z -> ChunkPos(x, z) }
+                }
+        } else {
+            sequenceOf(ChunkPos(non2Nectere(nonPos.x, nectereBiome), non2Nectere(nonPos.z, nectereBiome)))
+        }
     }
 
     /**

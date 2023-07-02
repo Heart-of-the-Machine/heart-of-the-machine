@@ -53,9 +53,9 @@ class NecterePortalSpawnerBlockEntity(pos: BlockPos, state: BlockState) :
         if (world != null && world is ServerWorld) {
             // This is an awful hack to get minecraft to stop complaining about these BlockEntities being removed but
             // still pending.
-//            world.getChunk(pos).addPendingBlockEntityNbt(writeNbt(NbtCompound()))
-//
-//            world.removeBlockEntity(pos)
+            world.getChunk(pos).setBlockEntityNbt(toIdentifiedLocatedNbt())
+
+            world.removeBlockEntity(pos)
 
             if (originalBlock.block != HotMBlocks.NECTERE_PORTAL_SPAWNER) {
                 world.setBlockState(pos, originalBlock)

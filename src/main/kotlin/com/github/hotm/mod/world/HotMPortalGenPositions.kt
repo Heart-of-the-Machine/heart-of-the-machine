@@ -6,7 +6,8 @@ import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.Heightmap
 import net.minecraft.world.RegistryWorldView
 import net.minecraft.world.StructureWorldAccess
-import java.util.*
+import java.util.Random
+import net.minecraft.world.HeightLimitView
 
 object HotMPortalGenPositions {
     private const val WORLD_SEED_OFFSET = 0xDEADBEEFL
@@ -21,7 +22,7 @@ object HotMPortalGenPositions {
     /**
      * Gets the location of the portal spawner block entity within a chunk.
      */
-    fun getPortalSpawnerPos(pos: ChunkPos): BlockPos = BlockPos(pos.startX, 1, pos.startZ)
+    fun getPortalSpawnerPos(world: HeightLimitView, pos: ChunkPos): BlockPos = BlockPos(pos.startX, world.bottomY + 1, pos.startZ)
 
     /**
      * Scans the world at the given x and z coordinates for valid biomes and surfaces.
@@ -94,6 +95,13 @@ object HotMPortalGenPositions {
     }
 
     /**
+     * Gets the x position of the chunk that the given portal is in.
+     */
+    fun portal2ChunkX(portalX: Int): Int {
+        return HotMPortalOffsets.portal2StructureX(portalX).shr(4)
+    }
+
+    /**
      * Gets the z position of a portal structure feature from the portal's chunk z.
      */
     fun chunk2StructureZ(chunkZ: Int): Int {
@@ -105,6 +113,13 @@ object HotMPortalGenPositions {
      */
     fun chunk2PortalZ(chunkZ: Int): Int {
         return HotMPortalOffsets.structure2PortalZ(chunk2StructureZ(chunkZ))
+    }
+
+    /**
+     * Gets the z position of the chunk that the given portal is in.
+     */
+    fun portal2ChunkZ(portalZ: Int): Int {
+        return HotMPortalOffsets.portal2StructureZ(portalZ).shr(4)
     }
 
     private data class FindContext(val roof: Int, val surfaces: List<Int>)
