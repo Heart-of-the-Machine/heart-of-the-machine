@@ -25,7 +25,7 @@ object HotMTeleporters {
             callback(Result.COOLDOWN)
         } else {
             entity.resetNetherPortalCooldown()
-            (entity as? ServerPlayerEntity)?.sendMessage(Constants.tt("message", "teleporting"), true)
+            (entity as? ServerPlayerEntity)?.sendMessage(Constants.msg("teleporting"), true)
 
             val server = world.server
 

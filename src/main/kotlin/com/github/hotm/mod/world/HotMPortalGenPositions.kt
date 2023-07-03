@@ -3,11 +3,11 @@ package com.github.hotm.mod.world
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
+import net.minecraft.world.HeightLimitView
 import net.minecraft.world.Heightmap
 import net.minecraft.world.RegistryWorldView
 import net.minecraft.world.StructureWorldAccess
 import java.util.Random
-import net.minecraft.world.HeightLimitView
 
 object HotMPortalGenPositions {
     private const val WORLD_SEED_OFFSET = 0xDEADBEEFL
@@ -22,7 +22,8 @@ object HotMPortalGenPositions {
     /**
      * Gets the location of the portal spawner block entity within a chunk.
      */
-    fun getPortalSpawnerPos(world: HeightLimitView, pos: ChunkPos): BlockPos = BlockPos(pos.startX, world.bottomY + 1, pos.startZ)
+    fun getPortalSpawnerPos(world: HeightLimitView, pos: ChunkPos): BlockPos =
+        BlockPos(pos.startX, world.bottomY + 1, pos.startZ)
 
     /**
      * Scans the world at the given x and z coordinates for valid biomes and surfaces.
@@ -106,6 +107,13 @@ object HotMPortalGenPositions {
      */
     fun chunk2PortalZ(chunkZ: Int): Int {
         return HotMPortalOffsets.structure2PortalZ(chunk2StructureZ(chunkZ))
+    }
+
+    /**
+     * Gets the block position of the portal for the given chunk.
+     */
+    fun chunk2PortalXZ(chunkPos: ChunkPos): BlockPos {
+        return BlockPos(chunk2PortalX(chunkPos.x), 64, chunk2PortalZ(chunkPos.z))
     }
 
     private data class FindContext(val roof: Int, val surfaces: List<Int>)

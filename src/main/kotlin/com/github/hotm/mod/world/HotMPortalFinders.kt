@@ -17,12 +17,15 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.property.Properties
 import net.minecraft.structure.ConcentricRingPlacementCalculator
 import net.minecraft.structure.RandomSpreadStructurePlacement
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.ChunkPos
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.MathHelper
+import net.minecraft.structure.StructureManager
+import net.minecraft.structure.StructureStart
+import net.minecraft.util.math.*
+import net.minecraft.world.RegistryWorldView
 import net.minecraft.world.World
+import net.minecraft.world.WorldView
+import net.minecraft.world.biome.Biome
 import net.minecraft.world.chunk.ChunkStatus
+import net.minecraft.world.gen.feature.StructureFeature
 import net.minecraft.world.poi.PointOfInterestStorage
 
 object HotMPortalFinders {
@@ -223,6 +226,11 @@ object HotMPortalFinders {
     }
 
     /**
+     * The result of looking for a portal placement.
+     */
+    data class PortalPlacementResult(val portalXZ: BlockPos, val portalHolder: NecterePortalData.Holder)
+
+    /**
      * Gets all the places in a non-nectere chunk that portals should be placed at (for non-nectere portal generation).
      */
     fun getNonNecterePortalPlacementsForChunk(
@@ -294,7 +302,176 @@ object HotMPortalFinders {
     }
 
     /**
-     * The result of looking for a portal placement.
+     * Used to indicate to the structure locator whether the given structure location is valid or it the locator should
+     * keep searching.
      */
-    data class PortalPlacementResult(val portalXZ: BlockPos, val portalHolder: NecterePortalData.Holder)
+    class FindResult<T> private constructor(private val obj: Any?) {
+        companion object {
+            fun <T> done(obj: T): FindResult<T> = FindResult(obj)
+            fun <T> keepSearching(): FindResult<T> = FindResult(KeepSearching)
+        }
+
+        private object KeepSearching
+
+        val isKeepSearching = obj == KeepSearching
+
+        @Suppress("UNCHECKED_CAST")
+        fun get(): T {
+            if (obj == KeepSearching) {
+                throw IllegalStateException("Called get on non-done find result")
+            } else {
+                return obj as T
+            }
+        }
+    }
+
+    /**
+     * Searches the world in concentric square-rings of x-by-x chunk structure regions. Each structure region contains
+     * at most one structure start and the location of that structure start can be determined.
+     */
+    fun <T> locate(
+        world: WorldView,
+        structureManager: StructureManager,
+        startChunk: ChunkPos,
+        maxRadius: Int,
+        seed: Long,
+        structure: StructureFeature,
+        placement: RandomSpreadStructurePlacement,
+        found: (StructureStart) -> FindResult<T>
+    ): T? {
+        val spacing = placement.spacing
+        var curRadius = 0
+
+        while (curRadius <= maxRadius) {
+            for (structX in -curRadius..curRadius) {
+                val xBorder = structX == -curRadius || structX == curRadius
+                for (structZ in -curRadius..curRadius) {
+                    val zBorder = structZ == -curRadius || structZ == curRadius
+                    if (xBorder || zBorder) {
+                        val curChunkX = startChunk.x + spacing * structX
+                        val curChunkZ = startChunk.z + spacing * structZ
+
+                        val chunkPos = placement.getPotentialStartChunk(seed, curChunkX, curChunkZ)
+
+                        val chunk = world.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS)
+                        val structureStart =
+                            structureManager.getStructureStart(
+                                ChunkSectionPos.from(chunk.pos, 0),
+                                structure,
+                                chunk
+                            )
+
+                        if (structureStart != null && structureStart.hasChildren()) {
+                            val res = found(structureStart)
+                            if (!res.isKeepSearching) {
+                                return res.get()
+                            }
+                        }
+
+                        if (curRadius == 0) {
+                            break
+                        }
+                    }
+                }
+
+                if (curRadius == 0) {
+                    break
+                }
+            }
+
+            ++curRadius
+        }
+
+        return null
+    }
+
+    /**
+     * Locates a non-nectere side portal for the given nectere biome, making sure the portal is not in a location
+     * corresponding to a denied non-nectere biome.
+     */
+    private fun locateNonNectereSidePortalStructure(
+        nectereWorld: RegistryWorldView,
+        structureAccessor: StructureManager,
+        blockPos: BlockPos,
+        maxRadius: Int,
+        seed: Long,
+        biomeKey: RegistryKey<Biome>,
+        structure: StructureFeature,
+        placement: RandomSpreadStructurePlacement
+    ): BlockPos? {
+        return locate(
+            nectereWorld,
+            structureAccessor,
+            ChunkPos(blockPos),
+            maxRadius,
+            seed,
+            structure,
+            placement
+        ) { structureStart ->
+            val portalPos = HotMPortalGenPositions.chunk2PortalXZ(structureStart.pos)
+
+            val foundBiome = nectereWorld.getBiome(portalPos).key
+
+            if (biomeKey == foundBiome.getOrNull()) {
+                // Don't locate portals in biomes that won't generate portals in the first place
+
+                val nonNecterePos = NecterePortalData.ifData(foundBiome) { portalHolder ->
+                    HotMLocationConversions.nectere2StartNon(portalPos, portalHolder.data)
+                }
+
+                if (nonNecterePos != null) {
+                    val nonNectereStructurePos = HotMPortalOffsets.portal2StructurePos(nonNecterePos)
+
+                    return@locate FindResult.done(nonNectereStructurePos)
+                }
+            }
+
+            return@locate FindResult.keepSearching()
+        }
+    }
+
+    /**
+     * Locates a Nectere portal in a non-Nectere dimension.
+     */
+    fun locateNonNectereSidePortalStructure(
+        currentWorld: ServerWorld,
+        currentPos: BlockPos,
+        radius: Int
+    ): BlockPos? {
+        val nectereWorld = HotMDimensions.getNectere(currentWorld.server)
+        val structureRegistry = nectereWorld.registryManager.get(RegistryKeys.STRUCTURE_FEATURE)
+
+        val structureHolder = structureRegistry.getHolder(HotMStructures.NECTERE_PORTAL).getOrNull()
+        if (structureHolder == null) {
+            HotMLog.LOG.error("No 'hotm:nectere_portal' structure registered")
+            return null
+        }
+
+        val calculator = nectereWorld.chunkManager.method_46642()
+        val placements = calculator.getFeaturePlacements(structureHolder)
+        val placement = placements.asSequence().filterIsInstance<RandomSpreadStructurePlacement>().firstOrNull()
+        if (placement == null) {
+            HotMLog.LOG.error("No random spread structure placements for 'hotm:nectere_portal' registered")
+            return null
+        }
+
+        if (placements.size > 1) {
+            HotMLog.LOG.warn("Multiple structure placements for 'hotm:nectere_portal' found, ignoring all but first.")
+        }
+
+        return NecterePortalData.BIOMES_BY_WORLD.get(currentWorld.registryKey).asSequence().mapNotNull { portalHolder ->
+            val necterePos = HotMLocationConversions.non2StartNectere(currentPos, portalHolder.data)
+
+            locateNonNectereSidePortalStructure(
+                nectereWorld,
+                nectereWorld.structureManager,
+                necterePos,
+                radius,
+                nectereWorld.seed,
+                portalHolder.biome,
+                structureHolder.value(),
+                placement
+            )
+        }.minByOrNull { portalPos -> portalPos.getSquaredDistance(currentPos) }
+    }
 }

@@ -26,5 +26,6 @@
 
   "itemGroup.hotm.main": "Heart of the Machine",
 
-  "message.hotm.teleporting": "Teleporting..."
+  "message.hotm.teleporting": "Teleporting...",
+  "message.hotm.locate_nectere_portal.not_found": "Unable to locate nectere portal."
 }

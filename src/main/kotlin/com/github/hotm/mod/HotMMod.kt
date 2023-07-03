@@ -3,6 +3,7 @@ package com.github.hotm.mod
 import com.github.hotm.mod.block.HotMBlocks
 import com.github.hotm.mod.block.HotMPointOfInterestTypes
 import com.github.hotm.mod.blockentity.HotMBlockEntities
+import com.github.hotm.mod.command.HotMCommand
 import com.github.hotm.mod.misc.HotMCreativeTabs
 import com.github.hotm.mod.world.biome.NecterePortalData
 import com.github.hotm.mod.world.gen.carver.HotMCarvers
@@ -30,6 +31,7 @@ object HotMMod : ModInitializer {
         HotMStructurePieces.init()
 
         HotMCreativeTabs.init()
+        HotMCommand.init()
 
         HotMLog.LOG.info("[HotM] Heart of the Machine initialized.")
     }

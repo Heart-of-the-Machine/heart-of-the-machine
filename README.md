@@ -43,7 +43,7 @@ Here is a screenshot of a previous version of Heart of the Machine:
 ## Getting to the Nectere Dimension
 
 The Nectere (or Nexus) dimension can be accessed through portals that generate at surface level in the overworld. You
-can locate them using the `/locate nectere_portal` command. Beware, the Nectere dimension has some pretty wacky terrain,
+can locate them using the `/hotm locate_nectere_portal` command. Beware, the Nectere dimension has some pretty wacky terrain,
 and you may want to bring some building blocks just in case you end up spawning in a cliff or on a floating island.
 
 ## What is still subject to change?
