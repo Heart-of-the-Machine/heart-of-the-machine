@@ -49,15 +49,6 @@ sourceSets {
 loom {
     accessWidenerPath.set(file("src/main/resources/hotm.accesswidener"))
 
-    splitEnvironmentSourceSets()
-
-    mods {
-        create(modid) {
-            sourceSet(sourceSets.getByName("main"))
-            sourceSet(sourceSets.getByName("client"))
-        }
-    }
-
     runs {
         getByName("client") {
             programArgs("--width", "1920", "--height", "1080")
