@@ -56,6 +56,19 @@ object HotMBlocks {
     }
     val THINKING_SAND by lazy { SandBlock(0x29261d, SAND_SETTINGS) }
 
+    // Plants
+
+    private val WOOD_SETTINGS =
+        QuiltBlockSettings.create().mapColor(MapColor.BLUE).instrument(NoteBlockInstrument.BASS).strength(2.0f)
+            .sounds(BlockSoundGroup.WOOD).lavaIgnitable()
+    private val LEAVES_SETTINGS =
+        QuiltBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).strength(0.2f).ticksRandomly()
+            .sounds(BlockSoundGroup.GRASS).nonOpaque().allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never)
+            .blockVision(HotMBlocks::never).lavaIgnitable().pistonBehavior(PistonBehavior.DESTROY)
+            .solidBlock(HotMBlocks::never)
+    val SOLAR_ARRAY_STEM by lazy { PillarBlock(WOOD_SETTINGS) }
+    val SOLAR_ARRAY_LEAVES by lazy { PlasseinLeavesBlock(LEAVES_SETTINGS) }
+
     // Leylines
 
     val THINKING_STONE_LEYLINE by lazy { Block(STONE_SETTINGS) }
@@ -97,6 +110,9 @@ object HotMBlocks {
         register(GLOWY_OBELISK_PART, "glowy_obelisk_part")
 
         register(THINKING_SAND, "thinking_sand")
+
+        register(SOLAR_ARRAY_STEM, "solar_array_stem")
+        register(SOLAR_ARRAY_LEAVES, "solar_array_leaves")
 
         register(THINKING_STONE_LEYLINE, "thinking_stone_leyline")
         register(THINKING_SCRAP_LEYLINE, "thinking_scrap_leyline")

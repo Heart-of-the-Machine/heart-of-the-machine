@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "hotm:block/solar_array_stem",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "hotm:block/solar_array_stem"
+    },
+    "axis=z": {
+      "model": "hotm:block/solar_array_stem",
+      "x": 90
+    }
+  }
+}

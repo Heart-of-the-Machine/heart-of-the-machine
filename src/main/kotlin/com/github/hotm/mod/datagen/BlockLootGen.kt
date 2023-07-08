@@ -9,6 +9,7 @@ import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_SLAB
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_STAIRS
+import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_STEM
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP_LEYLINE
@@ -44,6 +45,8 @@ class BlockLootGen(dataOutput: FabricDataOutput) : FabricBlockLootTableProvider(
         addDrop(THINKING_STONE_TILE_STAIRS)
         addDrop(OBELISK_PART)
         addDrop(GLOWY_OBELISK_PART)
+
+        addDrop(SOLAR_ARRAY_STEM)
 
         add(SMOOTH_THINKING_STONE_SLAB) { slabDrops(it) }
         add(THINKING_STONE_BRICK_SLAB) { slabDrops(it) }

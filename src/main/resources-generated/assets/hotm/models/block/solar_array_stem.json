@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "hotm:block/solar_array_stem_top",
+    "side": "hotm:block/solar_array_stem"
+  }
+}

@@ -11,6 +11,8 @@ import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_SLAB
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_STAIRS
+import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_LEAVES
+import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_STEM
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP_LEYLINE
@@ -51,6 +53,9 @@ object HotMCreativeTabs {
                 GLOWY_OBELISK_PART,
 
                 THINKING_SAND,
+
+                SOLAR_ARRAY_STEM,
+                SOLAR_ARRAY_LEAVES,
 
                 THINKING_STONE_LEYLINE,
                 THINKING_SCRAP_LEYLINE,

@@ -1,4 +1,4 @@
-// 1.20 Release Candidate 1	2023-07-01T12:31:15.343471637	Heart of the Machine/Block Loot Tables
+// 1.20 Release Candidate 1	2023-07-07T21:46:49.405575139	Heart of the Machine/Block Loot Tables
 66b307a0512d90d249aeac28bd8043371ea7bc4d data/hotm/loot_tables/blocks/rusted_thinking_scrap.json
 c5ea37b24efd5fb70fea9866955ebe3a05a6490c data/hotm/loot_tables/blocks/glowy_obelisk_part.json
 11905be6f4e6fcd3b196479a62e9c07b23cd4d9b data/hotm/loot_tables/blocks/thinking_stone_tile_slab.json
@@ -19,3 +19,4 @@ df4e4eedecab3143aa96d2a6802be11c3c08c506 data/hotm/loot_tables/blocks/thinking_s
 a2f4410dda8ecafe225d4d011ae9d8f45e12fd23 data/hotm/loot_tables/blocks/thinking_stone_tile_stairs.json
 42b62e2699d1b1e392d05059e73df7f95b4cc5b6 data/hotm/loot_tables/blocks/thinking_stone.json
 c7c9fa8a823b97fdf97a7dd946bc0b6f8590263b data/hotm/loot_tables/blocks/thinking_scrap.json
+e4d70aff86a11329e8c581199fac3845b3bff58f data/hotm/loot_tables/blocks/solar_array_stem.json

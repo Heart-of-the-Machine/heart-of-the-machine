@@ -11,6 +11,8 @@ import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE
+import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_LEAVES
+import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_STEM
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP_LEYLINE
@@ -18,21 +20,6 @@ import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_BRICKS
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILES
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
-import com.mojang.serialization.Codec
-import com.mojang.serialization.JsonOps
-import net.minecraft.block.Block
-import net.minecraft.data.client.ItemModelGenerator
-import net.minecraft.data.client.model.BlockStateModelGenerator
-import net.minecraft.data.client.model.ModelIds
-import net.minecraft.data.client.model.Models
-import net.minecraft.data.client.model.Texture
-import net.minecraft.data.client.model.TextureKey
-import net.minecraft.data.client.model.TexturedModel
-import net.minecraft.data.client.model.VariantsBlockStateSupplier
-import net.minecraft.util.Identifier
 import com.kneelawk.kmodlib.client.blockmodel.JsonMaterial
 import com.kneelawk.kmodlib.client.blockmodel.JsonTexture
 import com.kneelawk.kmodlib.client.blockmodel.KUnbakedModel
@@ -41,6 +28,15 @@ import com.kneelawk.kmodlib.client.blockmodel.connector.RenderTagModelConnector
 import com.kneelawk.kmodlib.client.blockmodel.ct.UnbakedCTLayer
 import com.kneelawk.kmodlib.client.blockmodel.cube.UnbakedCubeAllModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.sprite.UnbakedStaticSpriteSupplier
+import com.mojang.serialization.Codec
+import com.mojang.serialization.JsonOps
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
+import net.minecraft.block.Block
+import net.minecraft.data.client.ItemModelGenerator
+import net.minecraft.data.client.model.*
+import net.minecraft.util.Identifier
 
 class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     companion object {
@@ -54,6 +50,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
         gen.registerSimpleCubeAll(THINKING_STONE)
         gen.registerSimpleCubeAll(THINKING_SCRAP)
         gen.registerSimpleCubeAll(NECTERE_PORTAL_SPAWNER)
+        gen.registerSimpleCubeAll(THINKING_SAND)
 
         gen.registerCubeAllModelTexturePool(SMOOTH_THINKING_STONE).family(HotMBlockFamilies.SMOOTH_THINKING_STONE)
         gen.registerCubeAllModelTexturePool(THINKING_STONE_BRICKS).family(HotMBlockFamilies.THINKING_STONE_BRICKS)
@@ -70,7 +67,8 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
             TexturedModel.END_FOR_TOP_CUBE_COLUMN_HORIZONTAL
         )
 
-        gen.registerSimpleCubeAll(THINKING_SAND)
+        gen.registerLog(SOLAR_ARRAY_STEM).stem(SOLAR_ARRAY_STEM)
+        gen.registerSingleton(SOLAR_ARRAY_LEAVES, TexturedModel.LEAVES)
 
         Models.CUBE_BOTTOM_TOP.upload(
             RUSTED_THINKING_SCRAP,
