@@ -8,13 +8,7 @@
     "water_color": 4159204,
     "water_fog_color": 329011,
     "grass_color": 7587104,
-    "foliage_color": 3246362,
-    "music": {
-      "sound": "minecraft:music.overworld.jungle_and_forest",
-      "min_delay": 12000,
-      "max_delay": 24000,
-      "replace_current_music": false
-    }
+    "foliage_color": 3246362
   },
   "spawners": {},
   "spawn_costs": {},
