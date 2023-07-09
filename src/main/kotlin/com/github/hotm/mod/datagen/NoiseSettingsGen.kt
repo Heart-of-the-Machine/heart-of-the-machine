@@ -46,6 +46,7 @@ class NoiseSettingsGen(output: FabricDataOutput, provider: CompletableFuture<Hol
                     shiftX = "minecraft:shift_x".df,
                     shiftZ = "minecraft:shift_z".df
                 )
+                weirdness = "minecraft:overworld/ridges".df
 
                 val upperBoundedCaves =
                     0.9375.df + yGradient(160, 224, 1.0, 0.85) * (id("nectere/cave_3d_noise").df - 0.9375.df)

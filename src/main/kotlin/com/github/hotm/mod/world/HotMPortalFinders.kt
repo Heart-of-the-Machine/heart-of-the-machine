@@ -19,11 +19,13 @@ import net.minecraft.structure.ConcentricRingPlacementCalculator
 import net.minecraft.structure.RandomSpreadStructurePlacement
 import net.minecraft.structure.StructureManager
 import net.minecraft.structure.StructureStart
-import net.minecraft.util.math.*
-import net.minecraft.world.RegistryWorldView
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.ChunkPos
+import net.minecraft.util.math.ChunkSectionPos
+import net.minecraft.util.math.Direction
+import net.minecraft.util.math.MathHelper
 import net.minecraft.world.World
 import net.minecraft.world.WorldView
-import net.minecraft.world.biome.Biome
 import net.minecraft.world.chunk.ChunkStatus
 import net.minecraft.world.gen.feature.StructureFeature
 import net.minecraft.world.poi.PointOfInterestStorage
@@ -326,45 +328,55 @@ object HotMPortalFinders {
     }
 
     /**
+     * Used to pass a chunk pos and extra data together through the structure locator to the structure checker.
+     */
+    data class LocatePos<T>(val startChunk: ChunkPos, val data: T)
+
+    /**
      * Searches the world in concentric square-rings of x-by-x chunk structure regions. Each structure region contains
      * at most one structure start and the location of that structure start can be determined.
+     *
+     * This is designed to be used on multiple locations at once, returning the result of the first one it finds.
      */
-    fun <T> locate(
+    fun <T, R> multiLocate(
         world: WorldView,
         structureManager: StructureManager,
-        startChunk: ChunkPos,
+        startChunks: List<LocatePos<T>>,
         maxRadius: Int,
         seed: Long,
         structure: StructureFeature,
         placement: RandomSpreadStructurePlacement,
-        found: (StructureStart) -> FindResult<T>
-    ): T? {
+        found: (StructureStart, T) -> FindResult<R>
+    ): R? {
         val spacing = placement.spacing
         var curRadius = 0
 
         while (curRadius <= maxRadius) {
+            println("Searching radius: $curRadius")
             for (structX in -curRadius..curRadius) {
                 val xBorder = structX == -curRadius || structX == curRadius
                 for (structZ in -curRadius..curRadius) {
                     val zBorder = structZ == -curRadius || structZ == curRadius
                     if (xBorder || zBorder) {
-                        val curChunkX = startChunk.x + spacing * structX
-                        val curChunkZ = startChunk.z + spacing * structZ
+                        for (startChunk in startChunks) {
+                            val curChunkX = startChunk.startChunk.x + spacing * structX
+                            val curChunkZ = startChunk.startChunk.z + spacing * structZ
 
-                        val chunkPos = placement.getPotentialStartChunk(seed, curChunkX, curChunkZ)
+                            val chunkPos = placement.getPotentialStartChunk(seed, curChunkX, curChunkZ)
 
-                        val chunk = world.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS)
-                        val structureStart =
-                            structureManager.getStructureStart(
-                                ChunkSectionPos.from(chunk.pos, 0),
-                                structure,
-                                chunk
-                            )
+                            val chunk = world.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS)
+                            val structureStart =
+                                structureManager.getStructureStart(
+                                    ChunkSectionPos.from(chunk.pos, 0),
+                                    structure,
+                                    chunk
+                                )
 
-                        if (structureStart != null && structureStart.hasChildren()) {
-                            val res = found(structureStart)
-                            if (!res.isKeepSearching) {
-                                return res.get()
+                            if (structureStart != null && structureStart.hasChildren()) {
+                                val res = found(structureStart, startChunk.data)
+                                if (!res.isKeepSearching) {
+                                    return res.get()
+                                }
                             }
                         }
 
@@ -383,51 +395,6 @@ object HotMPortalFinders {
         }
 
         return null
-    }
-
-    /**
-     * Locates a non-nectere side portal for the given nectere biome, making sure the portal is not in a location
-     * corresponding to a denied non-nectere biome.
-     */
-    private fun locateNonNectereSidePortalStructure(
-        nectereWorld: RegistryWorldView,
-        structureAccessor: StructureManager,
-        blockPos: BlockPos,
-        maxRadius: Int,
-        seed: Long,
-        biomeKey: RegistryKey<Biome>,
-        structure: StructureFeature,
-        placement: RandomSpreadStructurePlacement
-    ): BlockPos? {
-        return locate(
-            nectereWorld,
-            structureAccessor,
-            ChunkPos(blockPos),
-            maxRadius,
-            seed,
-            structure,
-            placement
-        ) { structureStart ->
-            val portalPos = HotMPortalGenPositions.chunk2PortalXZ(structureStart.pos)
-
-            val foundBiome = nectereWorld.getBiome(portalPos).key
-
-            if (biomeKey == foundBiome.getOrNull()) {
-                // Don't locate portals in biomes that won't generate portals in the first place
-
-                val nonNecterePos = NecterePortalData.ifData(foundBiome) { portalHolder ->
-                    HotMLocationConversions.nectere2StartNon(portalPos, portalHolder.data)
-                }
-
-                if (nonNecterePos != null) {
-                    val nonNectereStructurePos = HotMPortalOffsets.portal2StructurePos(nonNecterePos)
-
-                    return@locate FindResult.done(nonNectereStructurePos)
-                }
-            }
-
-            return@locate FindResult.keepSearching()
-        }
     }
 
     /**
@@ -459,19 +426,47 @@ object HotMPortalFinders {
             HotMLog.LOG.warn("Multiple structure placements for 'hotm:nectere_portal' found, ignoring all but first.")
         }
 
-        return NecterePortalData.BIOMES_BY_WORLD.get(currentWorld.registryKey).asSequence().mapNotNull { portalHolder ->
-            val necterePos = HotMLocationConversions.non2StartNectere(currentPos, portalHolder.data)
+        println("========")
+        println("Locate non-nectere side portal")
+        println("current pos: $currentPos")
+        println("radius: $radius")
 
-            locateNonNectereSidePortalStructure(
-                nectereWorld,
-                nectereWorld.structureManager,
-                necterePos,
-                radius,
-                nectereWorld.seed,
-                portalHolder.biome,
-                structureHolder.value(),
-                placement
-            )
-        }.minByOrNull { portalPos -> portalPos.getSquaredDistance(currentPos) }
+        val locatePoses = NecterePortalData.BIOMES_BY_WORLD.get(currentWorld.registryKey).asSequence().map { portalHolder ->
+            val necterePos = HotMLocationConversions.non2StartNectere(currentPos, portalHolder.data)
+            LocatePos(ChunkPos(necterePos), portalHolder)
+        }.toMutableList()
+
+        // make sure we have the least multiplied biomes searched first
+        locatePoses.sortBy { it.data.data.coordinateFactor }
+
+        return multiLocate(
+            nectereWorld,
+            nectereWorld.structureManager,
+            locatePoses,
+            radius,
+            nectereWorld.seed,
+            structureHolder.value(),
+            placement
+        ) { structureStart, portalHolder ->
+            val portalPos = HotMPortalGenPositions.chunk2PortalXZ(structureStart.pos)
+
+            val foundBiome = nectereWorld.getBiome(portalPos).key
+
+            if (portalHolder.biome == foundBiome.getOrNull()) {
+                // Don't locate portals in biomes that won't generate portals in the first place
+
+                val nonNecterePos = NecterePortalData.ifData(foundBiome) { portalHolder ->
+                    HotMLocationConversions.nectere2StartNon(portalPos, portalHolder.data)
+                }
+
+                if (nonNecterePos != null) {
+                    val nonNectereStructurePos = HotMPortalOffsets.portal2StructurePos(nonNecterePos)
+
+                    return@multiLocate FindResult.done<BlockPos>(nonNectereStructurePos)
+                }
+            }
+
+            return@multiLocate FindResult.keepSearching<BlockPos>()
+        }
     }
 }

@@ -1,0 +1,23 @@
+{
+  "temperature": -0.2,
+  "downfall": -0.2,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 7254527,
+    "fog_color": 2236962,
+    "water_color": 7705031,
+    "water_fog_color": 329011,
+    "grass_color": 8182528,
+    "foliage_color": 7834648
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "hotm:nectere/cave",
+      "hotm:nectere/cave_extra_underground",
+      "hotm:nectere/canyon"
+    ]
+  },
+  "features": []
+}
