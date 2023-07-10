@@ -1,0 +1,30 @@
+{
+  "base_block": "hotm:thinking_scrap",
+  "map_color": "deepslate",
+  "name": "block.hotm.thinking_scrap",
+  "only_if_present": "hotm",
+  "recipes": "stonecutting",
+  "textures": "hotm:block/thinking_scrap",
+  "types_to_generate": [
+    "arch",
+    "beam",
+    "h_beam",
+    "wall_column",
+    "fence_post",
+    "joist",
+    "crown_molding",
+    "post_cap",
+    "post_lantern",
+    "rod",
+    "roof",
+    "wall_post",
+    "lattice",
+    "facade",
+    "tube_metal",
+    "i_beam",
+    "transom",
+    "octagonal_column",
+    "round_arch",
+    "round_fence_post"
+  ]
+}

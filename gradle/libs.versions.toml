@@ -1,25 +1,25 @@
 [versions]
 # Plugins
 loom = "1.2.+"
-kotlin = "1.8.21"
+kotlin = "1.8.22"
 minotaur = "2.8.1"
 cursegradle = "1.4.0"
 
 # Frameworks
-minecraft = "1.20-rc1"
-mappings = "1.20-rc1+build.5"
-loader = "0.19.0-beta.13"
+minecraft = "1.20.1"
+mappings = "1.20.1+build.20"
+loader = "0.20.0-beta.2"
 
 # Base Libraries
-qfapi = "7.0.0-alpha.4+0.83.0-1.20"
-qkl = "2.0.2+kt.1.8.20+flk.1.9.3"
+qfapi = "7.0.6+0.85.0-1.20.1"
+qkl = "2.1.0+kt.1.8.22+flk.1.9.4"
 #flk = "1.9.4+kotlin.1.8.21"
 
 # Implementation Libraries
 kmodlib = "0.2.1+1.20"
 
 # Local Runtime
-mod_menu = "7.0.0-beta.2"
+mod_menu = "7.1.0"
 
 [libraries]
 # Frameworks

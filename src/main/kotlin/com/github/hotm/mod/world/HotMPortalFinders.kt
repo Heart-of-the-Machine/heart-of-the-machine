@@ -248,7 +248,7 @@ object HotMPortalFinders {
             return emptySequence()
         }
 
-        val calculator = nectereWorld.chunkManager.method_46642()
+        val calculator = nectereWorld.chunkManager.concentricRingPlacementCalculator
         val placements = calculator.getFeaturePlacements(Holder.createDirect(structure))
         val placement = placements.asSequence().filterIsInstance<RandomSpreadStructurePlacement>().firstOrNull()
         if (placement == null) {
@@ -414,7 +414,7 @@ object HotMPortalFinders {
             return null
         }
 
-        val calculator = nectereWorld.chunkManager.method_46642()
+        val calculator = nectereWorld.chunkManager.concentricRingPlacementCalculator
         val placements = calculator.getFeaturePlacements(structureHolder)
         val placement = placements.asSequence().filterIsInstance<RandomSpreadStructurePlacement>().firstOrNull()
         if (placement == null) {

@@ -8,9 +8,9 @@ class NoiseApplier(private val randomState: RandomState) : DensityFunction.Visit
         return densityFunction
     }
 
-    override fun method_42358(noiseHolder: DensityFunction.C_jnszknql): DensityFunction.C_jnszknql {
+    override fun visitNoise(noiseHolder: DensityFunction.NoiseHolder): DensityFunction.NoiseHolder {
         val holder = noiseHolder.noiseData
         val sampler = randomState.getOrCreateNoiseSampler(holder.key.orElseThrow())
-        return DensityFunction.C_jnszknql(holder, sampler)
+        return DensityFunction.NoiseHolder(holder, sampler)
     }
 }

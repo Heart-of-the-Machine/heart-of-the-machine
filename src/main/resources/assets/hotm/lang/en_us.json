@@ -30,5 +30,11 @@
   "itemGroup.hotm.main": "Heart of the Machine",
 
   "message.hotm.teleporting": "Teleporting...",
-  "message.hotm.locate_nectere_portal.not_found": "Unable to locate nectere portal."
+  "message.hotm.locate_nectere_portal.not_found": "Unable to locate nectere portal.",
+
+  "architecture_extensions.grouped_block.block.hotm.thinking_stone": "Thinking Stone",
+  "architecture_extensions.grouped_block.block.hotm.thinking_scrap": "Thinking Scrap",
+  "architecture_extensions.grouped_block.block.hotm.smooth_thinking_stone": "Smooth Thinking Stone",
+  "architecture_extensions.grouped_block.block.hotm.thinking_stone_bricks": "Thinking Stone Brick",
+  "architecture_extensions.grouped_block.block.hotm.thinking_stone_tiles": "Thinking Stone Tile"
 }
