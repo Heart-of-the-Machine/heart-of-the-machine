@@ -1,0 +1,25 @@
+{
+  "type": "kmodlib-blockmodel:layered",
+  "layers": [
+    {
+      "type": "kmodlib-blockmodel:cube_all",
+      "all": "hotm:block/smooth_thinking_stone",
+      "quarter_faces": true
+    },
+    {
+      "type": "kmodlib-blockmodel:cube_all",
+      "all": {
+        "texture": "hotm:block/leyline_exterior_corners",
+        "tintindex": 0
+      },
+      "material": {
+        "ambient_occlusion": false,
+        "blend_mode": "cutout",
+        "diffuse_shading": false,
+        "emissive": true
+      },
+      "quarter_faces": true
+    }
+  ],
+  "particle": "hotm:block/smooth_thinking_stone"
+}

@@ -11,6 +11,7 @@ import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE
+import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_LEAVES
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_STEM
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
@@ -82,6 +83,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
 
         gen.registerLeyline(THINKING_STONE_LEYLINE, THINKING_STONE)
         gen.registerLeyline(THINKING_SCRAP_LEYLINE, THINKING_SCRAP)
+        gen.registerLeyline(SMOOTH_THINKING_STONE_LEYLINE, SMOOTH_THINKING_STONE)
 
         gen.registerSimpleState(RUSTED_THINKING_SCRAP_LEYLINE)
         gen.excludeFromSimpleItemModelGeneration(RUSTED_THINKING_SCRAP_LEYLINE)

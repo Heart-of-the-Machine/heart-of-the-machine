@@ -1,0 +1,30 @@
+{
+  "type": "kmodlib-blockmodel:layered",
+  "layers": [
+    {
+      "type": "kmodlib-blockmodel:cube_all",
+      "all": "hotm:block/smooth_thinking_stone",
+      "quarter_faces": true
+    },
+    {
+      "type": "kmodlib-blockmodel:quarter_connected_texture",
+      "connector": {
+        "type": "kmodlib-blockmodel:render_tag",
+        "tag": "hotm:leyline"
+      },
+      "exterior_corners": "hotm:block/leyline_exterior_corners",
+      "horizontal_edges": "hotm:block/leyline_horizontal_edges",
+      "interior_border": false,
+      "interior_corners": "hotm:block/leyline_interior_corners",
+      "material": {
+        "ambient_occlusion": false,
+        "blend_mode": "cutout",
+        "diffuse_shading": false,
+        "emissive": true
+      },
+      "tint_index": 0,
+      "vertical_edges": "hotm:block/leyline_vertical_edges"
+    }
+  ],
+  "particle": "hotm:block/smooth_thinking_stone"
+}

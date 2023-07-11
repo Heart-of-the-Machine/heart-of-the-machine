@@ -3,6 +3,7 @@ package com.github.hotm.mod.client
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
+import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_LEAVES
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_LEYLINE
@@ -21,7 +22,8 @@ object HotMColorProviders {
             THINKING_STONE_LEYLINE,
             THINKING_SCRAP_LEYLINE,
             RUSTED_THINKING_SCRAP_LEYLINE,
-            PLASSEIN_THINKING_SCRAP_LEYLINE
+            PLASSEIN_THINKING_SCRAP_LEYLINE,
+            SMOOTH_THINKING_STONE_LEYLINE
         )
         ColorProviderRegistry.BLOCK.register(
             Leaves,
@@ -34,7 +36,8 @@ object HotMColorProviders {
             THINKING_STONE_LEYLINE,
             THINKING_SCRAP_LEYLINE,
             RUSTED_THINKING_SCRAP_LEYLINE,
-            PLASSEIN_THINKING_SCRAP_LEYLINE
+            PLASSEIN_THINKING_SCRAP_LEYLINE,
+            SMOOTH_THINKING_STONE_LEYLINE
         )
         ColorProviderRegistry.ITEM.register(
             { _, _ -> 0x1d8ccc },

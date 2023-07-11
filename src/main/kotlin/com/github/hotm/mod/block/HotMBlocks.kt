@@ -75,6 +75,7 @@ object HotMBlocks {
     val THINKING_SCRAP_LEYLINE by lazy { Block(THINKING_SCRAP_SETTINGS) }
     val RUSTED_THINKING_SCRAP_LEYLINE by lazy { Block(THINKING_SCRAP_SETTINGS) }
     val PLASSEIN_THINKING_SCRAP_LEYLINE by lazy { Block(THINKING_SCRAP_SETTINGS) }
+    val SMOOTH_THINKING_STONE_LEYLINE by lazy { Block(STONE_SETTINGS) }
 
     // Portal
 
@@ -118,6 +119,7 @@ object HotMBlocks {
         register(THINKING_SCRAP_LEYLINE, "thinking_scrap_leyline")
         register(RUSTED_THINKING_SCRAP_LEYLINE, "rusted_thinking_scrap_leyline")
         register(PLASSEIN_THINKING_SCRAP_LEYLINE, "plassein_thinking_scrap_leyline")
+        register(SMOOTH_THINKING_STONE_LEYLINE, "smooth_thinking_stone_leyline")
 
         register(NECTERE_PORTAL, "nectere_portal")
         register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner")
