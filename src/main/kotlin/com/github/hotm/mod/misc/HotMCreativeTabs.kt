@@ -29,6 +29,7 @@ import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILE_STAIRS
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.minecraft.item.ItemConvertible
 import net.minecraft.item.ItemGroup
+import net.minecraft.item.ItemStack
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 
@@ -66,7 +67,7 @@ object HotMCreativeTabs {
                 PLASSEIN_THINKING_SCRAP_LEYLINE,
                 SMOOTH_THINKING_STONE_LEYLINE
             )
-        }.build()
+        }.icon { ItemStack(SMOOTH_THINKING_STONE_LEYLINE) }.build()
     }
 
     fun init() {
