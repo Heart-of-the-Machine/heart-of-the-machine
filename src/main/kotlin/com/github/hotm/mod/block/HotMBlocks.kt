@@ -5,6 +5,7 @@ import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.GlassBlock
 import net.minecraft.block.MapColor
 import net.minecraft.block.PillarBlock
 import net.minecraft.block.SandBlock
@@ -55,6 +56,12 @@ object HotMBlocks {
             .sounds(BlockSoundGroup.SAND)
     }
     val THINKING_SAND by lazy { SandBlock(0x29261d, SAND_SETTINGS) }
+    val THINKING_GLASS by lazy {
+        GlassBlock(
+            QuiltBlockSettings.create().instrument(NoteBlockInstrument.HAT).strength(0.3f).sounds(BlockSoundGroup.GLASS)
+                .nonOpaque().allowsSpawning(::never).solidBlock(::never).suffocates(::never).blockVision(::never)
+        )
+    }
 
     // Plants
 
@@ -111,6 +118,7 @@ object HotMBlocks {
         register(GLOWY_OBELISK_PART, "glowy_obelisk_part")
 
         register(THINKING_SAND, "thinking_sand")
+        register(THINKING_GLASS, "thinking_glass")
 
         register(SOLAR_ARRAY_STEM, "solar_array_stem")
         register(SOLAR_ARRAY_LEAVES, "solar_array_leaves")

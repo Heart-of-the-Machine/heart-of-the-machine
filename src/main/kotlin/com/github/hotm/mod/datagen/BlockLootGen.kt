@@ -1,6 +1,7 @@
 package com.github.hotm.mod.datagen
 
 import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
+import com.github.hotm.mod.block.HotMBlocks.THINKING_GLASS
 import com.github.hotm.mod.block.HotMBlocks.OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
@@ -38,6 +39,7 @@ class BlockLootGen(dataOutput: FabricDataOutput) : FabricBlockLootTableProvider(
         addDrop(SMOOTH_THINKING_STONE_LEYLINE)
 
         addDrop(THINKING_SAND)
+        addDrop(THINKING_GLASS)
 
         addDrop(SMOOTH_THINKING_STONE)
         addDrop(THINKING_STONE_BRICKS)

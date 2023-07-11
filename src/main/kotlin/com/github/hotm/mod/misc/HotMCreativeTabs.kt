@@ -3,6 +3,7 @@ package com.github.hotm.mod.misc
 import com.github.hotm.mod.Constants
 import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
+import com.github.hotm.mod.block.HotMBlocks.THINKING_GLASS
 import com.github.hotm.mod.block.HotMBlocks.OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
@@ -54,6 +55,7 @@ object HotMCreativeTabs {
                 GLOWY_OBELISK_PART,
 
                 THINKING_SAND,
+                THINKING_GLASS,
 
                 SOLAR_ARRAY_STEM,
                 SOLAR_ARRAY_LEAVES,

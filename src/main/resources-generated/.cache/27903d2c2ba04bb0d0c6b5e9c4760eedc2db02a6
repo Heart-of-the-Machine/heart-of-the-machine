@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-10T23:48:32.527804124	Heart of the Machine/Block Loot Tables
+// 1.20.1	2023-07-11T01:04:38.009315895	Heart of the Machine/Block Loot Tables
 66b307a0512d90d249aeac28bd8043371ea7bc4d data/hotm/loot_tables/blocks/rusted_thinking_scrap.json
 c5ea37b24efd5fb70fea9866955ebe3a05a6490c data/hotm/loot_tables/blocks/glowy_obelisk_part.json
 11905be6f4e6fcd3b196479a62e9c07b23cd4d9b data/hotm/loot_tables/blocks/thinking_stone_tile_slab.json
@@ -16,6 +16,7 @@ da7cad114350d138b5ee97f2e97fd2f23801339f data/hotm/loot_tables/blocks/thinking_s
 0da40ebf58e243495ac7f01446c2fb586bcb54d8 data/hotm/loot_tables/blocks/rusted_thinking_scrap_leyline.json
 df4e4eedecab3143aa96d2a6802be11c3c08c506 data/hotm/loot_tables/blocks/thinking_stone_bricks.json
 6d7c799e0d953b66eb0bd148d6e9afec5597c68d data/hotm/loot_tables/blocks/thinking_stone_brick_stairs.json
+6325cbc576b983b26f91d230218ffb8e44a878a7 data/hotm/loot_tables/blocks/thinking_glass.json
 a2f4410dda8ecafe225d4d011ae9d8f45e12fd23 data/hotm/loot_tables/blocks/thinking_stone_tile_stairs.json
 b806a514d0cb25a10bfc243d71bf79228187547e data/hotm/loot_tables/blocks/smooth_thinking_stone_leyline.json
 42b62e2699d1b1e392d05059e73df7f95b4cc5b6 data/hotm/loot_tables/blocks/thinking_stone.json

@@ -1,7 +1,7 @@
-// 1.20.1	2023-07-10T23:48:32.530381176	Heart of the Machine/Tags for minecraft:block
-d3a9ceff360208dbb10dcb70449de8bc9c19a9f5 data/minecraft/tags/blocks/mineable/pickaxe.json
+// 1.20.1	2023-07-11T01:04:38.014005873	Heart of the Machine/Tags for minecraft:block
+9cc258ae0181fdbda86ec4ca62d8b34c312e2bb5 data/minecraft/tags/blocks/mineable/pickaxe.json
 04295035018b579079e97333a1d602a148017ea3 data/hotm/tags/blocks/nectere_carver_replaceables.json
 6a4ca1eae53c1d88c9241adfef4244d7c9d5e7c9 data/minecraft/tags/blocks/mineable/shovel.json
 07042473bd263dcb900f0891f673671a125e4a75 data/hotm/tags/blocks/plassein_source.json
+9cc258ae0181fdbda86ec4ca62d8b34c312e2bb5 data/minecraft/tags/blocks/needs_stone_tool.json
 07042473bd263dcb900f0891f673671a125e4a75 data/minecraft/tags/blocks/mineable/axe.json
-d3a9ceff360208dbb10dcb70449de8bc9c19a9f5 data/minecraft/tags/blocks/needs_stone_tool.json

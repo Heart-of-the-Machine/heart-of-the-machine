@@ -1,0 +1,17 @@
+{
+  "type": "kmodlib-blockmodel:layered",
+  "layers": [
+    {
+      "type": "kmodlib-blockmodel:quarter_connected_texture",
+      "exterior_corners": "hotm:block/thinking_glass_exterior_corners",
+      "horizontal_edges": "hotm:block/thinking_glass_horizontal_edges",
+      "interior_corners": "hotm:block/thinking_glass_interior_corners",
+      "no_edges": "hotm:block/thinking_glass_no_edges",
+      "vertical_edges": "hotm:block/thinking_glass_vertical_edges",
+      "material": {
+        "blend_mode": "cutout_mipped"
+      }
+    }
+  ],
+  "particle": "hotm:block/thinking_glass_item"
+}

@@ -4,6 +4,7 @@ import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.HotMLog
 import com.github.hotm.mod.block.HotMBlockFamilies
 import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
+import com.github.hotm.mod.block.HotMBlocks.THINKING_GLASS
 import com.github.hotm.mod.block.HotMBlocks.NECTERE_PORTAL_SPAWNER
 import com.github.hotm.mod.block.HotMBlocks.OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
@@ -80,6 +81,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
 
         gen.registerSimpleState(RUSTED_THINKING_SCRAP)
         gen.registerSimpleState(PLASSEIN_THINKING_SCRAP)
+        gen.registerSimpleState(THINKING_GLASS)
 
         gen.registerLeyline(THINKING_STONE_LEYLINE, THINKING_STONE)
         gen.registerLeyline(THINKING_SCRAP_LEYLINE, THINKING_SCRAP)
@@ -89,6 +91,12 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
         gen.excludeFromSimpleItemModelGeneration(RUSTED_THINKING_SCRAP_LEYLINE)
         gen.registerSimpleState(PLASSEIN_THINKING_SCRAP_LEYLINE)
         gen.excludeFromSimpleItemModelGeneration(PLASSEIN_THINKING_SCRAP_LEYLINE)
+
+        Models.CUBE_ALL.upload(
+            ModelIds.getItemModelId(THINKING_GLASS.asItem()),
+            Texture.all(id("block/thinking_glass_item")),
+            gen.modelCollector
+        )
     }
 
     private fun BlockStateModelGenerator.registerRandomHorizontalRotationsState(block: Block) {
