@@ -4,7 +4,6 @@ import java.util.concurrent.CompletableFuture
 import com.github.hotm.mod.block.HotMBlockTags
 import com.github.hotm.mod.block.HotMBlockTags.NECTERE_CARVER_REPLACABLES
 import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
-import com.github.hotm.mod.block.HotMBlocks.THINKING_GLASS
 import com.github.hotm.mod.block.HotMBlocks.OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
@@ -15,6 +14,7 @@ import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_SLAB
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_STAIRS
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_STEM
+import com.github.hotm.mod.block.HotMBlocks.THINKING_GLASS
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP_LEYLINE
@@ -85,5 +85,22 @@ class BlockTagGen(
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE).add(SOLAR_ARRAY_STEM)
         getOrCreateTagBuilder(HotMBlockTags.PLASSEIN_SOURCE).add(SOLAR_ARRAY_STEM)
+
+        getOrCreateTagBuilder(HotMBlockTags.LEYLINES).add(
+            THINKING_STONE_LEYLINE,
+            THINKING_SCRAP_LEYLINE,
+            RUSTED_THINKING_SCRAP_LEYLINE,
+            PLASSEIN_THINKING_SCRAP_LEYLINE,
+            SMOOTH_THINKING_STONE_LEYLINE
+        )
+
+        getOrCreateTagBuilder(HotMBlockTags.PLASSEIN_FERTILE).add(
+            PLASSEIN_THINKING_SCRAP,
+            PLASSEIN_THINKING_SCRAP_LEYLINE,
+            RUSTED_THINKING_SCRAP,
+            RUSTED_THINKING_SCRAP_LEYLINE,
+            THINKING_SCRAP,
+            THINKING_SCRAP_LEYLINE
+        )
     }
 }

@@ -14,6 +14,7 @@ import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_LEAVES
+import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_SPROUT
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_STEM
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
@@ -97,6 +98,8 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
             Texture.all(id("block/thinking_glass_item")),
             gen.modelCollector
         )
+
+        gen.registerTintableCross(SOLAR_ARRAY_SPROUT, BlockStateModelGenerator.TintType.NOT_TINTED)
     }
 
     private fun BlockStateModelGenerator.registerRandomHorizontalRotationsState(block: Block) {

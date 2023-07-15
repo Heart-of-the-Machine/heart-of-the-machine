@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "hotm:plassein_thinking_scrap",
+    "hotm:plassein_thinking_scrap_leyline",
+    "hotm:rusted_thinking_scrap",
+    "hotm:rusted_thinking_scrap_leyline",
+    "hotm:thinking_scrap",
+    "hotm:thinking_scrap_leyline"
+  ]
+}

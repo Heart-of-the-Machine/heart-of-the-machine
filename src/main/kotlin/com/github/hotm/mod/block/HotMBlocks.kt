@@ -1,6 +1,7 @@
 package com.github.hotm.mod.block
 
 import com.github.hotm.mod.Constants
+import com.github.hotm.mod.block.sprout.SolarArraySproutGenerator
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings
 import net.minecraft.block.Block
@@ -73,8 +74,12 @@ object HotMBlocks {
             .sounds(BlockSoundGroup.GRASS).nonOpaque().allowsSpawning(HotMBlocks::never).suffocates(HotMBlocks::never)
             .blockVision(HotMBlocks::never).lavaIgnitable().pistonBehavior(PistonBehavior.DESTROY)
             .solidBlock(HotMBlocks::never)
+    private val PLANT_SETTINGS =
+        QuiltBlockSettings.create().mapColor(MapColor.PLANT).noCollision().ticksRandomly().breakInstantly()
+            .sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY)
     val SOLAR_ARRAY_STEM by lazy { PillarBlock(WOOD_SETTINGS) }
     val SOLAR_ARRAY_LEAVES by lazy { PlasseinLeavesBlock(LEAVES_SETTINGS) }
+    val SOLAR_ARRAY_SPROUT by lazy { PlasseinSproutBlock(SolarArraySproutGenerator, PLANT_SETTINGS) }
 
     // Leylines
 
@@ -122,6 +127,7 @@ object HotMBlocks {
 
         register(SOLAR_ARRAY_STEM, "solar_array_stem")
         register(SOLAR_ARRAY_LEAVES, "solar_array_leaves")
+        register(SOLAR_ARRAY_SPROUT, "solar_array_sprout")
 
         register(THINKING_STONE_LEYLINE, "thinking_stone_leyline")
         register(THINKING_SCRAP_LEYLINE, "thinking_scrap_leyline")
