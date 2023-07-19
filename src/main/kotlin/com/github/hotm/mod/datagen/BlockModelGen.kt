@@ -21,6 +21,7 @@ import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_LEAVES
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_SPROUT
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_STEM
+import com.github.hotm.mod.block.HotMBlocks.SPOROFRUIT
 import com.github.hotm.mod.block.HotMBlocks.THINKING_GLASS
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
@@ -38,13 +39,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.JsonOps
 import net.minecraft.block.Block
 import net.minecraft.data.client.ItemModelGenerator
-import net.minecraft.data.client.model.BlockStateModelGenerator
-import net.minecraft.data.client.model.ModelIds
-import net.minecraft.data.client.model.Models
-import net.minecraft.data.client.model.Texture
-import net.minecraft.data.client.model.TextureKey
-import net.minecraft.data.client.model.TexturedModel
-import net.minecraft.data.client.model.VariantsBlockStateSupplier
+import net.minecraft.data.client.model.*
 import net.minecraft.util.Identifier
 import com.kneelawk.kmodlib.client.blockmodel.JsonMaterial
 import com.kneelawk.kmodlib.client.blockmodel.JsonTexture
@@ -53,6 +48,7 @@ import com.kneelawk.kmodlib.client.blockmodel.UnbakedLayeredModel
 import com.kneelawk.kmodlib.client.blockmodel.connector.RenderTagModelConnector
 import com.kneelawk.kmodlib.client.blockmodel.ct.UnbakedCTLayer
 import com.kneelawk.kmodlib.client.blockmodel.cube.UnbakedCubeAllModelLayer
+import com.kneelawk.kmodlib.client.blockmodel.modelref.UnbakedModelRefModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.sprite.UnbakedStaticSpriteSupplier
 
 class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
@@ -127,6 +123,8 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
         )
 
         gen.registerTintableCross(SOLAR_ARRAY_SPROUT, BlockStateModelGenerator.TintType.NOT_TINTED)
+
+        gen.registerHighlightedCross(SPOROFRUIT, itemSuffix = "_base")
     }
 
     private fun BlockStateModelGenerator.registerRandomHorizontalRotationsState(block: Block) {
@@ -177,6 +175,39 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
         registerCustomModel(ModelIds.getItemModelId(block.asItem()).extendPath(".kml"), itemModel, KUnbakedModel.CODEC)
 
         excludeFromSimpleItemModelGeneration(block)
+    }
+
+    private fun BlockStateModelGenerator.registerHighlightedCross(
+        block: Block, baseSuffix: String = "_base", highlightSuffix: String = "_highlight",
+        itemSuffix: String = "_item",
+        baseTint: BlockStateModelGenerator.TintType = BlockStateModelGenerator.TintType.NOT_TINTED,
+        highlightTint: BlockStateModelGenerator.TintType = BlockStateModelGenerator.TintType.NOT_TINTED
+    ) {
+        val id = ModelIds.getBlockModelId(block)
+        val baseId = id.extendPath(baseSuffix)
+        val highlightId = id.extendPath(highlightSuffix)
+        val itemId = id.extendPath(itemSuffix)
+        baseTint.crossModel.upload(baseId, Texture.cross(baseId), modelCollector)
+        highlightTint.crossModel.upload(highlightId, Texture.cross(highlightId), modelCollector)
+        registerHighlighted(block, baseId, highlightId, itemId)
+        registerItemModel(block, itemSuffix)
+    }
+
+    private fun BlockStateModelGenerator.registerHighlighted(
+        block: Block, base: Identifier, highlight: Identifier, item: Identifier = base
+    ) {
+        registerSimpleState(block)
+
+        val baseId = ModelIds.getBlockModelId(block)
+        val suffixedModelId = baseId.extendPath(".kml")
+
+        val highlightMaterial = JsonMaterial(BlendMode.DEFAULT, false, true, false, true)
+
+        val baseLayer = UnbakedModelRefModelLayer(base, JsonMaterial.DEFAULT, true)
+        val highlightLayer = UnbakedModelRefModelLayer(highlight, highlightMaterial, true)
+
+        val blockModel = UnbakedLayeredModel(Identifier("block/block"), item, listOf(baseLayer, highlightLayer))
+        registerCustomModel(suffixedModelId, blockModel, KUnbakedModel.CODEC)
     }
 
     private fun <T> BlockStateModelGenerator.registerCustomModel(id: Identifier, model: T, codec: Codec<T>) {

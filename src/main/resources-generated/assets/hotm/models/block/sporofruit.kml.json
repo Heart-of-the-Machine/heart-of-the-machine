@@ -1,0 +1,19 @@
+{
+  "type": "kmodlib-blockmodel:layered",
+  "layers": [
+    {
+      "type": "kmodlib-blockmodel:model_ref",
+      "ref": "hotm:block/sporofruit_base"
+    },
+    {
+      "type": "kmodlib-blockmodel:model_ref",
+      "material": {
+        "ambient_occlusion": false,
+        "diffuse_shading": false,
+        "emissive": true
+      },
+      "ref": "hotm:block/sporofruit_highlight"
+    }
+  ],
+  "particle": "hotm:block/sporofruit_base"
+}

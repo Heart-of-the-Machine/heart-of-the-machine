@@ -1,5 +1,5 @@
-// 1.20.1	2023-07-18T17:34:58.182589195	Heart of the Machine/Recipes
+// 1.20.1	2023-07-18T23:19:46.630495883	Heart of the Machine/Recipes
 9a0a2d20228982b5adbfb0e7ebf4b919e3a6b239 data/hotm/recipes/aura_crystal.json
 81d5ec5f23ef1622afb7849c014deccb5c58bd33 data/hotm/recipes/holo_crystal.json
-b08eaf02b8953ef31f5adbe9e807f84de7b47221 data/hotm/advancements/recipes/building_blocks/aura_crystal.json
 c583715565ee524a22b77af12eba99bcb35747c0 data/hotm/advancements/recipes/building_blocks/holo_crystal.json
+b08eaf02b8953ef31f5adbe9e807f84de7b47221 data/hotm/advancements/recipes/building_blocks/aura_crystal.json
