@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "hotm:block/holo_thinking_stone_x"
+    },
+    "axis=y": {
+      "model": "hotm:block/holo_thinking_stone_y"
+    },
+    "axis=z": {
+      "model": "hotm:block/holo_thinking_stone_z"
+    }
+  }
+}

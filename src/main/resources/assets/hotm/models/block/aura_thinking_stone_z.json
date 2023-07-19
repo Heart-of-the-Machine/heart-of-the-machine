@@ -1,0 +1,8 @@
+{
+  "parent": "hotm:block/pillar_with_alt_z",
+  "textures": {
+    "end": "hotm:block/smooth_thinking_stone",
+    "side": "hotm:block/aura_thinking_stone",
+    "side_alt": "hotm:block/aura_thinking_stone_alt"
+  }
+}

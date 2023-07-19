@@ -20,6 +20,13 @@
   "block.hotm.thinking_sand": "Thinking Sand",
   "block.hotm.thinking_glass": "Thinking Glass",
 
+  "block.hotm.aura_crystal": "Aura Crystal",
+  "block.hotm.holo_crystal": "Holo Crystal",
+  "block.hotm.aura_lamp": "Aura Lamp",
+  "block.hotm.holo_lamp": "Holo Lamp",
+  "block.hotm.aura_thinking_stone": "Aura Thinking Stone",
+  "block.hotm.holo_thinking_stone": "Holo Thinking Stone",
+
   "block.hotm.solar_array_stem": "Solar Array Stem",
   "block.hotm.solar_array_leaves": "Solar Array Leaves",
   "block.hotm.solar_array_sprout": "Solar Array Sprout",
@@ -29,6 +36,9 @@
   "block.hotm.rusted_thinking_scrap_leyline": "Rusted Thinking Scrap Leyline",
   "block.hotm.plassein_thinking_scrap_leyline": "Plassein Thinking Scrap Leyline",
   "block.hotm.smooth_thinking_stone_leyline": "Smooth Thinking Stone Leyline",
+
+  "item.hotm.aura_crystal_shard": "Aura Crystal Shard",
+  "item.hotm.holo_crystal_shard": "Holo Crystal Shard",
 
   "itemGroup.hotm.main": "Heart of the Machine",
 

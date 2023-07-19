@@ -3,8 +3,13 @@ package com.github.hotm.mod.datagen
 import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.HotMLog
 import com.github.hotm.mod.block.HotMBlockFamilies
+import com.github.hotm.mod.block.HotMBlocks.AURA_CRYSTAL
+import com.github.hotm.mod.block.HotMBlocks.AURA_LAMP
+import com.github.hotm.mod.block.HotMBlocks.AURA_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
-import com.github.hotm.mod.block.HotMBlocks.THINKING_GLASS
+import com.github.hotm.mod.block.HotMBlocks.HOLO_CRYSTAL
+import com.github.hotm.mod.block.HotMBlocks.HOLO_LAMP
+import com.github.hotm.mod.block.HotMBlocks.HOLO_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.NECTERE_PORTAL_SPAWNER
 import com.github.hotm.mod.block.HotMBlocks.OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
@@ -16,6 +21,7 @@ import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_LEAVES
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_SPROUT
 import com.github.hotm.mod.block.HotMBlocks.SOLAR_ARRAY_STEM
+import com.github.hotm.mod.block.HotMBlocks.THINKING_GLASS
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SAND
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.THINKING_SCRAP_LEYLINE
@@ -23,6 +29,23 @@ import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_BRICKS
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILES
+import com.github.hotm.mod.item.HotMItems.AURA_CRYSTAL_SHARD
+import com.github.hotm.mod.item.HotMItems.HOLO_CRYSTAL_SHARD
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
+import com.mojang.serialization.Codec
+import com.mojang.serialization.JsonOps
+import net.minecraft.block.Block
+import net.minecraft.data.client.ItemModelGenerator
+import net.minecraft.data.client.model.BlockStateModelGenerator
+import net.minecraft.data.client.model.ModelIds
+import net.minecraft.data.client.model.Models
+import net.minecraft.data.client.model.Texture
+import net.minecraft.data.client.model.TextureKey
+import net.minecraft.data.client.model.TexturedModel
+import net.minecraft.data.client.model.VariantsBlockStateSupplier
+import net.minecraft.util.Identifier
 import com.kneelawk.kmodlib.client.blockmodel.JsonMaterial
 import com.kneelawk.kmodlib.client.blockmodel.JsonTexture
 import com.kneelawk.kmodlib.client.blockmodel.KUnbakedModel
@@ -31,15 +54,6 @@ import com.kneelawk.kmodlib.client.blockmodel.connector.RenderTagModelConnector
 import com.kneelawk.kmodlib.client.blockmodel.ct.UnbakedCTLayer
 import com.kneelawk.kmodlib.client.blockmodel.cube.UnbakedCubeAllModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.sprite.UnbakedStaticSpriteSupplier
-import com.mojang.serialization.Codec
-import com.mojang.serialization.JsonOps
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
-import net.minecraft.block.Block
-import net.minecraft.data.client.ItemModelGenerator
-import net.minecraft.data.client.model.*
-import net.minecraft.util.Identifier
 
 class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     companion object {
@@ -54,6 +68,19 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
         gen.registerSimpleCubeAll(THINKING_SCRAP)
         gen.registerSimpleCubeAll(NECTERE_PORTAL_SPAWNER)
         gen.registerSimpleCubeAll(THINKING_SAND)
+
+        gen.registerSimpleCubeAll(AURA_CRYSTAL)
+        gen.registerSimpleCubeAll(HOLO_CRYSTAL)
+        gen.registerSimpleCubeAll(AURA_LAMP)
+        gen.registerSimpleCubeAll(HOLO_LAMP)
+        gen.registerParentedItemModel(
+            AURA_THINKING_STONE,
+            ModelIds.getBlockModelId(AURA_THINKING_STONE).extendPath("_y")
+        )
+        gen.registerParentedItemModel(
+            HOLO_THINKING_STONE,
+            ModelIds.getBlockModelId(HOLO_THINKING_STONE).extendPath("_y")
+        )
 
         gen.registerCubeAllModelTexturePool(SMOOTH_THINKING_STONE).family(HotMBlockFamilies.SMOOTH_THINKING_STONE)
         gen.registerCubeAllModelTexturePool(THINKING_STONE_BRICKS).family(HotMBlockFamilies.THINKING_STONE_BRICKS)
@@ -157,6 +184,8 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
         modelCollector.accept(id) { element }
     }
 
-    override fun generateItemModels(itemModelGenerator: ItemModelGenerator) {
+    override fun generateItemModels(gen: ItemModelGenerator) {
+        gen.register(AURA_CRYSTAL_SHARD, Models.SINGLE_LAYER_ITEM)
+        gen.register(HOLO_CRYSTAL_SHARD, Models.SINGLE_LAYER_ITEM)
     }
 }

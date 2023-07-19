@@ -4,6 +4,7 @@ import com.github.hotm.mod.block.HotMBlocks
 import com.github.hotm.mod.block.HotMPointOfInterestTypes
 import com.github.hotm.mod.blockentity.HotMBlockEntities
 import com.github.hotm.mod.command.HotMCommand
+import com.github.hotm.mod.item.HotMItems
 import com.github.hotm.mod.misc.HotMCreativeTabs
 import com.github.hotm.mod.world.biome.NecterePortalData
 import com.github.hotm.mod.world.gen.carver.HotMCarvers
@@ -22,6 +23,7 @@ object HotMMod : ModInitializer {
         NecterePortalData.init()
 
         HotMBlocks.init()
+        HotMItems.init()
         HotMBlockEntities.init()
         HotMPointOfInterestTypes.init()
         HotMCarvers.init()

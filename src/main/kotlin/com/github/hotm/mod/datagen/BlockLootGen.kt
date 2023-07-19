@@ -1,6 +1,12 @@
 package com.github.hotm.mod.datagen
 
+import com.github.hotm.mod.block.HotMBlocks.AURA_CRYSTAL
+import com.github.hotm.mod.block.HotMBlocks.AURA_LAMP
+import com.github.hotm.mod.block.HotMBlocks.AURA_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
+import com.github.hotm.mod.block.HotMBlocks.HOLO_CRYSTAL
+import com.github.hotm.mod.block.HotMBlocks.HOLO_LAMP
+import com.github.hotm.mod.block.HotMBlocks.HOLO_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
@@ -25,11 +31,17 @@ import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILES
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILE_SLAB
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILE_STAIRS
+import com.github.hotm.mod.item.HotMItems
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.loot.condition.TableBonusLootCondition
 import net.minecraft.loot.entry.ItemEntry
+import net.minecraft.loot.function.ApplyBonusLootFunction
+import net.minecraft.loot.function.LimitCountLootFunction
+import net.minecraft.loot.function.SetCountLootFunction
+import net.minecraft.loot.operator.BoundedIntUnaryOperator
+import net.minecraft.loot.provider.number.UniformLootNumberProvider
 
 class BlockLootGen(dataOutput: FabricDataOutput) : FabricBlockLootTableProvider(dataOutput) {
     override fun generate() {
@@ -54,6 +66,35 @@ class BlockLootGen(dataOutput: FabricDataOutput) : FabricBlockLootTableProvider(
         addDrop(THINKING_STONE_TILE_STAIRS)
         addDrop(OBELISK_PART)
         addDrop(GLOWY_OBELISK_PART)
+
+        add(AURA_CRYSTAL) {
+            dropsWithSilkTouch(
+                it,
+                applyExplosionDecay(
+                    it,
+                    ItemEntry.builder(HotMItems.AURA_CRYSTAL_SHARD)
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(2.0f, 4.0f)))
+                        .apply(ApplyBonusLootFunction.uniformBonusCount(Enchantments.FORTUNE))
+                        .apply(LimitCountLootFunction.builder(BoundedIntUnaryOperator.create(1, 4)))
+                )
+            )
+        }
+        add(HOLO_CRYSTAL) {
+            dropsWithSilkTouch(
+                it,
+                applyExplosionDecay(
+                    it,
+                    ItemEntry.builder(HotMItems.HOLO_CRYSTAL_SHARD)
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(2.0f, 4.0f)))
+                        .apply(ApplyBonusLootFunction.uniformBonusCount(Enchantments.FORTUNE))
+                        .apply(LimitCountLootFunction.builder(BoundedIntUnaryOperator.create(1, 4)))
+                )
+            )
+        }
+        addDrop(AURA_LAMP)
+        addDrop(HOLO_LAMP)
+        addDrop(AURA_THINKING_STONE)
+        addDrop(HOLO_THINKING_STONE)
 
         addDrop(SOLAR_ARRAY_STEM)
         addDrop(SOLAR_ARRAY_SPROUT)

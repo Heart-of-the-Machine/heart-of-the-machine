@@ -1,9 +1,14 @@
 package com.github.hotm.mod.datagen
 
-import java.util.concurrent.CompletableFuture
 import com.github.hotm.mod.block.HotMBlockTags
 import com.github.hotm.mod.block.HotMBlockTags.NECTERE_CARVER_REPLACABLES
+import com.github.hotm.mod.block.HotMBlocks.AURA_CRYSTAL
+import com.github.hotm.mod.block.HotMBlocks.AURA_LAMP
+import com.github.hotm.mod.block.HotMBlocks.AURA_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
+import com.github.hotm.mod.block.HotMBlocks.HOLO_CRYSTAL
+import com.github.hotm.mod.block.HotMBlocks.HOLO_LAMP
+import com.github.hotm.mod.block.HotMBlocks.HOLO_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
@@ -30,6 +35,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.BlockTagProvider
 import net.minecraft.registry.HolderLookup
 import net.minecraft.registry.tag.BlockTags
+import java.util.concurrent.CompletableFuture
 
 class BlockTagGen(
     output: FabricDataOutput, registriesFuture: CompletableFuture<HolderLookup.Provider>
@@ -59,7 +65,13 @@ class BlockTagGen(
             THINKING_STONE_TILE_SLAB,
             OBELISK_PART,
             GLOWY_OBELISK_PART,
-            THINKING_GLASS
+            THINKING_GLASS,
+            AURA_CRYSTAL,
+            HOLO_CRYSTAL,
+            AURA_LAMP,
+            HOLO_LAMP,
+            AURA_THINKING_STONE,
+            HOLO_THINKING_STONE
         )
 
         private val BASE_TAGS = arrayOf(

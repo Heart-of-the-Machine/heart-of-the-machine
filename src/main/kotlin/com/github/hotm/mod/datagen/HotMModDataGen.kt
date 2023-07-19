@@ -13,10 +13,11 @@ object HotMModDataGen : DataGeneratorEntrypoint {
         pack.addProvider(::BlockModelGen)
         pack.addProvider(::BlockTagGen)
         pack.addProvider(::BlockLootGen)
+        pack.addProvider(::RecipeGen)
 
         pack.addProvider(::NoiseSettingsGen)
         pack.addProvider(::ArchExIntegrationGen)
 
-        HotMLog.LOG.info("[HotM] DataGen complete.")
+        HotMLog.LOG.info("[HotM] All data generators registered.")
     }
 }

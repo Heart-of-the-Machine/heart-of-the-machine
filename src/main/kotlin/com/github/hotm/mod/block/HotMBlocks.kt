@@ -32,6 +32,13 @@ object HotMBlocks {
         QuiltBlockSettings.create().mapColor(MapColor.METAL).instrument(NoteBlockInstrument.IRON_XYLOPHONE)
             .requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.METAL)
     }
+    private val CRYSTAL_SETTINS by lazy {
+        QuiltBlockSettings.create().instrument(NoteBlockInstrument.PLING).strength(0.3f).sounds(BlockSoundGroup.GLASS)
+            .luminance { 15 }.solidBlock(::never)
+    }
+    private val LAMP_SETTINGS by lazy {
+        QuiltBlockSettings.create().luminance { 15 }.strength(0.3f).sounds(BlockSoundGroup.GLASS)
+    }
 
     val THINKING_STONE by lazy { Block(STONE_SETTINGS) }
 
@@ -62,6 +69,17 @@ object HotMBlocks {
             QuiltBlockSettings.create().instrument(NoteBlockInstrument.HAT).strength(0.3f).sounds(BlockSoundGroup.GLASS)
                 .nonOpaque().allowsSpawning(::never).solidBlock(::never).suffocates(::never).blockVision(::never)
         )
+    }
+
+    val AURA_CRYSTAL by lazy { Block(QuiltBlockSettings.copyOf(CRYSTAL_SETTINS).mapColor(MapColor.CYAN)) }
+    val HOLO_CRYSTAL by lazy { Block(QuiltBlockSettings.copyOf(CRYSTAL_SETTINS).mapColor(MapColor.MAGENTA)) }
+    val AURA_LAMP by lazy { Block(QuiltBlockSettings.copyOf(LAMP_SETTINGS).mapColor(MapColor.CYAN)) }
+    val HOLO_LAMP by lazy { Block(QuiltBlockSettings.copyOf(LAMP_SETTINGS).mapColor(MapColor.MAGENTA)) }
+    val AURA_THINKING_STONE by lazy {
+        PillarBlock(QuiltBlockSettings.copyOf(LAMP_SETTINGS).mapColor(MapColor.CYAN))
+    }
+    val HOLO_THINKING_STONE by lazy {
+        PillarBlock(QuiltBlockSettings.copyOf(LAMP_SETTINGS).mapColor(MapColor.MAGENTA))
     }
 
     // Plants
@@ -124,6 +142,13 @@ object HotMBlocks {
 
         register(THINKING_SAND, "thinking_sand")
         register(THINKING_GLASS, "thinking_glass")
+
+        register(AURA_CRYSTAL, "aura_crystal")
+        register(HOLO_CRYSTAL, "holo_crystal")
+        register(AURA_LAMP, "aura_lamp")
+        register(HOLO_LAMP, "holo_lamp")
+        register(AURA_THINKING_STONE, "aura_thinking_stone")
+        register(HOLO_THINKING_STONE, "holo_thinking_stone")
 
         register(SOLAR_ARRAY_STEM, "solar_array_stem")
         register(SOLAR_ARRAY_LEAVES, "solar_array_leaves")

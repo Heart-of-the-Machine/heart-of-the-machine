@@ -1,8 +1,9 @@
-// 1.20.1	2023-07-14T22:52:16.192102914	Heart of the Machine/Block Loot Tables
+// 1.20.1	2023-07-18T17:34:58.179594497	Heart of the Machine/Block Loot Tables
 11905be6f4e6fcd3b196479a62e9c07b23cd4d9b data/hotm/loot_tables/blocks/thinking_stone_tile_slab.json
 dcb3c6f0248ea51f67370129ee665a01382b85e1 data/hotm/loot_tables/blocks/solar_array_sprout.json
 cfb87a3ab1af4afd18f6804f8c8778c1a2d900d2 data/hotm/loot_tables/blocks/thinking_stone_tiles.json
 9df8d6deeaba7ff3ecc1b4d749692390498f3fe3 data/hotm/loot_tables/blocks/smooth_thinking_stone_slab.json
+2ab3c4724c81e4c2ca8ddd421b36ba67b5a366c9 data/hotm/loot_tables/blocks/holo_crystal.json
 8c7293c30e14bb3c1e971f87b8cee756993e2877 data/hotm/loot_tables/blocks/plassein_thinking_scrap.json
 0e583d944bb17c72c678c780ffd001420b121600 data/hotm/loot_tables/blocks/obelisk_part.json
 68d0dc1bfc22ca1250c91cafb7b8153114fecabd data/hotm/loot_tables/blocks/thinking_stone_brick_slab.json
@@ -13,8 +14,10 @@ b806a514d0cb25a10bfc243d71bf79228187547e data/hotm/loot_tables/blocks/smooth_thi
 e4d70aff86a11329e8c581199fac3845b3bff58f data/hotm/loot_tables/blocks/solar_array_stem.json
 66b307a0512d90d249aeac28bd8043371ea7bc4d data/hotm/loot_tables/blocks/rusted_thinking_scrap.json
 c5ea37b24efd5fb70fea9866955ebe3a05a6490c data/hotm/loot_tables/blocks/glowy_obelisk_part.json
+b1183cd29a740ac6df7f4632f7d2dc4adb003e04 data/hotm/loot_tables/blocks/holo_thinking_stone.json
 c860e08ed7decdb4ea0125259b81c6afb5b65a2d data/hotm/loot_tables/blocks/smooth_thinking_stone_stairs.json
 1f24ccf4ae7bb0ceb3bdf2604f25c2e99710478f data/hotm/loot_tables/blocks/plassein_thinking_scrap_leyline.json
+18718c14fa2d07354af4c647b788254595011442 data/hotm/loot_tables/blocks/aura_thinking_stone.json
 0a45283477e122d980d52bc3744631fa17909a50 data/hotm/loot_tables/blocks/solar_array_leaves.json
 ef78514d7958fc7fb5b5541e56543373569a5873 data/hotm/loot_tables/blocks/smooth_thinking_stone.json
 80cf1704059f2e0910bb122ba9b2a35ac28a48b7 data/hotm/loot_tables/blocks/thinking_sand.json
@@ -22,5 +25,8 @@ da7cad114350d138b5ee97f2e97fd2f23801339f data/hotm/loot_tables/blocks/thinking_s
 df4e4eedecab3143aa96d2a6802be11c3c08c506 data/hotm/loot_tables/blocks/thinking_stone_bricks.json
 6d7c799e0d953b66eb0bd148d6e9afec5597c68d data/hotm/loot_tables/blocks/thinking_stone_brick_stairs.json
 6325cbc576b983b26f91d230218ffb8e44a878a7 data/hotm/loot_tables/blocks/thinking_glass.json
+17040a0b2c22c0f5d902499b4ebbbc580d998b90 data/hotm/loot_tables/blocks/aura_crystal.json
+c112ea1b459b945f1d8f34fb6de1ee69615d5931 data/hotm/loot_tables/blocks/aura_lamp.json
 42b62e2699d1b1e392d05059e73df7f95b4cc5b6 data/hotm/loot_tables/blocks/thinking_stone.json
 c7c9fa8a823b97fdf97a7dd946bc0b6f8590263b data/hotm/loot_tables/blocks/thinking_scrap.json
+f7958afe6f9314bb124b7c2b01d8c0e86a01e8cb data/hotm/loot_tables/blocks/holo_lamp.json
