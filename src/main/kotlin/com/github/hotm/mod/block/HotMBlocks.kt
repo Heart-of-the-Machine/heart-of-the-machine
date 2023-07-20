@@ -104,7 +104,7 @@ object HotMBlocks {
     val SOLAR_ARRAY_LEAVES by lazy { PlasseinLeavesBlock(LEAVES_SETTINGS) }
     val SOLAR_ARRAY_SPROUT by lazy { PlasseinSproutBlock(SolarArraySproutGenerator, SPROUT_SETTINGS) }
 
-    val SPOROFRUIT by lazy { PlasseinPlantBlock(PLANT_SETTINGS) }
+    val SPOROFRUIT by lazy { PlasseinFlowerBlock(PLANT_SETTINGS) }
 
     // Leylines
 
