@@ -3,7 +3,7 @@
   "layers": [
     {
       "type": "kmodlib-blockmodel:model_ref",
-      "ref": "hotm:block/sporofruit_base"
+      "ref": "hotm:item/sporofruit_base"
     },
     {
       "type": "kmodlib-blockmodel:model_ref",
@@ -12,8 +12,10 @@
         "diffuse_shading": false,
         "emissive": true
       },
-      "ref": "hotm:block/sporofruit_highlight"
+      "ref": "hotm:item/sporofruit_highlight"
     }
   ],
-  "particle": "hotm:block/sporofruit_highlight"
+  "particle": "hotm:block/sporofruit_base",
+  "side_lit": false,
+  "transformation": "minecraft:item/generated"
 }

@@ -1,7 +1,7 @@
-// 1.20.1	2023-07-18T23:19:46.628309007	Heart of the Machine/Model Definitions
+// 1.20.1	2023-07-21T03:14:02.30281828	Heart of the Machine/Model Definitions
 0c233054f1b33d0373bee946ac380babf02c6b4e assets/hotm/models/block/thinking_stone.json
-8b27e53ea6d7ebc2f944e54745f53f1e1c196cc8 assets/hotm/blockstates/sporofruit.json
 f2144fbbbc91108b3bf126658ec393a87b207a39 assets/hotm/models/block/sporofruit_highlight.json
+8b27e53ea6d7ebc2f944e54745f53f1e1c196cc8 assets/hotm/blockstates/sporofruit.json
 98333f0c410841e23d0deb1205958da00d545acd assets/hotm/models/block/obelisk_part.json
 be3fd8a1ffb69d6958e454f8c9de953c58fe47e0 assets/hotm/models/block/smooth_thinking_stone_stairs.json
 ac663871586414d46fc0c7d9efd17e7944e56165 assets/hotm/models/block/smooth_thinking_stone_slab_top.json
@@ -29,6 +29,7 @@ cbfafc9aed18939a713dd4b0598a3a9da2076e30 assets/hotm/models/item/thinking_scrap.
 8f2846d09ded13e11ac9ea4bbd3434d2816dbf8f assets/hotm/models/block/solar_array_sprout.json
 71be07952cf67493489abd8f1a29e47408e37a50 assets/hotm/blockstates/rusted_thinking_scrap.json
 27f8e11379d3047e207f99f7b0ce22da6a65bcda assets/hotm/models/block/nectere_portal_spawner.json
+2b2b99a386a5143ca8ad4530f3583cd3a3c249ce assets/hotm/models/item/sporofruit.kml.json
 5edea39247b8f5fbb56fca51116a8493744c5a10 assets/hotm/models/block/holo_crystal.json
 70965d2549580a33e5179bda11d06d22cb6d0d92 assets/hotm/models/item/aura_crystal.json
 4c8bee85f095b505e4d2295472e2aee38b6819b4 assets/hotm/models/item/thinking_stone_bricks.json
@@ -40,7 +41,6 @@ e3efdc2c26da5e0c91ae1fb3658db004e373dee4 assets/hotm/models/block/thinking_stone
 22597274f3fbac8ea8f733664f3528146e31a41a assets/hotm/blockstates/rusted_thinking_scrap_leyline.json
 4c1830b466e9a99fbf487f852df5b5ab87936a32 assets/hotm/models/block/thinking_stone_tiles.json
 cf34dc0cd8ccca043435ae970e3d44376bd95cd5 assets/hotm/models/item/thinking_scrap_leyline.kml.json
-94bd1d8849c4f89582d55b871adce70f2190c1c9 assets/hotm/models/item/sporofruit.json
 cf9da18c0048ed649f68f39e9eb88fc4cac4df05 assets/hotm/models/item/thinking_stone.json
 7d4987754cc2427b3f373c094d3939cdf610f894 assets/hotm/blockstates/solar_array_leaves.json
 9be67b887a6d4fe9d0086ec94ef4d8edab16acce assets/hotm/blockstates/thinking_scrap.json
@@ -54,6 +54,7 @@ c1bfd29f058d4cb97bc31632d198ff818fca6d73 assets/hotm/blockstates/thinking_stone_
 21ba24cf1da2ccd7f782dcdba9157ece72171f94 assets/hotm/models/block/obelisk_part_horizontal.json
 04f306e85783f5d3f622f5607ea40818c73e22c1 assets/hotm/blockstates/smooth_thinking_stone_slab.json
 72c9f1ef222ec339aa94823e18bec68d03adc3a3 assets/hotm/blockstates/thinking_stone_tile_stairs.json
+498db5d974c91548c083e6d009d1105bf9710c4f assets/hotm/models/item/sporofruit_highlight.json
 678934a0b7a60d5c49c1c199660af22fff4b5296 assets/hotm/models/block/thinking_sand.json
 6ef45a2261830f7c64cc7f8c7c9b39d8fd401e9b assets/hotm/blockstates/smooth_thinking_stone.json
 6a591267143cf5fceecccf89bdb28feda3f249c7 assets/hotm/models/item/thinking_stone_tiles.json
@@ -89,6 +90,7 @@ b62ecea3dde4dbbdf6318809764462e4995b9cd6 assets/hotm/models/item/thinking_sand.j
 ee1844a71cfb5cd66b05026be15835b2ebffedf4 assets/hotm/models/item/solar_array_sprout.json
 52f949e769b12415b004a8d783522671163e09a5 assets/hotm/models/item/rusted_thinking_scrap.json
 5235f8d750cd1c30dbed45b9b3c9972169fb6744 assets/hotm/blockstates/holo_lamp.json
+94bd1d8849c4f89582d55b871adce70f2190c1c9 assets/hotm/models/item/sporofruit_base.json
 e157b81cc3224e1b0ccae9b8bb3e86151c74f94b assets/hotm/models/item/nectere_portal_spawner.json
 f103297d9d4de112fe9a51432598d44553ac7f6b assets/hotm/blockstates/aura_crystal.json
 b397de178a4961551a3030b13d8b3bb198465473 assets/hotm/blockstates/thinking_glass.json
@@ -96,10 +98,10 @@ b397de178a4961551a3030b13d8b3bb198465473 assets/hotm/blockstates/thinking_glass.
 e7bd4323f5a02c0ab934f5a5f4c69a8dac34b4cc assets/hotm/blockstates/smooth_thinking_stone_stairs.json
 f5ca5c954a867de935eee3a09a545dc78fce5094 assets/hotm/models/block/smooth_thinking_stone_stairs_inner.json
 2d8cc73a21b732b8d172852c47b567bd41aa683f assets/hotm/models/item/thinking_stone_brick_slab.json
-e0d0008e7131eeb1d98d144d59fd941f18cff845 assets/hotm/models/block/sporofruit.kml.json
+de95418378a0c4dd0867560af9d6f27186c4f19e assets/hotm/models/block/sporofruit.kml.json
 b23e4a5c3aa175079c551e95de69a27a3857c7ad assets/hotm/blockstates/obelisk_part.json
 9372c2d760430c4d4dbdae558d36328e89a3e4dd assets/hotm/blockstates/thinking_stone_leyline.json
-a264e1791046f5e0c82a98e014118bd754afacbe assets/hotm/blockstates/thinking_stone_tile_slab.json
 1e988fa731eeeee8152d181b1757b2f7384390c5 assets/hotm/blockstates/thinking_stone_bricks.json
+a264e1791046f5e0c82a98e014118bd754afacbe assets/hotm/blockstates/thinking_stone_tile_slab.json
 737f4658f4b5a6b87dbb43e3b78849ae269573eb assets/hotm/blockstates/nectere_portal_spawner.json
 491539261688e6d319509d0c39f05344e15da114 assets/hotm/models/item/smooth_thinking_stone_stairs.json

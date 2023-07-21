@@ -32,15 +32,6 @@ import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILES
 import com.github.hotm.mod.item.HotMItems.AURA_CRYSTAL_SHARD
 import com.github.hotm.mod.item.HotMItems.HOLO_CRYSTAL_SHARD
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
-import com.mojang.serialization.Codec
-import com.mojang.serialization.JsonOps
-import net.minecraft.block.Block
-import net.minecraft.data.client.ItemModelGenerator
-import net.minecraft.data.client.model.*
-import net.minecraft.util.Identifier
 import com.kneelawk.kmodlib.client.blockmodel.JsonMaterial
 import com.kneelawk.kmodlib.client.blockmodel.JsonTexture
 import com.kneelawk.kmodlib.client.blockmodel.KUnbakedModel
@@ -50,6 +41,15 @@ import com.kneelawk.kmodlib.client.blockmodel.ct.UnbakedCTLayer
 import com.kneelawk.kmodlib.client.blockmodel.cube.UnbakedCubeAllModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.modelref.UnbakedModelRefModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.sprite.UnbakedStaticSpriteSupplier
+import com.mojang.serialization.Codec
+import com.mojang.serialization.JsonOps
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
+import net.minecraft.block.Block
+import net.minecraft.data.client.ItemModelGenerator
+import net.minecraft.data.client.model.*
+import net.minecraft.util.Identifier
 
 class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     companion object {
@@ -124,7 +124,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
 
         gen.registerTintableCross(SOLAR_ARRAY_SPROUT, BlockStateModelGenerator.TintType.NOT_TINTED)
 
-        gen.registerHighlightedCross(SPOROFRUIT, itemSuffix = "_base")
+        gen.registerHighlightedCross(SPOROFRUIT)
     }
 
     private fun BlockStateModelGenerator.registerRandomHorizontalRotationsState(block: Block) {
@@ -179,34 +179,45 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
 
     private fun BlockStateModelGenerator.registerHighlightedCross(
         block: Block, baseSuffix: String = "_base", highlightSuffix: String = "_highlight",
-        itemSuffix: String = "_item",
         baseTint: BlockStateModelGenerator.TintType = BlockStateModelGenerator.TintType.NOT_TINTED,
         highlightTint: BlockStateModelGenerator.TintType = BlockStateModelGenerator.TintType.NOT_TINTED
     ) {
         val id = ModelIds.getBlockModelId(block)
         val baseId = id.extendPath(baseSuffix)
         val highlightId = id.extendPath(highlightSuffix)
-        val itemId = id.extendPath(itemSuffix)
         baseTint.crossModel.upload(baseId, Texture.cross(baseId), modelCollector)
         highlightTint.crossModel.upload(highlightId, Texture.cross(highlightId), modelCollector)
-        registerHighlighted(block, baseId, highlightId, itemId)
-        registerItemModel(block, itemSuffix)
+        registerSimpleState(block)
+        registerHighlighted(id, baseId, highlightId)
+
+        val itemId = ModelIds.getItemModelId(block.asItem())
+        val baseItemId = itemId.extendPath(baseSuffix)
+        val highlightItemId = itemId.extendPath(highlightSuffix)
+        Models.SINGLE_LAYER_ITEM.upload(baseItemId, Texture.layer0(baseId), modelCollector)
+        Models.SINGLE_LAYER_ITEM.upload(highlightItemId, Texture.layer0(highlightId), modelCollector)
+        excludeFromSimpleItemModelGeneration(block)
+        registerHighlighted(
+            itemId,
+            baseItemId,
+            highlightItemId,
+            particle = baseId,
+            transformation = Identifier("item/generated"),
+            sideLit = false
+        )
     }
 
     private fun BlockStateModelGenerator.registerHighlighted(
-        block: Block, base: Identifier, highlight: Identifier, item: Identifier = base
+        modelId: Identifier, base: Identifier, highlight: Identifier, particle: Identifier = highlight,
+        transformation: Identifier = Identifier("block/block"), sideLit: Boolean = true
     ) {
-        registerSimpleState(block)
-
-        val baseId = ModelIds.getBlockModelId(block)
-        val suffixedModelId = baseId.extendPath(".kml")
+        val suffixedModelId = modelId.extendPath(".kml")
 
         val highlightMaterial = JsonMaterial(BlendMode.DEFAULT, false, true, false, true)
 
         val baseLayer = UnbakedModelRefModelLayer(base, JsonMaterial.DEFAULT, true)
         val highlightLayer = UnbakedModelRefModelLayer(highlight, highlightMaterial, true)
 
-        val blockModel = UnbakedLayeredModel(Identifier("block/block"), item, listOf(baseLayer, highlightLayer))
+        val blockModel = UnbakedLayeredModel(transformation, particle, listOf(baseLayer, highlightLayer), sideLit)
         registerCustomModel(suffixedModelId, blockModel, KUnbakedModel.CODEC)
     }
 
