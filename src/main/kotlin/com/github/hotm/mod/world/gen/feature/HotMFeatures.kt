@@ -3,6 +3,8 @@ package com.github.hotm.mod.world.gen.feature
 import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.world.gen.feature.tree.SolarArrayFoliagePlacer
 import com.github.hotm.mod.world.gen.feature.tree.SolarArrayTrunkPlacer
+import org.quiltmc.qsl.worldgen.biome.api.BiomeModifications
+import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectors
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKey
@@ -12,10 +14,13 @@ import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.PlacedFeature
 import net.minecraft.world.gen.foliage.FoliagePlacerType
 import net.minecraft.world.gen.trunk.TrunkPlacerType
-import org.quiltmc.qsl.worldgen.biome.api.BiomeModifications
-import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectors
 
 object HotMFeatures {
+    val CRYSTAL_GROWTH by lazy { CrystalGrowthFeature(CrystalGrowthConfig.CODEC) }
+    val SERVER_TOWER by lazy { ServerTowerFeature(ServerTowerConfig.CODEC) }
+
+    // nectere portal stuff
+
     val NON_NECTERE_SIDE_NECTERE_PORTAL by lazy { NecterePortalFeature(DefaultFeatureConfig.CODEC) }
     val NON_NECTERE_SIDE_NECTERE_PORTAL_ID = id("nns_nectere_portal")
     val NON_NECTERE_SIDE_NECTERE_PORTAL_KEY: RegistryKey<PlacedFeature> =
@@ -28,6 +33,9 @@ object HotMFeatures {
     val SOLAR_ARRAY_CONFIGURED_FEATURE = RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, id("solar_array"))
 
     fun init() {
+        Registry.register(Registries.FEATURE, id("crystal_growth"), CRYSTAL_GROWTH)
+        Registry.register(Registries.FEATURE, id("server_tower"), SERVER_TOWER)
+
         Registry.register(Registries.FEATURE, NON_NECTERE_SIDE_NECTERE_PORTAL_ID, NON_NECTERE_SIDE_NECTERE_PORTAL)
 
         BiomeModifications.addFeature(

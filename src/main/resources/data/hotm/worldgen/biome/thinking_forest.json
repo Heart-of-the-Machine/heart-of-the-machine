@@ -27,10 +27,14 @@
     [],
     [],
     [],
-    [],
+    [
+      "hotm:crystal_growth_all",
+      "hotm:server_tower_all"
+    ],
     [],
     [
-      "hotm:solar_array"
+      "hotm:solar_array",
+      "hotm:flower_thinking_forest"
     ],
     []
   ]

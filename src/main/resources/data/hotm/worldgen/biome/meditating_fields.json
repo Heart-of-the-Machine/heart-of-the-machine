@@ -19,5 +19,20 @@
       "hotm:nectere/canyon"
     ]
   },
-  "features": []
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "hotm:crystal_growth_all",
+      "hotm:server_tower_all"
+    ],
+    [],
+    [],
+    []
+  ]
 }

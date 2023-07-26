@@ -1,0 +1,11 @@
+{
+  "type": "hotm:crystal_growth",
+  "config": {
+    "targets": "hotm:thinking_stone",
+    "crystal": {
+      "Name": "hotm:aura_crystal"
+    },
+    "size": 5,
+    "split_chance": 0.5
+  }
+}
