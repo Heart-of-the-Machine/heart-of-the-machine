@@ -180,6 +180,6 @@ class ServerTowerFeature(codec: Codec<ServerTowerConfig>) : Feature<ServerTowerC
             y--
         }
 
-        return config.maxDrop
+        return pos.y - config.maxDrop
     }
 }
