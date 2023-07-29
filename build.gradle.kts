@@ -68,6 +68,7 @@ loom {
 
 repositories {
     maven("https://kneelawk.com/maven/") { name = "Kneelawk" }
+    maven("https://maven.alexiil.uk/") { name = "AlexIIL" }
     maven("https://maven.terraformersmc.com/releases/") { name = "TerraformersMC" }
     maven("https://maven.cafeteria.dev/releases/") {
         name = "Cafeteria"

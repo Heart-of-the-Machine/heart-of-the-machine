@@ -17,6 +17,7 @@ qkl = "2.1.0+kt.1.8.22+flk.1.9.4"
 
 # Implementation Libraries
 kmodlib = "0.2.8+1.20"
+graphlib = "1.1.1+1.20"
 
 # Local Runtime
 mod_menu = "7.1.0"
@@ -35,6 +36,7 @@ qkl = { module = "org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries", ve
 
 # Implementation Libraries
 kmodlib = { module = "com.kneelawk:kmodlib-all", version.ref = "kmodlib" }
+graphlib = { module = "com.kneelawk:graphlib", version.ref = "graphlib" }
 
 # Local Runtime
 mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "mod_menu" }
@@ -42,7 +44,7 @@ mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "mod_menu" }
 [bundles]
 libs_base = ["qfapi"]
 libs_kotlin = ["qkl"]
-libs_impl = ["kmodlib"]
+libs_impl = ["kmodlib", "graphlib"]
 runtime_local = ["mod_menu"]
 
 [plugins]

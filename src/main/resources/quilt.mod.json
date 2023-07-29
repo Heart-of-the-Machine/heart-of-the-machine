@@ -54,6 +54,10 @@
       {
         "id": "kmodlib-blockmodel",
         "versions": "~0.2.0"
+      },
+      {
+        "id": "graphlib",
+        "versions": "~1.1"
       }
     ]
   },
