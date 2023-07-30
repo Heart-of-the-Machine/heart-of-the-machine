@@ -46,6 +46,7 @@
 
   "message.hotm.teleporting": "Teleporting...",
   "message.hotm.locate_nectere_portal.not_found": "Unable to locate nectere portal.",
+  "message.hotm.current_aura.get": "Current chunk section Aura: %s",
 
   "architecture_extensions.grouped_block.block.hotm.thinking_stone": "Thinking Stone",
   "architecture_extensions.grouped_block.block.hotm.thinking_scrap": "Thinking Scrap",

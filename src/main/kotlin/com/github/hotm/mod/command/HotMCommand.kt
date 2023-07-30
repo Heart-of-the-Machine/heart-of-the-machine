@@ -6,6 +6,7 @@ import com.github.hotm.mod.HotMLog
 import com.github.hotm.mod.world.HotMDimensions
 import com.github.hotm.mod.world.HotMPortalFinders
 import com.github.hotm.mod.world.HotMPortalOffsets
+import com.github.hotm.mod.world.aura.Aura
 import com.github.hotm.mod.world.gen.structure.HotMStructures
 import com.google.common.base.Stopwatch
 import kotlin.jvm.optionals.getOrNull
@@ -14,6 +15,7 @@ import org.quiltmc.qkl.library.brigadier.argument.literal
 import org.quiltmc.qkl.library.brigadier.executeWithResult
 import org.quiltmc.qkl.library.brigadier.register
 import org.quiltmc.qkl.library.brigadier.required
+import org.quiltmc.qkl.library.brigadier.util.sendFeedback
 import org.quiltmc.qkl.library.brigadier.util.server
 import org.quiltmc.qkl.library.brigadier.util.world
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback
@@ -29,6 +31,7 @@ import net.minecraft.text.Texts
 import net.minecraft.util.Formatting
 import net.minecraft.util.Util
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.math.MathHelper
 
 object HotMCommand {
@@ -37,6 +40,7 @@ object HotMCommand {
             dispatcher.register("hotm") {
                 requires { it.hasPermissionLevel(2) }
                 setupLocate()
+                setupAura()
             }
         }
     }
@@ -75,6 +79,24 @@ object HotMCommand {
                             sendFeedback(source, sourcePos, portalPos, stopwatch.elapsed())
                         )
                     }
+                }
+            }
+        }
+    }
+
+    private fun LiteralArgumentBuilder<ServerCommandSource>.setupAura() {
+        required(literal("aura")) {
+            required(literal("get")) {
+                executeWithResult {
+                    val aura = Aura.get(world, ChunkSectionPos.from(source.position))
+
+                    sendFeedback(
+                        msg(
+                            "current_aura.get",
+                            Text.literal(aura.toString()).styled { it.withColor(Formatting.AQUA) })
+                    )
+
+                    CommandResult.success(aura.toInt())
                 }
             }
         }

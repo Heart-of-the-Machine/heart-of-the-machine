@@ -6,6 +6,7 @@ import com.github.hotm.mod.blockentity.HotMBlockEntities
 import com.github.hotm.mod.command.HotMCommand
 import com.github.hotm.mod.item.HotMItems
 import com.github.hotm.mod.misc.HotMCreativeTabs
+import com.github.hotm.mod.world.aura.Aura
 import com.github.hotm.mod.world.biome.NecterePortalData
 import com.github.hotm.mod.world.gen.carver.HotMCarvers
 import com.github.hotm.mod.world.gen.decorator.HotMPlacementModifiers
@@ -36,6 +37,8 @@ object HotMMod : ModInitializer {
 
         HotMCreativeTabs.init()
         HotMCommand.init()
+
+        Aura.init()
 
         HotMLog.LOG.info("[HotM] Heart of the Machine initialized.")
     }
