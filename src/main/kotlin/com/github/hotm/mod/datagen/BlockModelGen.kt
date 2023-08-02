@@ -30,8 +30,24 @@ import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_BRICKS
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILES
+import com.github.hotm.mod.item.HotMItems.AURAMETER
 import com.github.hotm.mod.item.HotMItems.AURA_CRYSTAL_SHARD
 import com.github.hotm.mod.item.HotMItems.HOLO_CRYSTAL_SHARD
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
+import com.mojang.serialization.Codec
+import com.mojang.serialization.JsonOps
+import net.minecraft.block.Block
+import net.minecraft.data.client.ItemModelGenerator
+import net.minecraft.data.client.model.BlockStateModelGenerator
+import net.minecraft.data.client.model.ModelIds
+import net.minecraft.data.client.model.Models
+import net.minecraft.data.client.model.Texture
+import net.minecraft.data.client.model.TextureKey
+import net.minecraft.data.client.model.TexturedModel
+import net.minecraft.data.client.model.VariantsBlockStateSupplier
+import net.minecraft.util.Identifier
 import com.kneelawk.kmodlib.client.blockmodel.JsonMaterial
 import com.kneelawk.kmodlib.client.blockmodel.JsonTexture
 import com.kneelawk.kmodlib.client.blockmodel.KUnbakedModel
@@ -41,15 +57,6 @@ import com.kneelawk.kmodlib.client.blockmodel.ct.UnbakedCTLayer
 import com.kneelawk.kmodlib.client.blockmodel.cube.UnbakedCubeAllModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.modelref.UnbakedModelRefModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.sprite.UnbakedStaticSpriteSupplier
-import com.mojang.serialization.Codec
-import com.mojang.serialization.JsonOps
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
-import net.minecraft.block.Block
-import net.minecraft.data.client.ItemModelGenerator
-import net.minecraft.data.client.model.*
-import net.minecraft.util.Identifier
 
 class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     companion object {
@@ -229,5 +236,7 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     override fun generateItemModels(gen: ItemModelGenerator) {
         gen.register(AURA_CRYSTAL_SHARD, Models.SINGLE_LAYER_ITEM)
         gen.register(HOLO_CRYSTAL_SHARD, Models.SINGLE_LAYER_ITEM)
+
+        gen.register(AURAMETER, Models.SINGLE_LAYER_ITEM)
     }
 }

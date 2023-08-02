@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hotm:block/simple_siphon_aura_node"
+    }
+  }
+}

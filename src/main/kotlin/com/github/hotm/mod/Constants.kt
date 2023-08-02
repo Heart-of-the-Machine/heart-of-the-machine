@@ -12,6 +12,8 @@ object Constants {
 
     fun id(path: String): Identifier = Identifier(MOD_ID, path)
 
+    fun str(path: String): String = "$MOD_ID:$path"
+
     fun tt(prefix: String, suffix: String, vararg args: Any?): MutableText =
         Text.translatable("$prefix.$MOD_ID.$suffix", *args)
 

@@ -129,6 +129,17 @@ object HotMBlocks {
         )
     }
 
+    // Aura Nodes
+
+    val AURA_NODE_SETTINGS by lazy {
+        QuiltBlockSettings.create().requiresTool().strength(2.0f, 5.0f).sounds(BlockSoundGroup.GLASS).luminance { 12 }
+            .nonOpaque()
+    }
+
+    val SIMPLE_SIPHON_AURA_NODE by lazy {
+        SimpleSiphonAuraNodeBlock(QuiltBlockSettings.copyOf(AURA_NODE_SETTINGS).mapColor(MapColor.CYAN))
+    }
+
     fun init() {
         register(THINKING_STONE, "thinking_stone")
         register(THINKING_SCRAP, "thinking_scrap")
@@ -171,6 +182,8 @@ object HotMBlocks {
 
         register(NECTERE_PORTAL, "nectere_portal")
         register(NECTERE_PORTAL_SPAWNER, "nectere_portal_spawner")
+
+        register(SIMPLE_SIPHON_AURA_NODE, "simple_siphon_aura_node")
     }
 
     private fun register(block: Block, path: String) {

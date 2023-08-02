@@ -5,7 +5,10 @@ import com.github.hotm.mod.block.HotMPointOfInterestTypes
 import com.github.hotm.mod.blockentity.HotMBlockEntities
 import com.github.hotm.mod.command.HotMCommand
 import com.github.hotm.mod.item.HotMItems
+import com.github.hotm.mod.item.InteractionCanceler
 import com.github.hotm.mod.misc.HotMCreativeTabs
+import com.github.hotm.mod.node.HotMUniverses
+import com.github.hotm.mod.util.CurrentServer
 import com.github.hotm.mod.world.aura.Aura
 import com.github.hotm.mod.world.biome.NecterePortalData
 import com.github.hotm.mod.world.gen.carver.HotMCarvers
@@ -28,6 +31,7 @@ object HotMMod : ModInitializer {
         HotMItems.init()
         HotMBlockEntities.init()
         HotMPointOfInterestTypes.init()
+        HotMUniverses.init()
         HotMCarvers.init()
         HotMPlacementModifiers.init()
         HotMFeatures.init()
@@ -38,7 +42,9 @@ object HotMMod : ModInitializer {
         HotMCreativeTabs.init()
         HotMCommand.init()
 
+        CurrentServer.init()
         Aura.init()
+        InteractionCanceler.init()
 
         HotMLog.LOG.info("[HotM] Heart of the Machine initialized.")
     }

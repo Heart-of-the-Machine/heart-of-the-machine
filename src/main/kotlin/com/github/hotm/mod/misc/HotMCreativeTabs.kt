@@ -14,6 +14,7 @@ import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.PLASSEIN_THINKING_SCRAP_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP
 import com.github.hotm.mod.block.HotMBlocks.RUSTED_THINKING_SCRAP_LEYLINE
+import com.github.hotm.mod.block.HotMBlocks.SIMPLE_SIPHON_AURA_NODE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.SMOOTH_THINKING_STONE_SLAB
@@ -34,6 +35,7 @@ import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_LEYLINE
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILES
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILE_SLAB
 import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILE_STAIRS
+import com.github.hotm.mod.item.HotMItems.AURAMETER
 import com.github.hotm.mod.item.HotMItems.AURA_CRYSTAL_SHARD
 import com.github.hotm.mod.item.HotMItems.HOLO_CRYSTAL_SHARD
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
@@ -47,8 +49,12 @@ object HotMCreativeTabs {
     val MAIN by lazy {
         FabricItemGroup.builder().name(Constants.tt("itemGroup", "main")).entries { _, collector ->
             collector.addItems(
+                AURAMETER,
+
                 AURA_CRYSTAL_SHARD,
                 HOLO_CRYSTAL_SHARD,
+
+                SIMPLE_SIPHON_AURA_NODE,
 
                 THINKING_STONE,
                 THINKING_SCRAP,

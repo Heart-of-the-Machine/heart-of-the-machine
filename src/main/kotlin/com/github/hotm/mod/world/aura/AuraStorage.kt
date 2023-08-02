@@ -7,5 +7,5 @@ interface AuraStorage {
 
     fun get(pos: ChunkSectionPos): Float
 
-    fun recalculate(pos: ChunkSectionPos)
+    fun update(pos: ChunkSectionPos, value: Float)
 }

@@ -22,8 +22,8 @@ object Aura {
         return getServerStorage(world).get(pos)
     }
 
-    fun recalculate(world: ServerWorld, pos: ChunkSectionPos) {
-        getServerStorage(world).recalculate(pos)
+    fun update(world: ServerWorld, pos: ChunkSectionPos, value: Float) {
+        getServerStorage(world).update(pos, value)
     }
 
     fun init() {

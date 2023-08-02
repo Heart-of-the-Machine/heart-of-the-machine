@@ -39,14 +39,20 @@
   "block.hotm.plassein_thinking_scrap_leyline": "Plassein Thinking Scrap Leyline",
   "block.hotm.smooth_thinking_stone_leyline": "Smooth Thinking Stone Leyline",
 
+  "block.hotm.simple_siphon_aura_node": "Siphon Aura Node",
+
   "item.hotm.aura_crystal_shard": "Aura Crystal Shard",
   "item.hotm.holo_crystal_shard": "Holo Crystal Shard",
+
+  "item.hotm.aurameter": "Aurameter",
 
   "itemGroup.hotm.main": "Heart of the Machine",
 
   "message.hotm.teleporting": "Teleporting...",
   "message.hotm.locate_nectere_portal.not_found": "Unable to locate nectere portal.",
   "message.hotm.current_aura.get": "Current chunk section Aura: %s",
+  "message.hotm.aurameter.chunk": "Base chunk Aura: %s, total chunk Aura: %s.",
+  "message.hotm.aurameter.node": "Node Aura: %s",
 
   "architecture_extensions.grouped_block.block.hotm.thinking_stone": "Thinking Stone",
   "architecture_extensions.grouped_block.block.hotm.thinking_scrap": "Thinking Scrap",

@@ -36,8 +36,9 @@ class ServerAuraStorage(val world: ServerWorld, data: Path, dsync: Boolean) : Au
         return chunk.currentAura
     }
 
-    override fun recalculate(pos: ChunkSectionPos) {
-        TODO("Not yet implemented")
+    override fun update(pos: ChunkSectionPos, value: Float) {
+        val chunk = chunks.getOrCreate(pos) ?: return
+        chunk.currentAura = value
     }
 
     fun onWorldChunkLoad(pos: ChunkPos) {

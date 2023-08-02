@@ -1,0 +1,98 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "casing": "hotm:block/aura_node_casing"
+  },
+  "elements": [
+    {
+      "from": [ 4, 7, 4 ],
+      "to": [ 12, 9, 12 ],
+      "faces": {
+        "north": {
+          "uv": [ 4, 7, 12, 9 ],
+          "texture": "#casing"
+        },
+        "east": {
+          "uv": [ 4, 7, 12, 9 ],
+          "texture": "#casing"
+        },
+        "south": {
+          "uv": [ 4, 7, 12, 9 ],
+          "texture": "#casing"
+        },
+        "west": {
+          "uv": [ 4, 7, 12, 9 ],
+          "texture": "#casing"
+        },
+        "up": {
+          "uv": [ 4, 4, 12, 12 ],
+          "texture": "#casing"
+        },
+        "down": {
+          "uv": [ 4, 4, 12, 12 ],
+          "texture": "#casing"
+        }
+      }
+    },
+    {
+      "from": [ 4, 4, 4 ],
+      "to": [ 12, 6, 12 ],
+      "faces": {
+        "north": {
+          "uv": [ 4, 10, 12, 12 ],
+          "texture": "#casing"
+        },
+        "east": {
+          "uv": [ 4, 10, 12, 12 ],
+          "texture": "#casing"
+        },
+        "south": {
+          "uv": [ 4, 10, 12, 12 ],
+          "texture": "#casing"
+        },
+        "west": {
+          "uv": [ 4, 10, 12, 12 ],
+          "texture": "#casing"
+        },
+        "up": {
+          "uv": [ 4, 4, 12, 12 ],
+          "texture": "#casing"
+        },
+        "down": {
+          "uv": [ 4, 4, 12, 12 ],
+          "texture": "#casing"
+        }
+      }
+    },
+    {
+      "from": [ 4, 10, 4 ],
+      "to": [ 12, 12, 12 ],
+      "faces": {
+        "north": {
+          "uv": [ 4, 4, 12, 6 ],
+          "texture": "#casing"
+        },
+        "east": {
+          "uv": [ 4, 4, 12, 6 ],
+          "texture": "#casing"
+        },
+        "south": {
+          "uv": [ 4, 4, 12, 6 ],
+          "texture": "#casing"
+        },
+        "west": {
+          "uv": [ 4, 4, 12, 6 ],
+          "texture": "#casing"
+        },
+        "up": {
+          "uv": [ 4, 4, 12, 12 ],
+          "texture": "#casing"
+        },
+        "down": {
+          "uv": [ 4, 4, 12, 12 ],
+          "texture": "#casing"
+        }
+      }
+    }
+  ]
+}
