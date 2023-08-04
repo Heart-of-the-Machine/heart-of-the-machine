@@ -39,7 +39,7 @@ class AurameterItem(settings: Settings) : Item(settings), InteractionCanceler {
         val block = context.world.getBlockState(pos).block as? AuraNodeBlock ?: return ActionResult.FAIL
         val blockNode = block.getSelectedBlockNode(context)
         val nodePos = NodePos(pos, blockNode)
-        val view = HotMUniverses.AURA.getSidedGraphView(world) ?: return ActionResult.FAIL
+        val view = HotMUniverses.NETWORKS.getSidedGraphView(world) ?: return ActionResult.FAIL
 
         val holder = view.getNodeAt(nodePos) ?: return ActionResult.FAIL
         val node = holder.getNodeEntity(ValuedAuraNode::class.java) ?: return ActionResult.FAIL

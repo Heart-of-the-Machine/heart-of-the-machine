@@ -25,7 +25,7 @@ class SimpleSiphonAuraNodeBlock(settings: Settings) : Block(settings), AuraNodeB
 
     override fun prepare(state: BlockState, world: WorldAccess, pos: BlockPos, flags: Int, maxUpdateDepth: Int) {
         if (world is ServerWorld) {
-            HotMUniverses.AURA.getServerGraphWorld(world).updateNodes(pos)
+            HotMUniverses.NETWORKS.getServerGraphWorld(world).updateNodes(pos)
         }
     }
 

@@ -18,10 +18,10 @@ class AuraLinkEntity(val parent: NodePos, value: Float) : AbstractLinkEntity() {
     companion object {
         val TYPE = LinkEntityType.of(id("aura"), {
             val tag = it as? NbtCompound ?: return@of null
-            val parent = NodePos.fromNbt(tag.getCompound("parent"), HotMUniverses.AURA) ?: return@of null
+            val parent = NodePos.fromNbt(tag.getCompound("parent"), HotMUniverses.NETWORKS) ?: return@of null
             AuraLinkEntity(parent, tag.getFloat("value"))
         }, { buf, ctx ->
-            val parent = NodePos.fromPacket(buf, ctx, HotMUniverses.AURA)
+            val parent = NodePos.fromPacket(buf, ctx, HotMUniverses.NETWORKS)
             val value = buf.readFloat()
             AuraLinkEntity(parent, value)
         })

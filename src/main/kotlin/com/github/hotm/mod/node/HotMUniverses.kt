@@ -12,16 +12,16 @@ import com.kneelawk.graphlib.api.graph.GraphUniverse
 import com.kneelawk.graphlib.api.graph.user.SyncProfile
 
 object HotMUniverses {
-    val AURA = GraphUniverse.builder().synchronizeToClient(SyncProfile.SYNC_EVERYTHING).build(id("auranet"))
+    val NETWORKS = GraphUniverse.builder().synchronizeToClient(SyncProfile.SYNC_EVERYTHING).build(id("networks"))
 
     fun init() {
-        AURA.register()
+        NETWORKS.register()
 
-        AURA.addDiscoverer(AuraNodeBlockDiscoverer)
-        AURA.addLinkKeyType(AuraLinkKey.TYPE)
-        AURA.addLinkEntityType(AuraLinkEntity.TYPE)
+        NETWORKS.addDiscoverer(AuraNodeBlockDiscoverer)
+        NETWORKS.addLinkKeyType(AuraLinkKey.TYPE)
+        NETWORKS.addLinkEntityType(AuraLinkEntity.TYPE)
 
-        AURA.addNodeTypes(SimpleSiphonAuraBlockNode.TYPE, SimpleSourceAuraBlockNode.TYPE)
-        AURA.addNodeEntityTypes(SimpleSiphonAuraNode.TYPE, SimpleSourceAuraNode.TYPE)
+        NETWORKS.addNodeTypes(SimpleSiphonAuraBlockNode.TYPE, SimpleSourceAuraBlockNode.TYPE)
+        NETWORKS.addNodeEntityTypes(SimpleSiphonAuraNode.TYPE, SimpleSourceAuraNode.TYPE)
     }
 }

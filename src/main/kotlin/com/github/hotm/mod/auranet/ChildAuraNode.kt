@@ -4,7 +4,7 @@ import com.github.hotm.mod.node.aura.AuraLinkEntity
 import com.kneelawk.graphlib.api.graph.LinkHolder
 import com.kneelawk.graphlib.api.graph.user.LinkKey
 
-interface ChildAuraNode : AuraNode {
+interface ChildAuraNode : ConnectableAuraNode {
     fun sumParentLinks(): Float {
         var sum = 0f
         for (link in parentLinks()) {

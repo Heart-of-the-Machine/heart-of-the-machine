@@ -5,7 +5,7 @@ import com.github.hotm.mod.util.MaybeNode
 import com.kneelawk.graphlib.api.graph.LinkHolder
 import com.kneelawk.graphlib.api.graph.user.LinkKey
 
-interface ParentAuraNode : AuraNode {
+interface ParentAuraNode : ConnectableAuraNode {
     fun getChildNodes(): Sequence<MaybeNode> {
         return childLinks().map { MaybeNode.of(it.other(context.pos)) }
     }

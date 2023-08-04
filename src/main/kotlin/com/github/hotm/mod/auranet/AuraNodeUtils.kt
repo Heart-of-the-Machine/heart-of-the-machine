@@ -36,19 +36,18 @@ object AuraNodeUtils {
     }
 
     fun updateAllSiphons(view: GraphView, pos: ChunkSectionPos) {
+        val auraCache = mutableMapOf<DimChunkSectionPos, SiphonChunkData>()
         for (siphon in getAllSiphons(view, pos)) {
-            updateValues(siphon)
+            updateValues(siphon, auraCache)
         }
     }
 
-    fun updateValues(root: NodeHolder<*>) {
+    fun updateValues(root: NodeHolder<*>, auraCache: MutableMap<DimChunkSectionPos, SiphonChunkData> = mutableMapOf()) {
         // do depth-first updates, making sure to watch out for loops
 
         val parentNodes = mutableSetOf<DimPos>()
         val stack = ArrayDeque<Node>()
         stack.addLast(Node(root, false))
-
-        val auraCache = mutableMapOf<DimChunkSectionPos, SiphonChunkData>()
 
         while (stack.isNotEmpty()) {
             val node = stack.last()
@@ -134,7 +133,7 @@ object AuraNodeUtils {
 
         if (node is ParentAuraNode) {
             for (child in node.getChildNodes()) {
-                child.tryGetHolder(server, HotMUniverses.AURA)?.let {
+                child.tryGetHolder(server, HotMUniverses.NETWORKS)?.let {
                     val pos = DimPos.of(it)
                     if (!distinct.contains(pos)) {
                         distinct.add(pos)
