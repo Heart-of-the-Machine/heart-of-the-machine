@@ -5,6 +5,8 @@ import com.kneelawk.graphlib.api.graph.LinkHolder
 import com.kneelawk.graphlib.api.graph.user.LinkKey
 
 interface ChildAuraNode : ConnectableAuraNode {
+    fun preAddParent(parent: ParentAuraNode) {}
+
     fun sumParentLinks(): Float {
         var sum = 0f
         for (link in parentLinks()) {

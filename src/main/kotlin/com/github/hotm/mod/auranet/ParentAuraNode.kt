@@ -6,6 +6,8 @@ import com.kneelawk.graphlib.api.graph.LinkHolder
 import com.kneelawk.graphlib.api.graph.user.LinkKey
 
 interface ParentAuraNode : ConnectableAuraNode {
+    fun preAddChild(child: ChildAuraNode) {}
+
     fun getChildNodes(): Sequence<MaybeNode> {
         return childLinks().map { MaybeNode.of(it.other(context.pos)) }
     }

@@ -1,18 +1,50 @@
 package com.github.hotm.mod.auranet
 
 import com.github.hotm.mod.HotMLog
+import com.github.hotm.mod.auranet.ConnectableAuraNode.Companion.MIN_CONNECT_DISTANCE
+import com.github.hotm.mod.item.TunerConnectResult
 import com.github.hotm.mod.node.HotMUniverses
+import com.github.hotm.mod.node.aura.AuraLinkEntity
+import com.github.hotm.mod.node.aura.AuraLinkKey
 import com.github.hotm.mod.util.DimChunkSectionPos
 import com.github.hotm.mod.util.DimPos
 import com.github.hotm.mod.world.aura.Aura
+import kotlin.math.sqrt
 import kotlin.streams.asSequence
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.ChunkSectionPos
 import com.kneelawk.graphlib.api.graph.GraphView
+import com.kneelawk.graphlib.api.graph.GraphWorld
 import com.kneelawk.graphlib.api.graph.NodeHolder
 import com.kneelawk.graphlib.api.graph.user.BlockNode
 
 object AuraNodeUtils {
+    fun connect(world: GraphWorld, parent: ParentAuraNode, child: ChildAuraNode): TunerConnectResult {
+        if (parent.context.blockWorld.registryKey != child.context.blockWorld.registryKey)
+            return TunerConnectResult.WrongDimension(
+                parent.context.blockWorld.registryKey,
+                child.context.blockWorld.registryKey
+            )
+
+        val maxDistance = MIN_CONNECT_DISTANCE + parent.connectDistanceExtension + child.connectDistanceExtension
+        val maxDistanceSqr = maxDistance * maxDistance
+        val distanceSqr = parent.context.blockPos.getSquaredDistance(child.context.blockPos)
+        if (distanceSqr > maxDistanceSqr)
+            return TunerConnectResult.TooFar(sqrt(distanceSqr).toFloat(), maxDistance)
+
+        if (wouldCauseLoop(parent.context.holder, child.context.holder))
+            return TunerConnectResult.DependencyLoop
+
+        parent.preAddChild(child)
+        child.preAddParent(parent)
+
+        world.connectNodes(parent.context.pos, child.context.pos, AuraLinkKey, AuraLinkEntity(parent.context.pos, 0f))
+
+        updateValues(parent.context.holder)
+
+        return TunerConnectResult.Success
+    }
+
     fun calculateSiphonValue(initDenom: Float, denomStep: Float, chunkAura: Float, siphonCount: Int): Float {
         return chunkAura / (denomStep * siphonCount + initDenom - denomStep)
     }
