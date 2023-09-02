@@ -14,12 +14,14 @@ object HotMItems {
     val HOLO_CRYSTAL_SHARD by lazy { Item(RESOURCE_ITEM_SETTINGS) }
 
     val AURAMETER by lazy { AurameterItem(TOOL_ITEM_SETTINGS) }
+    val NODE_TUNER by lazy { NodeTunerItem(TOOL_ITEM_SETTINGS) }
 
     fun init() {
         register(AURA_CRYSTAL_SHARD, "aura_crystal_shard")
         register(HOLO_CRYSTAL_SHARD, "holo_crystal_shard")
 
         register(AURAMETER, "aurameter")
+        register(NODE_TUNER, "node_tuner")
     }
 
     private fun register(item: Item, path: String) {

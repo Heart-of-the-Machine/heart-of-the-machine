@@ -6,15 +6,13 @@ import com.github.hotm.mod.util.s2cReadWrite
 import com.github.hotm.mod.util.sendToClients
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.ChunkSectionPos
 import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.kneelawk.graphlib.api.graph.user.NodeEntity
 import com.kneelawk.graphlib.api.graph.user.NodeEntityType
 
-class SimpleSiphonAuraNode(value: Float) : AbstractSiphonAuraNode(), ParentAuraNode, SiphonAuraNode, RecalculableAuraNode,
-    ValuedAuraNode {
+class SimpleSiphonAuraNode(value: Float) : AbstractSiphonAuraNode(), ParentAuraNode, SiphonAuraNode,
+    RecalculableAuraNode, ValuedAuraNode {
     companion object {
         val TYPE = NodeEntityType.of(id("simple_siphon_aura_node"), {
             val tag = it as? NbtCompound ?: return@of null

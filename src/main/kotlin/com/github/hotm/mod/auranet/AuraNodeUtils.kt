@@ -67,6 +67,13 @@ object AuraNodeUtils {
         return sum
     }
 
+    fun updateChunkAura(view: GraphView, pos: ChunkSectionPos) {
+        val world = view.world as? ServerWorld
+            ?: throw IllegalStateException("updateChunkAura should only be called on the logical server")
+        recalculateChunkAura(world, view, pos)
+        updateAllSiphons(view, pos)
+    }
+
     fun updateAllSiphons(view: GraphView, pos: ChunkSectionPos) {
         val auraCache = mutableMapOf<DimChunkSectionPos, SiphonChunkData>()
         for (siphon in getAllSiphons(view, pos)) {
@@ -203,9 +210,13 @@ object AuraNodeUtils {
 
         // finally, update the chunk's aura
         if (node is SourceAuraNode) {
-            val pos = ChunkSectionPos.from(node.context.blockPos)
-            Aura.update(world, pos, calculateSources(node.context.graphWorld, pos))
+            recalculateChunkAura(world, node.context.graphWorld, ChunkSectionPos.from(node.context.blockPos))
         }
+    }
+
+    private fun recalculateChunkAura(world: ServerWorld, graphView: GraphView, chunkPos: ChunkSectionPos) {
+        val base = Aura.getBase(world, chunkPos)
+        Aura.update(world, chunkPos, base + calculateSources(graphView, chunkPos))
     }
 
     private fun calculateAuraCacheEntry(

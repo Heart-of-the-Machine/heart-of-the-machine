@@ -1,0 +1,6 @@
+{
+  "parent": "hotm:block/aura_node_core",
+  "textures": {
+    "core": "hotm:block/simple_source_aura_node_core"
+  }
+}

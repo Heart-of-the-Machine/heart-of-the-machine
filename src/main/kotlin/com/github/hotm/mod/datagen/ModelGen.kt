@@ -33,6 +33,7 @@ import com.github.hotm.mod.block.HotMBlocks.THINKING_STONE_TILES
 import com.github.hotm.mod.item.HotMItems.AURAMETER
 import com.github.hotm.mod.item.HotMItems.AURA_CRYSTAL_SHARD
 import com.github.hotm.mod.item.HotMItems.HOLO_CRYSTAL_SHARD
+import com.github.hotm.mod.item.HotMItems.NODE_TUNER
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
@@ -58,7 +59,7 @@ import com.kneelawk.kmodlib.client.blockmodel.cube.UnbakedCubeAllModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.modelref.UnbakedModelRefModelLayer
 import com.kneelawk.kmodlib.client.blockmodel.sprite.UnbakedStaticSpriteSupplier
 
-class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
+class ModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
     companion object {
         private val LEYLINE_ECTEX = id("block/leyline_exterior_corners")
         private val LEYLINE_HETEX = id("block/leyline_horizontal_edges")
@@ -238,5 +239,6 @@ class BlockModelGen(output: FabricDataOutput) : FabricModelProvider(output) {
         gen.register(HOLO_CRYSTAL_SHARD, Models.SINGLE_LAYER_ITEM)
 
         gen.register(AURAMETER, Models.SINGLE_LAYER_ITEM)
+        gen.register(NODE_TUNER, Models.SINGLE_LAYER_ITEM)
     }
 }

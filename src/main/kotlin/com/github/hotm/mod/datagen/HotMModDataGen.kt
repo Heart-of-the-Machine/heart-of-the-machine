@@ -10,7 +10,7 @@ object HotMModDataGen : DataGeneratorEntrypoint {
         HotMLog.LOG.info("[HotM] Starting DataGen...")
 
         val pack = fabricDataGenerator.createPack()
-        pack.addProvider(::BlockModelGen)
+        pack.addProvider(::ModelGen)
         pack.addProvider(::BlockTagGen)
         pack.addProvider(::BlockLootGen)
         pack.addProvider(::RecipeGen)

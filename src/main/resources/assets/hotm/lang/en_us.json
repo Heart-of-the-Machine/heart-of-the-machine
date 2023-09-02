@@ -40,11 +40,13 @@
   "block.hotm.smooth_thinking_stone_leyline": "Smooth Thinking Stone Leyline",
 
   "block.hotm.simple_siphon_aura_node": "Siphon Aura Node",
+  "block.hotm.simple_source_aura_node": "Source Aura Node",
 
   "item.hotm.aura_crystal_shard": "Aura Crystal Shard",
   "item.hotm.holo_crystal_shard": "Holo Crystal Shard",
 
   "item.hotm.aurameter": "Aurameter",
+  "item.hotm.node_tuner": "Node Tuner",
 
   "itemGroup.hotm.main": "Heart of the Machine",
 

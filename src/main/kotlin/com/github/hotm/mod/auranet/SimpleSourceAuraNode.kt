@@ -11,8 +11,8 @@ import alexiil.mc.lib.net.NetByteBuf
 import com.kneelawk.graphlib.api.graph.user.NodeEntity
 import com.kneelawk.graphlib.api.graph.user.NodeEntityType
 
-class SimpleSourceAuraNode(value: Float) : AbstractAuraNode(), ChildAuraNode, SourceAuraNode, RecalculableAuraNode,
-    ValuedAuraNode {
+class SimpleSourceAuraNode(value: Float) : AbstractSourceAuraNode(), ChildAuraNode, SourceAuraNode,
+    RecalculableAuraNode, ValuedAuraNode {
     companion object {
         val TYPE = NodeEntityType.of(id("simple_source_aura_node"), {
             val tag = it as? NbtCompound ?: return@of null
