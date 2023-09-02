@@ -86,6 +86,11 @@ class NodeTunerItem(settings: Settings) : Item(settings) {
 
             return if (res.successful) ActionResult.SUCCESS else ActionResult.FAIL
         } else {
+            // check that the node we're selecting is actually a parent aura node
+            val graphWorld = HotMUniverses.NETWORKS.getServerGraphWorld(world)
+            val parentHolder = graphWorld.getNodeAt(nodePos) ?: return ActionResult.FAIL
+            if (parentHolder.getNodeEntity() !is ParentAuraNode) return ActionResult.FAIL
+
             setPosition(stack, nodePos)
 
             return ActionResult.SUCCESS
