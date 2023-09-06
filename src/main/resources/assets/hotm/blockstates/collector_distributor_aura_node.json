@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hotm:block/collector_distributor_aura_node"
+    }
+  }
+}

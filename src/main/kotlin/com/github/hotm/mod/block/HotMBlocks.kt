@@ -142,6 +142,9 @@ object HotMBlocks {
     val SIMPLE_SOURCE_AURA_NODE by lazy {
         SimpleSourceAuraNodeBlock(QuiltBlockSettings.copyOf(AURA_NODE_SETTINGS).mapColor(MapColor.MAGENTA))
     }
+    val COLLECTOR_DISTRIBUTOR_AURA_NODE by lazy {
+        CollectorDistributorAuraNodeBlock(QuiltBlockSettings.copyOf(AURA_NODE_SETTINGS).mapColor(MapColor.LIGHT_BLUE))
+    }
 
     fun init() {
         register(THINKING_STONE, "thinking_stone")
@@ -188,6 +191,7 @@ object HotMBlocks {
 
         register(SIMPLE_SIPHON_AURA_NODE, "simple_siphon_aura_node")
         register(SIMPLE_SOURCE_AURA_NODE, "simple_source_aura_node")
+        register(COLLECTOR_DISTRIBUTOR_AURA_NODE, "collector_distributor_aura_node")
     }
 
     private fun register(block: Block, path: String) {

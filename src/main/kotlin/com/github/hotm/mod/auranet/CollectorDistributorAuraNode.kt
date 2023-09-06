@@ -8,30 +8,26 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
 import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
-import com.kneelawk.graphlib.api.graph.GraphWorld
 import com.kneelawk.graphlib.api.graph.user.NodeEntity
 import com.kneelawk.graphlib.api.graph.user.NodeEntityType
 
-class SimpleSiphonAuraNode(value: Float) : AbstractSiphonAuraNode(), ParentAuraNode, SiphonAuraNode,
+class CollectorDistributorAuraNode(value: Float) : AbstractAuraNode(), ParentAuraNode, ChildAuraNode,
     RecalculableAuraNode, ValuedAuraNode {
     companion object {
-        val TYPE = NodeEntityType.of(id("simple_siphon_aura_node"), {
+        val TYPE = NodeEntityType.of(id("collector_distributor_aura_node"), {
             val tag = it as? NbtCompound ?: return@of null
-            SimpleSiphonAuraNode(tag.getFloat("value"))
-        }, { buf, _ ->
-            SimpleSiphonAuraNode(buf.readFloat())
-        })
+            CollectorDistributorAuraNode(tag.getFloat("value"))
+        }, { buf, _ -> CollectorDistributorAuraNode(buf.readFloat()) })
 
         private val NET_PARENT = NodeEntity.NET_PARENT.subType(
-            SimpleSiphonAuraNode::class.java,
-            str("simple_siphon_aura_node")
+            CollectorDistributorAuraNode::class.java, str("collector_distributor_aura_node")
         )
 
         private val ID_VALUE_CHANGE = NET_PARENT.idData("VALUE_CHANGE")
             .s2cReadWrite({ value = it.readFloat() }, { it.writeFloat(value) })
     }
 
-    override var value = value
+    override var value: Float = value
         private set
 
     fun updateValue(value: Float) {
@@ -53,18 +49,7 @@ class SimpleSiphonAuraNode(value: Float) : AbstractSiphonAuraNode(), ParentAuraN
     }
 
     override fun recalculateValue(getSiphonData: () -> SiphonChunkData) {
-        val data = getSiphonData()
-        updateValue(AuraNodeUtils.calculateSiphonValue(10f, 2f, data.currentAura, data.siphonCount))
-
-        // apply child link value
-        setFirstChildLink(value)
-    }
-
-    override fun preAddChild(child: ChildAuraNode) {
-        val graphWorld = context.graphWorld as? GraphWorld ?: return
-        for (link in context.holder.connections.toList()) {
-            val oldChild = link.other(context.pos).getNodeEntity(ChildAuraNode::class.java) ?: continue
-            AuraNodeUtils.disconnect(graphWorld, this, oldChild)
-        }
+        updateValue(sumParentLinks())
+        distributeAmongChildLinks(value)
     }
 }

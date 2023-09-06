@@ -5,6 +5,7 @@ import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.block.HotMBlocks.AURA_CRYSTAL
 import com.github.hotm.mod.block.HotMBlocks.AURA_LAMP
 import com.github.hotm.mod.block.HotMBlocks.AURA_THINKING_STONE
+import com.github.hotm.mod.block.HotMBlocks.COLLECTOR_DISTRIBUTOR_AURA_NODE
 import com.github.hotm.mod.block.HotMBlocks.GLOWY_OBELISK_PART
 import com.github.hotm.mod.block.HotMBlocks.HOLO_CRYSTAL
 import com.github.hotm.mod.block.HotMBlocks.HOLO_LAMP
@@ -59,6 +60,7 @@ object HotMCreativeTabs {
 
                 SIMPLE_SIPHON_AURA_NODE,
                 SIMPLE_SOURCE_AURA_NODE,
+                COLLECTOR_DISTRIBUTOR_AURA_NODE,
 
                 THINKING_STONE,
                 THINKING_SCRAP,

@@ -41,6 +41,7 @@
 
   "block.hotm.simple_siphon_aura_node": "Siphon Aura Node",
   "block.hotm.simple_source_aura_node": "Source Aura Node",
+  "block.hotm.collector_distributor_aura_node": "Collector Distributor Aura Node",
 
   "item.hotm.aura_crystal_shard": "Aura Crystal Shard",
   "item.hotm.holo_crystal_shard": "Holo Crystal Shard",

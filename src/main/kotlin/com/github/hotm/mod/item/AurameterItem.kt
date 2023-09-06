@@ -36,13 +36,25 @@ class AurameterItem(settings: Settings) : Item(settings), InteractionCanceler {
         }
 
         val pos = context.blockPos
-        val block = context.world.getBlockState(pos).block as? AuraNodeBlock ?: return ActionResult.FAIL
+        val block = context.world.getBlockState(pos).block as? AuraNodeBlock ?: run {
+            println("Not Aura Node Block")
+            return ActionResult.FAIL
+        }
         val blockNode = block.getSelectedBlockNode(context)
         val nodePos = NodePos(pos, blockNode)
-        val view = HotMUniverses.NETWORKS.getSidedGraphView(world) ?: return ActionResult.FAIL
+        val view = HotMUniverses.NETWORKS.getSidedGraphView(world) ?: run {
+            println("No graph view")
+            return ActionResult.FAIL
+        }
 
-        val holder = view.getNodeAt(nodePos) ?: return ActionResult.FAIL
-        val node = holder.getNodeEntity(ValuedAuraNode::class.java) ?: return ActionResult.FAIL
+        val holder = view.getNodeAt(nodePos) ?: run {
+            println("No node at $nodePos")
+            return ActionResult.FAIL
+        }
+        val node = holder.getNodeEntity(ValuedAuraNode::class.java) ?: run {
+            println("Wrong node entity: ${holder.getNodeEntity()}")
+            return ActionResult.FAIL
+        }
 
         return if (world.isClient) {
             ActionResult.SUCCESS

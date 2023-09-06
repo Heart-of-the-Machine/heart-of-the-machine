@@ -45,6 +45,12 @@ object AuraNodeUtils {
         return TunerConnectResult.Success
     }
 
+    fun disconnect(world: GraphWorld, parent: ParentAuraNode, child: ChildAuraNode) {
+        world.disconnectNodes(parent.context.pos, child.context.pos, AuraLinkKey)
+//        updateValues(parent.context.holder)
+//        updateValues(child.context.holder)
+    }
+
     fun calculateSiphonValue(initDenom: Float, denomStep: Float, chunkAura: Float, siphonCount: Int): Float {
         return chunkAura / (denomStep * siphonCount + initDenom - denomStep)
     }

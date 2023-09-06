@@ -1,5 +1,6 @@
 package com.github.hotm.mod.item
 
+import com.github.hotm.mod.Constants.msg
 import com.github.hotm.mod.Constants.str
 import com.github.hotm.mod.HotMLog
 import com.github.hotm.mod.auranet.AuraNodeUtils
@@ -7,11 +8,13 @@ import com.github.hotm.mod.auranet.ChildAuraNode
 import com.github.hotm.mod.auranet.ParentAuraNode
 import com.github.hotm.mod.block.AuraNodeBlock
 import com.github.hotm.mod.node.HotMUniverses
+import com.github.hotm.mod.node.aura.AuraLinkKey
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.ActionResult
+import com.kneelawk.graphlib.api.util.LinkPos
 import com.kneelawk.graphlib.api.util.NodePos
 
 class NodeTunerItem(settings: Settings) : Item(settings) {
@@ -78,13 +81,21 @@ class NodeTunerItem(settings: Settings) : Item(settings) {
             val parent = parentHolder.getNodeEntity(ParentAuraNode::class.java) ?: return ActionResult.FAIL
             val child = childHolder.getNodeEntity(ChildAuraNode::class.java) ?: return ActionResult.FAIL
 
-            val res = AuraNodeUtils.connect(graphWorld, parent, child)
+            if (graphWorld.linkExistsAt(LinkPos(parentHolder.pos, childHolder.pos, AuraLinkKey))) {
+                AuraNodeUtils.disconnect(graphWorld, parent, child)
+                player?.sendMessage(msg("node_tuner.disconnected"), true)
 
-            player?.sendMessage(res.msg, true)
+                removePosition(stack)
 
-            removePosition(stack)
+                return ActionResult.SUCCESS
+            } else {
+                val res = AuraNodeUtils.connect(graphWorld, parent, child)
+                player?.sendMessage(res.msg, true)
 
-            return if (res.successful) ActionResult.SUCCESS else ActionResult.FAIL
+                removePosition(stack)
+
+                return if (res.successful) ActionResult.SUCCESS else ActionResult.FAIL
+            }
         } else {
             // check that the node we're selecting is actually a parent aura node
             val graphWorld = HotMUniverses.NETWORKS.getServerGraphWorld(world)

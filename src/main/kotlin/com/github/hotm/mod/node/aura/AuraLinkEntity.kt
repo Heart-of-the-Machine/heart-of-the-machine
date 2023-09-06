@@ -2,11 +2,13 @@ package com.github.hotm.mod.node.aura
 
 import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.Constants.str
+import com.github.hotm.mod.auranet.AuraNodeUtils
 import com.github.hotm.mod.node.HotMUniverses
 import com.github.hotm.mod.util.s2cReadWrite
 import com.github.hotm.mod.util.sendToClients
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
+import net.minecraft.server.world.ServerWorld
 import alexiil.mc.lib.net.IMsgWriteCtx
 import alexiil.mc.lib.net.NetByteBuf
 import com.kneelawk.graphlib.api.graph.user.AbstractLinkEntity
@@ -57,5 +59,12 @@ class AuraLinkEntity(val parent: NodePos, value: Float) : AbstractLinkEntity() {
         super.toPacket(buf, ctx)
         parent.toPacket(buf, ctx)
         buf.writeFloat(value)
+    }
+
+    override fun onDelete() {
+        if (context.blockWorld is ServerWorld) {
+            AuraNodeUtils.updateValues(context.first)
+            AuraNodeUtils.updateValues(context.second)
+        }
     }
 }
