@@ -4,6 +4,7 @@
   "package": "com.github.hotm.mod.mixin.impl",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "FrustumAccessor",
     "PointOfInterestTypesAccessor",
     "SurfaceRulesContextAccessor",
     "ThreadedChunkManagerMixin"
