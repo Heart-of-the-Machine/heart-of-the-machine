@@ -1,9 +1,5 @@
 package com.github.hotm.client.render.blockentity
 
-import java.util.*
-import com.github.hotm.client.HotMSprites
-import com.github.hotm.client.blockmodel.HotMBlockModels
-import com.github.hotm.client.render.HotMRenderMaterials
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.exp
@@ -14,12 +10,14 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.TexturedRenderLayers
+import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.BlockRenderManager
+import net.minecraft.client.texture.SpriteAtlasTexture
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.*
-import net.minecraft.util.random.RandomGenerator
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.MathHelper
+import net.minecraft.util.math.Vec3i
 import net.minecraft.world.BlockRenderView
 import net.minecraft.world.World
 
@@ -93,7 +91,7 @@ object AuraNodeRendererUtils {
         matrices.multiply(Quaternionf().rotationY(rollShift))
         renderBeamSquare(
             matrices,
-            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM, false),
+            consumers.getBuffer(RenderLayer.getBeaconBeam(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, false)),
             1f,
             len,
             innerRadius,
@@ -104,7 +102,7 @@ object AuraNodeRendererUtils {
         )
         renderBeamEnds(
             matrices,
-            HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM_END, false),
+            consumers.getBuffer(RenderLayer.getBeaconBeam(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, false)),
             1f,
             len,
             innerRadius,
@@ -115,34 +113,32 @@ object AuraNodeRendererUtils {
         )
         matrices.pop()
 
-        if (HotMRenderMaterials.shouldRenderOuterAuraNodeBeam()) {
-            matrices.push()
-            matrices.multiply(Quaternionf().rotationY(rollShift))
-            matrices.translate(0.0, -1.0 / 32.0, 0.0)
-            renderBeamSquare(
-                matrices,
-                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM, true),
-                0.125f,
-                len + 2f / 32f,
-                outerRadius,
-                0.0f,
-                1.0f,
-                0.0f,
-                1.0f
-            )
-            renderBeamEnds(
-                matrices,
-                HotMRenderMaterials.getAuraNodeBeamConsumer(consumers, HotMSprites.AURA_NODE_BEAM_END, true),
-                0.125f,
-                len + 2f / 32f,
-                outerRadius,
-                0.0f,
-                1.0f,
-                0.0f,
-                1.0f
-            )
-            matrices.pop()
-        }
+        matrices.push()
+        matrices.multiply(Quaternionf().rotationY(rollShift))
+        matrices.translate(0.0, -1.0 / 32.0, 0.0)
+        renderBeamSquare(
+            matrices,
+            consumers.getBuffer(RenderLayer.getBeaconBeam(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, true)),
+            0.125f,
+            len + 2f / 32f,
+            outerRadius,
+            0.0f,
+            1.0f,
+            0.0f,
+            1.0f
+        )
+        renderBeamEnds(
+            matrices,
+            consumers.getBuffer(RenderLayer.getBeaconBeam(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, true)),
+            0.125f,
+            len + 2f / 32f,
+            outerRadius,
+            0.0f,
+            1.0f,
+            0.0f,
+            1.0f
+        )
+        matrices.pop()
 
         matrices.push()
         matrices.translate(0.0, 0.35, 0.0)
@@ -304,18 +300,19 @@ object AuraNodeRendererUtils {
         val blockRenderManager: BlockRenderManager = MinecraftClient.getInstance().blockRenderManager
         val bakedModelManager = blockRenderManager.models.modelManager
         matrices.translate(-0.5, 0.0, -0.5)
-        blockRenderManager.modelRenderer.render(
-            world,
-            bakedModelManager.getModel(HotMBlockModels.AURA_NODE_BEAM_CROWN_PIECE),
-            blockstate,
-            pos,
-            matrices,
-            consumers.getBuffer(TexturedRenderLayers.getEntitySolid()),
-            false,
-            RandomGenerator.createLegacy(42),
-            42L,
-            OverlayTexture.DEFAULT_UV
-        )
+        // FIXME
+//        blockRenderManager.modelRenderer.render(
+//            world,
+//            bakedModelManager.getModel(HotMBlockModels.AURA_NODE_BEAM_CROWN_PIECE),
+//            blockstate,
+//            pos,
+//            matrices,
+//            consumers.getBuffer(TexturedRenderLayers.getEntitySolid()),
+//            false,
+//            RandomGenerator.createLegacy(42),
+//            42L,
+//            OverlayTexture.DEFAULT_UV
+//        )
         matrices.pop()
     }
 }
