@@ -76,6 +76,8 @@ repositories {
             includeGroup("me.luligabi")
         }
     }
+
+    mavenLocal()
 }
 
 dependencies {

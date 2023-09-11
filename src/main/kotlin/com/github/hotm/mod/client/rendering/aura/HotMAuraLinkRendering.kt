@@ -1,14 +1,13 @@
 package com.github.hotm.mod.client.rendering.aura
 
+import com.github.hotm.client.render.blockentity.AuraNodeRendererUtils
 import com.github.hotm.mod.auranet.AuraNode
 import com.github.hotm.mod.mixin.api.HotMClientMixinHelper
 import com.github.hotm.mod.node.HotMUniverses
 import com.github.hotm.mod.node.aura.AuraLinkEntity
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
-import net.minecraft.client.render.RenderLayer
 import net.minecraft.util.math.Vec3d
-import com.kneelawk.graphlib.api.client.render.RenderUtils
 import com.kneelawk.graphlib.api.graph.user.NodeEntityType
 
 object HotMAuraLinkRendering {
@@ -53,17 +52,33 @@ object HotMAuraLinkRendering {
 
                 if (!HotMClientMixinHelper.isLineSegmentVisible(frustum, parentVec, childVec)) continue
 
-                RenderUtils.drawLine(
+                stack.push()
+                stack.translate(parentVec.x, parentVec.y, parentVec.z)
+
+                AuraNodeRendererUtils.renderBeam(
+                    ctx.world(),
+                    parentHolder.blockPos,
                     stack,
-                    consumers.getBuffer(RenderLayer.LINES),
-                    parentVec.x.toFloat(),
-                    parentVec.y.toFloat(),
-                    parentVec.z.toFloat(),
-                    childVec.x.toFloat(),
-                    childVec.y.toFloat(),
-                    childVec.z.toFloat(),
-                    0xFFFFFFFF.toInt()
+                    consumers,
+                    ctx.tickDelta(),
+                    childHolder.blockPos.subtract(parentHolder.blockPos),
+                    linkEntity.value,
+                    0f
                 )
+
+                stack.pop()
+
+//                RenderUtils.drawLine(
+//                    stack,
+//                    consumers.getBuffer(RenderLayer.LINES),
+//                    parentVec.x.toFloat(),
+//                    parentVec.y.toFloat(),
+//                    parentVec.z.toFloat(),
+//                    childVec.x.toFloat(),
+//                    childVec.y.toFloat(),
+//                    childVec.z.toFloat(),
+//                    0xFFFFFFFF.toInt()
+//                )
             }
         }
 

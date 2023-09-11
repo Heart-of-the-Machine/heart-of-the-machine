@@ -1,5 +1,7 @@
 package com.github.hotm.client.render.blockentity
 
+import com.github.hotm.mod.Constants.id
+import com.github.hotm.mod.client.rendering.RenderUtils
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.exp
@@ -22,6 +24,9 @@ import net.minecraft.world.BlockRenderView
 import net.minecraft.world.World
 
 object AuraNodeRendererUtils {
+    private val AURA_NODE_BEAM = id("block/aura_node_beam")
+    private val AURA_NODE_BEAM_END = id("block/aura_node_beam_end")
+
     fun renderBeam(
         world: World,
         pos: BlockPos,
@@ -74,13 +79,16 @@ object AuraNodeRendererUtils {
         outerRadius: Float,
         crownRadius: Float,
     ) {
+        val beamSprite = RenderUtils.getBlockSprite(AURA_NODE_BEAM)
+        val endSprite = RenderUtils.getBlockSprite(AURA_NODE_BEAM_END)
+
         val xzLen = MathHelper.sqrt(dx * dx + dz * dz)
         val len = MathHelper.sqrt(dx * dx + dy * dy + dz * dz)
 
         val animationAmount = Math.floorMod(worldTime, 40).toFloat() + tickDelta
         val pitchShift = -atan2(xzLen, dy)
         val yawShift = -atan2(dz, dx) - PI.toFloat() / 2f
-        val rollShift = animationAmount * 2.25f - 45.0f
+        val rollShift = animationAmount * 0.04f
 
         matrices.push()
 
@@ -95,10 +103,10 @@ object AuraNodeRendererUtils {
             1f,
             len,
             innerRadius,
-            0.0f,
-            1.0f,
-            0.0f,
-            1.0f
+            beamSprite.getFrameU(0.0),
+            beamSprite.getFrameU(16.0),
+            beamSprite.getFrameV(0.0),
+            beamSprite.getFrameV(16.0)
         )
         renderBeamEnds(
             matrices,
@@ -106,10 +114,10 @@ object AuraNodeRendererUtils {
             1f,
             len,
             innerRadius,
-            0.0f,
-            1.0f,
-            0.0f,
-            1.0f
+            endSprite.getFrameU(0.0),
+            endSprite.getFrameU(16.0),
+            endSprite.getFrameV(0.0),
+            endSprite.getFrameV(16.0)
         )
         matrices.pop()
 
@@ -122,10 +130,10 @@ object AuraNodeRendererUtils {
             0.125f,
             len + 2f / 32f,
             outerRadius,
-            0.0f,
-            1.0f,
-            0.0f,
-            1.0f
+            beamSprite.getFrameU(0.0),
+            beamSprite.getFrameU(16.0),
+            beamSprite.getFrameV(0.0),
+            beamSprite.getFrameV(16.0)
         )
         renderBeamEnds(
             matrices,
@@ -133,10 +141,10 @@ object AuraNodeRendererUtils {
             0.125f,
             len + 2f / 32f,
             outerRadius,
-            0.0f,
-            1.0f,
-            0.0f,
-            1.0f
+            endSprite.getFrameU(0.0),
+            endSprite.getFrameU(16.0),
+            endSprite.getFrameV(0.0),
+            endSprite.getFrameV(16.0)
         )
         matrices.pop()
 

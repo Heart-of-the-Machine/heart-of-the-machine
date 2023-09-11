@@ -57,7 +57,7 @@
       },
       {
         "id": "graphlib",
-        "versions": "~1.2"
+        "versions": ">=1.2"
       }
     ]
   },
