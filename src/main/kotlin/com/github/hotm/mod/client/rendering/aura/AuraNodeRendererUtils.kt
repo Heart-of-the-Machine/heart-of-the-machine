@@ -1,4 +1,4 @@
-package com.github.hotm.client.render.blockentity
+package com.github.hotm.mod.client.rendering.aura
 
 import com.github.hotm.mod.Constants.id
 import com.github.hotm.mod.client.rendering.RenderUtils

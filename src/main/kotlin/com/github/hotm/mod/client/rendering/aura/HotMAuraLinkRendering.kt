@@ -1,6 +1,5 @@
 package com.github.hotm.mod.client.rendering.aura
 
-import com.github.hotm.client.render.blockentity.AuraNodeRendererUtils
 import com.github.hotm.mod.auranet.AuraNode
 import com.github.hotm.mod.mixin.api.HotMClientMixinHelper
 import com.github.hotm.mod.node.HotMUniverses
