@@ -1,6 +1,7 @@
 package com.github.hotm.mod.client
 
 import com.github.hotm.mod.HotMLog
+import com.github.hotm.mod.client.rendering.aura.AuraNodeRendererUtils
 import com.github.hotm.mod.client.rendering.aura.HotMAuraLinkRendering
 import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer
@@ -13,6 +14,7 @@ object HotMModClient : ClientModInitializer {
         HotMBlocksClient.init()
         HotMColorProviders.init()
         HotMAuraLinkRendering.init()
+        AuraNodeRendererUtils.init()
 
         HotMLog.LOG.info("[HotM] Heart of the Machine Client initialized.")
     }

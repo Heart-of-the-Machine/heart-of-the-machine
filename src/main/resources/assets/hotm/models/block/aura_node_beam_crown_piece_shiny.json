@@ -1,0 +1,37 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "piece": "hotm:block/aura_node_beam_crown_piece",
+    "particle": "hotm:block/aura_node_beam_crown_piece"
+  },
+  "elements": [
+    {
+      "from": [ 7, 2, 7.5 ],
+      "to": [ 9, 3, 8 ],
+      "faces": {
+        "north": {
+          "uv": [ 1, 0, 3, 1 ],
+          "texture": "#piece"
+        },
+        "east": {
+          "uv": [ 2.5, 0, 3, 1 ],
+          "texture": "#piece"
+        },
+        "south": {
+          "uv": [ 1, 0, 3, 1 ],
+          "texture": "#piece"
+        },
+        "west": {
+          "uv": [ 1, 0, 1.5, 1 ],
+          "texture": "#piece"
+        },
+        "up": {
+          "uv": [ 1, 0, 3, 0.5 ],
+          "texture": "#piece"
+        }
+      }
+    }
+  ]
+}

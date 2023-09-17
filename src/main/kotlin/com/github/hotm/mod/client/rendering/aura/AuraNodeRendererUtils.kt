@@ -5,6 +5,7 @@ import com.github.hotm.mod.client.rendering.RenderUtils
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.exp
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin
 import org.joml.Matrix3f
 import org.joml.Matrix4f
 import org.joml.Quaternionf
@@ -13,19 +14,28 @@ import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayer
+import net.minecraft.client.render.TexturedRenderLayers
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.BlockRenderManager
 import net.minecraft.client.texture.SpriteAtlasTexture
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.MathHelper
-import net.minecraft.util.math.Vec3i
+import net.minecraft.util.math.Vec3d
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.world.BlockRenderView
 import net.minecraft.world.World
 
 object AuraNodeRendererUtils {
     private val AURA_NODE_BEAM = id("block/aura_node_beam")
     private val AURA_NODE_BEAM_END = id("block/aura_node_beam_end")
+    private val AURA_NODE_BEAM_CROWN_PIECE = id("block/aura_node_beam_crown_piece")
+
+    fun init() {
+        ModelLoadingPlugin.register { ctx ->
+            ctx.addModels(AURA_NODE_BEAM_CROWN_PIECE)
+        }
+    }
 
     fun renderBeam(
         world: World,
@@ -33,7 +43,7 @@ object AuraNodeRendererUtils {
         matrices: MatrixStack,
         consumers: VertexConsumerProvider,
         tickDelta: Float,
-        offset: Vec3i,
+        offset: Vec3d,
         energy: Float,
         crownRoll: Float
     ) {
@@ -289,7 +299,7 @@ object AuraNodeRendererUtils {
         val increment = PI.toFloat() * 2f / numPieces.toFloat()
         for (i in 0 until numPieces) {
             matrices.push()
-            matrices.multiply(Quaternionf().rotationY(i.toFloat() * increment * crownRoll))
+            matrices.multiply(Quaternionf().rotationY(i.toFloat() * increment + crownRoll))
             matrices.translate(0.0, 0.0, -crownRadius)
             matrices.scale(scale, scale, scale)
             renderCrownPiece(world, blockstate, pos, matrices, consumers)
@@ -308,19 +318,19 @@ object AuraNodeRendererUtils {
         val blockRenderManager: BlockRenderManager = MinecraftClient.getInstance().blockRenderManager
         val bakedModelManager = blockRenderManager.models.modelManager
         matrices.translate(-0.5, 0.0, -0.5)
-        // FIXME
-//        blockRenderManager.modelRenderer.render(
-//            world,
-//            bakedModelManager.getModel(HotMBlockModels.AURA_NODE_BEAM_CROWN_PIECE),
-//            blockstate,
-//            pos,
-//            matrices,
-//            consumers.getBuffer(TexturedRenderLayers.getEntitySolid()),
-//            false,
-//            RandomGenerator.createLegacy(42),
-//            42L,
-//            OverlayTexture.DEFAULT_UV
-//        )
+        val model = bakedModelManager.getModel(AURA_NODE_BEAM_CROWN_PIECE) ?: bakedModelManager.missingModel
+        blockRenderManager.modelRenderer.render(
+            world,
+            model,
+            blockstate,
+            pos,
+            matrices,
+            consumers.getBuffer(TexturedRenderLayers.getEntitySolid()),
+            false,
+            RandomGenerator.createLegacy(42),
+            42L,
+            OverlayTexture.DEFAULT_UV
+        )
         matrices.pop()
     }
 }

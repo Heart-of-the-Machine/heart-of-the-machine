@@ -40,10 +40,18 @@ class AuraLinkEntity(val parent: NodePos, value: Float) : AbstractLinkEntity() {
     var value = value
         private set
 
+    // Only used on the client-side
+    private var crownRoll = 0f
+
     fun updateValue(value: Float) {
         this.value = value
         context.markDirty()
         ID_VALUE_CHANGE.sendToClients(context, this)
+    }
+
+    fun incrementAndGetCrownRoll(increment: Float): Float {
+        crownRoll += increment
+        return crownRoll
     }
 
     override fun getType(): LinkEntityType = TYPE

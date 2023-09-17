@@ -12,6 +12,9 @@ import com.kneelawk.graphlib.api.graph.user.NodeEntityType
 object HotMAuraLinkRendering {
     private val nodeRenderers = mutableMapOf<NodeEntityType, AuraNodeRenderer<*>>()
 
+    private var lastWorldTime = 0L
+    private var lastTickDelta = 0f
+
     fun registerAuraNodeRenderer(type: NodeEntityType, renderer: AuraNodeRenderer<*>) {
         nodeRenderers[type] = renderer
     }
@@ -26,6 +29,15 @@ object HotMAuraLinkRendering {
         val frustum = ctx.frustum() ?: return
         val stack = ctx.matrixStack()
         val cameraPos = ctx.camera().pos
+
+        var dwt = ctx.world().time - lastWorldTime
+        val dtd = ctx.tickDelta() - lastTickDelta
+        lastWorldTime = ctx.world().time
+        lastTickDelta = ctx.tickDelta()
+
+        if (dwt > 50L) dwt = 0
+
+        val delta = dwt.toFloat() + dtd
 
         stack.push()
         stack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z)
@@ -54,15 +66,17 @@ object HotMAuraLinkRendering {
                 stack.push()
                 stack.translate(parentVec.x, parentVec.y, parentVec.z)
 
+                val crownRoll = linkEntity.incrementAndGetCrownRoll(linkEntity.value * Math.PI.toFloat() / 60f * delta)
+
                 AuraNodeRendererUtils.renderBeam(
                     ctx.world(),
                     parentHolder.blockPos,
                     stack,
                     consumers,
                     ctx.tickDelta(),
-                    childHolder.blockPos.subtract(parentHolder.blockPos),
+                    childVec.subtract(parentVec),
                     linkEntity.value,
-                    0f
+                    crownRoll
                 )
 
                 stack.pop()
